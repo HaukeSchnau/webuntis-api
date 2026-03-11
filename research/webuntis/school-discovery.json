@@ -1,0 +1,60 @@
+{
+  "observedAt": "2026-03-11",
+  "page": "https://webuntis.com/",
+  "transport": "JSON-RPC 2.0 over HTTPS",
+  "observedRuntimeEndpoint": "https://schoolsearch.webuntis.com/schoolquery2",
+  "bundleHintEndpoint": "https://mobile.webuntis.com/ms/schoolquery2",
+  "request": {
+    "method": "POST",
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "id": "<request-id>",
+      "method": "searchSchool",
+      "params": [
+        {
+          "search": "IGS Lilienthal"
+        }
+      ],
+      "jsonrpc": "2.0"
+    }
+  },
+  "sampleResponse": {
+    "jsonrpc": "2.0",
+    "id": "<request-id>",
+    "result": {
+      "size": 0,
+      "schools": [
+        {
+          "displayName": "IGS Lilienthal",
+          "address": "28865, Lilienthal, Auf dem Kamp 1e",
+          "server": "igs-lilienthal.webuntis.com",
+          "serverUrl": "https://igs-lilienthal.webuntis.com/WebUntis/?school=igs-lilienthal",
+          "loginName": "igs-lilienthal",
+          "schoolId": 6603700,
+          "tenantId": "6603700",
+          "mobileServiceUrl": null,
+          "useMobileServiceUrlAndroid": false,
+          "useMobileServiceUrlIos": false
+        },
+        {
+          "displayName": "Gesamtschule Otto Lilienthal Königs Wusterhausen",
+          "address": "15711, Königs Wusterhausen, Erich-Weinert-Straße 9",
+          "server": "gsolkw.webuntis.com",
+          "serverUrl": "https://gsolkw.webuntis.com/WebUntis/?school=gsolkw",
+          "loginName": "gsolkw",
+          "schoolId": 7554400,
+          "tenantId": "7554400",
+          "mobileServiceUrl": null,
+          "useMobileServiceUrlAndroid": false,
+          "useMobileServiceUrlIos": false
+        }
+      ]
+    }
+  },
+  "notes": [
+    "The observed browser request lowercased and normalized the search term before sending it.",
+    "The runtime request target differs from an older constant embedded in the public bundle. The browser currently used schoolsearch.webuntis.com."
+  ]
+}
