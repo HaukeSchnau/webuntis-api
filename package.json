@@ -1,0 +1,19 @@
+{
+  "name": "webuntis-api",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --watch index.ts",
+    "typecheck": "tsgo --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "dependencies": {
+    "@effect/platform-bun": "^4.0.0-beta.30",
+    "@effect/vitest": "^4.0.0-beta.30",
+    "@typescript/native-preview": "^7.0.0-dev.20260311.1",
+    "effect": "^4.0.0-beta.30"
+  }
+}
