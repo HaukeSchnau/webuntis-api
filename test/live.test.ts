@@ -2,8 +2,24 @@ import { describe, expect, it, layer } from "@effect/vitest";
 import { Effect, Layer } from "effect";
 import { AuthClient } from "../src/core/auth.ts";
 import { fromEnv } from "../src/core/config.ts";
+import { UnexpectedResponseError } from "../src/core/errors.ts";
 import { layer as makeWebUntisLayer, WebUntisClient } from "../src/client.ts";
-import { liveEnvMissing, normalizeAppData, normalizeMessagesPermissions, normalizeMessagesStatus, normalizeTimetableEntries, normalizeTimetableEntriesSettings, normalizeTimetableFilter, normalizeTimetableGrid, normalizeUserContactData, normalizeUserEmail } from "./support.ts";
+import {
+  liveEnvMissing,
+  normalizeAppData,
+  normalizeMessagesPermissions,
+  normalizeMessagesStatus,
+  normalizeSessionStatus,
+  normalizeTimetableEntries,
+  normalizeTimetableEntriesSettings,
+  normalizeTimetableFilter,
+  normalizeTimetableGrid,
+  normalizeTimetableMenu,
+  normalizeTimetableSearch,
+  normalizeUnexpectedResponse,
+  normalizeUserContactData,
+  normalizeUserEmail
+} from "./support.ts";
 
 const hasLiveEnv = liveEnvMissing.length === 0;
 
@@ -48,6 +64,36 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         expect(email.email).toContain("@");
         expect(normalizeUserContactData(contactData)).toMatchSnapshot();
         expect(normalizeUserEmail(email)).toMatchSnapshot();
+      }), 30_000);
+
+    it.effect("documents current upstream profile summary/admin failures", () =>
+      Effect.gen(function*() {
+        const client = yield* WebUntisClient;
+        const profileError = yield* Effect.flip(client.profile.experimental.getProfileJson);
+        const adminDetailsError = yield* Effect.flip(client.profile.experimental.getAdminDetailsJson);
+
+        expect(profileError).toBeInstanceOf(UnexpectedResponseError);
+        expect(adminDetailsError).toBeInstanceOf(UnexpectedResponseError);
+        expect(normalizeUnexpectedResponse(profileError as UnexpectedResponseError)).toMatchSnapshot();
+        expect(normalizeUnexpectedResponse(adminDetailsError as UnexpectedResponseError)).toMatchSnapshot();
+      }), 30_000);
+
+    it.effect("reads session status and timetable discovery endpoints", () =>
+      Effect.gen(function*() {
+        const client = yield* WebUntisClient;
+        const appData = yield* client.app.getData;
+        const status = yield* client.session.getStatus();
+        const menu = yield* client.timetable.getMenu;
+        const search = yield* client.timetable.search({
+          query: "10",
+          schoolyear: appData.currentSchoolYear.id
+        });
+
+        expect(status.expiresInMs).toBeGreaterThanOrEqual(0);
+        expect(search.results.length).toBeGreaterThan(0);
+        expect(normalizeSessionStatus(status)).toMatchSnapshot();
+        expect(normalizeTimetableMenu(menu)).toMatchSnapshot();
+        expect(normalizeTimetableSearch(search)).toMatchSnapshot();
       }), 30_000);
 
     it.effect("reads timetable endpoints using the first discovered class", () =>

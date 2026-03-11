@@ -7,7 +7,7 @@ The client models the modern WebUntis REST surface as a portable Effect service 
 - `SchoolDiscovery` resolves a school name through the public WebUntis search API.
 - `AuthClient` performs the classic login handshake and mints the session-bound JWT from `/WebUntis/api/token/new`.
 - `WebUntisHttp` attaches cookies and bearer auth for modern `/api/rest/view/v1/...` requests.
-- `WebUntisClient` exposes the first domain clients for `app`, `schoolyears`, `messages`, `profile`, `timetable`, plus a `rawViewApi` escape hatch.
+- `WebUntisClient` exposes the first domain clients for `app`, `schoolyears`, `messages`, `profile`, `session`, `timetable`, plus a `rawViewApi` escape hatch.
 
 ## Runtime
 
@@ -88,4 +88,5 @@ await Effect.runPromise(program.pipe(Effect.provide(layer)));
 
 - Live tests use `@effect/vitest` against a real tenant.
 - Snapshot tests normalize volatile live payload fields.
+- The live suite also pins the current behavior of adjacent routes such as `session/status`, `timetable/menu`, `timetable/search`, and the currently failing `profile` summary/admin endpoints.
 - Reverse-engineering snapshot tests pin the mined frontend endpoint inventory so upstream bundle drift is obvious.

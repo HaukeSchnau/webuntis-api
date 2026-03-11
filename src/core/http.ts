@@ -22,12 +22,27 @@ export interface RequestOptions {
   readonly query?: Readonly<Record<string, string | number | boolean | undefined>>;
   readonly headers?: Readonly<Record<string, string | undefined>>;
   readonly withSchoolYearHeader?: boolean | undefined;
+  readonly body?: unknown;
 }
 
 export interface WebUntisHttp {
   readonly get: (path: string, options?: RequestOptions) => Effect.Effect<HttpClientResponse.HttpClientResponse, unknown>;
   readonly getJson: (path: string, options?: RequestOptions) => Effect.Effect<unknown, unknown>;
   readonly getSchema: <S extends Schema.Top>(
+    path: string,
+    schema: S,
+    options?: RequestOptions
+  ) => Effect.Effect<Schema.Schema.Type<S>, unknown, S["DecodingServices"]>;
+  readonly post: (path: string, options?: RequestOptions) => Effect.Effect<HttpClientResponse.HttpClientResponse, unknown>;
+  readonly postJson: (path: string, options?: RequestOptions) => Effect.Effect<unknown, unknown>;
+  readonly postSchema: <S extends Schema.Top>(
+    path: string,
+    schema: S,
+    options?: RequestOptions
+  ) => Effect.Effect<Schema.Schema.Type<S>, unknown, S["DecodingServices"]>;
+  readonly put: (path: string, options?: RequestOptions) => Effect.Effect<HttpClientResponse.HttpClientResponse, unknown>;
+  readonly putJson: (path: string, options?: RequestOptions) => Effect.Effect<unknown, unknown>;
+  readonly putSchema: <S extends Schema.Top>(
     path: string,
     schema: S,
     options?: RequestOptions
@@ -41,7 +56,7 @@ export const Live = Effect.gen(function*() {
   const authClient = yield* AuthClient;
   const sessionStore = yield* SessionStore;
 
-  const get = (path: string, options: RequestOptions = {}) =>
+  const execute = (method: "GET" | "POST" | "PUT", path: string, options: RequestOptions = {}) =>
     Effect.gen(function*() {
       const state = yield* authClient.ensureAuthenticated;
       const school = state.resolvedSchool!;
@@ -66,10 +81,14 @@ export const Live = Effect.gen(function*() {
         baseHeaders["X-Webuntis-Api-School-Year-Id"] = String(state.schoolYearId);
       }
 
-      const request = HttpClientRequest.get(isAbsolute ? path : `${baseUrl}/${path.replace(/^\/+/, "")}`).pipe(
+      let request = HttpClientRequest.make(method)(isAbsolute ? path : `${baseUrl}/${path.replace(/^\/+/, "")}`).pipe(
         HttpClientRequest.setUrlParams(options.query ?? {}),
         HttpClientRequest.setHeaders(mergeHeaders(baseHeaders, options.headers))
       );
+
+      if (method !== "GET" && options.body !== undefined) {
+        request = yield* HttpClientRequest.bodyJson(request, options.body);
+      }
 
       const response = yield* baseClient.execute(request);
       yield* sessionStore.update((current) => ({
@@ -90,11 +109,12 @@ export const Live = Effect.gen(function*() {
       return response;
     });
 
-  const getJson: WebUntisHttp["getJson"] = (path, options) =>
-    get(path, options).pipe(Effect.flatMap((response) => response.json));
-
-  const getSchema: WebUntisHttp["getSchema"] = (path, schema, options) =>
-    get(path, options).pipe(
+  const decodeSchema = <S extends Schema.Top>(
+    path: string,
+    schema: S,
+    effect: Effect.Effect<HttpClientResponse.HttpClientResponse, unknown>
+  ) =>
+    effect.pipe(
       Effect.flatMap(HttpClientResponse.schemaBodyJson(schema as any)),
       Effect.mapError((error) =>
         error instanceof UnexpectedResponseError
@@ -103,11 +123,35 @@ export const Live = Effect.gen(function*() {
             path,
             message: String(error)
           }))
-    ) as any;
+    ) as Effect.Effect<Schema.Schema.Type<S>, unknown, S["DecodingServices"]>;
+
+  const get: WebUntisHttp["get"] = (path, options) => execute("GET", path, options);
+  const getJson: WebUntisHttp["getJson"] = (path, options) =>
+    get(path, options).pipe(Effect.flatMap((response) => response.json));
+  const getSchema: WebUntisHttp["getSchema"] = (path, schema, options) =>
+    decodeSchema(path, schema, get(path, options));
+
+  const post: WebUntisHttp["post"] = (path, options) => execute("POST", path, options);
+  const postJson: WebUntisHttp["postJson"] = (path, options) =>
+    post(path, options).pipe(Effect.flatMap((response) => response.json));
+  const postSchema: WebUntisHttp["postSchema"] = (path, schema, options) =>
+    decodeSchema(path, schema, post(path, options));
+
+  const put: WebUntisHttp["put"] = (path, options) => execute("PUT", path, options);
+  const putJson: WebUntisHttp["putJson"] = (path, options) =>
+    put(path, options).pipe(Effect.flatMap((response) => response.json));
+  const putSchema: WebUntisHttp["putSchema"] = (path, schema, options) =>
+    decodeSchema(path, schema, put(path, options));
 
   return {
     get,
     getJson,
-    getSchema
+    getSchema,
+    post,
+    postJson,
+    postSchema,
+    put,
+    putJson,
+    putSchema
   };
 });

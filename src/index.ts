@@ -12,8 +12,9 @@ export { SessionStore, inMemory as inMemorySessionStore } from "./core/session-s
 export * from "./core/types.ts";
 export { makeAppClient } from "./domains/app.ts";
 export { makeMessagesClient } from "./domains/messages.ts";
-export { makeProfileClient } from "./domains/profile.ts";
+export * from "./domains/profile.ts";
 export { makeRawViewApiClient } from "./domains/raw-view-api.ts";
 export * from "./domains/schemas.ts";
 export { makeSchoolyearsClient } from "./domains/schoolyears.ts";
+export * from "./domains/session.ts";
 export * from "./domains/timetable.ts";

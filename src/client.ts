@@ -11,6 +11,7 @@ import { makeMessagesClient } from "./domains/messages.ts";
 import { makeProfileClient } from "./domains/profile.ts";
 import { makeRawViewApiClient } from "./domains/raw-view-api.ts";
 import { makeSchoolyearsClient } from "./domains/schoolyears.ts";
+import { makeSessionClient } from "./domains/session.ts";
 import { makeTimetableClient } from "./domains/timetable.ts";
 
 export interface WebUntisClient {
@@ -23,6 +24,7 @@ export interface WebUntisClient {
   readonly schoolyears: Fx.Success<typeof makeSchoolyearsClient>;
   readonly messages: Fx.Success<typeof makeMessagesClient>;
   readonly profile: Fx.Success<typeof makeProfileClient>;
+  readonly session: Fx.Success<typeof makeSessionClient>;
   readonly timetable: Fx.Success<typeof makeTimetableClient>;
   readonly rawViewApi: Fx.Success<typeof makeRawViewApiClient>;
 }
@@ -36,6 +38,7 @@ export const Live = Layer.effect(WebUntisClient)(
     const schoolyears = yield* makeSchoolyearsClient;
     const messages = yield* makeMessagesClient;
     const profile = yield* makeProfileClient;
+    const session = yield* makeSessionClient;
     const timetable = yield* makeTimetableClient;
     const rawViewApi = yield* makeRawViewApiClient;
 
@@ -45,6 +48,7 @@ export const Live = Layer.effect(WebUntisClient)(
       schoolyears,
       messages,
       profile,
+      session,
       timetable,
       rawViewApi
     };

@@ -474,6 +474,32 @@ exports[`live WebUntis integration > with live layer > bootstraps auth and reads
 }
 `;
 
+exports[`live WebUntis integration > with live layer > documents current upstream profile summary/admin failures 1`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>_<redacted-label>",
+    "errorMessage": "Es ist ein Fehler aufgetreten. {0}",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/profile",
+  "status": 500,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current upstream profile summary/admin failures 2`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>_<redacted-label>",
+    "errorMessage": "",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/profile/admin/details",
+  "status": 500,
+}
+`;
+
 exports[`live WebUntis integration > with live layer > reads schoolyears and message metadata 1`] = `
 {
   "allowRequestReadConfirmation": true,
@@ -493,6 +519,364 @@ exports[`live WebUntis integration > with live layer > reads schoolyears and mes
 exports[`live WebUntis integration > with live layer > reads schoolyears and message metadata 2`] = `
 {
   "unreadMessagesCount": 0,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads session status and timetable discovery endpoints 1`] = `
+{
+  "expiresInMs": 0,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads session status and timetable discovery endpoints 2`] = `
+{
+  "availableTimetables": [
+    "<redacted-label>",
+    "<redacted-label>",
+    "<redacted-label>",
+    "<redacted-label>",
+    "<redacted-label>",
+  ],
+  "dependents": [],
+  "myTimetable": null,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads session status and timetable discovery endpoints 3`] = `
+{
+  "numPartialMatches": 32,
+  "results": [
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "10",
+        "id": 470,
+        "longName": "Willkommen 10",
+        "shortName": "10",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "10.1",
+        "id": 473,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "10.1",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "10.2",
+        "id": 476,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "10.2",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "10.3",
+        "id": 479,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "10.3",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "10.4",
+        "id": 482,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "10.4",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "10.5",
+        "id": 485,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "10.5",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "10.6",
+        "id": 488,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "10.6",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "1-10",
+        "id": 34,
+        "longName": "Grasberg",
+        "shortName": "1-10",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "2-10",
+        "id": 90,
+        "longName": "Grasberg Informatik",
+        "shortName": "2-10",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "B105",
+        "id": 572,
+        "longName": "Lilienthal",
+        "shortName": "B105",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "B109",
+        "id": 122,
+        "longName": "Lehrküche",
+        "shortName": "B109",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "C103",
+        "id": 134,
+        "longName": "Lilienthal",
+        "shortName": "C103",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "C104",
+        "id": 138,
+        "longName": "Lilienthal-Diff",
+        "shortName": "C104",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "C105",
+        "id": 142,
+        "longName": "Lilienthal",
+        "shortName": "C105",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "C106",
+        "id": 146,
+        "longName": "Lilienthal",
+        "shortName": "C106",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "C107",
+        "id": 150,
+        "longName": "Lilienthal",
+        "shortName": "C107",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "C108",
+        "id": 154,
+        "longName": "Lilienthal-Diff",
+        "shortName": "C108",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "C109",
+        "id": 158,
+        "longName": "Lilienthal-Diff",
+        "shortName": "C109",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "C110",
+        "id": 162,
+        "longName": "Lilienthal-Diff",
+        "shortName": "C110",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "D101",
+        "id": 182,
+        "longName": "Lilienthal",
+        "shortName": "D101",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "D104",
+        "id": 186,
+        "longName": "Lilienthal",
+        "shortName": "D104",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "D105",
+        "id": 190,
+        "longName": "Lilienthal",
+        "shortName": "D105",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "D106",
+        "id": 194,
+        "longName": "Lilienthal",
+        "shortName": "D106",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "D107",
+        "id": 198,
+        "longName": "Lilienthal-diff",
+        "shortName": "D107",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "E103",
+        "id": 258,
+        "longName": "Lilienthal",
+        "shortName": "E103",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "E104",
+        "id": 262,
+        "longName": "Lilienthal",
+        "shortName": "E104",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "E106",
+        "id": 266,
+        "longName": "Lilienthal",
+        "shortName": "E106",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "E107",
+        "id": 270,
+        "longName": "Lilienthal",
+        "shortName": "E107",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "E108",
+        "id": 274,
+        "longName": "Lilienthal",
+        "shortName": "E108",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "E109",
+        "id": 278,
+        "longName": "Lilienthal",
+        "shortName": "E109",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<redacted-label>10",
+        "id": 386,
+        "longName": "Lilienthal <redacted-label> Lernbereich",
+        "shortName": "<redacted-label>10",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<redacted-label> 10",
+        "id": 450,
+        "longName": "<redacted-label> 10",
+        "shortName": "<redacted-label> 10",
+      },
+      "type": "<redacted-label>",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "Will-An-Lili 10",
+        "id": 1149,
+        "longName": "<redacted-label>n-Lili 10",
+        "shortName": "Will-An-Lili 10",
+      },
+      "type": "<redacted-label>",
+    },
+  ],
 }
 `;
 
