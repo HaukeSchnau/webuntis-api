@@ -1,15 +1,91 @@
 # webuntis-api
 
-To install dependencies:
+Headless WebUntis client built on the Effect v4 beta ecosystem.
+
+The client models the modern WebUntis REST surface as a portable Effect service graph:
+
+- `SchoolDiscovery` resolves a school name through the public WebUntis search API.
+- `AuthClient` performs the classic login handshake and mints the session-bound JWT from `/WebUntis/api/token/new`.
+- `WebUntisHttp` attaches cookies and bearer auth for modern `/api/rest/view/v1/...` requests.
+- `WebUntisClient` exposes the first domain clients for `app`, `schoolyears`, `messages`, `profile`, `timetable`, plus a `rawViewApi` escape hatch.
+
+## Runtime
+
+This package is headless. It does not depend on a browser at runtime.
+
+The current implementation targets the modern REST-first WebUntis flow:
+
+1. School discovery via `https://schoolsearch.webuntis.com/schoolquery2`
+2. Session bootstrap via `GET /WebUntis/index.do`
+3. Credential submission via `POST /WebUntis/j_spring_security_check`
+4. Token minting via `GET /WebUntis/api/token/new`
+5. Bearer-authenticated requests to `/WebUntis/api/rest/view/v1/...`
+
+Reverse-engineering artifacts live under [`research/webuntis`](./research/webuntis).
+
+## Development
+
+Install dependencies:
 
 ```bash
 bun install
 ```
 
-To run:
+Run the static checks:
 
 ```bash
-bun run index.ts
+bun run typecheck
 ```
 
-This project was created using `bun init` in bun v1.3.10. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+Run tests:
+
+```bash
+bun run test
+```
+
+The live integration suite activates automatically when these environment variables are set:
+
+```bash
+export WEBUNTIS_SCHOOL_NAME="IGS Lilienthal"
+export WEBUNTIS_USERNAME="..."
+export WEBUNTIS_PASSWORD="..."
+```
+
+Optional overrides:
+
+- `WEBUNTIS_SCHOOL_LOGIN_NAME`
+- `WEBUNTIS_SERVER`
+- `WEBUNTIS_SERVER_URL`
+- `WEBUNTIS_TENANT_ID`
+
+Without credentials, the live suite is skipped and the tests explain which variables are missing.
+
+## Example
+
+```ts
+import { Effect, Layer } from "effect";
+import { WebUntisClient, clientConfigFromEnv, makeWebUntisLayer } from "webuntis-api";
+
+const program = Effect.gen(function*() {
+  const client = yield* WebUntisClient;
+  const appData = yield* client.app.getData;
+  const schoolyears = yield* client.schoolyears.list;
+
+  return {
+    school: appData.tenant.displayName,
+    schoolyears
+  };
+});
+
+const layer = Layer.unwrap(
+  clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer))
+);
+
+await Effect.runPromise(program.pipe(Effect.provide(layer)));
+```
+
+## Testing Strategy
+
+- Live tests use `@effect/vitest` against a real tenant.
+- Snapshot tests normalize volatile live payload fields.
+- Reverse-engineering snapshot tests pin the mined frontend endpoint inventory so upstream bundle drift is obvious.

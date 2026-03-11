@@ -1,0 +1,1957 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`live WebUntis integration > with live layer > bootstraps auth and reads app metadata 1`] = `
+{
+  "currentSchoolYear": {
+    "dateRange": {
+      "end": "2026-07-01",
+      "start": "2025-08-14",
+    },
+    "id": 7,
+    "name": "2025/2026",
+    "timeGrid": {
+      "schoolyearId": 7,
+      "units": [
+        {
+          "endTime": 800,
+          "startTime": 740,
+          "unitOfDay": 1,
+        },
+        {
+          "endTime": 840,
+          "startTime": 800,
+          "unitOfDay": 2,
+        },
+        {
+          "endTime": 920,
+          "startTime": 840,
+          "unitOfDay": 3,
+        },
+        {
+          "endTime": 1025,
+          "startTime": 945,
+          "unitOfDay": 4,
+        },
+        {
+          "endTime": 1105,
+          "startTime": 1025,
+          "unitOfDay": 5,
+        },
+        {
+          "endTime": 1210,
+          "startTime": 1130,
+          "unitOfDay": 6,
+        },
+        {
+          "endTime": 1250,
+          "startTime": 1210,
+          "unitOfDay": 7,
+        },
+        {
+          "endTime": 1320,
+          "startTime": 1250,
+          "unitOfDay": 8,
+        },
+        {
+          "endTime": 1350,
+          "startTime": 1320,
+          "unitOfDay": 9,
+        },
+        {
+          "endTime": 1430,
+          "startTime": 1350,
+          "unitOfDay": 10,
+        },
+        {
+          "endTime": 1510,
+          "startTime": 1430,
+          "unitOfDay": 11,
+        },
+        {
+          "endTime": 1555,
+          "startTime": 1515,
+          "unitOfDay": 12,
+        },
+        {
+          "endTime": 1630,
+          "startTime": 1555,
+          "unitOfDay": 13,
+        },
+      ],
+    },
+  },
+  "holidays": [
+    {
+      "bookable": false,
+      "end": "2023-10-02T23:59:59",
+      "id": 31,
+      "name": "Ferien1",
+      "start": "2023-10-02T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2023-10-31T23:59:59",
+      "id": 34,
+      "name": "Ferien2",
+      "start": "2023-10-16T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-01-07T23:59:59",
+      "id": 37,
+      "name": "Ferien3",
+      "start": "2023-12-23T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-02-04T23:59:59",
+      "id": 40,
+      "name": "Ferien4",
+      "start": "2024-02-01T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-04-01T23:59:59",
+      "id": 43,
+      "name": "Ferien5",
+      "start": "2024-03-17T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-05-10T23:59:59",
+      "id": 46,
+      "name": "Ferien6",
+      "start": "2024-05-10T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-05-21T23:59:59",
+      "id": 49,
+      "name": "Ferien7",
+      "start": "2024-05-21T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-06-30T23:59:59",
+      "id": 52,
+      "name": "Ferien8",
+      "start": "2024-06-22T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2023-10-03T23:59:59",
+      "id": 55,
+      "name": "3.10.",
+      "start": "2023-10-03T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-04-01T23:59:59",
+      "id": 58,
+      "name": "1.4.",
+      "start": "2024-04-01T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-05-01T23:59:59",
+      "id": 61,
+      "name": "1.5.",
+      "start": "2024-05-01T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-05-09T23:59:59",
+      "id": 64,
+      "name": "9.5.",
+      "start": "2024-05-09T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-05-20T23:59:59",
+      "id": 67,
+      "name": "20.5.",
+      "start": "2024-05-20T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-10-20T23:59:59",
+      "id": 69,
+      "name": "Ferien1",
+      "start": "2024-10-04T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-11-01T23:59:59",
+      "id": 72,
+      "name": "Ferien2",
+      "start": "2024-11-01T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-01-03T23:59:59",
+      "id": 75,
+      "name": "Ferien3",
+      "start": "2024-12-23T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-02-04T23:59:59",
+      "id": 78,
+      "name": "Ferien4",
+      "start": "2025-02-03T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-04-21T23:59:59",
+      "id": 81,
+      "name": "Ferien6",
+      "start": "2025-04-07T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-05-02T23:59:59",
+      "id": 84,
+      "name": "Ferien5",
+      "start": "2025-04-30T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-05-30T23:59:59",
+      "id": 87,
+      "name": "Ferien7",
+      "start": "2025-05-30T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-06-10T23:59:59",
+      "id": 90,
+      "name": "Ferien8",
+      "start": "2025-06-10T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-10-03T23:59:59",
+      "id": 93,
+      "name": "3.10.",
+      "start": "2024-10-03T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-10-18T23:59:59",
+      "id": 96,
+      "name": "18.10.",
+      "start": "2024-10-18T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2024-10-31T23:59:59",
+      "id": 99,
+      "name": "31.10.",
+      "start": "2024-10-31T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-04-18T23:59:59",
+      "id": 102,
+      "name": "18.4.",
+      "start": "2025-04-18T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-04-21T23:59:59",
+      "id": 105,
+      "name": "21.4.",
+      "start": "2025-04-21T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-05-01T23:59:59",
+      "id": 108,
+      "name": "1.5.",
+      "start": "2025-05-01T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-05-02T23:59:59",
+      "id": 111,
+      "name": "2.5.",
+      "start": "2025-05-02T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-05-29T23:59:59",
+      "id": 114,
+      "name": "29.5.",
+      "start": "2025-05-29T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-06-09T23:59:59",
+      "id": 117,
+      "name": "9.6.",
+      "start": "2025-06-09T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-10-26T23:59:59",
+      "id": 118,
+      "name": "Ferien1",
+      "start": "2025-10-13T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2026-01-05T23:59:59",
+      "id": 121,
+      "name": "Ferien2",
+      "start": "2025-12-22T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2026-02-03T23:59:59",
+      "id": 124,
+      "name": "Ferien3",
+      "start": "2026-02-02T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2026-04-07T23:59:59",
+      "id": 127,
+      "name": "Ferien4",
+      "start": "2026-03-23T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2026-05-15T23:59:59",
+      "id": 130,
+      "name": "Ferien5",
+      "start": "2026-05-14T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2026-05-26T23:59:59",
+      "id": 133,
+      "name": "Ferien6",
+      "start": "2026-05-26T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-10-03T23:59:59",
+      "id": 136,
+      "name": "3.10.",
+      "start": "2025-10-03T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2025-10-31T23:59:59",
+      "id": 139,
+      "name": "31.10.",
+      "start": "2025-10-31T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2026-05-01T23:59:59",
+      "id": 142,
+      "name": "1.5.",
+      "start": "2026-05-01T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2026-05-14T23:59:59",
+      "id": 145,
+      "name": "14.5.",
+      "start": "2026-05-14T00:00:00",
+    },
+    {
+      "bookable": false,
+      "end": "2026-05-25T23:59:59",
+      "id": 148,
+      "name": "25.5.",
+      "start": "2026-05-25T00:00:00",
+    },
+  ],
+  "permissions": [
+    "<redacted-label>:R:0:<redacted-label>",
+    "<redacted-label>_<redacted-label>:R:1:<redacted-label>",
+    "<redacted-label>_<redacted-label>:R:5:<redacted-label>",
+    "<redacted-label>_<redacted-label>:R:2:<redacted-label>",
+    "<redacted-label>_<redacted-label>:R:4:<redacted-label>",
+    "<redacted-label>_<redacted-label>:R:3:<redacted-label>",
+    "<redacted-label>:R:0:<redacted-label>",
+    "<redacted-label>:R:0:<redacted-label>",
+    "<redacted-label>:R:0:<redacted-label>",
+    "<redacted-label>:<redacted-label>:0:<redacted-label>",
+    "<redacted-label>:<redacted-label>:0:<redacted-label>",
+    "<redacted-label>:<redacted-label>:0:<redacted-label>",
+    "<redacted-label>_<redacted-label>:<redacted-label>:0:<redacted-label>",
+    "<redacted-label>:<redacted-label>:0:<redacted-label>",
+    "<redacted-label>:<redacted-label>:0:<redacted-label>",
+    "<redacted-label>_<redacted-label>:R:1:<redacted-label>",
+    "<redacted-label>_<redacted-label>:R:2:<redacted-label>",
+    "<redacted-label>_<redacted-label>:R:4:<redacted-label>",
+    "<redacted-label>_<redacted-label>_<redacted-label>:R:4:<redacted-label>",
+    "<redacted-label>_<redacted-label>_<redacted-label>:R:1:<redacted-label>",
+    "<redacted-label>_<redacted-label>_<redacted-label>:R:2:<redacted-label>",
+    "<redacted-label>_<redacted-label>:<redacted-label>:0:<redacted-label>",
+    "<redacted-label>:R:0:<redacted-label>",
+    "<redacted-label>:<redacted-label>:0:<redacted-label>",
+    "<redacted-label>_<redacted-label>:R:1:<redacted-label>",
+    "<redacted-label>_<redacted-label>:R:2:<redacted-label>",
+    "<redacted-label>:<redacted-label>:0:<redacted-label>",
+    "<redacted-label>:<redacted-label>:0:<redacted-label>",
+  ],
+  "settings": [
+    "system.linesperpage:50",
+    "system.firstDayOfWeek:2",
+    "system.showlessonsofday:false",
+    "system.emailadmin:<redacted-email>",
+  ],
+  "tenant": {
+    "displayName": "<redacted-label> Lilienthal",
+    "id": "6603700",
+    "name": "igs-lilienthal",
+  },
+  "user": {
+    "email": "<redacted-email>",
+    "id": 3711,
+    "locale": "de",
+    "name": "hauke.studienbuch",
+    "permissions": {
+      "views": [
+        "<redacted-label>",
+        "<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>",
+        "<redacted-label>",
+        "<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>",
+        "<redacted-label>_<redacted-label>",
+        "<redacted-label>",
+        "<redacted-label>",
+        "<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_2021",
+        "<redacted-label>_<redacted-label>_2021_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>_2021_<redacted-label>",
+        "<redacted-label>_<redacted-label>_2021_<redacted-label>_<redacted-label>",
+        "<redacted-label>_<redacted-label>",
+        "<redacted-label>",
+      ],
+    },
+    "roles": [
+      "<redacted-label>",
+    ],
+  },
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message metadata 1`] = `
+{
+  "allowRequestReadConfirmation": true,
+  "canForbidReplies": true,
+  "maxFileCount": 5,
+  "maxFileSize": 7000000,
+  "recipientOptions": [
+    "<redacted-label>",
+    "<redacted-label>",
+  ],
+  "recipientSearchMaxResult": 100,
+  "showDraftsTab": true,
+  "showSentTab": true,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message metadata 2`] = `
+{
+  "unreadMessagesCount": 0,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads timetable endpoints using the first discovered class 1`] = `
+{
+  "classFormat": 2,
+  "firstDayOfWeek": "<redacted-label>",
+  "formatDefinitions": [
+    {
+      "duration": {
+        "end": "18:15",
+        "start": "07:40",
+      },
+      "hideDetails": false,
+      "id": 0,
+      "longname": "default",
+      "minRows": 4,
+      "name": "default",
+      "showCancellations": true,
+      "showExternalCalendars": true,
+      "showStartEndTime": false,
+      "showStartEndTimeOfSlots": true,
+      "timeGridDays": [
+        "<redacted-label>",
+        "<redacted-label>",
+        "<redacted-label>",
+        "<redacted-label>",
+        "<redacted-label>",
+      ],
+      "timeGridSlots": [
+        {
+          "duration": {
+            "end": "08:00",
+            "start": "07:40",
+          },
+          "name": "<redacted-label>",
+          "number": 1,
+        },
+        {
+          "duration": {
+            "end": "08:40",
+            "start": "08:00",
+          },
+          "name": "Block1-1",
+          "number": 2,
+        },
+        {
+          "duration": {
+            "end": "09:20",
+            "start": "08:40",
+          },
+          "name": "Block1-2",
+          "number": 3,
+        },
+        {
+          "duration": {
+            "end": "10:25",
+            "start": "09:45",
+          },
+          "name": "Block2-1",
+          "number": 4,
+        },
+        {
+          "duration": {
+            "end": "11:05",
+            "start": "10:25",
+          },
+          "name": "Block2-2",
+          "number": 5,
+        },
+        {
+          "duration": {
+            "end": "12:10",
+            "start": "11:30",
+          },
+          "name": "Block3-1",
+          "number": 6,
+        },
+        {
+          "duration": {
+            "end": "12:50",
+            "start": "12:10",
+          },
+          "name": "Block3-2",
+          "number": 7,
+        },
+        {
+          "duration": {
+            "end": "13:20",
+            "start": "12:50",
+          },
+          "name": "<redacted-label>1",
+          "number": 8,
+        },
+        {
+          "duration": {
+            "end": "13:50",
+            "start": "13:20",
+          },
+          "name": "<redacted-label>2",
+          "number": 9,
+        },
+        {
+          "duration": {
+            "end": "14:30",
+            "start": "13:50",
+          },
+          "name": "Block4-1",
+          "number": 10,
+        },
+        {
+          "duration": {
+            "end": "15:10",
+            "start": "14:30",
+          },
+          "name": "Block4-2",
+          "number": 11,
+        },
+        {
+          "duration": {
+            "end": "15:55",
+            "start": "15:15",
+          },
+          "name": "",
+          "number": 12,
+        },
+        {
+          "duration": {
+            "end": "16:30",
+            "start": "15:55",
+          },
+          "name": "",
+          "number": 13,
+        },
+      ],
+      "timeGridType": "<redacted-label>_<redacted-label>",
+    },
+    {
+      "duration": {
+        "end": "16:30",
+        "start": "07:40",
+      },
+      "hideDetails": false,
+      "id": 2,
+      "longname": "Standard_<redacted-label>",
+      "minRows": 4,
+      "name": "Standard_<redacted-label>",
+      "showCancellations": true,
+      "showExternalCalendars": true,
+      "showStartEndTime": false,
+      "showStartEndTimeOfSlots": true,
+      "timeGridDays": [
+        "<redacted-label>",
+        "<redacted-label>",
+        "<redacted-label>",
+        "<redacted-label>",
+        "<redacted-label>",
+      ],
+      "timeGridSlots": [
+        {
+          "duration": {
+            "end": "08:00",
+            "start": "07:40",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "08:40",
+            "start": "08:00",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "09:20",
+            "start": "08:40",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "10:25",
+            "start": "09:45",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "11:05",
+            "start": "10:25",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "12:10",
+            "start": "11:30",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "12:50",
+            "start": "12:10",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "13:20",
+            "start": "12:50",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "13:50",
+            "start": "13:20",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "14:30",
+            "start": "13:50",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "15:10",
+            "start": "14:30",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "15:55",
+            "start": "15:15",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "16:30",
+            "start": "15:55",
+          },
+          "name": null,
+          "number": null,
+        },
+      ],
+      "timeGridType": "<redacted-label>_<redacted-label>",
+    },
+  ],
+  "resourceFormat": 0,
+  "roomFormat": 2,
+  "studentFormat": 2,
+  "subjectFormat": 2,
+  "teacherFormat": 2,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads timetable endpoints using the first discovered class 2`] = `
+{
+  "assignmentGroups": [],
+  "buildings": [],
+  "classes": [
+    {
+      "class": {
+        "displayName": "10",
+        "id": 470,
+        "longName": "Willkommen 10",
+        "shortName": "10",
+      },
+      "classTeacher1": null,
+      "classTeacher2": null,
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "10.1",
+        "id": 473,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "10.1",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 106,
+        "longName": "Frank",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 126,
+        "longName": "Grütjen",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "10.2",
+        "id": 476,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "10.2",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 154,
+        "longName": "Hilken",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 198,
+        "longName": "Klähr",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "10.3",
+        "id": 479,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "10.3",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 98,
+        "longName": "Erichsen",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 186,
+        "longName": "Kämpf",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "10.4",
+        "id": 482,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "10.4",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 486,
+        "longName": "Mittwollen",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 445,
+        "longName": "Schnepel",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "10.5",
+        "id": 485,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "10.5",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 346,
+        "longName": "Tamcke",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 477,
+        "longName": "Langhorst",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "10.6",
+        "id": 488,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "10.6",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 338,
+        "longName": "Schröder",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 342,
+        "longName": "Schulenberg",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "11.1",
+        "id": 491,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "11.1",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 406,
+        "longName": "Bi",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 258,
+        "longName": "Müller",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek <redacted-label>",
+        "id": 10,
+        "longName": "Lilienthal Sek <redacted-label>",
+        "shortName": "Lil-Sek<redacted-label>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "11.2",
+        "id": 494,
+        "longName": "<redacted-label>",
+        "shortName": "11.2",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 370,
+        "longName": "Timm",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": null,
+      "department": {
+        "displayName": "Lilienthal Sek <redacted-label>",
+        "id": 10,
+        "longName": "Lilienthal Sek <redacted-label>",
+        "shortName": "Lil-Sek<redacted-label>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "11.3",
+        "id": 497,
+        "longName": "<redacted-label>",
+        "shortName": "11.3",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 358,
+        "longName": "Thiel",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": null,
+      "department": {
+        "displayName": "Lilienthal Sek <redacted-label>",
+        "id": 10,
+        "longName": "Lilienthal Sek <redacted-label>",
+        "shortName": "Lil-Sek<redacted-label>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "12",
+        "id": 503,
+        "longName": "Jahrgang Udo",
+        "shortName": "12",
+      },
+      "classTeacher1": null,
+      "classTeacher2": null,
+      "department": {
+        "displayName": "Lilienthal Sek <redacted-label>",
+        "id": 10,
+        "longName": "Lilienthal Sek <redacted-label>",
+        "shortName": "Lil-Sek<redacted-label>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "13",
+        "id": 500,
+        "longName": "Jahrgang Lisel",
+        "shortName": "13",
+      },
+      "classTeacher1": null,
+      "classTeacher2": null,
+      "department": {
+        "displayName": "Lilienthal Sek <redacted-label>",
+        "id": 10,
+        "longName": "Lilienthal Sek <redacted-label>",
+        "shortName": "Lil-Sek<redacted-label>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "5.1",
+        "id": 374,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "5.1",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 30,
+        "longName": "Bouwer",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 226,
+        "longName": "Büsing",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "5.2",
+        "id": 377,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "5.2",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 22,
+        "longName": "Bembenek",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 448,
+        "longName": "Schröer",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "5.3",
+        "id": 380,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "5.3",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 206,
+        "longName": "Klotzek",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 58,
+        "longName": "Dantz",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "5.4",
+        "id": 383,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "5.4",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 462,
+        "longName": "Martens",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 483,
+        "longName": "Lorenz",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "5.5",
+        "id": 386,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "5.5",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 500,
+        "longName": "Kahrs",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 194,
+        "longName": "Kellermann",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "5.6",
+        "id": 389,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "5.6",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 421,
+        "longName": "Hagedorn",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 250,
+        "longName": "Meißner",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "6.1",
+        "id": 392,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "6.1",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 34,
+        "longName": "Buse",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 318,
+        "longName": "Schilling",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "6.2",
+        "id": 395,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "6.2",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 90,
+        "longName": "Engelbertz",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 409,
+        "longName": "Bünte",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "6.3",
+        "id": 398,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "6.3",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 459,
+        "longName": "Köstermann",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 480,
+        "longName": "Lichtwer",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "6.4",
+        "id": 401,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "6.4",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 402,
+        "longName": "Zoll",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 42,
+        "longName": "Claus",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "6.5",
+        "id": 404,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "6.5",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 474,
+        "longName": "Krein",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 503,
+        "longName": "Streil",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "6.6",
+        "id": 407,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "6.6",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 492,
+        "longName": "Schiwek",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 214,
+        "longName": "Köpke",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "7.1",
+        "id": 410,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "7.1",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 162,
+        "longName": "Höppe",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 266,
+        "longName": "Nielsen",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "7.2",
+        "id": 413,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "7.2",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 74,
+        "longName": "Drachenberg",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 468,
+        "longName": "Fedder",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "7.3",
+        "id": 416,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "7.3",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 362,
+        "longName": "Thoms",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 322,
+        "longName": "Schwabe",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "7.4",
+        "id": 419,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "7.4",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 50,
+        "longName": "Cordes",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 146,
+        "longName": "Heubner",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "7.5",
+        "id": 422,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "7.5",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 122,
+        "longName": "Graue-Marks",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 70,
+        "longName": "Ditschke",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "7.6",
+        "id": 425,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "7.6",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 102,
+        "longName": "Fidan",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 238,
+        "longName": "Mann",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Grasberg",
+        "id": 6,
+        "longName": "Grasberg",
+        "shortName": "Gra",
+      },
+    },
+    {
+      "class": {
+        "displayName": "8",
+        "id": 428,
+        "longName": "Willkommen 8",
+        "shortName": "8",
+      },
+      "classTeacher1": null,
+      "classTeacher2": null,
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "8.1",
+        "id": 431,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "8.1",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 62,
+        "longName": "Daus-Kohlhas",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 18,
+        "longName": "Below",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "8.2",
+        "id": 434,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "8.2",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 94,
+        "longName": "Enneking",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 246,
+        "longName": "Maschke",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "8.3",
+        "id": 437,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "8.3",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 66,
+        "longName": "Direnga",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 274,
+        "longName": "Olbertz",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "8.4",
+        "id": 440,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "8.4",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 314,
+        "longName": "Schaper",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 54,
+        "longName": "Dahl",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "8.5",
+        "id": 443,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "8.5",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 86,
+        "longName": "Endemann",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 182,
+        "longName": "Jenderny",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "9",
+        "id": 446,
+        "longName": "Willkommen 9",
+        "shortName": "9",
+      },
+      "classTeacher1": null,
+      "classTeacher2": null,
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "9.1",
+        "id": 449,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "9.1",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 222,
+        "longName": "Krause",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 166,
+        "longName": "Hornung",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "9.2",
+        "id": 452,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "9.2",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 218,
+        "longName": "Dorn-Kraatz",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 158,
+        "longName": "Hirsch",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "9.3",
+        "id": 455,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "9.3",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 202,
+        "longName": "Klee",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 242,
+        "longName": "Markowsky",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "9.4",
+        "id": 458,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "9.4",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 282,
+        "longName": "Rasche",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 354,
+        "longName": "Thiele",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "9.5",
+        "id": 461,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "9.5",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 78,
+        "longName": "Düdükcü",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 134,
+        "longName": "Hanisch",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "9.6",
+        "id": 464,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "9.6",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 310,
+        "longName": "Sap",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 334,
+        "longName": "Spangenberg",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+    {
+      "class": {
+        "displayName": "9.7",
+        "id": 467,
+        "longName": "<redacted-label>/<redacted-label>",
+        "shortName": "9.7",
+      },
+      "classTeacher1": {
+        "displayName": "<redacted-label>",
+        "id": 298,
+        "longName": "Rudolph",
+        "shortName": "<redacted-label>",
+      },
+      "classTeacher2": {
+        "displayName": "<redacted-label>",
+        "id": 382,
+        "longName": "Walczak",
+        "shortName": "<redacted-label>",
+      },
+      "department": {
+        "displayName": "Lilienthal Sek I",
+        "id": 7,
+        "longName": "Lilienthal Sek I",
+        "shortName": "Lil-Sek I",
+      },
+    },
+  ],
+  "departments": [
+    {
+      "displayName": "Grasberg",
+      "id": 6,
+      "longName": "Grasberg",
+      "shortName": "Gra",
+    },
+    {
+      "displayName": "Lilienthal",
+      "id": 2,
+      "longName": "Lilienthal",
+      "shortName": "<redacted-label>",
+    },
+    {
+      "displayName": "Lilienthal Sek I",
+      "id": 7,
+      "longName": "Lilienthal Sek I",
+      "shortName": "Lil-Sek I",
+    },
+    {
+      "displayName": "Lilienthal Sek <redacted-label>",
+      "id": 10,
+      "longName": "Lilienthal Sek <redacted-label>",
+      "shortName": "Lil-Sek<redacted-label>",
+    },
+  ],
+  "preSelected": null,
+  "resourceType": "<redacted-label>",
+  "resourceTypes": [],
+  "resources": [],
+  "roomGroups": [],
+  "rooms": [],
+  "students": [],
+  "subjects": [],
+  "teachers": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads timetable endpoints using the first discovered class 3`] = `
+{
+  "highlightCancellations": false,
+  "highlightChanges": false,
+  "highlightExams": false,
+  "highlightExternalEntries": false,
+  "showAllDropdownElements": false,
+  "showForeignSubstitutions": false,
+  "showICal": true,
+  "showICalExport": false,
+  "showResourceLocks": false,
+  "showRoomLocks": false,
+  "showStudentAbsences": false,
+  "showSymbols": false,
+  "showTeacherAbsences": false,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads timetable endpoints using the first discovered class 4`] = `
+{
+  "days": [
+    {
+      "backEntries": [],
+      "date": "2026-03-11",
+      "dayEntries": [],
+      "gridEntries": [],
+      "resource": {
+        "displayName": "",
+        "id": 470,
+        "longName": "Willkommen 10",
+        "shortName": "10",
+      },
+      "resourceType": "<redacted-label>",
+      "status": "<redacted-label>_<redacted-label>",
+    },
+  ],
+  "errors": [],
+  "format": 2,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads user contact endpoints 1`] = `
+{
+  "areContactDetailsWriteable": false,
+  "city": null,
+  "email": "<redacted-email>",
+  "mobileNumber": null,
+  "postCode": null,
+  "street": null,
+  "telephoneNumber": null,
+  "userEmailMissingOrDifferentToMasterData": false,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads user contact endpoints 2`] = `
+{
+  "email": "<redacted-email>",
+}
+`;

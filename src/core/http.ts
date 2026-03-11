@@ -1,0 +1,113 @@
+import { Effect, Redacted, Schema, ServiceMap } from "effect";
+import * as Cookies from "effect/unstable/http/Cookies";
+import * as HttpClient from "effect/unstable/http/HttpClient";
+import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
+import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
+import { AuthClient } from "./auth.ts";
+import { SchemaDriftError, UnexpectedResponseError } from "./errors.ts";
+import { SessionStore } from "./session-store.ts";
+import { resolveBaseUrl } from "./types.ts";
+
+const defaultAcceptHeader = "application/json, text/plain, */*";
+
+const mergeHeaders = (
+  current: Readonly<Record<string, string>>,
+  extra: Readonly<Record<string, string | undefined>> = {}
+) =>
+  Object.fromEntries(
+    Object.entries({ ...current, ...extra }).filter((entry): entry is [string, string] => entry[1] !== undefined)
+  );
+
+export interface RequestOptions {
+  readonly query?: Readonly<Record<string, string | number | boolean | undefined>>;
+  readonly headers?: Readonly<Record<string, string | undefined>>;
+  readonly withSchoolYearHeader?: boolean | undefined;
+}
+
+export interface WebUntisHttp {
+  readonly get: (path: string, options?: RequestOptions) => Effect.Effect<HttpClientResponse.HttpClientResponse, unknown>;
+  readonly getJson: (path: string, options?: RequestOptions) => Effect.Effect<unknown, unknown>;
+  readonly getSchema: <S extends Schema.Top>(
+    path: string,
+    schema: S,
+    options?: RequestOptions
+  ) => Effect.Effect<Schema.Schema.Type<S>, unknown, S["DecodingServices"]>;
+}
+
+export const WebUntisHttp = ServiceMap.Service<WebUntisHttp, WebUntisHttp>("webuntis/WebUntisHttp");
+
+export const Live = Effect.gen(function*() {
+  const baseClient = yield* HttpClient.HttpClient;
+  const authClient = yield* AuthClient;
+  const sessionStore = yield* SessionStore;
+
+  const get = (path: string, options: RequestOptions = {}) =>
+    Effect.gen(function*() {
+      const state = yield* authClient.ensureAuthenticated;
+      const school = state.resolvedSchool!;
+      const token = state.token ? Redacted.value(state.token) : undefined;
+      const cookieHeader = Object.values(state.cookies.cookies).map((cookie) => `${cookie.name}=${cookie.valueEncoded}`).join("; ");
+      const baseUrl = resolveBaseUrl(school);
+      const isAbsolute = /^https?:\/\//.test(path);
+      const baseHeaders: Record<string, string> = {
+        accept: defaultAcceptHeader
+      };
+
+      if (token) {
+        baseHeaders.Authorization = `Bearer ${token}`;
+      }
+      if (cookieHeader.length > 0) {
+        baseHeaders.cookie = cookieHeader;
+      }
+      if (state.tenantId) {
+        baseHeaders["Tenant-Id"] = state.tenantId;
+      }
+      if (options.withSchoolYearHeader !== false && state.schoolYearId !== undefined) {
+        baseHeaders["X-Webuntis-Api-School-Year-Id"] = String(state.schoolYearId);
+      }
+
+      const request = HttpClientRequest.get(isAbsolute ? path : `${baseUrl}/${path.replace(/^\/+/, "")}`).pipe(
+        HttpClientRequest.setUrlParams(options.query ?? {}),
+        HttpClientRequest.setHeaders(mergeHeaders(baseHeaders, options.headers))
+      );
+
+      const response = yield* baseClient.execute(request);
+      yield* sessionStore.update((current) => ({
+        ...current,
+        cookies: Cookies.merge(current.cookies, response.cookies)
+      }));
+
+      if (response.status < 200 || response.status >= 300) {
+        return yield* Effect.fail(
+          new UnexpectedResponseError({
+            path,
+            status: response.status,
+            body: yield* response.text
+          })
+        );
+      }
+
+      return response;
+    });
+
+  const getJson: WebUntisHttp["getJson"] = (path, options) =>
+    get(path, options).pipe(Effect.flatMap((response) => response.json));
+
+  const getSchema: WebUntisHttp["getSchema"] = (path, schema, options) =>
+    get(path, options).pipe(
+      Effect.flatMap(HttpClientResponse.schemaBodyJson(schema as any)),
+      Effect.mapError((error) =>
+        error instanceof UnexpectedResponseError
+          ? error
+          : new SchemaDriftError({
+            path,
+            message: String(error)
+          }))
+    ) as any;
+
+  return {
+    get,
+    getJson,
+    getSchema
+  };
+});
