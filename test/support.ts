@@ -1,5 +1,19 @@
 import { Redacted } from "effect";
-import type { AppData, MessagesPermissions, MessagesStatus, TimetableEntries, TimetableEntriesSettings, TimetableFilter, TimetableGrid, UserContactData, UserEmail } from "../src/domains/schemas.ts";
+import type {
+  AppData,
+  MessagesPermissions,
+  MessagesStatus,
+  SessionStatus,
+  TimetableEntries,
+  TimetableEntriesSettings,
+  TimetableFilter,
+  TimetableGrid,
+  TimetableMenu,
+  TimetableSearch,
+  UserContactData,
+  UserEmail
+} from "../src/domains/schemas.ts";
+import { UnexpectedResponseError } from "../src/core/errors.ts";
 import { fromEnv } from "../src/core/config.ts";
 
 export const readLiveConfig = () => fromEnv();
@@ -46,7 +60,25 @@ export const normalizeMessagesPermissions = (value: MessagesPermissions) => norm
 export const normalizeMessagesStatus = (value: MessagesStatus) => normalizeUnknown(value);
 export const normalizeUserContactData = (value: UserContactData) => normalizeUnknown(value);
 export const normalizeUserEmail = (value: UserEmail) => normalizeUnknown(value);
+export const normalizeSessionStatus = (value: SessionStatus) => normalizeUnknown(value);
 export const normalizeTimetableGrid = (value: TimetableGrid) => normalizeUnknown(value);
 export const normalizeTimetableFilter = (value: TimetableFilter) => normalizeUnknown(value);
 export const normalizeTimetableEntriesSettings = (value: TimetableEntriesSettings) => normalizeUnknown(value);
 export const normalizeTimetableEntries = (value: TimetableEntries) => normalizeUnknown(value);
+export const normalizeTimetableMenu = (value: TimetableMenu) => normalizeUnknown(value);
+export const normalizeTimetableSearch = (value: TimetableSearch) => normalizeUnknown(value);
+
+export const normalizeUnexpectedResponse = (error: UnexpectedResponseError) => {
+  let body: unknown = error.body;
+  try {
+    body = JSON.parse(error.body);
+  } catch {
+    body = error.body;
+  }
+
+  return {
+    path: error.path,
+    status: error.status,
+    body: normalizeUnknown(body)
+  };
+};

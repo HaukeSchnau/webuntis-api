@@ -110,6 +110,12 @@ export const UserEmailSchema = Schema.Struct({
 
 export type UserEmail = Schema.Schema.Type<typeof UserEmailSchema>;
 
+export const SessionStatusSchema = Schema.Struct({
+  expiresInMs: Schema.Number
+});
+
+export type SessionStatus = Schema.Schema.Type<typeof SessionStatusSchema>;
+
 export const TimetableFormatDefinitionSchema = Schema.Struct({
   id: Schema.Number,
   name: Schema.String,
@@ -144,6 +150,35 @@ export const TimetableGridSchema = Schema.Struct({
 });
 
 export type TimetableGrid = Schema.Schema.Type<typeof TimetableGridSchema>;
+
+export const TimetableSearchResultSchema = Schema.Struct({
+  type: Schema.String,
+  resource: Schema.Struct({
+    id: Schema.Number,
+    shortName: Schema.String,
+    longName: Schema.String,
+    displayName: Schema.String
+  }),
+  imageUrl: Schema.NullOr(Schema.String)
+});
+
+export type TimetableSearchResult = Schema.Schema.Type<typeof TimetableSearchResultSchema>;
+
+export const TimetableMenuSchema = Schema.Struct({
+  myTimetable: Schema.NullOr(TimetableSearchResultSchema),
+  dependents: Schema.Array(TimetableSearchResultSchema),
+  availableTimetables: Schema.Array(Schema.String)
+});
+
+export type TimetableMenu = Schema.Schema.Type<typeof TimetableMenuSchema>;
+
+export const TimetableSearchSchema = Schema.Struct({
+  numPartialMatches: Schema.Number,
+  results: Schema.Array(TimetableSearchResultSchema)
+});
+
+export type TimetableSearch = Schema.Schema.Type<typeof TimetableSearchSchema>;
+export type TimetableSearchResults = TimetableSearch;
 
 export const DisplayResourceSchema = Schema.Struct({
   id: Schema.Number,

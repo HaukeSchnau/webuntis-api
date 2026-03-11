@@ -4,7 +4,9 @@ import {
   TimetableEntriesSchema,
   TimetableEntriesSettingsSchema,
   TimetableFilterSchema,
-  TimetableGridSchema
+  TimetableGridSchema,
+  TimetableMenuSchema,
+  TimetableSearchSchema
 } from "./schemas.ts";
 
 export interface TimetableEntriesRequest {
@@ -30,6 +32,11 @@ export interface TimetableEntriesSettingsRequest {
   readonly format?: number | undefined;
 }
 
+export interface TimetableSearchRequest {
+  readonly query: string;
+  readonly schoolyear: number;
+}
+
 export const makeTimetableClient = Effect.gen(function*() {
   const http = yield* WebUntisHttp;
 
@@ -53,6 +60,17 @@ export const makeTimetableClient = Effect.gen(function*() {
           format: request.format ?? 2,
           resourceType: request.resourceType
         }
+      }),
+    getMenu: http.getSchema("api/rest/view/v1/timetable/menu", TimetableMenuSchema, {
+      withSchoolYearHeader: false
+    }),
+    search: (request: TimetableSearchRequest) =>
+      http.getSchema("api/rest/view/v1/timetable/search", TimetableSearchSchema, {
+        query: {
+          q: request.query,
+          schoolyear: request.schoolyear
+        },
+        withSchoolYearHeader: false
       }),
     getEntries: (request: TimetableEntriesRequest) =>
       http.getSchema("api/rest/view/v1/timetable/entries", TimetableEntriesSchema, {
