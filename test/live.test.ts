@@ -145,6 +145,23 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         expect(normalizeTimetableCalendar(calendar)).toMatchSnapshot();
       }), 30_000);
 
+    it.effect("documents current timetable utility/settings access behavior", () =>
+      Effect.gen(function*() {
+        const client = yield* WebUntisClient;
+        const formatListError = yield* Effect.flip(client.timetable.experimental.getFormatListJson);
+        const generalSettingsError = yield* Effect.flip(client.timetable.experimental.getGeneralSettingsJson);
+        const visibilityRestrictionError = yield* Effect.flip(
+          client.timetable.experimental.getVisibilityRestrictionJson
+        );
+
+        expect(formatListError).toBeInstanceOf(UnexpectedResponseError);
+        expect(generalSettingsError).toBeInstanceOf(UnexpectedResponseError);
+        expect(visibilityRestrictionError).toBeInstanceOf(UnexpectedResponseError);
+        expect(normalizeUnexpectedResponse(formatListError as UnexpectedResponseError)).toMatchSnapshot();
+        expect(normalizeUnexpectedResponse(generalSettingsError as UnexpectedResponseError)).toMatchSnapshot();
+        expect(normalizeUnexpectedResponse(visibilityRestrictionError as UnexpectedResponseError)).toMatchSnapshot();
+      }), 30_000);
+
     it.effect("reads timetable endpoints using the first discovered class", () =>
       Effect.gen(function*() {
         const client = yield* WebUntisClient;

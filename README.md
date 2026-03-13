@@ -10,6 +10,7 @@ The client models the modern WebUntis REST surface as a portable Effect service 
 - `WebUntisClient` exposes the first domain clients for `app`, `schoolyears`, `messages`, `profile`, `session`, `timetable`, plus a `rawViewApi` escape hatch.
   The `app` and `timetable` domains now also cover adjacent bootstrap routes such as `home`, `mobile/data`, `trigger/startup`, and `timetable/calendar`.
   The `messages` domain now covers inbox, drafts, sent, recipient quickfilters, recipient filter/search helpers, reply-form lookup, and individual message detail in addition to status and permissions.
+  The timetable client also exposes experimental read probes for the currently restricted settings/format routes so tenant behavior changes are visible in the live suite.
 
 ## Runtime
 

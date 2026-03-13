@@ -98,6 +98,17 @@ export const makeTimetableClient = Effect.gen(function*() {
           timetableType: request.timetableType ?? "STANDARD",
           layout: request.layout ?? "START_TIME"
         }
+      }),
+    experimental: {
+      getFormatListJson: http.getJson("api/rest/view/v1/timetable/settings/format/list", {
+        withSchoolYearHeader: false
+      }),
+      getGeneralSettingsJson: http.getJson("api/rest/view/v1/timetable/settings/general", {
+        withSchoolYearHeader: false
+      }),
+      getVisibilityRestrictionJson: http.getJson("api/rest/view/v1/timetable/settings/visibilityRestriction", {
+        withSchoolYearHeader: false
       })
+    }
   };
 });

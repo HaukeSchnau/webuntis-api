@@ -474,6 +474,45 @@ exports[`live WebUntis integration > with live layer > bootstraps auth and reads
 }
 `;
 
+exports[`live WebUntis integration > with live layer > documents current timetable utility/settings access behavior 1`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>",
+    "errorMessage": "Access Denied",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/timetable/settings/format/list",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current timetable utility/settings access behavior 2`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>",
+    "errorMessage": "Access Denied",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/timetable/settings/general",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current timetable utility/settings access behavior 3`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>",
+    "errorMessage": "Access Denied",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/timetable/settings/visibilityRestriction",
+  "status": 403,
+}
+`;
+
 exports[`live WebUntis integration > with live layer > documents current upstream profile summary/admin failures 1`] = `
 {
   "body": {
