@@ -2,7 +2,12 @@ import { Redacted } from "effect";
 import type {
   AppData,
   Home,
+  MessageDetail,
+  MessageDrafts,
+  MessageRecipientQuickfilters,
+  MessageSent,
   MessagesPermissions,
+  MessagesInbox,
   MessagesStatus,
   MobileData,
   SessionStatus,
@@ -63,6 +68,11 @@ const normalizeUnknown = (value: unknown): unknown => {
 
 export const normalizeAppData = (value: AppData) => normalizeUnknown(value);
 export const normalizeHome = (value: Home) => normalizeUnknown(value);
+export const normalizeMessageDetail = (value: MessageDetail) => normalizeUnknown(value);
+export const normalizeMessageDrafts = (value: MessageDrafts) => normalizeUnknown(value);
+export const normalizeMessageRecipientQuickfilters = (value: MessageRecipientQuickfilters) => normalizeUnknown(value);
+export const normalizeMessageSent = (value: MessageSent) => normalizeUnknown(value);
+export const normalizeMessagesInbox = (value: MessagesInbox) => normalizeUnknown(value);
 export const normalizeMessagesPermissions = (value: MessagesPermissions) => normalizeUnknown(value);
 export const normalizeMessagesStatus = (value: MessagesStatus) => normalizeUnknown(value);
 export const normalizeMobileData = (value: MobileData) => normalizeUnknown(value);

@@ -561,6 +561,125 @@ exports[`live WebUntis integration > with live layer > reads bootstrap and home 
 }
 `;
 
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 1`] = `
+{
+  "incomingMessages": [
+    {
+      "allowMessageDeletion": true,
+      "contentPreview": null,
+      "hasAttachments": false,
+      "id": 445,
+      "isMessageRead": true,
+      "isReply": false,
+      "isReplyAllowed": true,
+      "sender": {
+        "className": null,
+        "displayName": "<redacted-label>",
+        "imageUrl": null,
+        "userId": 7,
+      },
+      "sentDateTime": "<redacted-datetime>",
+      "subject": "Kein aktueller Vertretungsplan",
+    },
+  ],
+  "readConfirmationMessages": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 2`] = `
+{
+  "draftMessages": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 3`] = `
+{
+  "allowRequestReadConfirmation": true,
+  "canForbidReplies": true,
+  "maxFileCount": 5,
+  "maxFileSize": 7000000,
+  "recipientOptions": [
+    "<redacted-label>",
+    "<redacted-label>",
+  ],
+  "recipientSearchMaxResult": 100,
+  "showDraftsTab": true,
+  "showSentTab": true,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 4`] = `
+{
+  "canCreatePublic": false,
+  "items": [
+    {
+      "deletable": false,
+      "dynamic": false,
+      "editable": false,
+      "id": 7,
+      "name": "Klassenlehrkraft",
+      "personCount": 76,
+      "publicAccess": true,
+    },
+    {
+      "deletable": false,
+      "dynamic": false,
+      "editable": false,
+      "id": 3,
+      "name": "Lehrkräfte",
+      "personCount": 128,
+      "publicAccess": true,
+    },
+    {
+      "deletable": false,
+      "dynamic": false,
+      "editable": false,
+      "id": 11,
+      "name": "Schüler",
+      "personCount": 1178,
+      "publicAccess": true,
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 5`] = `
+{
+  "sentMessages": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 6`] = `
+{
+  "unreadMessagesCount": 0,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 7`] = `
+{
+  "allowMessageDeletion": true,
+  "attachments": [],
+  "blobAttachment": null,
+  "content": null,
+  "id": 445,
+  "isReply": false,
+  "isReplyAllowed": true,
+  "isReplyForbidden": false,
+  "isReportMessage": false,
+  "replyHistory": [],
+  "requestConfirmation": null,
+  "sender": {
+    "className": null,
+    "displayName": "<redacted-label>",
+    "imageUrl": null,
+    "userId": 7,
+  },
+  "sentDateTime": "<redacted-datetime>",
+  "storageAttachments": [],
+  "subject": "Kein aktueller Vertretungsplan",
+}
+`;
+
 exports[`live WebUntis integration > with live layer > reads schoolyears and message metadata 1`] = `
 {
   "allowRequestReadConfirmation": true,

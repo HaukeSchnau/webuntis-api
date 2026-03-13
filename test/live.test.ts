@@ -8,6 +8,11 @@ import {
   liveEnvMissing,
   normalizeAppData,
   normalizeHome,
+  normalizeMessageDetail,
+  normalizeMessageDrafts,
+  normalizeMessageRecipientQuickfilters,
+  normalizeMessageSent,
+  normalizeMessagesInbox,
   normalizeMessagesPermissions,
   normalizeMessagesStatus,
   normalizeMobileData,
@@ -61,16 +66,29 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         expect(normalizeStartupActions(startupActions)).toMatchSnapshot();
       }), 30_000);
 
-    it.effect("reads schoolyears and message metadata", () =>
+    it.effect("reads schoolyears and message endpoints", () =>
       Effect.gen(function*() {
         const client = yield* WebUntisClient;
         const schoolyears = yield* client.schoolyears.list;
+        const inbox = yield* client.messages.getInbox;
+        const drafts = yield* client.messages.getDrafts;
         const messagePermissions = yield* client.messages.getPermissions;
+        const quickfilters = yield* client.messages.getRecipientQuickfilters;
+        const sent = yield* client.messages.getSent;
         const messageStatus = yield* client.messages.getStatus;
+        const messageId = inbox.incomingMessages[0]?.id;
 
         expect(schoolyears.length).toBeGreaterThan(0);
+        expect(messageId).toBeDefined();
+        const detail = yield* client.messages.getMessage(messageId!);
+
+        expect(normalizeMessagesInbox(inbox)).toMatchSnapshot();
+        expect(normalizeMessageDrafts(drafts)).toMatchSnapshot();
         expect(normalizeMessagesPermissions(messagePermissions)).toMatchSnapshot();
+        expect(normalizeMessageRecipientQuickfilters(quickfilters)).toMatchSnapshot();
+        expect(normalizeMessageSent(sent)).toMatchSnapshot();
         expect(normalizeMessagesStatus(messageStatus)).toMatchSnapshot();
+        expect(normalizeMessageDetail(detail)).toMatchSnapshot();
       }), 30_000);
 
     it.effect("reads user contact endpoints", () =>
