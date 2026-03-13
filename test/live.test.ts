@@ -10,7 +10,10 @@ import {
   normalizeHome,
   normalizeMessageDetail,
   normalizeMessageDrafts,
+  normalizeMessageRecipientFilter,
   normalizeMessageRecipientQuickfilters,
+  normalizeMessageReplyForm,
+  normalizeMessageRecipientSearch,
   normalizeMessageSent,
   normalizeMessagesInbox,
   normalizeMessagesPermissions,
@@ -74,21 +77,28 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         const drafts = yield* client.messages.getDrafts;
         const messagePermissions = yield* client.messages.getPermissions;
         const quickfilters = yield* client.messages.getRecipientQuickfilters;
+        const staffFilter = yield* client.messages.getRecipientFilter("STAFF");
+        const staffSearch = yield* client.messages.searchRecipients("STAFF", "a");
         const sent = yield* client.messages.getSent;
         const messageStatus = yield* client.messages.getStatus;
         const messageId = inbox.incomingMessages[0]?.id;
 
         expect(schoolyears.length).toBeGreaterThan(0);
         expect(messageId).toBeDefined();
+        expect(staffFilter.filters.length).toBeGreaterThan(0);
         const detail = yield* client.messages.getMessage(messageId!);
+        const replyForm = yield* client.messages.getReplyForm(messageId!);
 
         expect(normalizeMessagesInbox(inbox)).toMatchSnapshot();
         expect(normalizeMessageDrafts(drafts)).toMatchSnapshot();
         expect(normalizeMessagesPermissions(messagePermissions)).toMatchSnapshot();
         expect(normalizeMessageRecipientQuickfilters(quickfilters)).toMatchSnapshot();
+        expect(normalizeMessageRecipientFilter(staffFilter)).toMatchSnapshot();
+        expect(normalizeMessageRecipientSearch(staffSearch)).toMatchSnapshot();
         expect(normalizeMessageSent(sent)).toMatchSnapshot();
         expect(normalizeMessagesStatus(messageStatus)).toMatchSnapshot();
         expect(normalizeMessageDetail(detail)).toMatchSnapshot();
+        expect(normalizeMessageReplyForm(replyForm)).toMatchSnapshot();
       }), 30_000);
 
     it.effect("reads user contact endpoints", () =>

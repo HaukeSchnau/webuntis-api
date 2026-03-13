@@ -645,17 +645,133 @@ exports[`live WebUntis integration > with live layer > reads schoolyears and mes
 
 exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 5`] = `
 {
-  "sentMessages": [],
+  "filters": [
+    {
+      "items": [
+        "10",
+        "10.1",
+        "10.2",
+        "10.3",
+        "10.4",
+        "10.5",
+        "10.6",
+        "11.1",
+        "11.2",
+        "11.3",
+        "12",
+        "13",
+        "5.1",
+        "5.2",
+        "5.3",
+        "5.4",
+        "5.5",
+        "5.6",
+        "6.1",
+        "6.2",
+        "6.3",
+        "6.4",
+        "6.5",
+        "6.6",
+        "7.1",
+        "7.2",
+        "7.3",
+        "7.4",
+        "7.5",
+        "7.6",
+        "8",
+        "8.1",
+        "8.2",
+        "8.3",
+        "8.4",
+        "8.5",
+        "9",
+        "9.1",
+        "9.2",
+        "9.3",
+        "9.4",
+        "9.5",
+        "9.6",
+        "9.7",
+      ],
+      "type": "<redacted-label>",
+    },
+    {
+      "items": [
+        "Grasberg",
+        "Lilienthal",
+        "Lilienthal Sek I",
+        "Lilienthal Sek <redacted-label>",
+      ],
+      "type": "<redacted-label>",
+    },
+    {
+      "items": [
+        "Administration",
+        "Lehrkräfte",
+        "Schulleitung",
+        "Verwaltung",
+      ],
+      "type": "<redacted-label>",
+    },
+    {
+      "items": [
+        "Admin",
+        "Directorate",
+        "Staff",
+        "Teacher",
+      ],
+      "type": "<redacted-label>_<redacted-label>",
+    },
+  ],
 }
 `;
 
 exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 6`] = `
+[
+  {
+    "className": null,
+    "displayName": "",
+    "imageUrl": null,
+    "personId": -1,
+    "role": "staff",
+  },
+  {
+    "className": null,
+    "displayName": "",
+    "imageUrl": null,
+    "personId": -1,
+    "role": "staff",
+  },
+  {
+    "className": null,
+    "displayName": "",
+    "imageUrl": null,
+    "personId": -1,
+    "role": "staff",
+  },
+  {
+    "className": null,
+    "displayName": "",
+    "imageUrl": null,
+    "personId": -1,
+    "role": "staff",
+  },
+]
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 7`] = `
+{
+  "sentMessages": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 8`] = `
 {
   "unreadMessagesCount": 0,
 }
 `;
 
-exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 7`] = `
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 9`] = `
 {
   "allowMessageDeletion": true,
   "attachments": [],
@@ -676,6 +792,36 @@ exports[`live WebUntis integration > with live layer > reads schoolyears and mes
   },
   "sentDateTime": "<redacted-datetime>",
   "storageAttachments": [],
+  "subject": "Kein aktueller Vertretungsplan",
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 10`] = `
+{
+  "recipient": {
+    "className": null,
+    "displayName": "<redacted-label>",
+    "id": 330,
+  },
+  "replyHistory": [
+    {
+      "attachments": [],
+      "blobAttachment": null,
+      "content": null,
+      "id": 445,
+      "isRevoked": false,
+      "recipients": [],
+      "sender": {
+        "className": null,
+        "displayName": "<redacted-label>",
+        "imageUrl": null,
+        "userId": 7,
+      },
+      "sentDateTime": "<redacted-datetime>",
+      "storageAttachments": [],
+      "subject": "Kein aktueller Vertretungsplan",
+    },
+  ],
   "subject": "Kein aktueller Vertretungsplan",
 }
 `;

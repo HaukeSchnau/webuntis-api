@@ -4,7 +4,10 @@ import type {
   Home,
   MessageDetail,
   MessageDrafts,
+  MessageRecipientFilter,
   MessageRecipientQuickfilters,
+  MessageReplyForm,
+  MessageRecipientSearch,
   MessageSent,
   MessagesPermissions,
   MessagesInbox,
@@ -70,7 +73,10 @@ export const normalizeAppData = (value: AppData) => normalizeUnknown(value);
 export const normalizeHome = (value: Home) => normalizeUnknown(value);
 export const normalizeMessageDetail = (value: MessageDetail) => normalizeUnknown(value);
 export const normalizeMessageDrafts = (value: MessageDrafts) => normalizeUnknown(value);
+export const normalizeMessageRecipientFilter = (value: MessageRecipientFilter) => normalizeUnknown(value);
 export const normalizeMessageRecipientQuickfilters = (value: MessageRecipientQuickfilters) => normalizeUnknown(value);
+export const normalizeMessageReplyForm = (value: MessageReplyForm) => normalizeUnknown(value);
+export const normalizeMessageRecipientSearch = (value: MessageRecipientSearch) => normalizeUnknown(value);
 export const normalizeMessageSent = (value: MessageSent) => normalizeUnknown(value);
 export const normalizeMessagesInbox = (value: MessagesInbox) => normalizeUnknown(value);
 export const normalizeMessagesPermissions = (value: MessagesPermissions) => normalizeUnknown(value);
