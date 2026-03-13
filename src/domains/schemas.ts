@@ -116,6 +116,56 @@ export const SessionStatusSchema = Schema.Struct({
 
 export type SessionStatus = Schema.Schema.Type<typeof SessionStatusSchema>;
 
+export const HomeCellSchema = Schema.Struct({
+  badge: Schema.NullOr(Schema.Unknown),
+  type: Schema.String
+});
+
+export const HomeSectionSchema = Schema.Struct({
+  cells: Schema.Array(HomeCellSchema)
+});
+
+export const HomeSchema = Schema.Struct({
+  schoolName: Schema.String,
+  sections: Schema.Array(HomeSectionSchema),
+  integrationsSection: Schema.Array(Schema.Unknown),
+  isEmailUpdateRequired: Schema.Boolean
+});
+
+export type Home = Schema.Schema.Type<typeof HomeSchema>;
+
+export const MobileTenantSchema = Schema.Struct({
+  id: Schema.String,
+  displayName: Schema.String,
+  wuVersion: Schema.String,
+  language: Schema.String
+});
+
+export const MobileUserSchema = Schema.Struct({
+  id: Schema.Number,
+  username: Schema.String,
+  person: Schema.NullOr(Schema.Unknown),
+  referencedStudents: Schema.Array(Schema.Unknown),
+  locale: Schema.String,
+  departmentId: Schema.Number,
+  role: Schema.String,
+  permissions: Schema.Array(Schema.String)
+});
+
+export const MobileDataSchema = Schema.Struct({
+  schoolYear: SchoolyearSchema,
+  tenant: MobileTenantSchema,
+  user: MobileUserSchema
+});
+
+export type MobileData = Schema.Schema.Type<typeof MobileDataSchema>;
+
+export const StartupActionsSchema = Schema.Struct({
+  startupActions: Schema.Array(Schema.Unknown)
+});
+
+export type StartupActions = Schema.Schema.Type<typeof StartupActionsSchema>;
+
 export const TimetableFormatDefinitionSchema = Schema.Struct({
   id: Schema.Number,
   name: Schema.String,
@@ -259,3 +309,9 @@ export const TimetableEntriesSchema = Schema.Struct({
 });
 
 export type TimetableEntries = Schema.Schema.Type<typeof TimetableEntriesSchema>;
+
+export const TimetableCalendarSchema = Schema.Struct({
+  integrations: Schema.Array(Schema.Unknown)
+});
+
+export type TimetableCalendar = Schema.Schema.Type<typeof TimetableCalendarSchema>;

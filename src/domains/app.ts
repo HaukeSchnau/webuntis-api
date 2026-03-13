@@ -1,10 +1,22 @@
 import { Effect } from "effect";
 import { SessionStore } from "../core/session-store.ts";
 import { WebUntisHttp } from "../core/http.ts";
-import { AppDataSchema } from "./schemas.ts";
+import {
+  AppDataSchema,
+  type AppData,
+  HomeSchema,
+  type Home,
+  MobileDataSchema,
+  type MobileData,
+  StartupActionsSchema,
+  type StartupActions
+} from "./schemas.ts";
 
 export interface AppClient {
-  readonly getData: Effect.Effect<any, unknown>;
+  readonly getData: Effect.Effect<AppData, unknown>;
+  readonly getHome: Effect.Effect<Home, unknown>;
+  readonly getMobileData: Effect.Effect<MobileData, unknown>;
+  readonly getStartupActions: Effect.Effect<StartupActions, unknown>;
 }
 
 export const makeAppClient = Effect.gen(function*() {
@@ -24,6 +36,15 @@ export const makeAppClient = Effect.gen(function*() {
   );
 
   return {
-    getData
+    getData,
+    getHome: http.getSchema("api/rest/view/v1/home", HomeSchema, {
+      withSchoolYearHeader: false
+    }),
+    getMobileData: http.getSchema("api/rest/view/v1/mobile/data", MobileDataSchema, {
+      withSchoolYearHeader: false
+    }),
+    getStartupActions: http.getSchema("api/rest/view/v1/trigger/startup", StartupActionsSchema, {
+      withSchoolYearHeader: false
+    })
   };
 });
