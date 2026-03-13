@@ -1,9 +1,13 @@
 import { Redacted } from "effect";
 import type {
   AppData,
+  Home,
   MessagesPermissions,
   MessagesStatus,
+  MobileData,
   SessionStatus,
+  StartupActions,
+  TimetableCalendar,
   TimetableEntries,
   TimetableEntriesSettings,
   TimetableFilter,
@@ -26,6 +30,8 @@ export const liveEnvMissing = [
 
 const redactString = (value: string) =>
   value
+    .replace(/^\d{4}-\d{2}-\d{2}T[^"]*$/g, "<redacted-datetime>")
+    .replace(/^\d{4}-\d{2}-\d{2}$/g, "<redacted-date>")
     .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "<redacted-email>")
     .replace(/[A-Z][A-ZÄÖÜ-]{1,}/g, "<redacted-label>");
 
@@ -56,11 +62,15 @@ const normalizeUnknown = (value: unknown): unknown => {
 };
 
 export const normalizeAppData = (value: AppData) => normalizeUnknown(value);
+export const normalizeHome = (value: Home) => normalizeUnknown(value);
 export const normalizeMessagesPermissions = (value: MessagesPermissions) => normalizeUnknown(value);
 export const normalizeMessagesStatus = (value: MessagesStatus) => normalizeUnknown(value);
+export const normalizeMobileData = (value: MobileData) => normalizeUnknown(value);
 export const normalizeUserContactData = (value: UserContactData) => normalizeUnknown(value);
 export const normalizeUserEmail = (value: UserEmail) => normalizeUnknown(value);
 export const normalizeSessionStatus = (value: SessionStatus) => normalizeUnknown(value);
+export const normalizeStartupActions = (value: StartupActions) => normalizeUnknown(value);
+export const normalizeTimetableCalendar = (value: TimetableCalendar) => normalizeUnknown(value);
 export const normalizeTimetableGrid = (value: TimetableGrid) => normalizeUnknown(value);
 export const normalizeTimetableFilter = (value: TimetableFilter) => normalizeUnknown(value);
 export const normalizeTimetableEntriesSettings = (value: TimetableEntriesSettings) => normalizeUnknown(value);

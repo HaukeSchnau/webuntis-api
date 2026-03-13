@@ -7,9 +7,13 @@ import { layer as makeWebUntisLayer, WebUntisClient } from "../src/client.ts";
 import {
   liveEnvMissing,
   normalizeAppData,
+  normalizeHome,
   normalizeMessagesPermissions,
   normalizeMessagesStatus,
+  normalizeMobileData,
   normalizeSessionStatus,
+  normalizeStartupActions,
+  normalizeTimetableCalendar,
   normalizeTimetableEntries,
   normalizeTimetableEntriesSettings,
   normalizeTimetableFilter,
@@ -40,6 +44,21 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         const appData = yield* client.app.getData;
         expect(appData.currentSchoolYear.id).toBeGreaterThan(0);
         expect(normalizeAppData(appData)).toMatchSnapshot();
+      }), 30_000);
+
+    it.effect("reads bootstrap and home endpoints", () =>
+      Effect.gen(function*() {
+        const client = yield* WebUntisClient;
+        const home = yield* client.app.getHome;
+        const mobileData = yield* client.app.getMobileData;
+        const startupActions = yield* client.app.getStartupActions;
+
+        expect(home.schoolName).toContain("IGS");
+        expect(mobileData.schoolYear.id).toBeGreaterThan(0);
+        expect(Array.isArray(startupActions.startupActions)).toBe(true);
+        expect(normalizeHome(home)).toMatchSnapshot();
+        expect(normalizeMobileData(mobileData)).toMatchSnapshot();
+        expect(normalizeStartupActions(startupActions)).toMatchSnapshot();
       }), 30_000);
 
     it.effect("reads schoolyears and message metadata", () =>
@@ -84,6 +103,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         const appData = yield* client.app.getData;
         const status = yield* client.session.getStatus();
         const menu = yield* client.timetable.getMenu;
+        const calendar = yield* client.timetable.getCalendar();
         const search = yield* client.timetable.search({
           query: "10",
           schoolyear: appData.currentSchoolYear.id
@@ -94,6 +114,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         expect(normalizeSessionStatus(status)).toMatchSnapshot();
         expect(normalizeTimetableMenu(menu)).toMatchSnapshot();
         expect(normalizeTimetableSearch(search)).toMatchSnapshot();
+        expect(normalizeTimetableCalendar(calendar)).toMatchSnapshot();
       }), 30_000);
 
     it.effect("reads timetable endpoints using the first discovered class", () =>

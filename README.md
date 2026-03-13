@@ -8,6 +8,7 @@ The client models the modern WebUntis REST surface as a portable Effect service 
 - `AuthClient` performs the classic login handshake and mints the session-bound JWT from `/WebUntis/api/token/new`.
 - `WebUntisHttp` attaches cookies and bearer auth for modern `/api/rest/view/v1/...` requests.
 - `WebUntisClient` exposes the first domain clients for `app`, `schoolyears`, `messages`, `profile`, `session`, `timetable`, plus a `rawViewApi` escape hatch.
+  The `app` and `timetable` domains now also cover adjacent bootstrap routes such as `home`, `mobile/data`, `trigger/startup`, and `timetable/calendar`.
 
 ## Runtime
 
