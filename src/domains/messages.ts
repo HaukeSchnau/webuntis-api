@@ -3,7 +3,10 @@ import { WebUntisHttp } from "../core/http.ts";
 import {
   MessageDetailSchema,
   MessageDraftsSchema,
+  MessageRecipientFilterSchema,
   MessageRecipientQuickfiltersSchema,
+  MessageReplyFormSchema,
+  MessageRecipientSearchSchema,
   MessageSentSchema,
   MessagesInboxSchema,
   MessagesPermissionsSchema,
@@ -26,10 +29,29 @@ export const makeMessagesClient = Effect.gen(function*() {
       MessageRecipientQuickfiltersSchema,
       { withSchoolYearHeader: false }
     ),
+    getRecipientFilter: (recipientOption: string) =>
+      http.getSchema(
+        `api/rest/view/v1/messages/recipients/${encodeURIComponent(recipientOption)}/filter`,
+        MessageRecipientFilterSchema,
+        { withSchoolYearHeader: false }
+      ),
+    searchRecipients: (recipientOption: string, searchText: string) =>
+      http.getSchema(
+        `api/rest/view/v1/messages/recipients/${encodeURIComponent(recipientOption)}/search`,
+        MessageRecipientSearchSchema,
+        {
+          query: { searchText },
+          withSchoolYearHeader: false
+        }
+      ),
     getSent: http.getSchema("api/rest/view/v1/messages/sent", MessageSentSchema, {
       withSchoolYearHeader: false
     }),
     getStatus: http.getSchema("api/rest/view/v1/messages/status", MessagesStatusSchema),
+    getReplyForm: (id: number) =>
+      http.getSchema(`api/rest/view/v1/messages/${id}/reply-form`, MessageReplyFormSchema, {
+        withSchoolYearHeader: false
+      }),
     getMessage: (id: number) =>
       http.getSchema(`api/rest/view/v1/messages/${id}`, MessageDetailSchema, {
         withSchoolYearHeader: false
