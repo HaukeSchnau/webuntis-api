@@ -9,6 +9,7 @@ The client models the modern WebUntis REST surface as a portable Effect service 
 - `WebUntisHttp` attaches cookies and bearer auth for modern `/api/rest/view/v1/...` requests.
 - `WebUntisClient` exposes the first domain clients for `app`, `schoolyears`, `messages`, `profile`, `session`, `timetable`, plus a `rawViewApi` escape hatch.
   The `app` and `timetable` domains now also cover adjacent bootstrap routes such as `home`, `mobile/data`, `trigger/startup`, and `timetable/calendar`.
+  The timetable domain also exposes typed `availableRooms` support through the confirmed-working `v2` query-parameter route.
   The `messages` domain now covers inbox, drafts, sent, recipient quickfilters, recipient filter/search helpers, reply-form lookup, and individual message detail in addition to status and permissions.
   The timetable client also exposes experimental read probes for the currently restricted settings/format routes so tenant behavior changes are visible in the live suite.
 
@@ -22,7 +23,7 @@ The current implementation targets the modern REST-first WebUntis flow:
 2. Session bootstrap via `GET /WebUntis/index.do`
 3. Credential submission via `POST /WebUntis/j_spring_security_check`
 4. Token minting via `GET /WebUntis/api/token/new`
-5. Bearer-authenticated requests to `/WebUntis/api/rest/view/v1/...`
+5. Bearer-authenticated requests to `/WebUntis/api/rest/view/v1/...` and selected confirmed `v2` routes such as `timetable/availableRooms`
 
 Reverse-engineering artifacts live under [`research/webuntis`](./research/webuntis).
 

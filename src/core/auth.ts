@@ -1,13 +1,10 @@
 import { Effect, Layer, Redacted, ServiceMap } from "effect";
 import * as Cookies from "effect/unstable/http/Cookies";
-import * as HttpClient from "effect/unstable/http/HttpClient";
-import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
-import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
 import type { ClientConfig } from "./config.ts";
 import { ClientConfig as ClientConfigTag } from "./config.ts";
 import { AuthenticationError } from "./errors.ts";
 import type { ResolvedSchool, SessionState } from "./types.ts";
-import { resolveBaseUrl, resolveTenantHost } from "./types.ts";
+import { resolveBaseUrl } from "./types.ts";
 import { SchoolDiscovery } from "./discovery.ts";
 import { SessionStore } from "./session-store.ts";
 
@@ -27,6 +24,29 @@ const parseJwtExpiration = (token: string): number | undefined => {
 
 const mergeCookieHeader = (cookies: Cookies.Cookies) =>
   Cookies.isEmpty(cookies) ? {} : { cookie: Cookies.toCookieHeader(cookies) };
+
+const responseCookies = (response: Response): Cookies.Cookies => {
+  const headers = response.headers as Headers & {
+    getSetCookie?: () => ReadonlyArray<string>;
+  };
+  const setCookie = typeof headers.getSetCookie === "function"
+    ? headers.getSetCookie()
+    : [];
+  return Cookies.fromSetCookie(setCookie);
+};
+
+const executeFetch = (
+  input: string,
+  init?: RequestInit
+) =>
+  Effect.tryPromise({
+    try: () => fetch(input, init),
+    catch: (error) =>
+      new AuthenticationError({
+        stage: "bootstrap",
+        message: String(error)
+      })
+  });
 
 const resolveSchool = (
   config: ClientConfig,
@@ -57,7 +77,6 @@ export const AuthClient = ServiceMap.Service<AuthClient, AuthClient>("webuntis/A
 
 export const Live = Layer.effect(AuthClient)(
   Effect.gen(function*() {
-    const baseClient = yield* HttpClient.HttpClient;
     const config = yield* ClientConfigTag;
     const discovery = yield* SchoolDiscovery;
     const sessionStore = yield* SessionStore;
@@ -67,24 +86,38 @@ export const Live = Layer.effect(AuthClient)(
         const baseUrl = resolveBaseUrl(school);
         const state = yield* sessionStore.get;
 
-        const seedResponse = yield* baseClient.get(`${baseUrl}/index.do`, {
+        const seedResponse = yield* executeFetch(`${baseUrl}/index.do`, {
           headers: mergeCookieHeader(state.cookies)
-        }).pipe(Effect.flatMap(HttpClientResponse.filterStatusOk));
+        });
+        if (!seedResponse.ok) {
+          return yield* Effect.fail(
+            new AuthenticationError({
+              stage: "bootstrap",
+              message: `Seed request failed for ${school.server}`
+            })
+          );
+        }
 
-        const loginRequest = HttpClientRequest.post(`${baseUrl}/j_spring_security_check`).pipe(
-          HttpClientRequest.bodyUrlParams({
+        const seededCookies = Cookies.merge(state.cookies, responseCookies(seedResponse));
+        const loginResponse = yield* executeFetch(`${baseUrl}/j_spring_security_check`, {
+          method: "POST",
+          headers: {
+            ...mergeCookieHeader(seededCookies),
+            accept: "application/json, text/plain, */*",
+            "content-type": "application/x-www-form-urlencoded"
+          },
+          body: new URLSearchParams({
             school: school.loginName,
             j_username: config.username,
             j_password: Redacted.value(config.password)
           }),
-          HttpClientRequest.setHeaders({
-            ...mergeCookieHeader(Cookies.merge(state.cookies, seedResponse.cookies)),
-            accept: "application/json, text/plain, */*"
-          })
-        );
-
-        const loginResponse = yield* baseClient.execute(loginRequest).pipe(
-          Effect.flatMap(HttpClientResponse.filterStatusOk),
+          redirect: "manual"
+        }).pipe(
+          Effect.flatMap((response) =>
+            response.status >= 200 && response.status < 400
+              ? Effect.succeed(response)
+              : Effect.fail(response)
+          ),
           Effect.mapError(() =>
             new AuthenticationError({
               stage: "login",
@@ -92,7 +125,7 @@ export const Live = Layer.effect(AuthClient)(
             }))
         );
 
-        const cookies = Cookies.merge(Cookies.merge(state.cookies, seedResponse.cookies), loginResponse.cookies);
+        const cookies = Cookies.merge(seededCookies, responseCookies(loginResponse));
         yield* sessionStore.update((previous) => ({
           ...previous,
           cookies,
@@ -121,10 +154,10 @@ export const Live = Layer.effect(AuthClient)(
       const cookies = yield* bootstrapCookies(school);
       const baseUrl = resolveBaseUrl(school);
 
-      const tokenResponse = yield* baseClient.get(`${baseUrl}/api/token/new`, {
+      const tokenResponse = yield* executeFetch(`${baseUrl}/api/token/new`, {
         headers: mergeCookieHeader(cookies)
       }).pipe(
-        Effect.flatMap(HttpClientResponse.filterStatusOk),
+        Effect.flatMap((response) => response.ok ? Effect.succeed(response) : Effect.fail(response)),
         Effect.mapError(() =>
           new AuthenticationError({
             stage: "token",
@@ -132,10 +165,10 @@ export const Live = Layer.effect(AuthClient)(
           }))
       );
 
-        const tokenString = (yield* tokenResponse.text).trim();
-        if (tokenString.length === 0 || tokenString.startsWith("<!DOCTYPE")) {
-          return yield* Effect.fail(
-            new AuthenticationError({
+      const tokenString = (yield* Effect.tryPromise(() => tokenResponse.text())).trim();
+      if (tokenString.length === 0 || tokenString.startsWith("<!DOCTYPE")) {
+        return yield* Effect.fail(
+          new AuthenticationError({
             stage: "token",
             message: "Token minting redirected to anonymous WebUntis HTML"
           })
@@ -144,7 +177,7 @@ export const Live = Layer.effect(AuthClient)(
 
       yield* sessionStore.update((previous) => ({
         ...previous,
-        cookies: Cookies.merge(previous.cookies, tokenResponse.cookies),
+        cookies: Cookies.merge(previous.cookies, responseCookies(tokenResponse)),
         resolvedSchool: previous.resolvedSchool ?? school,
         tenantId: previous.tenantId ?? config.tenantId ?? school.tenantId,
         token: Redacted.make(tokenString),

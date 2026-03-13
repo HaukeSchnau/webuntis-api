@@ -1,6 +1,7 @@
 import { Effect } from "effect";
 import { WebUntisHttp } from "../core/http.ts";
 import {
+  TimetableAvailableRoomsSchema,
   TimetableCalendarSchema,
   TimetableEntriesSchema,
   TimetableEntriesSettingsSchema,
@@ -43,6 +44,11 @@ export interface TimetableCalendarRequest {
   readonly timetableType?: string | undefined;
 }
 
+export interface TimetableAvailableRoomsRequest {
+  readonly startDateTime: string;
+  readonly endDateTime: string;
+}
+
 export const makeTimetableClient = Effect.gen(function*() {
   const http = yield* WebUntisHttp;
 
@@ -83,6 +89,14 @@ export const makeTimetableClient = Effect.gen(function*() {
         query: {
           q: request.query,
           schoolyear: request.schoolyear
+        },
+        withSchoolYearHeader: false
+      }),
+    getAvailableRooms: (request: TimetableAvailableRoomsRequest) =>
+      http.getSchema("api/rest/view/v2/timetable/availableRooms", TimetableAvailableRoomsSchema, {
+        query: {
+          startDateTime: request.startDateTime,
+          endDateTime: request.endDateTime
         },
         withSchoolYearHeader: false
       }),

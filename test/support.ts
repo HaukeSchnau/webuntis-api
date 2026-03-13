@@ -14,6 +14,7 @@ import type {
   MessagesStatus,
   MobileData,
   SessionStatus,
+  TimetableAvailableRooms,
   StartupActions,
   TimetableCalendar,
   TimetableEntries,
@@ -87,6 +88,7 @@ export const normalizeUserEmail = (value: UserEmail) => normalizeUnknown(value);
 export const normalizeSessionStatus = (value: SessionStatus) => normalizeUnknown(value);
 export const normalizeStartupActions = (value: StartupActions) => normalizeUnknown(value);
 export const normalizeTimetableCalendar = (value: TimetableCalendar) => normalizeUnknown(value);
+export const normalizeTimetableAvailableRooms = (value: TimetableAvailableRooms) => normalizeUnknown(value);
 export const normalizeTimetableGrid = (value: TimetableGrid) => normalizeUnknown(value);
 export const normalizeTimetableFilter = (value: TimetableFilter) => normalizeUnknown(value);
 export const normalizeTimetableEntriesSettings = (value: TimetableEntriesSettings) => normalizeUnknown(value);
