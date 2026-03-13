@@ -371,6 +371,18 @@ export const TimetableSearchSchema = Schema.Struct({
 export type TimetableSearch = Schema.Schema.Type<typeof TimetableSearchSchema>;
 export type TimetableSearchResults = TimetableSearch;
 
+export const TimetableAvailableRoomSchema = Schema.Struct({
+  id: Schema.Number,
+  name: Schema.String,
+  longName: Schema.String,
+  displayName: Schema.String
+});
+
+export const TimetableAvailableRoomsSchema = Schema.Array(TimetableAvailableRoomSchema);
+
+export type TimetableAvailableRoom = Schema.Schema.Type<typeof TimetableAvailableRoomSchema>;
+export type TimetableAvailableRooms = Schema.Schema.Type<typeof TimetableAvailableRoomsSchema>;
+
 export const DisplayResourceSchema = Schema.Struct({
   id: Schema.Number,
   shortName: Schema.String,

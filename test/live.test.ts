@@ -21,6 +21,7 @@ import {
   normalizeMobileData,
   normalizeSessionStatus,
   normalizeStartupActions,
+  normalizeTimetableAvailableRooms,
   normalizeTimetableCalendar,
   normalizeTimetableEntries,
   normalizeTimetableEntriesSettings,
@@ -136,13 +137,19 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           query: "10",
           schoolyear: appData.currentSchoolYear.id
         });
+        const availableRooms = yield* client.timetable.getAvailableRooms({
+          startDateTime: "2026-03-13T08:00:00",
+          endDateTime: "2026-03-13T10:00:00"
+        });
 
         expect(status.expiresInMs).toBeGreaterThanOrEqual(0);
         expect(search.results.length).toBeGreaterThan(0);
+        expect(availableRooms.length).toBeGreaterThan(0);
         expect(normalizeSessionStatus(status)).toMatchSnapshot();
         expect(normalizeTimetableMenu(menu)).toMatchSnapshot();
         expect(normalizeTimetableSearch(search)).toMatchSnapshot();
         expect(normalizeTimetableCalendar(calendar)).toMatchSnapshot();
+        expect(normalizeTimetableAvailableRooms(availableRooms)).toMatchSnapshot();
       }), 30_000);
 
     it.effect("documents current timetable utility/settings access behavior", () =>
