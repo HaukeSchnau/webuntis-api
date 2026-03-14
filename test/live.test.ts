@@ -5,7 +5,12 @@ import { fromEnv } from "../src/core/config.ts";
 import { UnexpectedResponseError } from "../src/core/errors.ts";
 import { layer as makeWebUntisLayer, WebUntisClient } from "../src/client.ts";
 import { strictJsonParseOptions } from "../src/core/schema.ts";
-import { HomeSchema, MobileDataSchema, StartupActionsSchema } from "../src/domains/schemas.ts";
+import {
+  HomeSchema,
+  MobileDataSchema,
+  MobileDataV1V2Schema,
+  StartupActionsSchema
+} from "../src/domains/schemas.ts";
 import {
   liveEnvMissing,
   normalizeAppData,
@@ -103,7 +108,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       Effect.gen(function*() {
         const client = yield* WebUntisClient;
         const decodeHome = Schema.decodeUnknownSync(HomeSchema);
-        const decodeMobileData = Schema.decodeUnknownSync(MobileDataSchema);
+        const decodeMobileDataV1V2 = Schema.decodeUnknownSync(MobileDataV1V2Schema);
         const homeV1 = decodeHome(
           yield* client.rawViewApi.getJson("api/rest/view/v1/home", {
             withSchoolYearHeader: false
@@ -111,25 +116,43 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           strictJsonParseOptions
         );
         const homeV2 = yield* client.app.getHome;
-        const mobileDataV1 = decodeMobileData(
+        const mobileDataV1 = decodeMobileDataV1V2(
           yield* client.rawViewApi.getJson("api/rest/view/v1/mobile/data", {
             withSchoolYearHeader: false
           }),
           strictJsonParseOptions
         );
-        const mobileDataV2 = decodeMobileData(
+        const mobileDataV2 = decodeMobileDataV1V2(
           yield* client.rawViewApi.getJson("api/rest/view/v2/mobile/data", {
             withSchoolYearHeader: false
           }),
           strictJsonParseOptions
         );
+        const decodeMobileDataV3 = Schema.decodeUnknownSync(MobileDataSchema);
+        const mobileDataV3 = decodeMobileDataV3(
+          yield* client.rawViewApi.getJson("api/rest/view/v3/mobile/data", {
+            withSchoolYearHeader: false
+          }),
+          strictJsonParseOptions
+        );
+        const clientMobileData = yield* client.app.getMobileData;
+        const { schoolLoginName, ...mobileDataV3TenantWithoutSchoolLoginName } = mobileDataV3.tenant;
 
         expect(homeV1).not.toEqual(homeV2);
         expect(mobileDataV1).toEqual(mobileDataV2);
+        expect(mobileDataV3).not.toEqual(mobileDataV1);
+        expect(clientMobileData).toEqual(mobileDataV3);
+        expect(mobileDataV3.tenant.schoolLoginName.length).toBeGreaterThan(0);
+        expect({
+          ...mobileDataV3,
+          tenant: mobileDataV3TenantWithoutSchoolLoginName
+        }).toEqual(mobileDataV1);
         expect(normalizeHome(homeV1)).toMatchSnapshot();
         expect(normalizeHome(homeV2)).toMatchSnapshot();
         expect(normalizeMobileData(mobileDataV1)).toMatchSnapshot();
         expect(normalizeMobileData(mobileDataV2)).toMatchSnapshot();
+        expect(normalizeMobileData(mobileDataV3)).toMatchSnapshot();
+        expect(normalizeMobileData(clientMobileData)).toMatchSnapshot();
       }), 30_000);
 
     it.effect("reads additional app bootstrap endpoints", () =>

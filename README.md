@@ -6,7 +6,7 @@ The client models the modern WebUntis REST surface as a portable Effect service 
 
 - `SchoolDiscovery` resolves a school name through the public WebUntis search API.
 - `AuthClient` performs the classic login handshake and mints the session-bound JWT from `/WebUntis/api/token/new`.
-- `WebUntisHttp` attaches cookies and bearer auth for modern `/api/rest/view/v1/...` requests.
+- `WebUntisHttp` attaches cookies and bearer auth for modern `/api/rest/view/...` requests.
 - `WebUntisClient` exposes the first domain clients for `app`, `schoolyears`, `messages`, `profile`, `session`, `timetable`, plus a `rawViewApi` escape hatch.
   The `app` and `timetable` domains now also cover adjacent bootstrap routes such as `home`, `mobile/data`, `trigger/startup`, `today/meta`, `dashboard/cards`, `app/platform-application/menus`, `app/third-party/data`, `onboarding`, `timegrid`, `timetable/calendar`, `timetable/externalCalendar`, and `timetable/entriesWeekOverview`.
   The timetable domain also exposes typed `availableRooms` support through the confirmed-working `v2` query-parameter route.
@@ -24,7 +24,7 @@ The current implementation targets the modern REST-first WebUntis flow:
 2. Session bootstrap via `GET /WebUntis/index.do`
 3. Credential submission via `POST /WebUntis/j_spring_security_check`
 4. Token minting via `GET /WebUntis/api/token/new`
-5. Bearer-authenticated requests to `/WebUntis/api/rest/view/v1/...` and selected confirmed `v2` routes such as `home`, `trigger/startup`, and `timetable/availableRooms`
+5. Bearer-authenticated requests to `/WebUntis/api/rest/view/v1/...` plus selected confirmed newer routes such as `v2/home`, `v2/trigger/startup`, `v3/mobile/data`, and `v2/timetable/availableRooms`
 
 Reverse-engineering artifacts live under [`research/webuntis`](./research/webuntis).
 
