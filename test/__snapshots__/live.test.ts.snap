@@ -474,6 +474,149 @@ exports[`live WebUntis integration > with live layer > bootstraps auth and reads
 }
 `;
 
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 1`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>_<redacted-label>",
+    "errorMessage": "Access denied.",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/messages-of-the-day",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 2`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>",
+    "errorMessage": "Sie haben nicht die erforderlichen Benutzerrechte um die Funktion auszuführen.",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/messages/recipients/static/teachers",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 3`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>_<redacted-label>",
+    "errorMessage": "",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/messages/recipients/static/users",
+  "status": 500,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 4`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>",
+    "errorMessage": "Sie haben nicht die erforderlichen Benutzerrechte um die Funktion auszuführen.",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/messages/recipients/static/persons",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 5`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>",
+    "errorMessage": "Access Denied",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/rooms",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 6`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>",
+    "errorMessage": "Access Denied",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/rooms/{id}",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 7`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>",
+    "errorMessage": "Access Denied",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/buildings",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 8`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>",
+    "errorMessage": "Access Denied",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/teachers",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 9`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>",
+    "errorMessage": "Access Denied",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/teachers/{id}",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 10`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>",
+    "errorMessage": "Access Denied",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/subjects",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 11`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>",
+    "errorMessage": "Access Denied",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/subjects/{id}",
+  "status": 403,
+}
+`;
+
 exports[`live WebUntis integration > with live layer > documents current timetable utility/settings access behavior 1`] = `
 {
   "body": {
@@ -539,6 +682,587 @@ exports[`live WebUntis integration > with live layer > documents current upstrea
 }
 `;
 
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 1`] = `
+{
+  "calendar": null,
+  "greetingName": "<redacted>",
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 2`] = `
+{
+  "dashboardCards": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 3`] = `
+{
+  "dashboardCardsDetails": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 4`] = `
+{
+  "unreadCardsCount": 0,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 5`] = `
+[
+  {
+    "icon": "pa-iserv-logo.svg",
+    "id": 7,
+    "logoutUrl": null,
+    "name": "<redacted-label>erv",
+    "openInNewTab": true,
+    "redirectUrl": "https://igslilienthal.de/iserv?tenant_id=6603700&school=igs-lilienthal",
+  },
+]
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 6`] = `
+{
+  "playgroundUrl": null,
+  "sleekplanToken": "<redacted>",
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 7`] = `
+{
+  "step": "timetable--date-picker",
+  "time": "<redacted-datetime>",
+  "type": "<redacted-label>",
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional timetable overview endpoints 1`] = `
+{
+  "schoolyearId": 7,
+  "units": [
+    {
+      "endTime": 800,
+      "startTime": 740,
+      "unitOfDay": 1,
+    },
+    {
+      "endTime": 840,
+      "startTime": 800,
+      "unitOfDay": 2,
+    },
+    {
+      "endTime": 920,
+      "startTime": 840,
+      "unitOfDay": 3,
+    },
+    {
+      "endTime": 1025,
+      "startTime": 945,
+      "unitOfDay": 4,
+    },
+    {
+      "endTime": 1105,
+      "startTime": 1025,
+      "unitOfDay": 5,
+    },
+    {
+      "endTime": 1210,
+      "startTime": 1130,
+      "unitOfDay": 6,
+    },
+    {
+      "endTime": 1250,
+      "startTime": 1210,
+      "unitOfDay": 7,
+    },
+    {
+      "endTime": 1320,
+      "startTime": 1250,
+      "unitOfDay": 8,
+    },
+    {
+      "endTime": 1350,
+      "startTime": 1320,
+      "unitOfDay": 9,
+    },
+    {
+      "endTime": 1430,
+      "startTime": 1350,
+      "unitOfDay": 10,
+    },
+    {
+      "endTime": 1510,
+      "startTime": 1430,
+      "unitOfDay": 11,
+    },
+    {
+      "endTime": 1555,
+      "startTime": 1515,
+      "unitOfDay": 12,
+    },
+    {
+      "endTime": 1630,
+      "startTime": 1555,
+      "unitOfDay": 13,
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional timetable overview endpoints 2`] = `
+{
+  "days": [
+    {
+      "day": "<redacted-date>",
+      "resources": [
+        {
+          "cells": [
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+          ],
+          "resource": {
+            "displayName": "",
+            "id": 557,
+            "longName": "Grasberg",
+            "shortName": "1.12",
+          },
+          "status": "<redacted-label>_<redacted-label>",
+        },
+      ],
+    },
+    {
+      "day": "<redacted-date>",
+      "resources": [
+        {
+          "cells": [
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+          ],
+          "resource": {
+            "displayName": "",
+            "id": 557,
+            "longName": "Grasberg",
+            "shortName": "1.12",
+          },
+          "status": "<redacted-label>_<redacted-label>",
+        },
+      ],
+    },
+    {
+      "day": "<redacted-date>",
+      "resources": [
+        {
+          "cells": [
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+          ],
+          "resource": {
+            "displayName": "",
+            "id": 557,
+            "longName": "Grasberg",
+            "shortName": "1.12",
+          },
+          "status": "<redacted-label>_<redacted-label>",
+        },
+      ],
+    },
+    {
+      "day": "<redacted-date>",
+      "resources": [
+        {
+          "cells": [
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+          ],
+          "resource": {
+            "displayName": "",
+            "id": 557,
+            "longName": "Grasberg",
+            "shortName": "1.12",
+          },
+          "status": "<redacted-label>_<redacted-label>",
+        },
+      ],
+    },
+    {
+      "day": "<redacted-date>",
+      "resources": [
+        {
+          "cells": [
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+          ],
+          "resource": {
+            "displayName": "",
+            "id": 557,
+            "longName": "Grasberg",
+            "shortName": "1.12",
+          },
+          "status": "<redacted-label>_<redacted-label>",
+        },
+      ],
+    },
+  ],
+  "slots": [
+    {
+      "duration": {
+        "end": "08:00",
+        "start": "07:40",
+      },
+      "name": "<redacted-label>",
+      "number": 1,
+    },
+    {
+      "duration": {
+        "end": "08:40",
+        "start": "08:00",
+      },
+      "name": "Block1-1",
+      "number": 2,
+    },
+    {
+      "duration": {
+        "end": "09:20",
+        "start": "08:40",
+      },
+      "name": "Block1-2",
+      "number": 3,
+    },
+    {
+      "duration": {
+        "end": "10:25",
+        "start": "09:45",
+      },
+      "name": "Block2-1",
+      "number": 4,
+    },
+    {
+      "duration": {
+        "end": "11:05",
+        "start": "10:25",
+      },
+      "name": "Block2-2",
+      "number": 5,
+    },
+    {
+      "duration": {
+        "end": "12:10",
+        "start": "11:30",
+      },
+      "name": "Block3-1",
+      "number": 6,
+    },
+    {
+      "duration": {
+        "end": "12:50",
+        "start": "12:10",
+      },
+      "name": "Block3-2",
+      "number": 7,
+    },
+    {
+      "duration": {
+        "end": "13:20",
+        "start": "12:50",
+      },
+      "name": "<redacted-label>1",
+      "number": 8,
+    },
+    {
+      "duration": {
+        "end": "13:50",
+        "start": "13:20",
+      },
+      "name": "<redacted-label>2",
+      "number": 9,
+    },
+    {
+      "duration": {
+        "end": "14:30",
+        "start": "13:50",
+      },
+      "name": "Block4-1",
+      "number": 10,
+    },
+    {
+      "duration": {
+        "end": "15:10",
+        "start": "14:30",
+      },
+      "name": "Block4-2",
+      "number": 11,
+    },
+    {
+      "duration": {
+        "end": "15:55",
+        "start": "15:15",
+      },
+      "name": "",
+      "number": 12,
+    },
+    {
+      "duration": {
+        "end": "16:30",
+        "start": "15:55",
+      },
+      "name": "",
+      "number": 13,
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional timetable overview endpoints 3`] = `[]`;
+
 exports[`live WebUntis integration > with live layer > reads bootstrap and home endpoints 1`] = `
 {
   "integrationsSection": [],
@@ -589,7 +1313,7 @@ exports[`live WebUntis integration > with live layer > reads bootstrap and home 
     "person": null,
     "referencedStudents": [],
     "role": "<redacted-label>",
-    "username": "hauke.studienbuch",
+    "username": "<redacted>",
   },
 }
 `;

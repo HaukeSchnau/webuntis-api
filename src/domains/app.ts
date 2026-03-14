@@ -3,20 +3,45 @@ import { SessionStore } from "../core/session-store.ts";
 import { WebUntisHttp } from "../core/http.ts";
 import {
   AppDataSchema,
+  AppPlatformApplicationMenusSchema,
+  AppThirdPartyDataSchema,
   type AppData,
+  type AppPlatformApplicationMenus,
+  type AppThirdPartyData,
+  DashboardCardsDetailSchema,
+  DashboardCardsSchema,
+  DashboardCardsStatusSchema,
+  type DashboardCards,
+  type DashboardCardsDetail,
+  type DashboardCardsStatus,
   HomeSchema,
   type Home,
   MobileDataSchema,
   type MobileData,
+  OnboardingSchema,
+  type Onboarding,
   StartupActionsSchema,
-  type StartupActions
+  type StartupActions,
+  TodayMetaSchema,
+  type TodayMeta
 } from "./schemas.ts";
+
+export interface OnboardingRequest {
+  readonly type: string;
+}
 
 export interface AppClient {
   readonly getData: Effect.Effect<AppData, unknown>;
   readonly getHome: Effect.Effect<Home, unknown>;
   readonly getMobileData: Effect.Effect<MobileData, unknown>;
   readonly getStartupActions: Effect.Effect<StartupActions, unknown>;
+  readonly getPlatformApplicationMenus: Effect.Effect<AppPlatformApplicationMenus, unknown>;
+  readonly getThirdPartyData: Effect.Effect<AppThirdPartyData, unknown>;
+  readonly getTodayMeta: Effect.Effect<TodayMeta, unknown>;
+  readonly getDashboardCards: Effect.Effect<DashboardCards, unknown>;
+  readonly getDashboardCardsDetail: Effect.Effect<DashboardCardsDetail, unknown>;
+  readonly getDashboardCardsStatus: Effect.Effect<DashboardCardsStatus, unknown>;
+  readonly getOnboarding: (request: OnboardingRequest) => Effect.Effect<Onboarding, unknown>;
 }
 
 export const makeAppClient = Effect.gen(function*() {
@@ -45,6 +70,31 @@ export const makeAppClient = Effect.gen(function*() {
     }),
     getStartupActions: http.getSchema("api/rest/view/v1/trigger/startup", StartupActionsSchema, {
       withSchoolYearHeader: false
-    })
+    }),
+    getPlatformApplicationMenus: http.getSchema(
+      "api/rest/view/v1/app/platform-application/menus",
+      AppPlatformApplicationMenusSchema,
+      { withSchoolYearHeader: false }
+    ),
+    getThirdPartyData: http.getSchema("api/rest/view/v1/app/third-party/data", AppThirdPartyDataSchema, {
+      withSchoolYearHeader: false
+    }),
+    getTodayMeta: http.getSchema("api/rest/view/v1/today/meta", TodayMetaSchema, {
+      withSchoolYearHeader: false
+    }),
+    getDashboardCards: http.getSchema("api/rest/view/v1/dashboard/cards", DashboardCardsSchema, {
+      withSchoolYearHeader: false
+    }),
+    getDashboardCardsDetail: http.getSchema("api/rest/view/v1/dashboard/cards/detail", DashboardCardsDetailSchema, {
+      withSchoolYearHeader: false
+    }),
+    getDashboardCardsStatus: http.getSchema("api/rest/view/v1/dashboard/cards/status", DashboardCardsStatusSchema, {
+      withSchoolYearHeader: false
+    }),
+    getOnboarding: (request: OnboardingRequest) =>
+      http.getSchema("api/rest/view/v1/onboarding", OnboardingSchema, {
+        query: { type: request.type },
+        withSchoolYearHeader: false
+      })
   };
 });

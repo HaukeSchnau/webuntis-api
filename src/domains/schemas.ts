@@ -21,6 +21,8 @@ export const TimeGridSchema = Schema.Struct({
   units: Schema.Array(TimeGridUnitSchema)
 });
 
+export type TimeGrid = Schema.Schema.Type<typeof TimeGridSchema>;
+
 export const SchoolyearSchema = Schema.Struct({
   id: Schema.Number,
   name: Schema.String,
@@ -71,6 +73,45 @@ export const AppDataSchema = Schema.Struct({
 });
 
 export type AppData = Schema.Schema.Type<typeof AppDataSchema>;
+
+export const AppPlatformApplicationMenuSchema = Schema.Struct({
+  icon: Schema.String,
+  id: Schema.Number,
+  logoutUrl: Schema.NullOr(Schema.String),
+  name: Schema.String,
+  openInNewTab: Schema.Boolean,
+  redirectUrl: Schema.String
+});
+
+export const AppPlatformApplicationMenusSchema = Schema.Array(AppPlatformApplicationMenuSchema);
+
+export type AppPlatformApplicationMenu = Schema.Schema.Type<typeof AppPlatformApplicationMenuSchema>;
+export type AppPlatformApplicationMenus = Schema.Schema.Type<typeof AppPlatformApplicationMenusSchema>;
+
+export const AppThirdPartyDataSchema = Schema.Struct({
+  playgroundUrl: Schema.NullOr(Schema.String),
+  sleekplanToken: Schema.String
+});
+
+export type AppThirdPartyData = Schema.Schema.Type<typeof AppThirdPartyDataSchema>;
+
+export const DashboardCardsSchema = Schema.Struct({
+  dashboardCards: Schema.Array(Schema.Unknown)
+});
+
+export type DashboardCards = Schema.Schema.Type<typeof DashboardCardsSchema>;
+
+export const DashboardCardsDetailSchema = Schema.Struct({
+  dashboardCardsDetails: Schema.Array(Schema.Unknown)
+});
+
+export type DashboardCardsDetail = Schema.Schema.Type<typeof DashboardCardsDetailSchema>;
+
+export const DashboardCardsStatusSchema = Schema.Struct({
+  unreadCardsCount: Schema.Number
+});
+
+export type DashboardCardsStatus = Schema.Schema.Type<typeof DashboardCardsStatusSchema>;
 
 export const MessagesStatusSchema = Schema.Struct({
   unreadMessagesCount: Schema.Number
@@ -257,6 +298,13 @@ export const SessionStatusSchema = Schema.Struct({
 
 export type SessionStatus = Schema.Schema.Type<typeof SessionStatusSchema>;
 
+export const TodayMetaSchema = Schema.Struct({
+  greetingName: Schema.String,
+  calendar: Schema.NullOr(Schema.Unknown)
+});
+
+export type TodayMeta = Schema.Schema.Type<typeof TodayMetaSchema>;
+
 export const HomeCellSchema = Schema.Struct({
   badge: Schema.NullOr(Schema.Unknown),
   type: Schema.String
@@ -306,6 +354,14 @@ export const StartupActionsSchema = Schema.Struct({
 });
 
 export type StartupActions = Schema.Schema.Type<typeof StartupActionsSchema>;
+
+export const OnboardingSchema = Schema.Struct({
+  type: Schema.String,
+  time: Schema.String,
+  step: Schema.String
+});
+
+export type Onboarding = Schema.Schema.Type<typeof OnboardingSchema>;
 
 export const TimetableFormatDefinitionSchema = Schema.Struct({
   id: Schema.Number,
@@ -404,6 +460,25 @@ export const TimetableClassFilterItemSchema = Schema.Struct({
   department: TimetableDepartmentSchema
 });
 
+export const TimetableTeacherFilterItemSchema = Schema.Struct({
+  teacher: DisplayResourceSchema,
+  departments: Schema.Array(TimetableDepartmentSchema),
+  imageUrl: Schema.NullOr(Schema.String)
+});
+
+export const TimetableSubjectFilterItemSchema = Schema.Struct({
+  subject: DisplayResourceSchema,
+  departments: Schema.Array(TimetableDepartmentSchema)
+});
+
+export const TimetableRoomFilterItemSchema = Schema.Struct({
+  room: DisplayResourceSchema,
+  capacity: Schema.Number,
+  roomGroups: Schema.Array(Schema.Unknown),
+  building: Schema.NullOr(DisplayResourceSchema),
+  department: Schema.NullOr(TimetableDepartmentSchema)
+});
+
 export const TimetableFilterSchema = Schema.Struct({
   resourceType: Schema.String,
   preSelected: Schema.NullOr(Schema.Unknown),
@@ -414,10 +489,10 @@ export const TimetableFilterSchema = Schema.Struct({
   assignmentGroups: Schema.Array(Schema.Unknown),
   classes: Schema.Array(TimetableClassFilterItemSchema),
   resources: Schema.Array(Schema.Unknown),
-  rooms: Schema.Array(Schema.Unknown),
-  subjects: Schema.Array(Schema.Unknown),
+  rooms: Schema.Array(TimetableRoomFilterItemSchema),
+  subjects: Schema.Array(TimetableSubjectFilterItemSchema),
   students: Schema.Array(Schema.Unknown),
-  teachers: Schema.Array(Schema.Unknown)
+  teachers: Schema.Array(TimetableTeacherFilterItemSchema)
 });
 
 export type TimetableFilter = Schema.Schema.Type<typeof TimetableFilterSchema>;
@@ -468,3 +543,36 @@ export const TimetableCalendarSchema = Schema.Struct({
 });
 
 export type TimetableCalendar = Schema.Schema.Type<typeof TimetableCalendarSchema>;
+
+export const TimetableWeekOverviewCellSchema = Schema.Struct({
+  backEntries: Schema.Array(Schema.Unknown),
+  gridEntries: Schema.Array(Schema.Unknown)
+});
+
+export const TimetableWeekOverviewDayResourceSchema = Schema.Struct({
+  resource: DisplayResourceSchema,
+  status: Schema.String,
+  cells: Schema.Array(TimetableWeekOverviewCellSchema)
+});
+
+export const TimetableWeekOverviewDaySchema = Schema.Struct({
+  day: Schema.String,
+  resources: Schema.Array(TimetableWeekOverviewDayResourceSchema)
+});
+
+export const TimetableWeekOverviewSlotSchema = Schema.Struct({
+  name: Schema.String,
+  number: Schema.Number,
+  duration: TimeRangeSchema
+});
+
+export const TimetableEntriesWeekOverviewSchema = Schema.Struct({
+  slots: Schema.Array(TimetableWeekOverviewSlotSchema),
+  days: Schema.Array(TimetableWeekOverviewDaySchema)
+});
+
+export type TimetableEntriesWeekOverview = Schema.Schema.Type<typeof TimetableEntriesWeekOverviewSchema>;
+
+export const TimetableExternalCalendarSchema = Schema.Array(Schema.Unknown);
+
+export type TimetableExternalCalendar = Schema.Schema.Type<typeof TimetableExternalCalendarSchema>;
