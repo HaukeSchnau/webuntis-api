@@ -630,6 +630,18 @@ exports[`live WebUntis integration > with live layer > documents current blocked
 }
 `;
 
+exports[`live WebUntis integration > with live layer > documents current startup v1 and v2 parity 1`] = `
+{
+  "startupActions": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current startup v1 and v2 parity 2`] = `
+{
+  "startupActions": [],
+}
+`;
+
 exports[`live WebUntis integration > with live layer > documents current timetable utility/settings access behavior 1`] = `
 {
   "body": {

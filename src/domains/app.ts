@@ -69,7 +69,7 @@ export const makeAppClient = Effect.gen(function*() {
     getMobileData: http.getSchema("api/rest/view/v1/mobile/data", MobileDataSchema, {
       withSchoolYearHeader: false
     }),
-    getStartupActions: http.getSchema("api/rest/view/v1/trigger/startup", StartupActionsSchema, {
+    getStartupActions: http.getSchema("api/rest/view/v2/trigger/startup", StartupActionsSchema, {
       withSchoolYearHeader: false
     }),
     getPlatformApplicationMenus: http.getSchema(

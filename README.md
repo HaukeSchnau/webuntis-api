@@ -24,7 +24,7 @@ The current implementation targets the modern REST-first WebUntis flow:
 2. Session bootstrap via `GET /WebUntis/index.do`
 3. Credential submission via `POST /WebUntis/j_spring_security_check`
 4. Token minting via `GET /WebUntis/api/token/new`
-5. Bearer-authenticated requests to `/WebUntis/api/rest/view/v1/...` and selected confirmed `v2` routes such as `timetable/availableRooms`
+5. Bearer-authenticated requests to `/WebUntis/api/rest/view/v1/...` and selected confirmed `v2` routes such as `trigger/startup` and `timetable/availableRooms`
 
 Reverse-engineering artifacts live under [`research/webuntis`](./research/webuntis).
 
