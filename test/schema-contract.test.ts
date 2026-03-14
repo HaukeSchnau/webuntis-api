@@ -7,6 +7,7 @@ import {
   MessageSummarySchema,
   MessagesPermissionsSchema,
   OnboardingSchema,
+  StartupActionsSchema,
   TimeGridSchema,
   TimetableFormatDefinitionSchema,
   TimetableEntriesWeekOverviewSchema
@@ -184,6 +185,16 @@ describe("strict schema decoding", () => {
             }
           }
         ]
+      }, strictJsonParseOptions)
+    ).toThrow();
+  });
+
+  it("rejects unsupported startup actions", () => {
+    const decode = Schema.decodeUnknownSync(StartupActionsSchema);
+
+    expect(() =>
+      decode({
+        startupActions: ["VERIFY_PROFILE_DATA", "UNKNOWN_ACTION"]
       }, strictJsonParseOptions)
     ).toThrow();
   });

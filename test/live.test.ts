@@ -1,9 +1,11 @@
 import { describe, expect, it, layer } from "@effect/vitest";
-import { Effect, Layer } from "effect";
+import { Effect, Layer, Schema } from "effect";
 import { AuthClient } from "../src/core/auth.ts";
 import { fromEnv } from "../src/core/config.ts";
 import { UnexpectedResponseError } from "../src/core/errors.ts";
 import { layer as makeWebUntisLayer, WebUntisClient } from "../src/client.ts";
+import { strictJsonParseOptions } from "../src/core/schema.ts";
+import { StartupActionsSchema } from "../src/domains/schemas.ts";
 import {
   liveEnvMissing,
   normalizeAppData,
@@ -78,6 +80,23 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         expect(normalizeHome(home)).toMatchSnapshot();
         expect(normalizeMobileData(mobileData)).toMatchSnapshot();
         expect(normalizeStartupActions(startupActions)).toMatchSnapshot();
+      }), 30_000);
+
+    it.effect("documents current startup v1 and v2 parity", () =>
+      Effect.gen(function*() {
+        const client = yield* WebUntisClient;
+        const decodeStartupActions = Schema.decodeUnknownSync(StartupActionsSchema);
+        const startupActionsV1 = decodeStartupActions(
+          yield* client.rawViewApi.getJson("api/rest/view/v1/trigger/startup", {
+            withSchoolYearHeader: false
+          }),
+          strictJsonParseOptions
+        );
+        const startupActionsV2 = yield* client.app.getStartupActions;
+
+        expect(startupActionsV1).toEqual(startupActionsV2);
+        expect(normalizeStartupActions(startupActionsV1)).toMatchSnapshot();
+        expect(normalizeStartupActions(startupActionsV2)).toMatchSnapshot();
       }), 30_000);
 
     it.effect("reads additional app bootstrap endpoints", () =>

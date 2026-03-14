@@ -373,7 +373,12 @@ export const MobileDataSchema = Schema.Struct({
 export type MobileData = Schema.Schema.Type<typeof MobileDataSchema>;
 
 export const StartupActionsSchema = Schema.Struct({
-  startupActions: Schema.Array(Schema.Unknown)
+  startupActions: Schema.Array(
+    Schema.Literals([
+      "VERIFY_PROFILE_DATA",
+      "FORCE_ADMIN_DETAIL_CHANGE"
+    ])
+  )
 });
 
 export type StartupActions = Schema.Schema.Type<typeof StartupActionsSchema>;
