@@ -63,7 +63,7 @@ export const makeAppClient = Effect.gen(function*() {
 
   return {
     getData,
-    getHome: http.getSchema("api/rest/view/v1/home", HomeSchema, {
+    getHome: http.getSchema("api/rest/view/v2/home", HomeSchema, {
       withSchoolYearHeader: false
     }),
     getMobileData: http.getSchema("api/rest/view/v1/mobile/data", MobileDataSchema, {

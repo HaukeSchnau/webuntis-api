@@ -630,6 +630,120 @@ exports[`live WebUntis integration > with live layer > documents current blocked
 }
 `;
 
+exports[`live WebUntis integration > with live layer > documents current home and mobile version behavior 1`] = `
+{
+  "integrationsSection": [],
+  "isEmailUpdateRequired": false,
+  "schoolName": "<redacted-label> Lilienthal",
+  "sections": [
+    {
+      "cells": [
+        {
+          "badge": null,
+          "type": "<redacted-label>_<redacted-label>",
+        },
+        {
+          "badge": null,
+          "type": "<redacted-label>_<redacted-label>",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current home and mobile version behavior 2`] = `
+{
+  "integrationsSection": [],
+  "isEmailUpdateRequired": false,
+  "schoolName": "<redacted-label> Lilienthal",
+  "sections": [
+    {
+      "cells": [
+        {
+          "badge": null,
+          "type": "<redacted-label>_<redacted-label>",
+        },
+        {
+          "badge": null,
+          "type": "<redacted-label>_<redacted-label>_<redacted-label>",
+        },
+        {
+          "badge": null,
+          "type": "<redacted-label>_<redacted-label>",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current home and mobile version behavior 3`] = `
+{
+  "schoolYear": {
+    "dateRange": {
+      "end": "<redacted-datetime>",
+      "start": "<redacted-datetime>",
+    },
+    "id": 7,
+    "name": "2025/2026",
+  },
+  "tenant": {
+    "displayName": "<redacted-label> Lilienthal",
+    "id": "6603700",
+    "language": "",
+    "wuVersion": "2026.8.1",
+  },
+  "user": {
+    "departmentId": 0,
+    "id": 3711,
+    "locale": "de",
+    "permissions": [
+      "<redacted-label>_<redacted-label>",
+      "<redacted-label>_<redacted-label>",
+      "<redacted-label>_<redacted-label>_<redacted-label>",
+    ],
+    "person": null,
+    "referencedStudents": [],
+    "role": "<redacted-label>",
+    "username": "<redacted>",
+  },
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current home and mobile version behavior 4`] = `
+{
+  "schoolYear": {
+    "dateRange": {
+      "end": "<redacted-datetime>",
+      "start": "<redacted-datetime>",
+    },
+    "id": 7,
+    "name": "2025/2026",
+  },
+  "tenant": {
+    "displayName": "<redacted-label> Lilienthal",
+    "id": "6603700",
+    "language": "",
+    "wuVersion": "2026.8.1",
+  },
+  "user": {
+    "departmentId": 0,
+    "id": 3711,
+    "locale": "de",
+    "permissions": [
+      "<redacted-label>_<redacted-label>",
+      "<redacted-label>_<redacted-label>",
+      "<redacted-label>_<redacted-label>_<redacted-label>",
+    ],
+    "person": null,
+    "referencedStudents": [],
+    "role": "<redacted-label>",
+    "username": "<redacted>",
+  },
+}
+`;
+
 exports[`live WebUntis integration > with live layer > documents current startup v1 and v2 parity 1`] = `
 {
   "startupActions": [],
@@ -1299,6 +1413,10 @@ exports[`live WebUntis integration > with live layer > reads bootstrap and home 
         {
           "badge": null,
           "type": "<redacted-label>_<redacted-label>",
+        },
+        {
+          "badge": null,
+          "type": "<redacted-label>_<redacted-label>_<redacted-label>",
         },
         {
           "badge": null,
