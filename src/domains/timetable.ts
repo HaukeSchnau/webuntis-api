@@ -10,6 +10,7 @@ import {
   TimetableFilterSchema,
   TimetableGridSchema,
   TimetableMenuSchema,
+  type TimetableResourceType,
   TimetableSearchSchema,
   TimeGridSchema
 } from "./schemas.ts";
@@ -17,7 +18,7 @@ import {
 export interface TimetableEntriesRequest {
   readonly start: string;
   readonly end: string;
-  readonly resourceType: "CLASS" | "TEACHER" | "ROOM" | "SUBJECT" | "STUDENT";
+  readonly resourceType: TimetableResourceType;
   readonly resources: ReadonlyArray<number>;
   readonly timetableType?: string | undefined;
   readonly format?: number | undefined;
@@ -28,12 +29,12 @@ export interface TimetableEntriesRequest {
 export interface TimetableFilterRequest {
   readonly start: string;
   readonly end: string;
-  readonly resourceType: "CLASS" | "TEACHER" | "ROOM" | "SUBJECT" | "STUDENT";
+  readonly resourceType: TimetableResourceType;
   readonly timetableType?: string | undefined;
 }
 
 export interface TimetableEntriesSettingsRequest {
-  readonly resourceType: "CLASS" | "TEACHER" | "ROOM" | "SUBJECT" | "STUDENT";
+  readonly resourceType: TimetableResourceType;
   readonly format?: number | undefined;
 }
 
@@ -47,6 +48,10 @@ export interface TimetableCalendarRequest {
   readonly timetableType?: string | undefined;
 }
 
+export interface TimetableExternalCalendarRequest {
+  readonly myTimetable?: boolean | undefined;
+}
+
 export interface TimetableAvailableRoomsRequest {
   readonly startDateTime: string;
   readonly endDateTime: string;
@@ -55,7 +60,7 @@ export interface TimetableAvailableRoomsRequest {
 export interface TimetableEntriesWeekOverviewRequest {
   readonly start: string;
   readonly end: string;
-  readonly resourceType: "CLASS" | "TEACHER" | "ROOM" | "SUBJECT" | "STUDENT";
+  readonly resourceType: TimetableResourceType;
   readonly resources: ReadonlyArray<number>;
   readonly timetableType?: string | undefined;
 }
@@ -96,11 +101,13 @@ export const makeTimetableClient = Effect.gen(function*() {
         },
         withSchoolYearHeader: false
       }),
-    getExternalCalendar: http.getSchema(
-      "api/rest/view/v1/timetable/externalCalendar",
-      TimetableExternalCalendarSchema,
-      { withSchoolYearHeader: false }
-    ),
+    getExternalCalendar: (request: TimetableExternalCalendarRequest = {}) =>
+      http.getSchema("api/rest/view/v1/timetable/externalCalendar", TimetableExternalCalendarSchema, {
+        query: {
+          myTimetable: request.myTimetable
+        },
+        withSchoolYearHeader: false
+      }),
     search: (request: TimetableSearchRequest) =>
       http.getSchema("api/rest/view/v1/timetable/search", TimetableSearchSchema, {
         query: {

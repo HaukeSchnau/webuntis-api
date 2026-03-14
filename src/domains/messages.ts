@@ -4,6 +4,7 @@ import {
   MessageDetailSchema,
   MessageDraftsSchema,
   MessageRecipientFilterSchema,
+  type MessageRecipientOption,
   MessageRecipientQuickfiltersSchema,
   MessageReplyFormSchema,
   MessageRecipientSearchSchema,
@@ -29,13 +30,13 @@ export const makeMessagesClient = Effect.gen(function*() {
       MessageRecipientQuickfiltersSchema,
       { withSchoolYearHeader: false }
     ),
-    getRecipientFilter: (recipientOption: string) =>
+    getRecipientFilter: (recipientOption: MessageRecipientOption) =>
       http.getSchema(
         `api/rest/view/v1/messages/recipients/${encodeURIComponent(recipientOption)}/filter`,
         MessageRecipientFilterSchema,
         { withSchoolYearHeader: false }
       ),
-    searchRecipients: (recipientOption: string, searchText: string) =>
+    searchRecipients: (recipientOption: MessageRecipientOption, searchText: string) =>
       http.getSchema(
         `api/rest/view/v1/messages/recipients/${encodeURIComponent(recipientOption)}/search`,
         MessageRecipientSearchSchema,

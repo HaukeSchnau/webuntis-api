@@ -20,6 +20,7 @@ import {
   type MobileData,
   OnboardingSchema,
   type Onboarding,
+  type OnboardingType,
   StartupActionsSchema,
   type StartupActions,
   TodayMetaSchema,
@@ -27,7 +28,7 @@ import {
 } from "./schemas.ts";
 
 export interface OnboardingRequest {
-  readonly type: string;
+  readonly type: OnboardingType;
 }
 
 export interface AppClient {
