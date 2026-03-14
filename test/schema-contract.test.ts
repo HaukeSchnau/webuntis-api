@@ -3,6 +3,7 @@ import { Schema } from "effect";
 import { strictJsonParseOptions } from "../src/core/schema.ts";
 import {
   AppPlatformApplicationMenuSchema,
+  ExamFilterSchema,
   HomeCellSchema,
   MessageSummarySchema,
   MessagesPermissionsSchema,
@@ -244,6 +245,27 @@ describe("strict schema decoding", () => {
           role: "STAFF",
           permissions: ["READ_MESSAGES", "WRITE_MESSAGES"]
         }
+      }, strictJsonParseOptions)
+    ).toThrow();
+  });
+
+  it("rejects excess properties in exam filter payloads", () => {
+    const decode = Schema.decodeUnknownSync(ExamFilterSchema);
+
+    expect(() =>
+      decode({
+        examTypes: [
+          {
+            id: 4,
+            shortName: "Klausur",
+            longName: "Klausur Sek2",
+            displayName: "Klausur Sek2",
+            extra: true
+          }
+        ],
+        subjects: [],
+        classes: [],
+        teachers: []
       }, strictJsonParseOptions)
     ).toThrow();
   });

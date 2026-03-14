@@ -6,6 +6,10 @@ import type {
   DashboardCards,
   DashboardCardsDetail,
   DashboardCardsStatus,
+  ExamDetail,
+  ExamFilter,
+  Exams,
+  ExamStatistics,
   Home,
   MessageDetail,
   MessageDrafts,
@@ -91,6 +95,10 @@ export const normalizeAppThirdPartyData = (value: AppThirdPartyData) => normaliz
 export const normalizeDashboardCards = (value: DashboardCards) => normalizeUnknown(value);
 export const normalizeDashboardCardsDetail = (value: DashboardCardsDetail) => normalizeUnknown(value);
 export const normalizeDashboardCardsStatus = (value: DashboardCardsStatus) => normalizeUnknown(value);
+export const normalizeExamDetail = (value: ExamDetail) => normalizeUnknown(value);
+export const normalizeExamFilter = (value: ExamFilter) => normalizeUnknown(value);
+export const normalizeExams = (value: Exams) => normalizeUnknown(value);
+export const normalizeExamStatistics = (value: ExamStatistics) => normalizeUnknown(value);
 export const normalizeHome = (value: Home) => normalizeUnknown(value);
 export const normalizeMessageDetail = (value: MessageDetail) => normalizeUnknown(value);
 export const normalizeMessageDrafts = (value: MessageDrafts) => normalizeUnknown(value);
