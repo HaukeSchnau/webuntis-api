@@ -7,6 +7,7 @@ import { SchoolDiscovery, Live as SchoolDiscoveryLive } from "./core/discovery.t
 import { SessionStore, inMemory as SessionStoreInMemory } from "./core/session-store.ts";
 import { WebUntisHttp, Live as WebUntisHttpLive } from "./core/http.ts";
 import { makeAppClient } from "./domains/app.ts";
+import { makeClassregClient } from "./domains/classreg.ts";
 import { makeExamsClient } from "./domains/exams.ts";
 import { makeMessagesClient } from "./domains/messages.ts";
 import { makeProfileClient } from "./domains/profile.ts";
@@ -22,6 +23,7 @@ export interface WebUntisClient {
     readonly clear: Fx.Effect<void, unknown>;
   };
   readonly app: Fx.Success<typeof makeAppClient>;
+  readonly classreg: Fx.Success<typeof makeClassregClient>;
   readonly exams: Fx.Success<typeof makeExamsClient>;
   readonly schoolyears: Fx.Success<typeof makeSchoolyearsClient>;
   readonly messages: Fx.Success<typeof makeMessagesClient>;
@@ -37,6 +39,7 @@ export const Live = Layer.effect(WebUntisClient)(
   Effect.gen(function*() {
     const auth = yield* AuthClient;
     const app = yield* makeAppClient;
+    const classreg = yield* makeClassregClient;
     const exams = yield* makeExamsClient;
     const schoolyears = yield* makeSchoolyearsClient;
     const messages = yield* makeMessagesClient;
@@ -48,6 +51,7 @@ export const Live = Layer.effect(WebUntisClient)(
     return {
       auth,
       app,
+      classreg,
       exams,
       schoolyears,
       messages,

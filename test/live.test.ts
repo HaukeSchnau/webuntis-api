@@ -16,6 +16,8 @@ import {
   normalizeAppData,
   normalizeAppPlatformApplicationMenus,
   normalizeAppThirdPartyData,
+  normalizeClassregAbsencesMeta,
+  normalizeClassregHomeworkMeta,
   normalizeDashboardCards,
   normalizeDashboardCardsDetail,
   normalizeDashboardCardsStatus,
@@ -216,6 +218,23 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         expect(normalizeMessagesStatus(messageStatus)).toMatchSnapshot();
         expect(normalizeMessageDetail(detail)).toMatchSnapshot();
         expect(normalizeMessageReplyForm(replyForm)).toMatchSnapshot();
+      }), 30_000);
+
+    it.effect("reads classreg meta endpoints", () =>
+      Effect.gen(function*() {
+        const client = yield* WebUntisClient;
+        const absencesMeta = yield* client.classreg.getAbsencesMeta;
+        const homeworkMeta = yield* client.classreg.getHomeworkMeta;
+
+        expect(absencesMeta.classes.length).toBeGreaterThan(0);
+        expect(absencesMeta.reasons.length).toBeGreaterThan(0);
+        expect(absencesMeta.excuseStatuses.length).toBeGreaterThan(0);
+        expect(homeworkMeta.classes.length).toBeGreaterThan(0);
+        expect(homeworkMeta.teachers.length).toBeGreaterThan(0);
+        expect(homeworkMeta.subjects.length).toBeGreaterThan(0);
+        expect(homeworkMeta.schoolYears.length).toBeGreaterThan(0);
+        expect(normalizeClassregAbsencesMeta(absencesMeta)).toMatchSnapshot();
+        expect(normalizeClassregHomeworkMeta(homeworkMeta)).toMatchSnapshot();
       }), 30_000);
 
     it.effect("reads exam endpoints", () =>

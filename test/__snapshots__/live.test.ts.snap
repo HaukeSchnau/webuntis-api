@@ -1536,6 +1536,2578 @@ exports[`live WebUntis integration > with live layer > reads bootstrap and home 
 }
 `;
 
+exports[`live WebUntis integration > with live layer > reads classreg meta endpoints 1`] = `
+{
+  "assignmentGroups": [],
+  "canEditReason": true,
+  "classes": [
+    {
+      "id": 470,
+      "name": "10",
+    },
+    {
+      "id": 473,
+      "name": "10.1",
+    },
+    {
+      "id": 476,
+      "name": "10.2",
+    },
+    {
+      "id": 479,
+      "name": "10.3",
+    },
+    {
+      "id": 482,
+      "name": "10.4",
+    },
+    {
+      "id": 485,
+      "name": "10.5",
+    },
+    {
+      "id": 488,
+      "name": "10.6",
+    },
+    {
+      "id": 491,
+      "name": "11.1",
+    },
+    {
+      "id": 494,
+      "name": "11.2",
+    },
+    {
+      "id": 497,
+      "name": "11.3",
+    },
+    {
+      "id": 503,
+      "name": "12",
+    },
+    {
+      "id": 500,
+      "name": "13",
+    },
+    {
+      "id": 374,
+      "name": "5.1",
+    },
+    {
+      "id": 377,
+      "name": "5.2",
+    },
+    {
+      "id": 380,
+      "name": "5.3",
+    },
+    {
+      "id": 383,
+      "name": "5.4",
+    },
+    {
+      "id": 386,
+      "name": "5.5",
+    },
+    {
+      "id": 389,
+      "name": "5.6",
+    },
+    {
+      "id": 392,
+      "name": "6.1",
+    },
+    {
+      "id": 395,
+      "name": "6.2",
+    },
+    {
+      "id": 398,
+      "name": "6.3",
+    },
+    {
+      "id": 401,
+      "name": "6.4",
+    },
+    {
+      "id": 404,
+      "name": "6.5",
+    },
+    {
+      "id": 407,
+      "name": "6.6",
+    },
+    {
+      "id": 410,
+      "name": "7.1",
+    },
+    {
+      "id": 413,
+      "name": "7.2",
+    },
+    {
+      "id": 416,
+      "name": "7.3",
+    },
+    {
+      "id": 419,
+      "name": "7.4",
+    },
+    {
+      "id": 422,
+      "name": "7.5",
+    },
+    {
+      "id": 425,
+      "name": "7.6",
+    },
+    {
+      "id": 428,
+      "name": "8",
+    },
+    {
+      "id": 431,
+      "name": "8.1",
+    },
+    {
+      "id": 434,
+      "name": "8.2",
+    },
+    {
+      "id": 437,
+      "name": "8.3",
+    },
+    {
+      "id": 440,
+      "name": "8.4",
+    },
+    {
+      "id": 443,
+      "name": "8.5",
+    },
+    {
+      "id": 446,
+      "name": "9",
+    },
+    {
+      "id": 449,
+      "name": "9.1",
+    },
+    {
+      "id": 452,
+      "name": "9.2",
+    },
+    {
+      "id": 455,
+      "name": "9.3",
+    },
+    {
+      "id": 458,
+      "name": "9.4",
+    },
+    {
+      "id": 461,
+      "name": "9.5",
+    },
+    {
+      "id": 464,
+      "name": "9.6",
+    },
+    {
+      "id": 467,
+      "name": "9.7",
+    },
+  ],
+  "defaultExcuseStatusId": null,
+  "defaultReasonId": 41,
+  "excuseStatuses": [
+    {
+      "id": 0,
+      "name": "",
+      "type": "<redacted-label>",
+    },
+    {
+      "id": 3,
+      "name": "Attest eingereicht",
+      "type": "<redacted-label>",
+    },
+    {
+      "id": 1,
+      "name": "entschuldigt",
+      "type": "<redacted-label>",
+    },
+    {
+      "id": 2,
+      "name": "nicht entschuldigt",
+      "type": "<redacted-label>_<redacted-label>",
+    },
+  ],
+  "filterIsActiveForMissingAbsenceParentNotification": false,
+  "reasons": [
+    {
+      "automaticNotificationEnabled": false,
+      "id": 45,
+      "name": "Abgemeldet bei Burkardt",
+    },
+    {
+      "automaticNotificationEnabled": false,
+      "id": 41,
+      "name": "Abwesend ohne Grund",
+    },
+    {
+      "automaticNotificationEnabled": false,
+      "id": 40,
+      "name": "Eltern telefonisch",
+    },
+    {
+      "automaticNotificationEnabled": false,
+      "id": 46,
+      "name": "entschuldigtes Fehlen",
+    },
+    {
+      "automaticNotificationEnabled": false,
+      "id": 42,
+      "name": "Verspätet",
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads classreg meta endpoints 2`] = `
+{
+  "classes": [
+    {
+      "id": 374,
+      "name": "5.1",
+      "nameShort": "5.1",
+    },
+    {
+      "id": 377,
+      "name": "5.2",
+      "nameShort": "5.2",
+    },
+    {
+      "id": 380,
+      "name": "5.3",
+      "nameShort": "5.3",
+    },
+    {
+      "id": 383,
+      "name": "5.4",
+      "nameShort": "5.4",
+    },
+    {
+      "id": 386,
+      "name": "5.5",
+      "nameShort": "5.5",
+    },
+    {
+      "id": 389,
+      "name": "5.6",
+      "nameShort": "5.6",
+    },
+    {
+      "id": 392,
+      "name": "6.1",
+      "nameShort": "6.1",
+    },
+    {
+      "id": 395,
+      "name": "6.2",
+      "nameShort": "6.2",
+    },
+    {
+      "id": 398,
+      "name": "6.3",
+      "nameShort": "6.3",
+    },
+    {
+      "id": 401,
+      "name": "6.4",
+      "nameShort": "6.4",
+    },
+    {
+      "id": 404,
+      "name": "6.5",
+      "nameShort": "6.5",
+    },
+    {
+      "id": 407,
+      "name": "6.6",
+      "nameShort": "6.6",
+    },
+    {
+      "id": 410,
+      "name": "7.1",
+      "nameShort": "7.1",
+    },
+    {
+      "id": 413,
+      "name": "7.2",
+      "nameShort": "7.2",
+    },
+    {
+      "id": 416,
+      "name": "7.3",
+      "nameShort": "7.3",
+    },
+    {
+      "id": 419,
+      "name": "7.4",
+      "nameShort": "7.4",
+    },
+    {
+      "id": 422,
+      "name": "7.5",
+      "nameShort": "7.5",
+    },
+    {
+      "id": 425,
+      "name": "7.6",
+      "nameShort": "7.6",
+    },
+    {
+      "id": 428,
+      "name": "8",
+      "nameShort": "8",
+    },
+    {
+      "id": 431,
+      "name": "8.1",
+      "nameShort": "8.1",
+    },
+    {
+      "id": 434,
+      "name": "8.2",
+      "nameShort": "8.2",
+    },
+    {
+      "id": 437,
+      "name": "8.3",
+      "nameShort": "8.3",
+    },
+    {
+      "id": 440,
+      "name": "8.4",
+      "nameShort": "8.4",
+    },
+    {
+      "id": 443,
+      "name": "8.5",
+      "nameShort": "8.5",
+    },
+    {
+      "id": 446,
+      "name": "9",
+      "nameShort": "9",
+    },
+    {
+      "id": 449,
+      "name": "9.1",
+      "nameShort": "9.1",
+    },
+    {
+      "id": 452,
+      "name": "9.2",
+      "nameShort": "9.2",
+    },
+    {
+      "id": 455,
+      "name": "9.3",
+      "nameShort": "9.3",
+    },
+    {
+      "id": 458,
+      "name": "9.4",
+      "nameShort": "9.4",
+    },
+    {
+      "id": 461,
+      "name": "9.5",
+      "nameShort": "9.5",
+    },
+    {
+      "id": 464,
+      "name": "9.6",
+      "nameShort": "9.6",
+    },
+    {
+      "id": 467,
+      "name": "9.7",
+      "nameShort": "9.7",
+    },
+    {
+      "id": 470,
+      "name": "10",
+      "nameShort": "10",
+    },
+    {
+      "id": 473,
+      "name": "10.1",
+      "nameShort": "10.1",
+    },
+    {
+      "id": 476,
+      "name": "10.2",
+      "nameShort": "10.2",
+    },
+    {
+      "id": 479,
+      "name": "10.3",
+      "nameShort": "10.3",
+    },
+    {
+      "id": 482,
+      "name": "10.4",
+      "nameShort": "10.4",
+    },
+    {
+      "id": 485,
+      "name": "10.5",
+      "nameShort": "10.5",
+    },
+    {
+      "id": 488,
+      "name": "10.6",
+      "nameShort": "10.6",
+    },
+    {
+      "id": 491,
+      "name": "11.1",
+      "nameShort": "11.1",
+    },
+    {
+      "id": 494,
+      "name": "11.2",
+      "nameShort": "11.2",
+    },
+    {
+      "id": 497,
+      "name": "11.3",
+      "nameShort": "11.3",
+    },
+    {
+      "id": 500,
+      "name": "13",
+      "nameShort": "13",
+    },
+    {
+      "id": 503,
+      "name": "12",
+      "nameShort": "12",
+    },
+  ],
+  "schoolYears": [
+    {
+      "dateRange": {
+        "end": "<redacted-date>",
+        "start": "<redacted-date>",
+      },
+      "id": 4,
+      "name": "2023/2024",
+      "parentId": 0,
+    },
+    {
+      "dateRange": {
+        "end": "<redacted-date>",
+        "start": "<redacted-date>",
+      },
+      "id": 6,
+      "name": "2024/2025",
+      "parentId": 0,
+    },
+    {
+      "dateRange": {
+        "end": "<redacted-date>",
+        "start": "<redacted-date>",
+      },
+      "id": 7,
+      "name": "2025/2026",
+      "parentId": 0,
+    },
+  ],
+  "subjects": [
+    {
+      "id": 14,
+      "name": "<redacted-label> Zeitung",
+      "nameShort": "<redacted-label> Zeitung",
+    },
+    {
+      "id": 18,
+      "name": "<redacted-label> Werken",
+      "nameShort": "<redacted-label> Werken",
+    },
+    {
+      "id": 42,
+      "name": "<redacted-label> Sport",
+      "nameShort": "<redacted-label> Sport",
+    },
+    {
+      "id": 50,
+      "name": "<redacted-label> Singen",
+      "nameShort": "<redacted-label> Singen",
+    },
+    {
+      "id": 58,
+      "name": "<redacted-label> Schulgarten",
+      "nameShort": "<redacted-label> Schulgarten",
+    },
+    {
+      "id": 66,
+      "name": "<redacted-label> Rund um Mexiko",
+      "nameShort": "<redacted-label> Rund um Mexiko",
+    },
+    {
+      "id": 70,
+      "name": "<redacted-label> Rockband",
+      "nameShort": "<redacted-label> Rockband",
+    },
+    {
+      "id": 74,
+      "name": "<redacted-label> Präsentieren",
+      "nameShort": "<redacted-label> Präsentieren",
+    },
+    {
+      "id": 78,
+      "name": "<redacted-label> Podcast",
+      "nameShort": "<redacted-label> Podcast",
+    },
+    {
+      "id": 90,
+      "name": "<redacted-label> O",
+      "nameShort": "<redacted-label> O",
+    },
+    {
+      "id": 94,
+      "name": "<redacted-label> Musik",
+      "nameShort": "<redacted-label> Musik",
+    },
+    {
+      "id": 106,
+      "name": "<redacted-label> <redacted-label>",
+      "nameShort": "<redacted-label> <redacted-label>",
+    },
+    {
+      "id": 110,
+      "name": "<redacted-label> Länder",
+      "nameShort": "<redacted-label> Länder",
+    },
+    {
+      "id": 114,
+      "name": "<redacted-label> Küche",
+      "nameShort": "<redacted-label> Küche",
+    },
+    {
+      "id": 118,
+      "name": "<redacted-label> Kreativ",
+      "nameShort": "<redacted-label> Kreativ",
+    },
+    {
+      "id": 122,
+      "name": "<redacted-label> <redacted-label>",
+      "nameShort": "<redacted-label> <redacted-label>",
+    },
+    {
+      "id": 126,
+      "name": "<redacted-label> <redacted-label> Promo",
+      "nameShort": "<redacted-label> <redacted-label> Promo",
+    },
+    {
+      "id": 130,
+      "name": "<redacted-label> <redacted-label>",
+      "nameShort": "<redacted-label> <redacted-label>",
+    },
+    {
+      "id": 146,
+      "name": "<redacted-label> Gewässerökologie",
+      "nameShort": "<redacted-label> Gewässerökologie",
+    },
+    {
+      "id": 166,
+      "name": "<redacted-label> Film",
+      "nameShort": "<redacted-label> Film",
+    },
+    {
+      "id": 174,
+      "name": "<redacted-label> Ernährung",
+      "nameShort": "<redacted-label> Ernährung",
+    },
+    {
+      "id": 178,
+      "name": "<redacted-label> Erfindungen",
+      "nameShort": "<redacted-label> Erfindungen",
+    },
+    {
+      "id": 182,
+      "name": "<redacted-label> <redacted-label>",
+      "nameShort": "<redacted-label> <redacted-label>",
+    },
+    {
+      "id": 202,
+      "name": "<redacted-label> Alpen",
+      "nameShort": "<redacted-label> Alpen",
+    },
+    {
+      "id": 210,
+      "name": "<redacted-label>  Lesen Schreiben",
+      "nameShort": "<redacted-label>  Lesen Schreiben",
+    },
+    {
+      "id": 218,
+      "name": "wn2",
+      "nameShort": "wn2",
+    },
+    {
+      "id": 222,
+      "name": "wn1",
+      "nameShort": "wn1",
+    },
+    {
+      "id": 226,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 230,
+      "name": "Willk Gras",
+      "nameShort": "Willk Gras",
+    },
+    {
+      "id": 234,
+      "name": "Will-An-Lili",
+      "nameShort": "Will-An-Lili",
+    },
+    {
+      "id": 238,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 242,
+      "name": "Tutorium",
+      "nameShort": "Tutorium",
+    },
+    {
+      "id": 246,
+      "name": "TutMiL",
+      "nameShort": "TutMiL",
+    },
+    {
+      "id": 250,
+      "name": "Tu<redacted-label>i",
+      "nameShort": "Tu<redacted-label>i",
+    },
+    {
+      "id": 254,
+      "name": "<redacted-label> digital",
+      "nameShort": "<redacted-label> digital",
+    },
+    {
+      "id": 258,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 262,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 266,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 270,
+      "name": "Sprachwerkstatt",
+      "nameShort": "Sprachwerkstatt",
+    },
+    {
+      "id": 274,
+      "name": "Sport-Theorie",
+      "nameShort": "Sport-Theorie",
+    },
+    {
+      "id": 278,
+      "name": "Spanisch-F",
+      "nameShort": "Spanisch-F",
+    },
+    {
+      "id": 282,
+      "name": "Spanisch-A",
+      "nameShort": "Spanisch-A",
+    },
+    {
+      "id": 286,
+      "name": "Spa  <redacted-label>",
+      "nameShort": "Spa  <redacted-label>",
+    },
+    {
+      "id": 290,
+      "name": "sp4",
+      "nameShort": "sp4",
+    },
+    {
+      "id": 294,
+      "name": "sp3",
+      "nameShort": "sp3",
+    },
+    {
+      "id": 298,
+      "name": "sp2",
+      "nameShort": "sp2",
+    },
+    {
+      "id": 302,
+      "name": "sp1",
+      "nameShort": "sp1",
+    },
+    {
+      "id": 306,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 310,
+      "name": "sn23",
+      "nameShort": "sn23",
+    },
+    {
+      "id": 314,
+      "name": "sn2",
+      "nameShort": "sn2",
+    },
+    {
+      "id": 318,
+      "name": "sn1",
+      "nameShort": "sn1",
+    },
+    {
+      "id": 322,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 326,
+      "name": "sf5",
+      "nameShort": "sf5",
+    },
+    {
+      "id": 330,
+      "name": "sf4",
+      "nameShort": "sf4",
+    },
+    {
+      "id": 334,
+      "name": "sf3",
+      "nameShort": "sf3",
+    },
+    {
+      "id": 338,
+      "name": "sf2",
+      "nameShort": "sf2",
+    },
+    {
+      "id": 342,
+      "name": "sf1",
+      "nameShort": "sf1",
+    },
+    {
+      "id": 346,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 350,
+      "name": "re2",
+      "nameShort": "re2",
+    },
+    {
+      "id": 354,
+      "name": "re1",
+      "nameShort": "re1",
+    },
+    {
+      "id": 358,
+      "name": "pw5",
+      "nameShort": "pw5",
+    },
+    {
+      "id": 362,
+      "name": "pw4",
+      "nameShort": "pw4",
+    },
+    {
+      "id": 366,
+      "name": "<redacted-label>3",
+      "nameShort": "<redacted-label>3",
+    },
+    {
+      "id": 370,
+      "name": "pw3",
+      "nameShort": "pw3",
+    },
+    {
+      "id": 374,
+      "name": "<redacted-label>23",
+      "nameShort": "<redacted-label>23",
+    },
+    {
+      "id": 378,
+      "name": "<redacted-label>2",
+      "nameShort": "<redacted-label>2",
+    },
+    {
+      "id": 382,
+      "name": "pw2",
+      "nameShort": "pw2",
+    },
+    {
+      "id": 386,
+      "name": "<redacted-label>1",
+      "nameShort": "<redacted-label>1",
+    },
+    {
+      "id": 390,
+      "name": "pw1",
+      "nameShort": "pw1",
+    },
+    {
+      "id": 394,
+      "name": "Praxis",
+      "nameShort": "Praxis",
+    },
+    {
+      "id": 398,
+      "name": "Präsenz",
+      "nameShort": "Präsenz",
+    },
+    {
+      "id": 402,
+      "name": "Politik-Wirtschaft",
+      "nameShort": "Politik-Wirtschaft",
+    },
+    {
+      "id": 406,
+      "name": "Physik",
+      "nameShort": "Physik",
+    },
+    {
+      "id": 410,
+      "name": "ph3",
+      "nameShort": "ph3",
+    },
+    {
+      "id": 414,
+      "name": "<redacted-label>23",
+      "nameShort": "<redacted-label>23",
+    },
+    {
+      "id": 418,
+      "name": "<redacted-label>2",
+      "nameShort": "<redacted-label>2",
+    },
+    {
+      "id": 422,
+      "name": "ph2",
+      "nameShort": "ph2",
+    },
+    {
+      "id": 426,
+      "name": "<redacted-label>1",
+      "nameShort": "<redacted-label>1",
+    },
+    {
+      "id": 430,
+      "name": "ph1",
+      "nameShort": "ph1",
+    },
+    {
+      "id": 434,
+      "name": "<redacted-label> <redacted-label>",
+      "nameShort": "<redacted-label> <redacted-label>",
+    },
+    {
+      "id": 438,
+      "name": "<redacted-label> 9",
+      "nameShort": "<redacted-label> 9",
+    },
+    {
+      "id": 442,
+      "name": "<redacted-label> 8",
+      "nameShort": "<redacted-label> 8",
+    },
+    {
+      "id": 446,
+      "name": "<redacted-label> 2",
+      "nameShort": "<redacted-label> 2",
+    },
+    {
+      "id": 450,
+      "name": "<redacted-label> 10",
+      "nameShort": "<redacted-label> 10",
+    },
+    {
+      "id": 454,
+      "name": "<redacted-label> 1",
+      "nameShort": "<redacted-label> 1",
+    },
+    {
+      "id": 458,
+      "name": "<redacted-label>porthalle",
+      "nameShort": "<redacted-label>porthalle",
+    },
+    {
+      "id": 462,
+      "name": "<redacted-label>ammlung",
+      "nameShort": "<redacted-label>ammlung",
+    },
+    {
+      "id": 466,
+      "name": "<redacted-label> <redacted-label> G",
+      "nameShort": "<redacted-label> <redacted-label> G",
+    },
+    {
+      "id": 470,
+      "name": "<redacted-label> <redacted-label> E",
+      "nameShort": "<redacted-label> <redacted-label> E",
+    },
+    {
+      "id": 474,
+      "name": "<redacted-label> <redacted-label> G",
+      "nameShort": "<redacted-label> <redacted-label> G",
+    },
+    {
+      "id": 478,
+      "name": "<redacted-label> <redacted-label> E",
+      "nameShort": "<redacted-label> <redacted-label> E",
+    },
+    {
+      "id": 482,
+      "name": "<redacted-label> <redacted-label> G",
+      "nameShort": "<redacted-label> <redacted-label> G",
+    },
+    {
+      "id": 486,
+      "name": "<redacted-label> <redacted-label> E",
+      "nameShort": "<redacted-label> <redacted-label> E",
+    },
+    {
+      "id": 490,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 494,
+      "name": "mu23",
+      "nameShort": "mu23",
+    },
+    {
+      "id": 498,
+      "name": "mu1",
+      "nameShort": "mu1",
+    },
+    {
+      "id": 502,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 506,
+      "name": "ma5",
+      "nameShort": "ma5",
+    },
+    {
+      "id": 510,
+      "name": "ma4",
+      "nameShort": "ma4",
+    },
+    {
+      "id": 514,
+      "name": "ma3",
+      "nameShort": "ma3",
+    },
+    {
+      "id": 518,
+      "name": "<redacted-label>23",
+      "nameShort": "<redacted-label>23",
+    },
+    {
+      "id": 522,
+      "name": "<redacted-label>2",
+      "nameShort": "<redacted-label>2",
+    },
+    {
+      "id": 526,
+      "name": "ma2",
+      "nameShort": "ma2",
+    },
+    {
+      "id": 530,
+      "name": "<redacted-label>1",
+      "nameShort": "<redacted-label>1",
+    },
+    {
+      "id": 534,
+      "name": "ma1",
+      "nameShort": "ma1",
+    },
+    {
+      "id": 538,
+      "name": "<redacted-label>nterstützung",
+      "nameShort": "<redacted-label>nterstützung",
+    },
+    {
+      "id": 542,
+      "name": "Ma- G",
+      "nameShort": "Ma- G",
+    },
+    {
+      "id": 546,
+      "name": "Ma- E",
+      "nameShort": "Ma- E",
+    },
+    {
+      "id": 550,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 554,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 558,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 562,
+      "name": "Latein",
+      "nameShort": "Latein",
+    },
+    {
+      "id": 566,
+      "name": "la2",
+      "nameShort": "la2",
+    },
+    {
+      "id": 570,
+      "name": "la1",
+      "nameShort": "la1",
+    },
+    {
+      "id": 574,
+      "name": "L Treppenhaus",
+      "nameShort": "L Treppenhaus",
+    },
+    {
+      "id": 578,
+      "name": "L Mensa",
+      "nameShort": "L Mensa",
+    },
+    {
+      "id": 582,
+      "name": "L Hof <redacted-label>",
+      "nameShort": "L Hof <redacted-label>",
+    },
+    {
+      "id": 586,
+      "name": "L Hof <redacted-label>",
+      "nameShort": "L Hof <redacted-label>",
+    },
+    {
+      "id": 590,
+      "name": "L Hof <redacted-label>",
+      "nameShort": "L Hof <redacted-label>",
+    },
+    {
+      "id": 594,
+      "name": "L Hof <redacted-label>",
+      "nameShort": "L Hof <redacted-label>",
+    },
+    {
+      "id": 598,
+      "name": "Kunst-K",
+      "nameShort": "Kunst-K",
+    },
+    {
+      "id": 602,
+      "name": "ku2",
+      "nameShort": "ku2",
+    },
+    {
+      "id": 606,
+      "name": "ku1",
+      "nameShort": "ku1",
+    },
+    {
+      "id": 610,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 614,
+      "name": "Krea",
+      "nameShort": "Krea",
+    },
+    {
+      "id": 618,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 622,
+      "name": "Informatik",
+      "nameShort": "Informatik",
+    },
+    {
+      "id": 626,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 630,
+      "name": "if23",
+      "nameShort": "if23",
+    },
+    {
+      "id": 634,
+      "name": "if1",
+      "nameShort": "if1",
+    },
+    {
+      "id": 638,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 642,
+      "name": "Geschichte",
+      "nameShort": "Geschichte",
+    },
+    {
+      "id": 646,
+      "name": "ge4",
+      "nameShort": "ge4",
+    },
+    {
+      "id": 650,
+      "name": "ge3",
+      "nameShort": "ge3",
+    },
+    {
+      "id": 654,
+      "name": "<redacted-label>2",
+      "nameShort": "<redacted-label>2",
+    },
+    {
+      "id": 658,
+      "name": "ge2",
+      "nameShort": "ge2",
+    },
+    {
+      "id": 662,
+      "name": "<redacted-label>1",
+      "nameShort": "<redacted-label>1",
+    },
+    {
+      "id": 666,
+      "name": "ge1",
+      "nameShort": "ge1",
+    },
+    {
+      "id": 670,
+      "name": "G Mensa/Hausm.",
+      "nameShort": "G Mensa/Hausm.",
+    },
+    {
+      "id": 674,
+      "name": "G Mensa",
+      "nameShort": "G Mensa",
+    },
+    {
+      "id": 678,
+      "name": "G <redacted-label>",
+      "nameShort": "G <redacted-label>",
+    },
+    {
+      "id": 682,
+      "name": "G Hof/Bus",
+      "nameShort": "G Hof/Bus",
+    },
+    {
+      "id": 686,
+      "name": "G Hof/Biblio",
+      "nameShort": "G Hof/Biblio",
+    },
+    {
+      "id": 690,
+      "name": "G Hof-Bus-V",
+      "nameShort": "G Hof-Bus-V",
+    },
+    {
+      "id": 694,
+      "name": "G Flur/Spiele",
+      "nameShort": "G Flur/Spiele",
+    },
+    {
+      "id": 698,
+      "name": "Französisch",
+      "nameShort": "Französisch",
+    },
+    {
+      "id": 702,
+      "name": "fr23",
+      "nameShort": "fr23",
+    },
+    {
+      "id": 706,
+      "name": "fr1",
+      "nameShort": "fr1",
+    },
+    {
+      "id": 714,
+      "name": "<redacted-label> Schreiberlinge",
+      "nameShort": "<redacted-label> Schreiberlinge",
+    },
+    {
+      "id": 722,
+      "name": "Fanten",
+      "nameShort": "Fanten",
+    },
+    {
+      "id": 726,
+      "name": "en4",
+      "nameShort": "en4",
+    },
+    {
+      "id": 730,
+      "name": "en3",
+      "nameShort": "en3",
+    },
+    {
+      "id": 734,
+      "name": "<redacted-label>23",
+      "nameShort": "<redacted-label>23",
+    },
+    {
+      "id": 738,
+      "name": "<redacted-label>2",
+      "nameShort": "<redacted-label>2",
+    },
+    {
+      "id": 742,
+      "name": "en2",
+      "nameShort": "en2",
+    },
+    {
+      "id": 746,
+      "name": "<redacted-label>1",
+      "nameShort": "<redacted-label>1",
+    },
+    {
+      "id": 750,
+      "name": "en1",
+      "nameShort": "en1",
+    },
+    {
+      "id": 754,
+      "name": "En- G",
+      "nameShort": "En- G",
+    },
+    {
+      "id": 758,
+      "name": "En- E",
+      "nameShort": "En- E",
+    },
+    {
+      "id": 762,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 766,
+      "name": "ElE",
+      "nameShort": "ElE",
+    },
+    {
+      "id": 770,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 778,
+      "name": "ds2",
+      "nameShort": "ds2",
+    },
+    {
+      "id": 782,
+      "name": "ds1",
+      "nameShort": "ds1",
+    },
+    {
+      "id": 786,
+      "name": "Digital",
+      "nameShort": "Digital",
+    },
+    {
+      "id": 790,
+      "name": "de4",
+      "nameShort": "de4",
+    },
+    {
+      "id": 794,
+      "name": "de3",
+      "nameShort": "de3",
+    },
+    {
+      "id": 798,
+      "name": "<redacted-label>2",
+      "nameShort": "<redacted-label>2",
+    },
+    {
+      "id": 802,
+      "name": "de2",
+      "nameShort": "de2",
+    },
+    {
+      "id": 806,
+      "name": "<redacted-label>1",
+      "nameShort": "<redacted-label>1",
+    },
+    {
+      "id": 810,
+      "name": "de1",
+      "nameShort": "de1",
+    },
+    {
+      "id": 814,
+      "name": "<redacted-label>nterstützung",
+      "nameShort": "<redacted-label>nterstützung",
+    },
+    {
+      "id": 818,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 822,
+      "name": "<redacted-label>eit",
+      "nameShort": "<redacted-label>eit",
+    },
+    {
+      "id": 826,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 830,
+      "name": "Darstellendes Spiel",
+      "nameShort": "Darstellendes Spiel",
+    },
+    {
+      "id": 834,
+      "name": "Chemie",
+      "nameShort": "Chemie",
+    },
+    {
+      "id": 846,
+      "name": "ch5",
+      "nameShort": "ch5",
+    },
+    {
+      "id": 850,
+      "name": "ch4",
+      "nameShort": "ch4",
+    },
+    {
+      "id": 854,
+      "name": "ch3",
+      "nameShort": "ch3",
+    },
+    {
+      "id": 858,
+      "name": "<redacted-label>23",
+      "nameShort": "<redacted-label>23",
+    },
+    {
+      "id": 862,
+      "name": "<redacted-label>2",
+      "nameShort": "<redacted-label>2",
+    },
+    {
+      "id": 866,
+      "name": "ch2",
+      "nameShort": "ch2",
+    },
+    {
+      "id": 870,
+      "name": "<redacted-label>1",
+      "nameShort": "<redacted-label>1",
+    },
+    {
+      "id": 874,
+      "name": "ch1",
+      "nameShort": "ch1",
+    },
+    {
+      "id": 894,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 898,
+      "name": "Bläser_K",
+      "nameShort": "Bläser_K",
+    },
+    {
+      "id": 902,
+      "name": "Biologie",
+      "nameShort": "Biologie",
+    },
+    {
+      "id": 906,
+      "name": "bi4",
+      "nameShort": "bi4",
+    },
+    {
+      "id": 910,
+      "name": "bi3",
+      "nameShort": "bi3",
+    },
+    {
+      "id": 914,
+      "name": "<redacted-label>2",
+      "nameShort": "<redacted-label>2",
+    },
+    {
+      "id": 918,
+      "name": "bi2",
+      "nameShort": "bi2",
+    },
+    {
+      "id": 922,
+      "name": "<redacted-label>1",
+      "nameShort": "<redacted-label>1",
+    },
+    {
+      "id": 926,
+      "name": "bi1",
+      "nameShort": "bi1",
+    },
+    {
+      "id": 930,
+      "name": "Beratung",
+      "nameShort": "Beratung",
+    },
+    {
+      "id": 934,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 942,
+      "name": "Aktive Pause_Lil",
+      "nameShort": "Aktive Pause_Lil",
+    },
+    {
+      "id": 946,
+      "name": "Aktive Pause_<redacted-label>",
+      "nameShort": "Aktive Pause_<redacted-label>",
+    },
+    {
+      "id": 950,
+      "name": "Aktive Pause",
+      "nameShort": "Aktive Pause",
+    },
+    {
+      "id": 990,
+      "name": "<redacted-label> Lektüre",
+      "nameShort": "<redacted-label> Lektüre",
+    },
+    {
+      "id": 994,
+      "name": "<redacted-label> Ehrenamt",
+      "nameShort": "<redacted-label> Ehrenamt",
+    },
+    {
+      "id": 998,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 1002,
+      "name": "<redacted-label> Tutorium",
+      "nameShort": "<redacted-label> Tutorium",
+    },
+    {
+      "id": 1003,
+      "name": "L Hof <redacted-label> <redacted-label>",
+      "nameShort": "L Hof <redacted-label> <redacted-label>",
+    },
+    {
+      "id": 1006,
+      "name": "<redacted-label>23",
+      "nameShort": "<redacted-label>23",
+    },
+    {
+      "id": 1009,
+      "name": "ph23",
+      "nameShort": "ph23",
+    },
+    {
+      "id": 1012,
+      "name": "<redacted-label> heute und digita",
+      "nameShort": "<redacted-label> heute und digita",
+    },
+    {
+      "id": 1015,
+      "name": "<redacted-label> Durchblick",
+      "nameShort": "<redacted-label> Durchblick",
+    },
+    {
+      "id": 1018,
+      "name": "<redacted-label> Do it yourself",
+      "nameShort": "<redacted-label> Do it yourself",
+    },
+    {
+      "id": 1021,
+      "name": "<redacted-label> <redacted-label>ance",
+      "nameShort": "<redacted-label> <redacted-label>ance",
+    },
+    {
+      "id": 1024,
+      "name": "<redacted-label> Yoga",
+      "nameShort": "<redacted-label> Yoga",
+    },
+    {
+      "id": 1027,
+      "name": "<redacted-label> Experimente",
+      "nameShort": "<redacted-label> Experimente",
+    },
+    {
+      "id": 1030,
+      "name": "<redacted-label> Zeichnen",
+      "nameShort": "<redacted-label> Zeichnen",
+    },
+    {
+      "id": 1033,
+      "name": "<redacted-label> Hiking",
+      "nameShort": "<redacted-label> Hiking",
+    },
+    {
+      "id": 1036,
+      "name": "<redacted-label> Lerncoaching",
+      "nameShort": "<redacted-label> Lerncoaching",
+    },
+    {
+      "id": 1039,
+      "name": "<redacted-label> Fitness",
+      "nameShort": "<redacted-label> Fitness",
+    },
+    {
+      "id": 1042,
+      "name": "<redacted-label> Gesund&Sozial",
+      "nameShort": "<redacted-label> Gesund&Sozial",
+    },
+    {
+      "id": 1045,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 1048,
+      "name": "Auszeit",
+      "nameShort": "Auszeit",
+    },
+    {
+      "id": 1051,
+      "name": "Sprechstunde",
+      "nameShort": "Sprechstunde",
+    },
+    {
+      "id": 1052,
+      "name": "Kurze Sprechstunde",
+      "nameShort": "Kurze Sprechstunde",
+    },
+    {
+      "id": 1055,
+      "name": "Spass mit Mathe",
+      "nameShort": "Spass mit Mathe",
+    },
+    {
+      "id": 1057,
+      "name": "Einzel-U",
+      "nameShort": "Einzel-U",
+    },
+    {
+      "id": 1060,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 1061,
+      "name": "<redacted-label>1",
+      "nameShort": "<redacted-label>1",
+    },
+    {
+      "id": 1064,
+      "name": "<redacted-label>2",
+      "nameShort": "<redacted-label>2",
+    },
+    {
+      "id": 1065,
+      "name": "<redacted-label>1",
+      "nameShort": "<redacted-label>1",
+    },
+    {
+      "id": 1068,
+      "name": "Nachhaltigkeit",
+      "nameShort": "Nachhaltigkeit",
+    },
+    {
+      "id": 1071,
+      "name": "<redacted-label> Glück ist...",
+      "nameShort": "<redacted-label> Glück ist...",
+    },
+    {
+      "id": 1074,
+      "name": "<redacted-label> Tiral&Error",
+      "nameShort": "<redacted-label> Tiral&Error",
+    },
+    {
+      "id": 1077,
+      "name": "<redacted-label> Tanzen",
+      "nameShort": "<redacted-label> Tanzen",
+    },
+    {
+      "id": 1080,
+      "name": "<redacted-label> Fußball",
+      "nameShort": "<redacted-label> Fußball",
+    },
+    {
+      "id": 1083,
+      "name": "<redacted-label> Chinesisch",
+      "nameShort": "<redacted-label> Chinesisch",
+    },
+    {
+      "id": 1086,
+      "name": "<redacted-label> Schule gestalten",
+      "nameShort": "<redacted-label> Schule gestalten",
+    },
+    {
+      "id": 1089,
+      "name": "<redacted-label> Schülerfirma",
+      "nameShort": "<redacted-label> Schülerfirma",
+    },
+    {
+      "id": 1092,
+      "name": "<redacted-label> Ballspiele",
+      "nameShort": "<redacted-label> Ballspiele",
+    },
+    {
+      "id": 1095,
+      "name": "<redacted-label> Handarbeiten",
+      "nameShort": "<redacted-label> Handarbeiten",
+    },
+    {
+      "id": 1098,
+      "name": "<redacted-label> Chor",
+      "nameShort": "<redacted-label> Chor",
+    },
+    {
+      "id": 1101,
+      "name": "<redacted-label> Harry Potter",
+      "nameShort": "<redacted-label> Harry Potter",
+    },
+    {
+      "id": 1104,
+      "name": "<redacted-label> Die Welt im Klei",
+      "nameShort": "<redacted-label> Die Welt im Klei",
+    },
+    {
+      "id": 1107,
+      "name": "<redacted-label> Selbstverteidigu",
+      "nameShort": "<redacted-label> Selbstverteidigu",
+    },
+    {
+      "id": 1110,
+      "name": "<redacted-label> Programmieren",
+      "nameShort": "<redacted-label> Programmieren",
+    },
+    {
+      "id": 1113,
+      "name": "<redacted-label> Nachhaltigkeit",
+      "nameShort": "<redacted-label> Nachhaltigkeit",
+    },
+    {
+      "id": 1116,
+      "name": "<redacted-label> <redacted-label>",
+      "nameShort": "<redacted-label> <redacted-label>",
+    },
+    {
+      "id": 1119,
+      "name": "<redacted-label> <redacted-label>",
+      "nameShort": "<redacted-label> <redacted-label>",
+    },
+    {
+      "id": 1122,
+      "name": "<redacted-label> Event",
+      "nameShort": "<redacted-label> Event",
+    },
+    {
+      "id": 1125,
+      "name": "<redacted-label> Sport Jungen",
+      "nameShort": "<redacted-label> Sport Jungen",
+    },
+    {
+      "id": 1128,
+      "name": "<redacted-label>8+9",
+      "nameShort": "<redacted-label>8+9",
+    },
+    {
+      "id": 1131,
+      "name": "<redacted-label> Kunst",
+      "nameShort": "<redacted-label> Kunst",
+    },
+    {
+      "id": 1134,
+      "name": "<redacted-label> Afrika",
+      "nameShort": "<redacted-label> Afrika",
+    },
+    {
+      "id": 1136,
+      "name": "Beratung für Ukraine",
+      "nameShort": "Beratung für Ukraine",
+    },
+    {
+      "id": 1138,
+      "name": "<redacted-label>2",
+      "nameShort": "<redacted-label>2",
+    },
+    {
+      "id": 1139,
+      "name": "Bus Lang",
+      "nameShort": "Bus Lang",
+    },
+    {
+      "id": 1140,
+      "name": "Will-An-Lili 8",
+      "nameShort": "Will-An-Lili 8",
+    },
+    {
+      "id": 1143,
+      "name": "<redacted-label> Glück und Gesund",
+      "nameShort": "<redacted-label> Glück und Gesund",
+    },
+    {
+      "id": 1146,
+      "name": "Will-An-Lili 9",
+      "nameShort": "Will-An-Lili 9",
+    },
+    {
+      "id": 1149,
+      "name": "Will-An-Lili 10",
+      "nameShort": "Will-An-Lili 10",
+    },
+    {
+      "id": 1152,
+      "name": "ku11",
+      "nameShort": "ku11",
+    },
+    {
+      "id": 1153,
+      "name": "Ausgleich 13",
+      "nameShort": "Ausgleich 13",
+    },
+    {
+      "id": 1156,
+      "name": "ch23",
+      "nameShort": "ch23",
+    },
+    {
+      "id": 1159,
+      "name": "Philosophie",
+      "nameShort": "Philosophie",
+    },
+    {
+      "id": 1162,
+      "name": "st1",
+      "nameShort": "st1",
+    },
+    {
+      "id": 1165,
+      "name": "wn23",
+      "nameShort": "wn23",
+    },
+    {
+      "id": 1168,
+      "name": "Woodworking",
+      "nameShort": "Woodworking",
+    },
+    {
+      "id": 1171,
+      "name": "<redacted-label> Ballsportarten",
+      "nameShort": "<redacted-label> Ballsportarten",
+    },
+    {
+      "id": 1174,
+      "name": "<redacted-label> <redacted-label>",
+      "nameShort": "<redacted-label> <redacted-label>",
+    },
+    {
+      "id": 1177,
+      "name": "<redacted-label> Debattiere dich",
+      "nameShort": "<redacted-label> Debattiere dich ",
+    },
+    {
+      "id": 1180,
+      "name": "<redacted-label> Digitale Medien",
+      "nameShort": "<redacted-label> Digitale Medien",
+    },
+    {
+      "id": 1183,
+      "name": "<redacted-label> Fußball Juniorco",
+      "nameShort": "<redacted-label> Fußball Juniorco",
+    },
+    {
+      "id": 1186,
+      "name": "<redacted-label> Gesundheit und E",
+      "nameShort": "<redacted-label> Gesundheit und E",
+    },
+    {
+      "id": 1189,
+      "name": "<redacted-label> Gesundheit und S",
+      "nameShort": "<redacted-label> Gesundheit und S",
+    },
+    {
+      "id": 1192,
+      "name": "<redacted-label> Jugend forscht",
+      "nameShort": "<redacted-label> Jugend forscht",
+    },
+    {
+      "id": 1195,
+      "name": "<redacted-label> Lern-Oase",
+      "nameShort": "<redacted-label> Lern-Oase",
+    },
+    {
+      "id": 1198,
+      "name": "<redacted-label> Lernzeit",
+      "nameShort": "<redacted-label> Lernzeit",
+    },
+    {
+      "id": 1201,
+      "name": "<redacted-label> <redacted-label>",
+      "nameShort": "<redacted-label> <redacted-label>",
+    },
+    {
+      "id": 1204,
+      "name": "<redacted-label> Pop",
+      "nameShort": "<redacted-label> Pop",
+    },
+    {
+      "id": 1207,
+      "name": "<redacted-label> Rund um die Welt",
+      "nameShort": "<redacted-label> Rund um die Welt",
+    },
+    {
+      "id": 1210,
+      "name": "<redacted-label> Schach",
+      "nameShort": "<redacted-label> Schach",
+    },
+    {
+      "id": 1213,
+      "name": "<redacted-label> Schulband",
+      "nameShort": "<redacted-label> Schulband",
+    },
+    {
+      "id": 1216,
+      "name": "<redacted-label> Sport und Fitnes",
+      "nameShort": "<redacted-label> Sport und Fitnes",
+    },
+    {
+      "id": 1219,
+      "name": "<redacted-label> Veranstaltungste",
+      "nameShort": "<redacted-label> Veranstaltungste",
+    },
+    {
+      "id": 1222,
+      "name": "<redacted-label> Sportabzeichen",
+      "nameShort": "<redacted-label> Sportabzeichen",
+    },
+    {
+      "id": 1225,
+      "name": "<redacted-label> Kochen",
+      "nameShort": "<redacted-label> Kochen",
+    },
+    {
+      "id": 1228,
+      "name": "<redacted-label> Häkeln",
+      "nameShort": "<redacted-label> Häkeln",
+    },
+    {
+      "id": 1231,
+      "name": "<redacted-label> Pflanzen u. Tier",
+      "nameShort": "<redacted-label> Pflanzen u. Tier",
+    },
+    {
+      "id": 1234,
+      "name": "<redacted-label> MuTaThe",
+      "nameShort": "<redacted-label> MuTaThe",
+    },
+    {
+      "id": 1237,
+      "name": "<redacted-label> Entspannung",
+      "nameShort": "<redacted-label> Entspannung",
+    },
+    {
+      "id": 1240,
+      "name": "<redacted-label> Judo",
+      "nameShort": "<redacted-label> Judo",
+    },
+    {
+      "id": 1243,
+      "name": "<redacted-label> Inklusion",
+      "nameShort": "<redacted-label> Inklusion",
+    },
+    {
+      "id": 1246,
+      "name": "Leo",
+      "nameShort": "Leo",
+    },
+    {
+      "id": 1249,
+      "name": "Jugend forscht",
+      "nameShort": "Jugend forscht",
+    },
+    {
+      "id": 1252,
+      "name": "<redacted-label> 17 Ziele",
+      "nameShort": "<redacted-label> 17 Ziele",
+    },
+    {
+      "id": 1253,
+      "name": "<redacted-label> Kochen 2",
+      "nameShort": "<redacted-label> Kochen 2",
+    },
+    {
+      "id": 1256,
+      "name": "<redacted-label> Kochen 1",
+      "nameShort": "<redacted-label> Kochen 1",
+    },
+    {
+      "id": 1259,
+      "name": "G Hof-Biblio/Mensa1",
+      "nameShort": "G Hof-Biblio/Mensa1",
+    },
+    {
+      "id": 1262,
+      "name": "G Hof-Bus/Flure",
+      "nameShort": "G Hof-Bus/Flure",
+    },
+    {
+      "id": 1265,
+      "name": "G <redacted-label>/Forum",
+      "nameShort": "G <redacted-label>/Forum",
+    },
+    {
+      "id": 1267,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+  ],
+  "teachers": [
+    {
+      "id": 2,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 14,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 18,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 22,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 26,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 30,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 34,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 42,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 46,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 50,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 54,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 58,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 62,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 66,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 70,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 74,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 78,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 86,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 90,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 94,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 98,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 102,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 106,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 110,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 122,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 126,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 134,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 142,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 146,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 154,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 158,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 162,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 166,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 174,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 182,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 186,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 194,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 198,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 202,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 206,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 214,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 218,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 222,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 226,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 234,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 238,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 242,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 246,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 250,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 254,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 258,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 262,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 266,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 270,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 274,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 278,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 282,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 286,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 298,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 302,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 306,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 310,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 314,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 318,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 322,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 326,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 330,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 334,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 338,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 342,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 346,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 354,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 358,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 362,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 370,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 374,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 378,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 382,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 386,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 390,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 394,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 402,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 403,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 406,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 409,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 418,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 421,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 445,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 448,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 452,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 459,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 462,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 465,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 468,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 471,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 474,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 477,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 480,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 483,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 486,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 489,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 492,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 495,
+      "name": "<redacted-label> <redacted-label>",
+      "nameShort": "<redacted-label> <redacted-label>",
+    },
+    {
+      "id": 498,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 500,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 503,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 506,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 509,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 512,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 515,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 517,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 520,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 523,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 525,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 528,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 530,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+    {
+      "id": 533,
+      "name": "<redacted-label>",
+      "nameShort": "<redacted-label>",
+    },
+  ],
+}
+`;
+
 exports[`live WebUntis integration > with live layer > reads exam endpoints 1`] = `
 {
   "exams": [

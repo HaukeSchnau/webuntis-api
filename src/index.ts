@@ -11,6 +11,7 @@ export { WebUntisHttp, Live as WebUntisHttpLive } from "./core/http.ts";
 export { SessionStore, inMemory as inMemorySessionStore } from "./core/session-store.ts";
 export * from "./core/types.ts";
 export { makeAppClient } from "./domains/app.ts";
+export { makeClassregClient } from "./domains/classreg.ts";
 export { makeExamsClient } from "./domains/exams.ts";
 export { makeMessagesClient } from "./domains/messages.ts";
 export * from "./domains/profile.ts";

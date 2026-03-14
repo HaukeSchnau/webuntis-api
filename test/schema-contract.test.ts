@@ -3,6 +3,8 @@ import { Schema } from "effect";
 import { strictJsonParseOptions } from "../src/core/schema.ts";
 import {
   AppPlatformApplicationMenuSchema,
+  ClassregAbsencesMetaSchema,
+  ClassregHomeworkMetaSchema,
   ExamFilterSchema,
   HomeCellSchema,
   MessageSummarySchema,
@@ -198,6 +200,44 @@ describe("strict schema decoding", () => {
     expect(() =>
       decode({
         startupActions: ["VERIFY_PROFILE_DATA", "UNKNOWN_ACTION"]
+      }, strictJsonParseOptions)
+    ).toThrow();
+  });
+
+  it("rejects unsupported classreg excuse status types", () => {
+    const decode = Schema.decodeUnknownSync(ClassregAbsencesMetaSchema);
+
+    expect(() =>
+      decode({
+        canEditReason: true,
+        classes: [{ id: 470, name: "10" }],
+        defaultReasonId: 41,
+        defaultExcuseStatusId: null,
+        reasons: [{ id: 41, name: "Abwesend ohne Grund", automaticNotificationEnabled: false }],
+        excuseStatuses: [{ id: 0, name: "", type: "PENDING" }],
+        assignmentGroups: [],
+        filterIsActiveForMissingAbsenceParentNotification: false
+      }, strictJsonParseOptions)
+    ).toThrow();
+  });
+
+  it("rejects excess properties in classreg homework meta payloads", () => {
+    const decode = Schema.decodeUnknownSync(ClassregHomeworkMetaSchema);
+
+    expect(() =>
+      decode({
+        classes: [{ id: 374, name: "5.1", nameShort: "5.1", extra: true }],
+        teachers: [{ id: 2, name: "AHL", nameShort: "AHL" }],
+        subjects: [{ id: 14, name: "WPK Zeitung", nameShort: "WPK Zeitung" }],
+        schoolYears: [{
+          id: 7,
+          name: "2025/2026",
+          dateRange: {
+            start: "2025-08-14",
+            end: "2026-07-01"
+          },
+          parentId: 0
+        }]
       }, strictJsonParseOptions)
     ).toThrow();
   });
