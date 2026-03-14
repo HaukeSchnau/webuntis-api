@@ -3,6 +3,8 @@ import type {
   AppData,
   AppPlatformApplicationMenus,
   AppThirdPartyData,
+  ClassregAbsencesMeta,
+  ClassregHomeworkMeta,
   DashboardCards,
   DashboardCardsDetail,
   DashboardCardsStatus,
@@ -92,6 +94,8 @@ const normalizeUnknown = (value: unknown): unknown => {
 export const normalizeAppData = (value: AppData) => normalizeUnknown(value);
 export const normalizeAppPlatformApplicationMenus = (value: AppPlatformApplicationMenus) => normalizeUnknown(value);
 export const normalizeAppThirdPartyData = (value: AppThirdPartyData) => normalizeUnknown(value);
+export const normalizeClassregAbsencesMeta = (value: ClassregAbsencesMeta) => normalizeUnknown(value);
+export const normalizeClassregHomeworkMeta = (value: ClassregHomeworkMeta) => normalizeUnknown(value);
 export const normalizeDashboardCards = (value: DashboardCards) => normalizeUnknown(value);
 export const normalizeDashboardCardsDetail = (value: DashboardCardsDetail) => normalizeUnknown(value);
 export const normalizeDashboardCardsStatus = (value: DashboardCardsStatus) => normalizeUnknown(value);

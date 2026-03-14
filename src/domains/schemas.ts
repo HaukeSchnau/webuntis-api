@@ -38,6 +38,64 @@ export const SchoolyearWithTimeGridSchema = Schema.Struct({
   timeGrid: TimeGridSchema
 });
 
+export const ClassregIdNameSchema = Schema.Struct({
+  id: Schema.Number,
+  name: Schema.String
+});
+
+export const ClassregIdNameShortSchema = Schema.Struct({
+  id: Schema.Number,
+  name: Schema.String,
+  nameShort: Schema.String
+});
+
+export const ClassregExcuseStatusTypeSchema = Schema.Literals([
+  "OPEN",
+  "EXCUSED",
+  "NOT_EXCUSED"
+]);
+
+export const ClassregAbsenceReasonSchema = Schema.Struct({
+  id: Schema.Number,
+  name: Schema.String,
+  automaticNotificationEnabled: Schema.Boolean
+});
+
+export const ClassregExcuseStatusSchema = Schema.Struct({
+  id: Schema.Number,
+  name: Schema.String,
+  type: ClassregExcuseStatusTypeSchema
+});
+
+export const ClassregAbsencesMetaSchema = Schema.Struct({
+  canEditReason: Schema.Boolean,
+  classes: Schema.Array(ClassregIdNameSchema),
+  defaultReasonId: Schema.NullOr(Schema.Number),
+  defaultExcuseStatusId: Schema.NullOr(Schema.Number),
+  reasons: Schema.Array(ClassregAbsenceReasonSchema),
+  excuseStatuses: Schema.Array(ClassregExcuseStatusSchema),
+  assignmentGroups: Schema.Array(Schema.Unknown),
+  filterIsActiveForMissingAbsenceParentNotification: Schema.Boolean
+});
+
+export type ClassregAbsencesMeta = Schema.Schema.Type<typeof ClassregAbsencesMetaSchema>;
+
+export const ClassregHomeworkMetaSchoolyearSchema = Schema.Struct({
+  id: Schema.Number,
+  name: Schema.String,
+  dateRange: DateRangeSchema,
+  parentId: Schema.Number
+});
+
+export const ClassregHomeworkMetaSchema = Schema.Struct({
+  classes: Schema.Array(ClassregIdNameShortSchema),
+  teachers: Schema.Array(ClassregIdNameShortSchema),
+  subjects: Schema.Array(ClassregIdNameShortSchema),
+  schoolYears: Schema.Array(ClassregHomeworkMetaSchoolyearSchema)
+});
+
+export type ClassregHomeworkMeta = Schema.Schema.Type<typeof ClassregHomeworkMetaSchema>;
+
 export const TenantSchema = Schema.Struct({
   displayName: Schema.String,
   id: Schema.String,
@@ -282,6 +340,95 @@ export const MessageSentSchema = Schema.Struct({
 });
 
 export type MessageSent = Schema.Schema.Type<typeof MessageSentSchema>;
+
+export const CalendarEntryTodayStatusSchema = Schema.Literals([
+  "TAKING_PLACE",
+  "CANCELLED",
+  "SUBSTITUTION",
+  "MAYBE",
+  "MOVED",
+  "MOVED_AWAY",
+  "MOVED_HERE"
+]);
+
+export const CalendarEntryTodayTypeSchema = Schema.Literals([
+  "MEETING",
+  "STAND_BY_PERIOD",
+  "OFFICE_HOUR",
+  "BREAK_SUPERVISION",
+  "NORMAL_TEACHING_PERIOD",
+  "ADDITIONAL_PERIOD",
+  "EXAM",
+  "EVENT",
+  "CUSTOM"
+]);
+
+export const CalendarEntryTodayParticipantStatusSchema = Schema.Literals([
+  "REGULAR",
+  "REMOVED",
+  "SUBSTITUTION"
+]);
+
+export const CalendarEntryTodayResourceSchema = Schema.Struct({
+  displayName: Schema.String,
+  hasTimetable: Schema.Boolean,
+  id: Schema.Number,
+  longName: Schema.String,
+  shortName: Schema.String
+});
+
+export const CalendarEntryTodayLessonSchema = Schema.Struct({
+  lessonId: Schema.Number,
+  lessonNumber: Schema.Number
+});
+
+export const CalendarEntryTodaySubTypeSchema = Schema.Struct({
+  displayInPeriodDetails: Schema.Boolean,
+  displayName: Schema.String,
+  id: Schema.Number
+});
+
+export const CalendarEntryTodayRoomSchema = Schema.Struct({
+  displayName: Schema.String,
+  hasTimetable: Schema.Boolean,
+  id: Schema.Number,
+  longName: Schema.String,
+  shortName: Schema.String,
+  status: CalendarEntryTodayParticipantStatusSchema
+});
+
+export const CalendarEntryTodayTeacherSchema = Schema.Struct({
+  displayName: Schema.String,
+  hasTimetable: Schema.Boolean,
+  id: Schema.Number,
+  imageUrl: Schema.NullOr(Schema.String),
+  longName: Schema.String,
+  shortName: Schema.String,
+  status: CalendarEntryTodayParticipantStatusSchema
+});
+
+export const CalendarEntryTodayEntrySchema = Schema.Struct({
+  absenceReasonId: Schema.NullOr(Schema.Number),
+  color: Schema.NullOr(Schema.String),
+  endDateTime: Schema.String,
+  exam: Schema.NullOr(Schema.Unknown),
+  id: Schema.Number,
+  klasses: Schema.Array(CalendarEntryTodayResourceSchema),
+  lesson: CalendarEntryTodayLessonSchema,
+  originalCalendarEntry: Schema.NullOr(Schema.Unknown),
+  rooms: Schema.Array(CalendarEntryTodayRoomSchema),
+  startDateTime: Schema.String,
+  status: CalendarEntryTodayStatusSchema,
+  subType: CalendarEntryTodaySubTypeSchema,
+  subject: CalendarEntryTodayResourceSchema,
+  teachers: Schema.Array(CalendarEntryTodayTeacherSchema),
+  type: CalendarEntryTodayTypeSchema
+});
+
+export const CalendarEntryTodayEntriesSchema = Schema.Array(CalendarEntryTodayEntrySchema);
+
+export type CalendarEntryTodayEntry = Schema.Schema.Type<typeof CalendarEntryTodayEntrySchema>;
+export type CalendarEntryTodayEntries = Schema.Schema.Type<typeof CalendarEntryTodayEntriesSchema>;
 
 export const ExamDisplayResourceSchema = Schema.Struct({
   id: Schema.Number,

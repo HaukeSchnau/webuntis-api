@@ -7,7 +7,7 @@ The client models the modern WebUntis REST surface as a portable Effect service 
 - `SchoolDiscovery` resolves a school name through the public WebUntis search API.
 - `AuthClient` performs the classic login handshake and mints the session-bound JWT from `/WebUntis/api/token/new`.
 - `WebUntisHttp` attaches cookies and bearer auth for modern `/api/rest/view/...` requests.
-- `WebUntisClient` exposes the first domain clients for `app`, `schoolyears`, `messages`, `profile`, `session`, `timetable`, plus a `rawViewApi` escape hatch.
+- `WebUntisClient` exposes the first domain clients for `app`, `classreg`, `schoolyears`, `messages`, `profile`, `session`, `timetable`, plus a `rawViewApi` escape hatch.
   The client now also exposes a typed `exams` domain for list, filter, statistics, and detail reads.
   The `app` and `timetable` domains now also cover adjacent bootstrap routes such as `home`, `mobile/data`, `trigger/startup`, `today/meta`, `dashboard/cards`, `app/platform-application/menus`, `app/third-party/data`, `onboarding`, `timegrid`, `timetable/calendar`, `timetable/externalCalendar`, and `timetable/entriesWeekOverview`.
   The timetable domain also exposes typed `availableRooms` support through the confirmed-working `v2` query-parameter route.
@@ -102,6 +102,6 @@ await Effect.runPromise(program.pipe(Effect.provide(layer)));
 
 - Live tests use `@effect/vitest` against a real tenant.
 - Snapshot tests normalize volatile live payload fields, and we expect to refresh those snapshots whenever the upstream API legitimately changes.
-- The live suite also pins the current behavior of adjacent routes such as `session/status`, `today/meta`, `dashboard/cards`, `timetable/menu`, `timetable/search`, `timetable/entriesWeekOverview`, the currently failing `profile` summary/admin endpoints, and currently blocked read-only routes such as `messages-of-the-day`, `rooms`, `teachers`, and `subjects`.
+- The live suite also pins the current behavior of adjacent routes such as `classreg/absences/meta`, `classreg/homework/meta`, `session/status`, `today/meta`, `dashboard/cards`, `timetable/menu`, `timetable/search`, `timetable/entriesWeekOverview`, the currently failing `profile` summary/admin endpoints, and currently blocked read-only routes such as `messages-of-the-day`, `rooms`, `teachers`, and `subjects`.
 - Reverse-engineering snapshot tests pin the mined frontend endpoint inventory so upstream bundle drift is obvious.
 - Strict decoding is intentionally evidence-driven. When a route only returns empty arrays on the live tenant, we keep the container exact and leave the item payload opaque until live responses or shipped frontend code justify a narrower schema.
