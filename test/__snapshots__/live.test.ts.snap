@@ -529,12 +529,12 @@ exports[`live WebUntis integration > with live layer > documents current blocked
 exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 5`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>",
-    "errorMessage": "Access Denied",
+    "errorCode": "<redacted-label>_<redacted-label>",
+    "errorMessage": "Access denied.",
     "requestId": "<redacted>",
     "traceId": "<redacted>",
   },
-  "path": "api/rest/view/v1/rooms",
+  "path": "api/rest/view/v1/messages-of-the-day/form",
   "status": 403,
 }
 `;
@@ -547,7 +547,7 @@ exports[`live WebUntis integration > with live layer > documents current blocked
     "requestId": "<redacted>",
     "traceId": "<redacted>",
   },
-  "path": "api/rest/view/v1/rooms/{id}",
+  "path": "api/rest/view/v1/rooms",
   "status": 403,
 }
 `;
@@ -560,7 +560,7 @@ exports[`live WebUntis integration > with live layer > documents current blocked
     "requestId": "<redacted>",
     "traceId": "<redacted>",
   },
-  "path": "api/rest/view/v1/buildings",
+  "path": "api/rest/view/v1/rooms/{id}",
   "status": 403,
 }
 `;
@@ -573,7 +573,7 @@ exports[`live WebUntis integration > with live layer > documents current blocked
     "requestId": "<redacted>",
     "traceId": "<redacted>",
   },
-  "path": "api/rest/view/v1/teachers",
+  "path": "api/rest/view/v1/buildings",
   "status": 403,
 }
 `;
@@ -586,7 +586,7 @@ exports[`live WebUntis integration > with live layer > documents current blocked
     "requestId": "<redacted>",
     "traceId": "<redacted>",
   },
-  "path": "api/rest/view/v1/teachers/{id}",
+  "path": "api/rest/view/v1/teachers",
   "status": 403,
 }
 `;
@@ -599,12 +599,25 @@ exports[`live WebUntis integration > with live layer > documents current blocked
     "requestId": "<redacted>",
     "traceId": "<redacted>",
   },
-  "path": "api/rest/view/v1/subjects",
+  "path": "api/rest/view/v1/teachers/{id}",
   "status": 403,
 }
 `;
 
 exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 11`] = `
+{
+  "body": {
+    "errorCode": "<redacted-label>",
+    "errorMessage": "Access Denied",
+    "requestId": "<redacted>",
+    "traceId": "<redacted>",
+  },
+  "path": "api/rest/view/v1/subjects",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 12`] = `
 {
   "body": {
     "errorCode": "<redacted-label>",

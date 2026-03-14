@@ -3,8 +3,12 @@ import { Schema } from "effect";
 import { strictJsonParseOptions } from "../src/core/schema.ts";
 import {
   AppPlatformApplicationMenuSchema,
+  HomeCellSchema,
   MessageSummarySchema,
+  MessagesPermissionsSchema,
+  OnboardingSchema,
   TimeGridSchema,
+  TimetableFormatDefinitionSchema,
   TimetableEntriesWeekOverviewSchema
 } from "../src/domains/schemas.ts";
 
@@ -68,6 +72,18 @@ describe("strict schema decoding", () => {
     ).toThrow();
   });
 
+  it("rejects unsupported onboarding types", () => {
+    const decode = Schema.decodeUnknownSync(OnboardingSchema);
+
+    expect(() =>
+      decode({
+        type: "OTHER",
+        time: "2026-03-14T12:00:00",
+        step: "timetable--date-picker"
+      }, strictJsonParseOptions)
+    ).toThrow();
+  });
+
   it("rejects excess properties in new overview payloads", () => {
     const decode = Schema.decodeUnknownSync(TimetableEntriesWeekOverviewSchema);
 
@@ -104,6 +120,68 @@ describe("strict schema decoding", () => {
                 ]
               }
             ]
+          }
+        ]
+      }, strictJsonParseOptions)
+    ).toThrow();
+  });
+
+  it("rejects unsupported home cell types", () => {
+    const decode = Schema.decodeUnknownSync(HomeCellSchema);
+
+    expect(() =>
+      decode({
+        badge: null,
+        type: "UNKNOWN_CELL"
+      }, strictJsonParseOptions)
+    ).toThrow();
+  });
+
+  it("rejects unsupported message recipient options", () => {
+    const decode = Schema.decodeUnknownSync(MessagesPermissionsSchema);
+
+    expect(() =>
+      decode({
+        recipientOptions: ["STAFF", "GUARDIANS"],
+        allowRequestReadConfirmation: true,
+        recipientSearchMaxResult: 25,
+        showDraftsTab: true,
+        showSentTab: true,
+        canForbidReplies: true,
+        maxFileSize: 10,
+        maxFileCount: 3
+      }, strictJsonParseOptions)
+    ).toThrow();
+  });
+
+  it("rejects unsupported time grid types", () => {
+    const decode = Schema.decodeUnknownSync(TimetableFormatDefinitionSchema);
+
+    expect(() =>
+      decode({
+        id: 2,
+        name: "Default",
+        longname: "Default",
+        showStartEndTimeOfSlots: true,
+        showStartEndTime: true,
+        showCancellations: true,
+        showExternalCalendars: false,
+        hideDetails: false,
+        minRows: 6,
+        duration: {
+          start: "08:00",
+          end: "13:00"
+        },
+        timeGridType: "CUSTOM_GRID",
+        timeGridDays: ["MONDAY"],
+        timeGridSlots: [
+          {
+            name: "1",
+            number: 1,
+            duration: {
+              start: "08:00",
+              end: "08:45"
+            }
           }
         ]
       }, strictJsonParseOptions)

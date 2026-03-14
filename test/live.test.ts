@@ -206,7 +206,9 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           resourceType: "ROOM",
           resources: [roomId!]
         });
-        const externalCalendar = yield* client.timetable.getExternalCalendar;
+        const externalCalendar = yield* client.timetable.getExternalCalendar({
+          myTimetable: true
+        });
 
         expect(roomId).toBeDefined();
         expect(timegrid.units.length).toBeGreaterThan(0);
@@ -279,6 +281,11 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             withSchoolYearHeader: false
           })
         );
+        const messagesOfTheDayFormError = yield* Effect.flip(
+          client.rawViewApi.getJson("api/rest/view/v1/messages-of-the-day/form", {
+            withSchoolYearHeader: false
+          })
+        );
         const roomsError = yield* Effect.flip(client.rawViewApi.getJson("api/rest/view/v1/rooms"));
         const roomDetailError = yield* Effect.flip(client.rawViewApi.getJson(`api/rest/view/v1/rooms/${roomId}`));
         const buildingsError = yield* Effect.flip(client.rawViewApi.getJson("api/rest/view/v1/buildings"));
@@ -292,6 +299,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           staticTeachersError,
           staticUsersError,
           staticPersonsError,
+          messagesOfTheDayFormError,
           roomsError,
           roomDetailError,
           buildingsError,

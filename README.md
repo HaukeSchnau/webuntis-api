@@ -28,6 +28,14 @@ The current implementation targets the modern REST-first WebUntis flow:
 
 Reverse-engineering artifacts live under [`research/webuntis`](./research/webuntis).
 
+## Core Decisions
+
+- We optimize for broad coverage of read-only WebUntis endpoints first. Mutating business endpoints are out of scope for the public client surface.
+- We keep a large live test suite against the tenant and treat snapshot churn as a feature, not a problem. Snapshot updates are expected when upstream changes, because the main goal is to surface response drift quickly.
+- We keep schemas as strict as the evidence allows: excess properties are rejected, literal unions are preferred over open strings when route behavior or shipped frontend code makes them trustworthy, and uncertain payload sections stay opaque until we have enough live or source evidence to model them safely.
+- We aim for idiomatic Effect v4 code throughout. When an Effect v4 or unstable-platform API choice is unclear, we resolve it against the local [`$context-repo`](/Users/haukeschnau/.agents/skills/context-repo/SKILL.md) docs and source.
+- Live API exploration is done with [`$agent-browser`](/Users/haukeschnau/.agents/skills/agent-browser/SKILL.md), preferably through subagents, so runtime findings come from the real frontend and not from hand-wavy guesses.
+
 ## Development
 
 Install dependencies:
@@ -92,6 +100,7 @@ await Effect.runPromise(program.pipe(Effect.provide(layer)));
 ## Testing Strategy
 
 - Live tests use `@effect/vitest` against a real tenant.
-- Snapshot tests normalize volatile live payload fields.
+- Snapshot tests normalize volatile live payload fields, and we expect to refresh those snapshots whenever the upstream API legitimately changes.
 - The live suite also pins the current behavior of adjacent routes such as `session/status`, `today/meta`, `dashboard/cards`, `timetable/menu`, `timetable/search`, `timetable/entriesWeekOverview`, the currently failing `profile` summary/admin endpoints, and currently blocked read-only routes such as `messages-of-the-day`, `rooms`, `teachers`, and `subjects`.
 - Reverse-engineering snapshot tests pin the mined frontend endpoint inventory so upstream bundle drift is obvious.
+- Strict decoding is intentionally evidence-driven. When a route only returns empty arrays on the live tenant, we keep the container exact and leave the item payload opaque until live responses or shipped frontend code justify a narrower schema.

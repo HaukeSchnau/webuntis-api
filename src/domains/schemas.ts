@@ -148,8 +148,18 @@ export const MessagesInboxSchema = Schema.Struct({
 
 export type MessagesInbox = Schema.Schema.Type<typeof MessagesInboxSchema>;
 
+export const MessageRecipientOptionSchema = Schema.Literals([
+  "PARENTS",
+  "STUDENTS",
+  "STAFF",
+  "TEACHER",
+  "CUSTOM"
+]);
+
+export type MessageRecipientOption = Schema.Schema.Type<typeof MessageRecipientOptionSchema>;
+
 export const MessagesPermissionsSchema = Schema.Struct({
-  recipientOptions: Schema.Array(Schema.String),
+  recipientOptions: Schema.Array(MessageRecipientOptionSchema),
   allowRequestReadConfirmation: Schema.Boolean,
   recipientSearchMaxResult: Schema.Number,
   showDraftsTab: Schema.Boolean,
@@ -305,9 +315,22 @@ export const TodayMetaSchema = Schema.Struct({
 
 export type TodayMeta = Schema.Schema.Type<typeof TodayMetaSchema>;
 
+export const HomeCellTypeSchema = Schema.Literals([
+  "MY_EVENTS",
+  "CLASS_TEACHER",
+  "PARENTS_DAYS",
+  "CONTACT_HOURS",
+  "STUDENT_ABSENCES",
+  "STUDENT_ABSENCES_ADMINISTRATION",
+  "TEACHER_ABSENCES",
+  "SUBSTITUTION_REQUESTS"
+]);
+
+export type HomeCellType = Schema.Schema.Type<typeof HomeCellTypeSchema>;
+
 export const HomeCellSchema = Schema.Struct({
   badge: Schema.NullOr(Schema.Unknown),
-  type: Schema.String
+  type: HomeCellTypeSchema
 });
 
 export const HomeSectionSchema = Schema.Struct({
@@ -356,12 +379,17 @@ export const StartupActionsSchema = Schema.Struct({
 export type StartupActions = Schema.Schema.Type<typeof StartupActionsSchema>;
 
 export const OnboardingSchema = Schema.Struct({
-  type: Schema.String,
+  type: Schema.Literals(["TIMETABLE"]),
   time: Schema.String,
   step: Schema.String
 });
 
 export type Onboarding = Schema.Schema.Type<typeof OnboardingSchema>;
+export type OnboardingType = Onboarding["type"];
+
+export const TimeGridTypeSchema = Schema.Literals(["CLOCK_HOURS", "LESSON_GRID"]);
+
+export type TimeGridType = Schema.Schema.Type<typeof TimeGridTypeSchema>;
 
 export const TimetableFormatDefinitionSchema = Schema.Struct({
   id: Schema.Number,
@@ -374,7 +402,7 @@ export const TimetableFormatDefinitionSchema = Schema.Struct({
   hideDetails: Schema.Boolean,
   minRows: Schema.Number,
   duration: TimeRangeSchema,
-  timeGridType: Schema.String,
+  timeGridType: TimeGridTypeSchema,
   timeGridDays: Schema.Array(Schema.String),
   timeGridSlots: Schema.Array(
     Schema.Struct({
@@ -398,8 +426,19 @@ export const TimetableGridSchema = Schema.Struct({
 
 export type TimetableGrid = Schema.Schema.Type<typeof TimetableGridSchema>;
 
+export const TimetableResourceTypeSchema = Schema.Literals([
+  "CLASS",
+  "ROOM",
+  "RESOURCE",
+  "STUDENT",
+  "SUBJECT",
+  "TEACHER"
+]);
+
+export type TimetableResourceType = Schema.Schema.Type<typeof TimetableResourceTypeSchema>;
+
 export const TimetableSearchResultSchema = Schema.Struct({
-  type: Schema.String,
+  type: TimetableResourceTypeSchema,
   resource: Schema.Struct({
     id: Schema.Number,
     shortName: Schema.String,
@@ -480,7 +519,7 @@ export const TimetableRoomFilterItemSchema = Schema.Struct({
 });
 
 export const TimetableFilterSchema = Schema.Struct({
-  resourceType: Schema.String,
+  resourceType: TimetableResourceTypeSchema,
   preSelected: Schema.NullOr(Schema.Unknown),
   buildings: Schema.Array(Schema.Unknown),
   departments: Schema.Array(TimetableDepartmentSchema),
@@ -515,9 +554,18 @@ export const TimetableEntriesSettingsSchema = Schema.Struct({
 
 export type TimetableEntriesSettings = Schema.Schema.Type<typeof TimetableEntriesSettingsSchema>;
 
+export const DayDataStatusSchema = Schema.Literals([
+  "REGULAR",
+  "NO_DATA",
+  "NOT_ALLOWED",
+  "NOT_ALLOWED_FOR_RESOURCE"
+]);
+
+export type DayDataStatus = Schema.Schema.Type<typeof DayDataStatusSchema>;
+
 export const TimetableEntryDaySchema = Schema.Struct({
   date: Schema.String,
-  resourceType: Schema.String,
+  resourceType: TimetableResourceTypeSchema,
   resource: Schema.Struct({
     id: Schema.Number,
     shortName: Schema.String,
@@ -551,7 +599,7 @@ export const TimetableWeekOverviewCellSchema = Schema.Struct({
 
 export const TimetableWeekOverviewDayResourceSchema = Schema.Struct({
   resource: DisplayResourceSchema,
-  status: Schema.String,
+  status: DayDataStatusSchema,
   cells: Schema.Array(TimetableWeekOverviewCellSchema)
 });
 
