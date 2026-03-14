@@ -6,6 +6,8 @@ import {
   HomeCellSchema,
   MessageSummarySchema,
   MessagesPermissionsSchema,
+  MobileDataSchema,
+  MobileTenantSchema,
   OnboardingSchema,
   StartupActionsSchema,
   TimeGridSchema,
@@ -195,6 +197,53 @@ describe("strict schema decoding", () => {
     expect(() =>
       decode({
         startupActions: ["VERIFY_PROFILE_DATA", "UNKNOWN_ACTION"]
+      }, strictJsonParseOptions)
+    ).toThrow();
+  });
+
+  it("rejects incomplete mobile data tenant payloads", () => {
+    const decode = Schema.decodeUnknownSync(MobileTenantSchema);
+
+    expect(() =>
+      decode({
+        id: "6603700",
+        displayName: "IGS Lilienthal",
+        wuVersion: "2026.8.1",
+        language: ""
+      }, strictJsonParseOptions)
+    ).toThrow();
+  });
+
+  it("rejects unsupported mobile permissions", () => {
+    const decode = Schema.decodeUnknownSync(MobileDataSchema);
+
+    expect(() =>
+      decode({
+        schoolYear: {
+          id: 7,
+          name: "2025/2026",
+          dateRange: {
+            start: "2025-08-14T00:00:00",
+            end: "2026-07-01T00:00:00"
+          }
+        },
+        tenant: {
+          id: "6603700",
+          displayName: "IGS Lilienthal",
+          wuVersion: "2026.8.1",
+          language: "",
+          schoolLoginName: "igs-lilienthal"
+        },
+        user: {
+          id: 3711,
+          username: "hauke.studienbuch",
+          person: null,
+          referencedStudents: [],
+          locale: "de",
+          departmentId: 0,
+          role: "STAFF",
+          permissions: ["READ_MESSAGES", "WRITE_MESSAGES"]
+        }
       }, strictJsonParseOptions)
     ).toThrow();
   });

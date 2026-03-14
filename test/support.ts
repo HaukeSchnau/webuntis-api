@@ -18,6 +18,7 @@ import type {
   MessagesInbox,
   MessagesStatus,
   MobileData,
+  MobileDataV1V2,
   Onboarding,
   SessionStatus,
   TimetableAvailableRooms,
@@ -101,7 +102,7 @@ export const normalizeMessageSent = (value: MessageSent) => normalizeUnknown(val
 export const normalizeMessagesInbox = (value: MessagesInbox) => normalizeUnknown(value);
 export const normalizeMessagesPermissions = (value: MessagesPermissions) => normalizeUnknown(value);
 export const normalizeMessagesStatus = (value: MessagesStatus) => normalizeUnknown(value);
-export const normalizeMobileData = (value: MobileData) => normalizeUnknown(value);
+export const normalizeMobileData = (value: MobileData | MobileDataV1V2) => normalizeUnknown(value);
 export const normalizeOnboarding = (value: Onboarding) => normalizeUnknown(value);
 export const normalizeUserContactData = (value: UserContactData) => normalizeUnknown(value);
 export const normalizeUserEmail = (value: UserEmail) => normalizeUnknown(value);

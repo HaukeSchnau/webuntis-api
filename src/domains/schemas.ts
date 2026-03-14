@@ -350,8 +350,26 @@ export const MobileTenantSchema = Schema.Struct({
   id: Schema.String,
   displayName: Schema.String,
   wuVersion: Schema.String,
+  language: Schema.String,
+  schoolLoginName: Schema.String
+});
+
+export const MobileTenantV1V2Schema = Schema.Struct({
+  id: Schema.String,
+  displayName: Schema.String,
+  wuVersion: Schema.String,
   language: Schema.String
 });
+
+export const MobilePermissionSchema = Schema.Literals([
+  "READ_MESSAGES",
+  "WRITE_OWN_ABSENCES",
+  "WRITE_OWN_ABSENCE_REASON",
+  "CLASS_REGISTER",
+  "CHANGE_OWN_PASSWORD"
+]);
+
+export type MobilePermission = Schema.Schema.Type<typeof MobilePermissionSchema>;
 
 export const MobileUserSchema = Schema.Struct({
   id: Schema.Number,
@@ -361,7 +379,13 @@ export const MobileUserSchema = Schema.Struct({
   locale: Schema.String,
   departmentId: Schema.Number,
   role: Schema.String,
-  permissions: Schema.Array(Schema.String)
+  permissions: Schema.Array(MobilePermissionSchema)
+});
+
+export const MobileDataV1V2Schema = Schema.Struct({
+  schoolYear: SchoolyearSchema,
+  tenant: MobileTenantV1V2Schema,
+  user: MobileUserSchema
 });
 
 export const MobileDataSchema = Schema.Struct({
@@ -370,6 +394,7 @@ export const MobileDataSchema = Schema.Struct({
   user: MobileUserSchema
 });
 
+export type MobileDataV1V2 = Schema.Schema.Type<typeof MobileDataV1V2Schema>;
 export type MobileData = Schema.Schema.Type<typeof MobileDataSchema>;
 
 export const StartupActionsSchema = Schema.Struct({

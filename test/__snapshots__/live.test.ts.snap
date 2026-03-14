@@ -744,6 +744,74 @@ exports[`live WebUntis integration > with live layer > documents current home an
 }
 `;
 
+exports[`live WebUntis integration > with live layer > documents current home and mobile version behavior 5`] = `
+{
+  "schoolYear": {
+    "dateRange": {
+      "end": "<redacted-datetime>",
+      "start": "<redacted-datetime>",
+    },
+    "id": 7,
+    "name": "2025/2026",
+  },
+  "tenant": {
+    "displayName": "<redacted-label> Lilienthal",
+    "id": "6603700",
+    "language": "",
+    "schoolLoginName": "igs-lilienthal",
+    "wuVersion": "2026.8.1",
+  },
+  "user": {
+    "departmentId": 0,
+    "id": 3711,
+    "locale": "de",
+    "permissions": [
+      "<redacted-label>_<redacted-label>",
+      "<redacted-label>_<redacted-label>",
+      "<redacted-label>_<redacted-label>_<redacted-label>",
+    ],
+    "person": null,
+    "referencedStudents": [],
+    "role": "<redacted-label>",
+    "username": "<redacted>",
+  },
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current home and mobile version behavior 6`] = `
+{
+  "schoolYear": {
+    "dateRange": {
+      "end": "<redacted-datetime>",
+      "start": "<redacted-datetime>",
+    },
+    "id": 7,
+    "name": "2025/2026",
+  },
+  "tenant": {
+    "displayName": "<redacted-label> Lilienthal",
+    "id": "6603700",
+    "language": "",
+    "schoolLoginName": "igs-lilienthal",
+    "wuVersion": "2026.8.1",
+  },
+  "user": {
+    "departmentId": 0,
+    "id": 3711,
+    "locale": "de",
+    "permissions": [
+      "<redacted-label>_<redacted-label>",
+      "<redacted-label>_<redacted-label>",
+      "<redacted-label>_<redacted-label>_<redacted-label>",
+    ],
+    "person": null,
+    "referencedStudents": [],
+    "role": "<redacted-label>",
+    "username": "<redacted>",
+  },
+}
+`;
+
 exports[`live WebUntis integration > with live layer > documents current startup v1 and v2 parity 1`] = `
 {
   "startupActions": [],
@@ -1442,6 +1510,7 @@ exports[`live WebUntis integration > with live layer > reads bootstrap and home 
     "displayName": "<redacted-label> Lilienthal",
     "id": "6603700",
     "language": "",
+    "schoolLoginName": "igs-lilienthal",
     "wuVersion": "2026.8.1",
   },
   "user": {
