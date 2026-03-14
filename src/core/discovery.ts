@@ -5,6 +5,7 @@ import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
 import type { ClientConfig } from "./config.ts";
 import { ClientConfig as ClientConfigTag } from "./config.ts";
 import { SchoolSearchError, SchemaDriftError } from "./errors.ts";
+import { strictJsonParseOptions } from "./schema.ts";
 import type { ResolvedSchool } from "./types.ts";
 
 const SchoolSearchResultSchema = Schema.Struct({
@@ -62,7 +63,10 @@ export const Live = Layer.effect(SchoolDiscovery)(
             }))
         );
 
-        const decoded = yield* HttpClientResponse.schemaBodyJson(SearchSchoolRpcResponseSchema)(response).pipe(
+        const decoded = yield* HttpClientResponse.schemaBodyJson(
+          SearchSchoolRpcResponseSchema,
+          strictJsonParseOptions
+        )(response).pipe(
           Effect.mapError((error) =>
             new SchemaDriftError({
               path: "/schoolquery2",

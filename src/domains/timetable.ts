@@ -5,10 +5,13 @@ import {
   TimetableCalendarSchema,
   TimetableEntriesSchema,
   TimetableEntriesSettingsSchema,
+  TimetableEntriesWeekOverviewSchema,
+  TimetableExternalCalendarSchema,
   TimetableFilterSchema,
   TimetableGridSchema,
   TimetableMenuSchema,
-  TimetableSearchSchema
+  TimetableSearchSchema,
+  TimeGridSchema
 } from "./schemas.ts";
 
 export interface TimetableEntriesRequest {
@@ -49,10 +52,19 @@ export interface TimetableAvailableRoomsRequest {
   readonly endDateTime: string;
 }
 
+export interface TimetableEntriesWeekOverviewRequest {
+  readonly start: string;
+  readonly end: string;
+  readonly resourceType: "CLASS" | "TEACHER" | "ROOM" | "SUBJECT" | "STUDENT";
+  readonly resources: ReadonlyArray<number>;
+  readonly timetableType?: string | undefined;
+}
+
 export const makeTimetableClient = Effect.gen(function*() {
   const http = yield* WebUntisHttp;
 
   return {
+    getTimeGrid: http.getSchema("api/rest/view/v1/timegrid", TimeGridSchema),
     getGrid: (timetableType = "STANDARD") =>
       http.getSchema("api/rest/view/v1/timetable/grid", TimetableGridSchema, {
         query: { timetableType }
@@ -84,6 +96,11 @@ export const makeTimetableClient = Effect.gen(function*() {
         },
         withSchoolYearHeader: false
       }),
+    getExternalCalendar: http.getSchema(
+      "api/rest/view/v1/timetable/externalCalendar",
+      TimetableExternalCalendarSchema,
+      { withSchoolYearHeader: false }
+    ),
     search: (request: TimetableSearchRequest) =>
       http.getSchema("api/rest/view/v1/timetable/search", TimetableSearchSchema, {
         query: {
@@ -111,6 +128,16 @@ export const makeTimetableClient = Effect.gen(function*() {
           periodTypes: request.periodTypes ?? "",
           timetableType: request.timetableType ?? "STANDARD",
           layout: request.layout ?? "START_TIME"
+        }
+      }),
+    getEntriesWeekOverview: (request: TimetableEntriesWeekOverviewRequest) =>
+      http.getSchema("api/rest/view/v1/timetable/entriesWeekOverview", TimetableEntriesWeekOverviewSchema, {
+        query: {
+          start: request.start,
+          end: request.end,
+          resourceType: request.resourceType,
+          resources: request.resources.join(","),
+          timetableType: request.timetableType ?? "OVERVIEW_WEEK"
         }
       }),
     experimental: {

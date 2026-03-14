@@ -8,10 +8,11 @@ The client models the modern WebUntis REST surface as a portable Effect service 
 - `AuthClient` performs the classic login handshake and mints the session-bound JWT from `/WebUntis/api/token/new`.
 - `WebUntisHttp` attaches cookies and bearer auth for modern `/api/rest/view/v1/...` requests.
 - `WebUntisClient` exposes the first domain clients for `app`, `schoolyears`, `messages`, `profile`, `session`, `timetable`, plus a `rawViewApi` escape hatch.
-  The `app` and `timetable` domains now also cover adjacent bootstrap routes such as `home`, `mobile/data`, `trigger/startup`, and `timetable/calendar`.
+  The `app` and `timetable` domains now also cover adjacent bootstrap routes such as `home`, `mobile/data`, `trigger/startup`, `today/meta`, `dashboard/cards`, `app/platform-application/menus`, `app/third-party/data`, `onboarding`, `timegrid`, `timetable/calendar`, `timetable/externalCalendar`, and `timetable/entriesWeekOverview`.
   The timetable domain also exposes typed `availableRooms` support through the confirmed-working `v2` query-parameter route.
   The `messages` domain now covers inbox, drafts, sent, recipient quickfilters, recipient filter/search helpers, reply-form lookup, and individual message detail in addition to status and permissions.
   The timetable client also exposes experimental read probes for the currently restricted settings/format routes so tenant behavior changes are visible in the live suite.
+  JSON decoders run with strict excess-property rejection so unexpected upstream fields fail fast instead of being silently dropped.
 
 ## Runtime
 
@@ -92,5 +93,5 @@ await Effect.runPromise(program.pipe(Effect.provide(layer)));
 
 - Live tests use `@effect/vitest` against a real tenant.
 - Snapshot tests normalize volatile live payload fields.
-- The live suite also pins the current behavior of adjacent routes such as `session/status`, `timetable/menu`, `timetable/search`, and the currently failing `profile` summary/admin endpoints.
+- The live suite also pins the current behavior of adjacent routes such as `session/status`, `today/meta`, `dashboard/cards`, `timetable/menu`, `timetable/search`, `timetable/entriesWeekOverview`, the currently failing `profile` summary/admin endpoints, and currently blocked read-only routes such as `messages-of-the-day`, `rooms`, `teachers`, and `subjects`.
 - Reverse-engineering snapshot tests pin the mined frontend endpoint inventory so upstream bundle drift is obvious.

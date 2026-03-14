@@ -5,6 +5,7 @@ import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
 import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
 import { AuthClient } from "./auth.ts";
 import { SchemaDriftError, UnexpectedResponseError } from "./errors.ts";
+import { strictJsonParseOptions } from "./schema.ts";
 import { SessionStore } from "./session-store.ts";
 import { resolveBaseUrl } from "./types.ts";
 
@@ -115,7 +116,7 @@ export const Live = Effect.gen(function*() {
     effect: Effect.Effect<HttpClientResponse.HttpClientResponse, unknown>
   ) =>
     effect.pipe(
-      Effect.flatMap(HttpClientResponse.schemaBodyJson(schema as any)),
+      Effect.flatMap(HttpClientResponse.schemaBodyJson(schema as any, strictJsonParseOptions)),
       Effect.mapError((error) =>
         error instanceof UnexpectedResponseError
           ? error

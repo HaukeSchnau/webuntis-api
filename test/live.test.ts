@@ -7,6 +7,11 @@ import { layer as makeWebUntisLayer, WebUntisClient } from "../src/client.ts";
 import {
   liveEnvMissing,
   normalizeAppData,
+  normalizeAppPlatformApplicationMenus,
+  normalizeAppThirdPartyData,
+  normalizeDashboardCards,
+  normalizeDashboardCardsDetail,
+  normalizeDashboardCardsStatus,
   normalizeHome,
   normalizeMessageDetail,
   normalizeMessageDrafts,
@@ -19,16 +24,21 @@ import {
   normalizeMessagesPermissions,
   normalizeMessagesStatus,
   normalizeMobileData,
+  normalizeOnboarding,
   normalizeSessionStatus,
   normalizeStartupActions,
+  normalizeTimeGrid,
   normalizeTimetableAvailableRooms,
   normalizeTimetableCalendar,
   normalizeTimetableEntries,
+  normalizeTimetableEntriesWeekOverview,
   normalizeTimetableEntriesSettings,
+  normalizeTimetableExternalCalendar,
   normalizeTimetableFilter,
   normalizeTimetableGrid,
   normalizeTimetableMenu,
   normalizeTimetableSearch,
+  normalizeTodayMeta,
   normalizeUnexpectedResponse,
   normalizeUserContactData,
   normalizeUserEmail
@@ -68,6 +78,33 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         expect(normalizeHome(home)).toMatchSnapshot();
         expect(normalizeMobileData(mobileData)).toMatchSnapshot();
         expect(normalizeStartupActions(startupActions)).toMatchSnapshot();
+      }), 30_000);
+
+    it.effect("reads additional app bootstrap endpoints", () =>
+      Effect.gen(function*() {
+        const client = yield* WebUntisClient;
+        const todayMeta = yield* client.app.getTodayMeta;
+        const dashboardCards = yield* client.app.getDashboardCards;
+        const dashboardCardsDetail = yield* client.app.getDashboardCardsDetail;
+        const dashboardCardsStatus = yield* client.app.getDashboardCardsStatus;
+        const menus = yield* client.app.getPlatformApplicationMenus;
+        const thirdPartyData = yield* client.app.getThirdPartyData;
+        const onboarding = yield* client.app.getOnboarding({ type: "TIMETABLE" });
+
+        expect(todayMeta.greetingName.length).toBeGreaterThan(0);
+        expect(Array.isArray(dashboardCards.dashboardCards)).toBe(true);
+        expect(Array.isArray(dashboardCardsDetail.dashboardCardsDetails)).toBe(true);
+        expect(dashboardCardsStatus.unreadCardsCount).toBeGreaterThanOrEqual(0);
+        expect(menus.length).toBeGreaterThan(0);
+        expect(thirdPartyData).toHaveProperty("sleekplanToken");
+        expect(onboarding.type).toBe("TIMETABLE");
+        expect(normalizeTodayMeta(todayMeta)).toMatchSnapshot();
+        expect(normalizeDashboardCards(dashboardCards)).toMatchSnapshot();
+        expect(normalizeDashboardCardsDetail(dashboardCardsDetail)).toMatchSnapshot();
+        expect(normalizeDashboardCardsStatus(dashboardCardsStatus)).toMatchSnapshot();
+        expect(normalizeAppPlatformApplicationMenus(menus)).toMatchSnapshot();
+        expect(normalizeAppThirdPartyData(thirdPartyData)).toMatchSnapshot();
+        expect(normalizeOnboarding(onboarding)).toMatchSnapshot();
       }), 30_000);
 
     it.effect("reads schoolyears and message endpoints", () =>
@@ -152,6 +189,35 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         expect(normalizeTimetableAvailableRooms(availableRooms)).toMatchSnapshot();
       }), 30_000);
 
+    it.effect("reads additional timetable overview endpoints", () =>
+      Effect.gen(function*() {
+        const client = yield* WebUntisClient;
+        const roomFilter = yield* client.timetable.getFilter({
+          start: "2026-03-16",
+          end: "2026-03-20",
+          resourceType: "ROOM",
+          timetableType: "OVERVIEW_WEEK"
+        });
+        const roomId = (roomFilter.rooms.find((room) => room.room.shortName === "1.12") ?? roomFilter.rooms[0])?.room.id;
+        const timegrid = yield* client.timetable.getTimeGrid;
+        const weekOverview = yield* client.timetable.getEntriesWeekOverview({
+          start: "2026-03-16",
+          end: "2026-03-20",
+          resourceType: "ROOM",
+          resources: [roomId!]
+        });
+        const externalCalendar = yield* client.timetable.getExternalCalendar;
+
+        expect(roomId).toBeDefined();
+        expect(timegrid.units.length).toBeGreaterThan(0);
+        expect(weekOverview.slots.length).toBeGreaterThan(0);
+        expect(weekOverview.days.length).toBeGreaterThan(0);
+        expect(Array.isArray(externalCalendar)).toBe(true);
+        expect(normalizeTimeGrid(timegrid)).toMatchSnapshot();
+        expect(normalizeTimetableEntriesWeekOverview(weekOverview)).toMatchSnapshot();
+        expect(normalizeTimetableExternalCalendar(externalCalendar)).toMatchSnapshot();
+      }), 30_000);
+
     it.effect("documents current timetable utility/settings access behavior", () =>
       Effect.gen(function*() {
         const client = yield* WebUntisClient;
@@ -167,6 +233,76 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         expect(normalizeUnexpectedResponse(formatListError as UnexpectedResponseError)).toMatchSnapshot();
         expect(normalizeUnexpectedResponse(generalSettingsError as UnexpectedResponseError)).toMatchSnapshot();
         expect(normalizeUnexpectedResponse(visibilityRestrictionError as UnexpectedResponseError)).toMatchSnapshot();
+      }), 30_000);
+
+    it.effect("documents current blocked or unstable read-only endpoints", () =>
+      Effect.gen(function*() {
+        const client = yield* WebUntisClient;
+        const roomFilter = yield* client.timetable.getFilter({
+          start: "2026-03-16",
+          end: "2026-03-16",
+          resourceType: "ROOM"
+        });
+        const teacherFilter = yield* client.timetable.getFilter({
+          start: "2026-03-16",
+          end: "2026-03-16",
+          resourceType: "TEACHER"
+        });
+        const subjectFilter = yield* client.timetable.getFilter({
+          start: "2026-03-16",
+          end: "2026-03-16",
+          resourceType: "SUBJECT"
+        });
+        const roomId = (roomFilter.rooms.find((room) => room.room.shortName === "1.12") ?? roomFilter.rooms[0])?.room.id;
+        const teacherId = teacherFilter.teachers[0]?.teacher.id;
+        const subjectId = subjectFilter.subjects[0]?.subject.id;
+        expect(roomId).toBeDefined();
+        expect(teacherId).toBeDefined();
+        expect(subjectId).toBeDefined();
+        const messagesOfTheDayError = yield* Effect.flip(
+          client.rawViewApi.getJson("api/rest/view/v1/messages-of-the-day", {
+            withSchoolYearHeader: false
+          })
+        );
+        const staticTeachersError = yield* Effect.flip(
+          client.rawViewApi.getJson("api/rest/view/v1/messages/recipients/static/teachers", {
+            withSchoolYearHeader: false
+          })
+        );
+        const staticUsersError = yield* Effect.flip(
+          client.rawViewApi.getJson("api/rest/view/v1/messages/recipients/static/users", {
+            withSchoolYearHeader: false
+          })
+        );
+        const staticPersonsError = yield* Effect.flip(
+          client.rawViewApi.getJson("api/rest/view/v1/messages/recipients/static/persons", {
+            withSchoolYearHeader: false
+          })
+        );
+        const roomsError = yield* Effect.flip(client.rawViewApi.getJson("api/rest/view/v1/rooms"));
+        const roomDetailError = yield* Effect.flip(client.rawViewApi.getJson(`api/rest/view/v1/rooms/${roomId}`));
+        const buildingsError = yield* Effect.flip(client.rawViewApi.getJson("api/rest/view/v1/buildings"));
+        const teachersError = yield* Effect.flip(client.rawViewApi.getJson("api/rest/view/v1/teachers"));
+        const teacherDetailError = yield* Effect.flip(client.rawViewApi.getJson(`api/rest/view/v1/teachers/${teacherId}`));
+        const subjectsError = yield* Effect.flip(client.rawViewApi.getJson("api/rest/view/v1/subjects"));
+        const subjectDetailError = yield* Effect.flip(client.rawViewApi.getJson(`api/rest/view/v1/subjects/${subjectId}`));
+
+        for (const error of [
+          messagesOfTheDayError,
+          staticTeachersError,
+          staticUsersError,
+          staticPersonsError,
+          roomsError,
+          roomDetailError,
+          buildingsError,
+          teachersError,
+          teacherDetailError,
+          subjectsError,
+          subjectDetailError
+        ]) {
+          expect(error).toBeInstanceOf(UnexpectedResponseError);
+          expect(normalizeUnexpectedResponse(error as UnexpectedResponseError)).toMatchSnapshot();
+        }
       }), 30_000);
 
     it.effect("reads timetable endpoints using the first discovered class", () =>
