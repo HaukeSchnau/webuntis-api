@@ -19,6 +19,10 @@ import {
   normalizeDashboardCards,
   normalizeDashboardCardsDetail,
   normalizeDashboardCardsStatus,
+  normalizeExamDetail,
+  normalizeExamFilter,
+  normalizeExams,
+  normalizeExamStatistics,
   normalizeHome,
   normalizeMessageDetail,
   normalizeMessageDrafts,
@@ -212,6 +216,26 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         expect(normalizeMessagesStatus(messageStatus)).toMatchSnapshot();
         expect(normalizeMessageDetail(detail)).toMatchSnapshot();
         expect(normalizeMessageReplyForm(replyForm)).toMatchSnapshot();
+      }), 30_000);
+
+    it.effect("reads exam endpoints", () =>
+      Effect.gen(function*() {
+        const client = yield* WebUntisClient;
+        const exams = yield* client.exams.list;
+        const filter = yield* client.exams.getFilter;
+        const statistics = yield* client.exams.getStatistics;
+        const examId = exams.exams[0]?.examId;
+
+        expect(exams.exams.length).toBeGreaterThan(0);
+        expect(filter.examTypes.length).toBeGreaterThan(0);
+        expect(statistics.exams.length).toBeGreaterThan(0);
+        expect(examId).toBeDefined();
+        const detail = yield* client.exams.getExam(examId!);
+
+        expect(normalizeExams(exams)).toMatchSnapshot();
+        expect(normalizeExamFilter(filter)).toMatchSnapshot();
+        expect(normalizeExamStatistics(statistics)).toMatchSnapshot();
+        expect(normalizeExamDetail(detail)).toMatchSnapshot();
       }), 30_000);
 
     it.effect("reads user contact endpoints", () =>
