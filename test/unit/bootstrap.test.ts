@@ -1,0 +1,148 @@
+import { describe, expect, it } from "@effect/vitest";
+import { Effect } from "effect";
+import { AuthClient } from "../../src/core/auth.ts";
+import { WebUntisHttp } from "../../src/core/http.ts";
+import { makeCoreTestLayer, jsonResponse, makeJwt } from "./helpers.ts";
+
+describe("bootstrap and transport", () => {
+  it.effect("deduplicates concurrent authentication refreshes", () => {
+    let seedCalls = 0;
+    let loginCalls = 0;
+    let tokenCalls = 0;
+
+    return Effect.gen(function*() {
+      const auth = yield* AuthClient;
+      const [stateA, stateB] = yield* Effect.all([
+        auth.ensureAuthenticated,
+        auth.ensureAuthenticated
+      ], { concurrency: "unbounded" });
+
+      expect(stateA.token).toBeDefined();
+      expect(stateB.token).toBeDefined();
+      expect(seedCalls).toBe(1);
+      expect(loginCalls).toBe(1);
+      expect(tokenCalls).toBe(1);
+    }).pipe(
+      Effect.provide(makeCoreTestLayer((request) => {
+        const { pathname } = new URL(request.url);
+
+        if (pathname.endsWith("/index.do")) {
+          seedCalls += 1;
+          return new Response("", {
+            status: 200,
+            headers: { "set-cookie": "JSESSIONID=seed; Path=/;" }
+          });
+        }
+        if (pathname.endsWith("/j_spring_security_check")) {
+          loginCalls += 1;
+          return new Response("", {
+            status: 302,
+            headers: { "set-cookie": "JSESSIONID=login; Path=/;" }
+          });
+        }
+        if (pathname.endsWith("/api/token/new")) {
+          tokenCalls += 1;
+          return new Response(makeJwt(), { status: 200 });
+        }
+
+        throw new Error(`Unexpected request: ${request.method} ${request.url}`);
+      }))
+    );
+  }, 30_000);
+
+  it.effect("hydrates tenant and school-year headers automatically", () => {
+    const finalHeaders: Array<Readonly<Record<string, string>>> = [];
+
+    return Effect.gen(function*() {
+      const http = yield* WebUntisHttp;
+      yield* http.get("api/rest/view/v1/messages/status");
+
+      expect(finalHeaders).toHaveLength(1);
+      expect(finalHeaders[0]?.["authorization"]).toContain("Bearer ");
+      expect(finalHeaders[0]?.["cookie"]).toContain("JSESSIONID=login");
+      expect(finalHeaders[0]?.["Tenant-Id"] ?? finalHeaders[0]?.["tenant-id"]).toBe("tenant-42");
+      expect(
+        finalHeaders[0]?.["X-Webuntis-Api-School-Year-Id"] ??
+        finalHeaders[0]?.["x-webuntis-api-school-year-id"]
+      ).toBe("7");
+    }).pipe(
+      Effect.provide(makeCoreTestLayer((request) => {
+        const { pathname } = new URL(request.url);
+
+        if (pathname.endsWith("/index.do")) {
+          return new Response("", {
+            status: 200,
+            headers: { "set-cookie": "JSESSIONID=seed; Path=/;" }
+          });
+        }
+        if (pathname.endsWith("/j_spring_security_check")) {
+          return new Response("", {
+            status: 302,
+            headers: { "set-cookie": "JSESSIONID=login; Path=/;" }
+          });
+        }
+        if (pathname.endsWith("/api/token/new")) {
+          return new Response(makeJwt(), { status: 200 });
+        }
+        if (pathname.endsWith("/api/rest/view/v1/app/data")) {
+          return jsonResponse({
+            currentSchoolYear: { id: 7 },
+            tenant: { id: "tenant-42" }
+          });
+        }
+
+        finalHeaders.push(request.headers);
+        return jsonResponse({ ok: true });
+      }))
+    );
+  }, 30_000);
+
+  it.effect("skips metadata bootstrap when the school-year header is disabled", () => {
+    let metadataCalls = 0;
+    const finalHeaders: Array<Readonly<Record<string, string>>> = [];
+
+    return Effect.gen(function*() {
+      const http = yield* WebUntisHttp;
+      yield* http.get("api/rest/view/v1/messages/status", {
+        withSchoolYearHeader: false
+      });
+
+      expect(metadataCalls).toBe(0);
+      expect(finalHeaders).toHaveLength(1);
+      expect(
+        finalHeaders[0]?.["X-Webuntis-Api-School-Year-Id"] ??
+        finalHeaders[0]?.["x-webuntis-api-school-year-id"]
+      ).toBeUndefined();
+    }).pipe(
+      Effect.provide(makeCoreTestLayer((request) => {
+        const { pathname } = new URL(request.url);
+
+        if (pathname.endsWith("/index.do")) {
+          return new Response("", {
+            status: 200,
+            headers: { "set-cookie": "JSESSIONID=seed; Path=/;" }
+          });
+        }
+        if (pathname.endsWith("/j_spring_security_check")) {
+          return new Response("", {
+            status: 302,
+            headers: { "set-cookie": "JSESSIONID=login; Path=/;" }
+          });
+        }
+        if (pathname.endsWith("/api/token/new")) {
+          return new Response(makeJwt(), { status: 200 });
+        }
+        if (pathname.endsWith("/api/rest/view/v1/app/data")) {
+          metadataCalls += 1;
+          return jsonResponse({
+            currentSchoolYear: { id: 7 },
+            tenant: { id: "tenant-42" }
+          });
+        }
+
+        finalHeaders.push(request.headers);
+        return jsonResponse({ ok: true });
+      }))
+    );
+  }, 30_000);
+});

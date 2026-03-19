@@ -13,7 +13,7 @@ import {
   type TimetableResourceType,
   TimetableSearchSchema,
   TimeGridSchema
-} from "./schemas.ts";
+} from "./schemas/timetable.ts";
 
 export interface TimetableEntriesRequest {
   readonly start: string;

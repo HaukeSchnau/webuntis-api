@@ -1,5 +1,4 @@
 import type { Redacted } from "effect";
-import * as Cookies from "effect/unstable/http/Cookies";
 
 export interface Credentials {
   readonly username: string;
@@ -24,8 +23,7 @@ export interface WebUntisClientConfig extends Credentials {
   readonly discoveryEndpoint?: string | undefined;
 }
 
-export interface SessionState {
-  readonly cookies: Cookies.Cookies;
+export interface BootstrapState {
   readonly resolvedSchool?: ResolvedSchool | undefined;
   readonly token?: Redacted.Redacted<string> | undefined;
   readonly tokenExpiresAt?: number | undefined;
@@ -33,9 +31,29 @@ export interface SessionState {
   readonly schoolYearId?: number | undefined;
 }
 
-export const emptySessionState = (): SessionState => ({
-  cookies: Cookies.empty
-});
+export interface AuthenticatedState extends BootstrapState {
+  readonly resolvedSchool: ResolvedSchool;
+  readonly token: Redacted.Redacted<string>;
+}
+
+export interface BootstrapMetadata extends AuthenticatedState {
+  readonly tenantId: string;
+  readonly schoolYearId: number;
+}
+
+export const emptyBootstrapState = (): BootstrapState => ({});
+
+export const hasFreshToken = (state: BootstrapState, now = Date.now()): state is AuthenticatedState =>
+  state.resolvedSchool !== undefined &&
+  state.token !== undefined &&
+  state.tokenExpiresAt !== undefined &&
+  state.tokenExpiresAt - now > 60_000;
+
+export const hasBootstrapMetadata = (state: BootstrapState): state is BootstrapMetadata =>
+  state.resolvedSchool !== undefined &&
+  state.token !== undefined &&
+  state.tenantId !== undefined &&
+  state.schoolYearId !== undefined;
 
 export const resolveBaseUrl = (school: ResolvedSchool): string => {
   const serverUrl = school.serverUrl.replace(/\/+$/, "");

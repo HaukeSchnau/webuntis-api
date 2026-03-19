@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 import { WebUntisHttp } from "../core/http.ts";
-import { UserContactDataSchema, UserEmailSchema } from "./schemas.ts";
+import { UserContactDataSchema, UserEmailSchema } from "./schemas/profile.ts";
 
 export interface ExperimentalAdminDetailsUpdateRequest {
   readonly systemEmail: string;

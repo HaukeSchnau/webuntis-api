@@ -42,16 +42,16 @@ import type {
   TodayMeta,
   UserContactData,
   UserEmail
-} from "../src/domains/schemas.ts";
-import { UnexpectedResponseError } from "../src/core/errors.ts";
-import { fromEnv } from "../src/core/config.ts";
+} from "../../src/domains/schemas.ts";
+import { UnexpectedResponseError } from "../../src/core/errors.ts";
+import { fromEnv } from "../../src/core/config.ts";
 
 export const readLiveConfig = () => fromEnv();
 
 export const liveEnvMissing = [
-  process.env.WEBUNTIS_SCHOOL_NAME ? undefined : "WEBUNTIS_SCHOOL_NAME",
-  process.env.WEBUNTIS_USERNAME ? undefined : "WEBUNTIS_USERNAME",
-  process.env.WEBUNTIS_PASSWORD ? undefined : "WEBUNTIS_PASSWORD"
+  process.env["WEBUNTIS_SCHOOL_NAME"] ? undefined : "WEBUNTIS_SCHOOL_NAME",
+  process.env["WEBUNTIS_USERNAME"] ? undefined : "WEBUNTIS_USERNAME",
+  process.env["WEBUNTIS_PASSWORD"] ? undefined : "WEBUNTIS_PASSWORD"
 ].filter((field): field is string => field !== undefined);
 
 const redactString = (value: string) =>
@@ -134,11 +134,12 @@ export const normalizeTimetableSearch = (value: TimetableSearch) => normalizeUnk
 export const normalizeTodayMeta = (value: TodayMeta) => normalizeUnknown(value);
 
 export const normalizeUnexpectedResponse = (error: UnexpectedResponseError) => {
-  let body: unknown = error.body;
+  const rawBody = error.body ?? "";
+  let body: unknown = rawBody;
   try {
-    body = JSON.parse(error.body);
+    body = JSON.parse(rawBody);
   } catch {
-    body = error.body;
+    body = rawBody;
   }
 
   return {

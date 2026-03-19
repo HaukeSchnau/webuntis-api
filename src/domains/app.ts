@@ -1,6 +1,5 @@
 import { Effect } from "effect";
-import { SessionStore } from "../core/session-store.ts";
-import { WebUntisHttp } from "../core/http.ts";
+import { type RequestFailure, WebUntisHttp } from "../core/http.ts";
 import {
   AppDataSchema,
   AppPlatformApplicationMenusSchema,
@@ -25,44 +24,33 @@ import {
   type StartupActions,
   TodayMetaSchema,
   type TodayMeta
-} from "./schemas.ts";
+} from "./schemas/app.ts";
 
 export interface OnboardingRequest {
   readonly type: OnboardingType;
 }
 
 export interface AppClient {
-  readonly getData: Effect.Effect<AppData, unknown>;
-  readonly getHome: Effect.Effect<Home, unknown>;
-  readonly getMobileData: Effect.Effect<MobileData, unknown>;
-  readonly getStartupActions: Effect.Effect<StartupActions, unknown>;
-  readonly getPlatformApplicationMenus: Effect.Effect<AppPlatformApplicationMenus, unknown>;
-  readonly getThirdPartyData: Effect.Effect<AppThirdPartyData, unknown>;
-  readonly getTodayMeta: Effect.Effect<TodayMeta, unknown>;
-  readonly getDashboardCards: Effect.Effect<DashboardCards, unknown>;
-  readonly getDashboardCardsDetail: Effect.Effect<DashboardCardsDetail, unknown>;
-  readonly getDashboardCardsStatus: Effect.Effect<DashboardCardsStatus, unknown>;
-  readonly getOnboarding: (request: OnboardingRequest) => Effect.Effect<Onboarding, unknown>;
+  readonly getData: Effect.Effect<AppData, RequestFailure>;
+  readonly getHome: Effect.Effect<Home, RequestFailure>;
+  readonly getMobileData: Effect.Effect<MobileData, RequestFailure>;
+  readonly getStartupActions: Effect.Effect<StartupActions, RequestFailure>;
+  readonly getPlatformApplicationMenus: Effect.Effect<AppPlatformApplicationMenus, RequestFailure>;
+  readonly getThirdPartyData: Effect.Effect<AppThirdPartyData, RequestFailure>;
+  readonly getTodayMeta: Effect.Effect<TodayMeta, RequestFailure>;
+  readonly getDashboardCards: Effect.Effect<DashboardCards, RequestFailure>;
+  readonly getDashboardCardsDetail: Effect.Effect<DashboardCardsDetail, RequestFailure>;
+  readonly getDashboardCardsStatus: Effect.Effect<DashboardCardsStatus, RequestFailure>;
+  readonly getOnboarding: (request: OnboardingRequest) => Effect.Effect<Onboarding, RequestFailure>;
 }
 
 export const makeAppClient = Effect.gen(function*() {
   const http = yield* WebUntisHttp;
-  const sessionStore = yield* SessionStore;
-
-  const getData = http.getSchema("api/rest/view/v1/app/data", AppDataSchema, {
-    withSchoolYearHeader: false
-  }).pipe(
-    Effect.tap((appData) =>
-      sessionStore.update((state) => ({
-        ...state,
-        tenantId: state.tenantId ?? appData.tenant.id,
-        schoolYearId: appData.currentSchoolYear.id
-      }))
-    )
-  );
 
   return {
-    getData,
+    getData: http.getSchema("api/rest/view/v1/app/data", AppDataSchema, {
+      withSchoolYearHeader: false
+    }),
     getHome: http.getSchema("api/rest/view/v2/home", HomeSchema, {
       withSchoolYearHeader: false
     }),

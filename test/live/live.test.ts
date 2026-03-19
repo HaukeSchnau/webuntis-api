@@ -1,16 +1,16 @@
 import { describe, expect, it, layer } from "@effect/vitest";
 import { Effect, Layer, Schema } from "effect";
-import { AuthClient } from "../src/core/auth.ts";
-import { fromEnv } from "../src/core/config.ts";
-import { UnexpectedResponseError } from "../src/core/errors.ts";
-import { layer as makeWebUntisLayer, WebUntisClient } from "../src/client.ts";
-import { strictJsonParseOptions } from "../src/core/schema.ts";
+import { AuthClient } from "../../src/core/auth.ts";
+import { fromEnv } from "../../src/core/config.ts";
+import { UnexpectedResponseError } from "../../src/core/errors.ts";
+import { layer as makeWebUntisLayer, WebUntisClient } from "../../src/client.ts";
+import { strictJsonParseOptions } from "../../src/core/schema.ts";
 import {
   HomeSchema,
   MobileDataSchema,
   MobileDataV1V2Schema,
   StartupActionsSchema
-} from "../src/domains/schemas.ts";
+} from "../../src/domains/schemas.ts";
 import {
   liveEnvMissing,
   normalizeAppData,

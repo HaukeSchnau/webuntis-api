@@ -1,20 +1,24 @@
 {
   "name": "webuntis-api",
-  "module": "src/index.ts",
   "type": "module",
   "private": true,
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
-    "dev": "bun run --watch src/index.ts",
     "test": "vitest run",
+    "test:unit": "vitest run test/unit",
+    "test:contract": "vitest run test/contract",
+    "test:live": "vitest run test/live",
     "test:watch": "vitest",
     "typecheck": "tsgo --noEmit"
   },
   "devDependencies": {
-    "@types/bun": "latest",
+    "@types/node": "^24.6.1",
     "vitest": "^4.0.18"
   },
   "dependencies": {
-    "@effect/platform-bun": "^4.0.0-beta.30",
     "@effect/vitest": "^4.0.0-beta.30",
     "@typescript/native-preview": "^7.0.0-dev.20260311.1",
     "effect": "^4.0.0-beta.30"
