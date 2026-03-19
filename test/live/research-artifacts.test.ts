@@ -12,7 +12,7 @@ interface EndpointCatalog {
 
 const endpointCatalog = JSON.parse(
   readFileSync(
-    new URL("../research/webuntis/modern-rest-endpoints.json", import.meta.url),
+    new URL("../../research/webuntis/modern-rest-endpoints.json", import.meta.url),
     "utf8"
   )
 ) as EndpointCatalog;

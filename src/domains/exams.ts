@@ -5,7 +5,7 @@ import {
   ExamFilterSchema,
   ExamsSchema,
   ExamStatisticsSchema
-} from "./schemas.ts";
+} from "./schemas/exams.ts";
 
 export const makeExamsClient = Effect.gen(function*() {
   const http = yield* WebUntisHttp;

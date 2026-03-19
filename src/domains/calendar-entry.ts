@@ -1,6 +1,6 @@
 import { Effect } from "effect";
-import { WebUntisHttp } from "../core/http.ts";
-import { CalendarEntryTodayEntriesSchema, type CalendarEntryTodayEntries } from "./schemas.ts";
+import { type RequestFailure, WebUntisHttp } from "../core/http.ts";
+import { CalendarEntryTodayEntriesSchema, type CalendarEntryTodayEntries } from "./schemas/calendar-entry.ts";
 
 export type CalendarEntryTodayRequest =
   | {
@@ -20,7 +20,7 @@ export type CalendarEntryTodayRequest =
   };
 
 export interface CalendarEntryClient {
-  readonly getTodayEntries: (request: CalendarEntryTodayRequest) => Effect.Effect<CalendarEntryTodayEntries, unknown>;
+  readonly getTodayEntries: (request: CalendarEntryTodayRequest) => Effect.Effect<CalendarEntryTodayEntries, RequestFailure>;
 }
 
 export const makeCalendarEntryClient = Effect.gen(function*() {

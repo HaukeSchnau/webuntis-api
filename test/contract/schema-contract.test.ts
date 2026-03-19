@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Schema } from "effect";
-import { strictJsonParseOptions } from "../src/core/schema.ts";
+import { strictJsonParseOptions } from "../../src/core/schema.ts";
 import {
   AppPlatformApplicationMenuSchema,
   ClassregAbsencesMetaSchema,
@@ -16,7 +16,7 @@ import {
   TimeGridSchema,
   TimetableFormatDefinitionSchema,
   TimetableEntriesWeekOverviewSchema
-} from "../src/domains/schemas.ts";
+} from "../../src/domains/schemas.ts";
 
 describe("strict schema decoding", () => {
   it("rejects excess properties in existing message payloads", () => {

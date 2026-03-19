@@ -3,7 +3,7 @@ import { WebUntisHttp } from "../core/http.ts";
 import {
   ClassregAbsencesMetaSchema,
   ClassregHomeworkMetaSchema
-} from "./schemas.ts";
+} from "./schemas/classreg.ts";
 
 export const makeClassregClient = Effect.gen(function*() {
   const http = yield* WebUntisHttp;

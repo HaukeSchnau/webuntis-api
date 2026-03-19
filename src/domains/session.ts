@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 import { WebUntisHttp } from "../core/http.ts";
-import { SessionStatusSchema } from "./schemas.ts";
+import { SessionStatusSchema } from "./schemas/session.ts";
 
 export interface SessionStatusRequest {
   readonly clientTimeZone?: string | undefined;

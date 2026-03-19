@@ -1,6 +1,6 @@
 import { Effect, Schema } from "effect";
 import { WebUntisHttp } from "../core/http.ts";
-import { SchoolyearSchema } from "./schemas.ts";
+import { SchoolyearSchema } from "./schemas/shared.ts";
 
 export const makeSchoolyearsClient = Effect.gen(function*() {
   const http = yield* WebUntisHttp;

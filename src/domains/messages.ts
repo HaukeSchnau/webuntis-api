@@ -12,7 +12,7 @@ import {
   MessagesInboxSchema,
   MessagesPermissionsSchema,
   MessagesStatusSchema
-} from "./schemas.ts";
+} from "./schemas/messages.ts";
 
 export const makeMessagesClient = Effect.gen(function*() {
   const http = yield* WebUntisHttp;
