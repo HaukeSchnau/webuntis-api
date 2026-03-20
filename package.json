@@ -11,6 +11,8 @@
     "test:unit": "vitest run test/unit",
     "test:contract": "vitest run test/contract",
     "test:live": "vitest run test/live",
+    "test:live:sops": "./scripts/run-live-tests.sh",
+    "test:live:sops:update": "./scripts/run-live-tests.sh -u",
     "test:watch": "vitest",
     "typecheck": "tsgo --noEmit"
   },

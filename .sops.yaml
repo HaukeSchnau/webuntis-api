@@ -1,0 +1,3 @@
+creation_rules:
+  - path_regex: secrets/.*\.env$
+    age: age18q0vl05uxfugy0wemxwgd5y0rnrcxw9l5srkf3nhhf3ju4klufhq9vcwk3

@@ -74,6 +74,47 @@ Optional overrides:
 
 Without credentials, the live suite is skipped and the tests explain which variables are missing.
 
+## Encrypted Live Credentials
+
+The repository now keeps the live-test credentials in an encrypted SOPS file at [`secrets/webuntis-live.env`](./secrets/webuntis-live.env).
+
+SOPS is configured through [`.sops.yaml`](./.sops.yaml) and uses an `age` recipient. Only the public recipient is committed. The matching private key must be available locally at the standard SOPS path:
+
+```bash
+~/.config/sops/age/keys.txt
+```
+
+You can override that location with `SOPS_AGE_KEY_FILE`.
+
+If you do not already have `sops` and `age`, install them with Nix:
+
+```bash
+nix shell nixpkgs#sops nixpkgs#age
+```
+
+Convenience commands:
+
+```bash
+bun run test:live:sops
+bun run test:live:sops:update
+```
+
+Those scripts decrypt the repository secret just-in-time and export the resulting `WEBUNTIS_*` variables for the current process before running the live Vitest suite.
+
+To rotate or edit the encrypted live-test credentials:
+
+```bash
+sops secrets/webuntis-live.env
+```
+
+To decrypt the file manually for inspection without writing plaintext into the repository:
+
+```bash
+sops decrypt secrets/webuntis-live.env
+```
+
+Future developers and agents need the matching private key provisioned out of band before they can use the encrypted credentials. Do not commit plaintext `.env` files to the repo.
+
 ## Example
 
 ```ts
