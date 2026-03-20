@@ -1,7 +1,7 @@
 import { Effect, Layer, ServiceMap } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
-import type { Schoolyear } from "../schemas/shared.ts";
+import type { Schoolyear } from "../shared/schema.ts";
 import { SchoolyearsRequests } from "./requests.ts";
 
 export interface SchoolyearsClientShape {

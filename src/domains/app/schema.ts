@@ -5,7 +5,7 @@ import {
   SchoolyearWithTimeGridSchema,
   TenantSchema,
   UserSchema,
-} from "./shared.ts";
+} from "../shared/schema.ts";
 
 export const AppDataSchema = Schema.Struct({
   currentSchoolYear: SchoolyearWithTimeGridSchema,

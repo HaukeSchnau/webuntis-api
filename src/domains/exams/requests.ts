@@ -4,7 +4,7 @@ import {
   ExamFilterSchema,
   ExamStatisticsSchema,
   ExamsSchema,
-} from "../schemas/exams.ts";
+} from "./schema.ts";
 
 export const ExamsRequests = {
   list: schemaRequest<void, typeof ExamsSchema>({

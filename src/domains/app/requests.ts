@@ -12,7 +12,7 @@ import {
   type OnboardingType,
   StartupActionsSchema,
   TodayMetaSchema,
-} from "../schemas/app.ts";
+} from "./schema.ts";
 
 export interface OnboardingRequest {
   readonly type: OnboardingType;

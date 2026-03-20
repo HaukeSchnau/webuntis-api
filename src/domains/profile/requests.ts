@@ -1,5 +1,5 @@
 import { RequestPolicy, schemaRequest } from "../../internal/request.ts";
-import { UserContactDataSchema, UserEmailSchema } from "../schemas/profile.ts";
+import { UserContactDataSchema, UserEmailSchema } from "./schema.ts";
 
 export const ProfileRequests = {
   getUserContactData: schemaRequest<void, typeof UserContactDataSchema>({

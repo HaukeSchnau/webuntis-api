@@ -1,6 +1,7 @@
 import { Effect, Layer, ServiceMap } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
+import { MessagesRequests } from "./requests.ts";
 import type {
   MessageDetail,
   MessageDrafts,
@@ -13,8 +14,7 @@ import type {
   MessagesInbox,
   MessagesPermissions,
   MessagesStatus,
-} from "../schemas/messages.ts";
-import { MessagesRequests } from "./requests.ts";
+} from "./schema.ts";
 
 export interface MessagesClientShape {
   readonly getInbox: () => Effect.Effect<MessagesInbox, RequestFailure>;

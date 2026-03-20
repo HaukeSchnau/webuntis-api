@@ -1,8 +1,8 @@
 import { Effect, Layer, ServiceMap } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
-import type { SessionStatus } from "../schemas/session.ts";
 import { SessionRequests, type SessionStatusRequest } from "./requests.ts";
+import type { SessionStatus } from "./schema.ts";
 
 export interface SessionClientShape {
   readonly getStatus: (

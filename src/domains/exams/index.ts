@@ -1,13 +1,13 @@
 import { Effect, Layer, ServiceMap } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
+import { ExamsRequests } from "./requests.ts";
 import type {
   ExamDetail,
   ExamFilter,
   ExamStatistics,
   Exams,
-} from "../schemas/exams.ts";
-import { ExamsRequests } from "./requests.ts";
+} from "./schema.ts";
 
 export interface ExamsClientShape {
   readonly list: () => Effect.Effect<Exams, RequestFailure>;
