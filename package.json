@@ -14,9 +14,13 @@
     "test:live:sops": "./scripts/run-live-tests.sh",
     "test:live:sops:update": "./scripts/run-live-tests.sh -u",
     "test:watch": "vitest",
-    "typecheck": "tsgo --noEmit"
+    "typecheck": "tsgo --noEmit",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "format:check": "biome format ."
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.8",
     "@types/node": "^24.6.1",
     "vitest": "^4.0.18"
   },

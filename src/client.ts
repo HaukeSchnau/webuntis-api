@@ -1,87 +1,131 @@
 import { Effect, Layer, ServiceMap } from "effect";
-import type * as Fx from "effect/Effect";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
-import { AuthClient, Live as AuthClientLive } from "./core/auth.ts";
-import { Bootstrap, Live as BootstrapLive } from "./core/bootstrap.ts";
-import { type ClientConfig as ClientConfigShape, layer as clientConfigLayer } from "./core/config.ts";
-import { SchoolDiscovery, Live as SchoolDiscoveryLive } from "./core/discovery.ts";
-import { WebUntisHttp, Live as WebUntisHttpLive } from "./core/http.ts";
-import { makeAppClient } from "./domains/app.ts";
-import { makeCalendarEntryClient } from "./domains/calendar-entry.ts";
-import { makeClassregClient } from "./domains/classreg.ts";
-import { makeExamsClient } from "./domains/exams.ts";
-import { makeMessagesClient } from "./domains/messages.ts";
-import { makeProfileClient } from "./domains/profile.ts";
-import { makeRawViewApiClient } from "./domains/raw-view-api.ts";
-import { makeSchoolyearsClient } from "./domains/schoolyears.ts";
-import { makeSessionClient } from "./domains/session.ts";
-import { makeTimetableClient } from "./domains/timetable.ts";
+import { AuthClient } from "./auth.ts";
+import { AppClient } from "./domains/app/index.ts";
+import { ClassregClient } from "./domains/classreg/index.ts";
+import { ExamsClient } from "./domains/exams/index.ts";
+import { MessagesClient } from "./domains/messages/index.ts";
+import { ProfileClient } from "./domains/profile/index.ts";
+import { RawViewApiClient } from "./domains/raw-view-api/index.ts";
+import { SchoolyearsClient } from "./domains/schoolyears/index.ts";
+import { SessionClient } from "./domains/session/index.ts";
+import { TimetableClient } from "./domains/timetable/index.ts";
+import { Bootstrap } from "./internal/bootstrap.ts";
+import { ClientConfig } from "./internal/config.ts";
+import { SchoolDiscovery } from "./internal/discovery.ts";
+import { WebUntisHttp } from "./internal/http.ts";
 
-export interface WebUntisClient {
-  readonly auth: AuthClient;
-  readonly app: Fx.Success<typeof makeAppClient>;
-  readonly classreg: Fx.Success<typeof makeClassregClient>;
-  readonly exams: Fx.Success<typeof makeExamsClient>;
-  readonly schoolyears: Fx.Success<typeof makeSchoolyearsClient>;
-  readonly messages: Fx.Success<typeof makeMessagesClient>;
-  readonly profile: Fx.Success<typeof makeProfileClient>;
-  readonly session: Fx.Success<typeof makeSessionClient>;
-  readonly timetable: Fx.Success<typeof makeTimetableClient>;
-  readonly rawViewApi: Fx.Success<typeof makeRawViewApiClient>;
-  readonly experimental: {
-    readonly calendarEntry: Fx.Success<typeof makeCalendarEntryClient>;
-    readonly profile: Fx.Success<typeof makeProfileClient>["experimental"];
-    readonly timetable: Fx.Success<typeof makeTimetableClient>["experimental"];
-    readonly rawViewApi: Fx.Success<typeof makeRawViewApiClient>;
-  };
+export interface WebUntisClientShape {
+  readonly auth: AuthClient["Service"];
+  readonly app: AppClient["Service"];
+  readonly classreg: ClassregClient["Service"];
+  readonly exams: ExamsClient["Service"];
+  readonly schoolyears: SchoolyearsClient["Service"];
+  readonly messages: MessagesClient["Service"];
+  readonly profile: ProfileClient["Service"];
+  readonly session: SessionClient["Service"];
+  readonly timetable: TimetableClient["Service"];
 }
 
-export const WebUntisClient = ServiceMap.Service<WebUntisClient, WebUntisClient>("webuntis/WebUntisClient");
+export class WebUntisClient extends ServiceMap.Service<
+  WebUntisClient,
+  WebUntisClientShape
+>()("webuntis/WebUntisClient") {
+  static readonly layerNoDeps = Layer.effect(
+    this,
+    Effect.gen(function* () {
+      const auth = yield* AuthClient;
+      const app = yield* AppClient;
+      const classreg = yield* ClassregClient;
+      const exams = yield* ExamsClient;
+      const schoolyears = yield* SchoolyearsClient;
+      const messages = yield* MessagesClient;
+      const profile = yield* ProfileClient;
+      const session = yield* SessionClient;
+      const timetable = yield* TimetableClient;
 
-export const makeWebUntisClient = Effect.gen(function*() {
-  const auth = yield* AuthClient;
-  const app = yield* makeAppClient;
-  const calendarEntry = yield* makeCalendarEntryClient;
-  const classreg = yield* makeClassregClient;
-  const exams = yield* makeExamsClient;
-  const schoolyears = yield* makeSchoolyearsClient;
-  const messages = yield* makeMessagesClient;
-  const profile = yield* makeProfileClient;
-  const session = yield* makeSessionClient;
-  const timetable = yield* makeTimetableClient;
-  const rawViewApi = yield* makeRawViewApiClient;
+      return WebUntisClient.of({
+        auth,
+        app,
+        classreg,
+        exams,
+        schoolyears,
+        messages,
+        profile,
+        session,
+        timetable,
+      });
+    }),
+  );
 
-  return {
-    auth,
-    app,
-    classreg,
-    exams,
-    schoolyears,
-    messages,
-    profile,
-    session,
-    timetable,
-    rawViewApi,
-    experimental: {
-      calendarEntry,
-      profile: profile.experimental,
-      timetable: timetable.experimental,
-      rawViewApi
-    }
-  } satisfies WebUntisClient;
-});
+  static readonly layer = this.layerNoDeps;
+}
 
-export const Live = Layer.effect(WebUntisClient, makeWebUntisClient);
-
-export const layer = (config: ClientConfigShape) => {
-  const configLayer = clientConfigLayer(config);
+export const makeWebUntisLayer = (config: ClientConfig["Service"]) => {
+  const configLayer = ClientConfig.layer(config);
   const transportLayer = Layer.mergeAll(configLayer, FetchHttpClient.layer);
-  const discoveryLayer = SchoolDiscoveryLive.pipe(Layer.provideMerge(transportLayer));
-  const bootstrapLayer = BootstrapLive.pipe(Layer.provideMerge(discoveryLayer));
-  const authLayer = AuthClientLive.pipe(Layer.provideMerge(bootstrapLayer));
-  const httpLayer = WebUntisHttpLive.pipe(Layer.provideMerge(bootstrapLayer));
+  const discoveryLayer = SchoolDiscovery.layerNoDeps.pipe(
+    Layer.provideMerge(transportLayer),
+  );
+  const bootstrapLayer = Bootstrap.layerNoDeps.pipe(
+    Layer.provideMerge(discoveryLayer),
+  );
+  const authLayer = AuthClient.layerNoDeps.pipe(
+    Layer.provideMerge(bootstrapLayer),
+  );
+  const httpLayer = WebUntisHttp.layerNoDeps.pipe(
+    Layer.provideMerge(bootstrapLayer),
+  );
+  const appLayer = AppClient.layerNoDeps.pipe(Layer.provideMerge(httpLayer));
+  const classregLayer = ClassregClient.layerNoDeps.pipe(
+    Layer.provideMerge(httpLayer),
+  );
+  const examsLayer = ExamsClient.layerNoDeps.pipe(
+    Layer.provideMerge(httpLayer),
+  );
+  const rawViewApiLayer = RawViewApiClient.layerNoDeps.pipe(
+    Layer.provideMerge(httpLayer),
+  );
+  const schoolyearsLayer = SchoolyearsClient.layerNoDeps.pipe(
+    Layer.provideMerge(httpLayer),
+  );
+  const messagesLayer = MessagesClient.layerNoDeps.pipe(
+    Layer.provideMerge(httpLayer),
+  );
+  const profileLayer = ProfileClient.layerNoDeps.pipe(
+    Layer.provideMerge(httpLayer),
+  );
+  const sessionLayer = SessionClient.layerNoDeps.pipe(
+    Layer.provideMerge(httpLayer),
+  );
+  const timetableLayer = TimetableClient.layerNoDeps.pipe(
+    Layer.provideMerge(httpLayer),
+  );
+  const servicesLayer = Layer.mergeAll(
+    authLayer,
+    appLayer,
+    classregLayer,
+    examsLayer,
+    rawViewApiLayer,
+    schoolyearsLayer,
+    messagesLayer,
+    profileLayer,
+    sessionLayer,
+    timetableLayer,
+  );
+  const clientLayer = WebUntisClient.layerNoDeps.pipe(
+    Layer.provideMerge(servicesLayer),
+  );
 
-  return Live.pipe(
-    Layer.provideMerge(Layer.mergeAll(authLayer, httpLayer))
+  return Layer.mergeAll(
+    discoveryLayer,
+    bootstrapLayer,
+    httpLayer,
+    rawViewApiLayer,
+    servicesLayer,
+    clientLayer,
   );
 };
+
+export const layer = makeWebUntisLayer;
+export const Live = WebUntisClient.layerNoDeps;

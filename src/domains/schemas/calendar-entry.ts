@@ -7,7 +7,7 @@ export const CalendarEntryTodayStatusSchema = Schema.Literals([
   "MAYBE",
   "MOVED",
   "MOVED_AWAY",
-  "MOVED_HERE"
+  "MOVED_HERE",
 ]);
 
 export const CalendarEntryTodayTypeSchema = Schema.Literals([
@@ -19,13 +19,13 @@ export const CalendarEntryTodayTypeSchema = Schema.Literals([
   "ADDITIONAL_PERIOD",
   "EXAM",
   "EVENT",
-  "CUSTOM"
+  "CUSTOM",
 ]);
 
 export const CalendarEntryTodayParticipantStatusSchema = Schema.Literals([
   "REGULAR",
   "REMOVED",
-  "SUBSTITUTION"
+  "SUBSTITUTION",
 ]);
 
 export const CalendarEntryTodayResourceSchema = Schema.Struct({
@@ -33,18 +33,18 @@ export const CalendarEntryTodayResourceSchema = Schema.Struct({
   hasTimetable: Schema.Boolean,
   id: Schema.Number,
   longName: Schema.String,
-  shortName: Schema.String
+  shortName: Schema.String,
 });
 
 export const CalendarEntryTodayLessonSchema = Schema.Struct({
   lessonId: Schema.Number,
-  lessonNumber: Schema.Number
+  lessonNumber: Schema.Number,
 });
 
 export const CalendarEntryTodaySubTypeSchema = Schema.Struct({
   displayInPeriodDetails: Schema.Boolean,
   displayName: Schema.String,
-  id: Schema.Number
+  id: Schema.Number,
 });
 
 export const CalendarEntryTodayRoomSchema = Schema.Struct({
@@ -53,7 +53,7 @@ export const CalendarEntryTodayRoomSchema = Schema.Struct({
   id: Schema.Number,
   longName: Schema.String,
   shortName: Schema.String,
-  status: CalendarEntryTodayParticipantStatusSchema
+  status: CalendarEntryTodayParticipantStatusSchema,
 });
 
 export const CalendarEntryTodayTeacherSchema = Schema.Struct({
@@ -63,7 +63,7 @@ export const CalendarEntryTodayTeacherSchema = Schema.Struct({
   imageUrl: Schema.NullOr(Schema.String),
   longName: Schema.String,
   shortName: Schema.String,
-  status: CalendarEntryTodayParticipantStatusSchema
+  status: CalendarEntryTodayParticipantStatusSchema,
 });
 
 export const CalendarEntryTodayEntrySchema = Schema.Struct({
@@ -81,10 +81,16 @@ export const CalendarEntryTodayEntrySchema = Schema.Struct({
   subType: CalendarEntryTodaySubTypeSchema,
   subject: CalendarEntryTodayResourceSchema,
   teachers: Schema.Array(CalendarEntryTodayTeacherSchema),
-  type: CalendarEntryTodayTypeSchema
+  type: CalendarEntryTodayTypeSchema,
 });
 
-export const CalendarEntryTodayEntriesSchema = Schema.Array(CalendarEntryTodayEntrySchema);
+export const CalendarEntryTodayEntriesSchema = Schema.Array(
+  CalendarEntryTodayEntrySchema,
+);
 
-export type CalendarEntryTodayEntry = Schema.Schema.Type<typeof CalendarEntryTodayEntrySchema>;
-export type CalendarEntryTodayEntries = Schema.Schema.Type<typeof CalendarEntryTodayEntriesSchema>;
+export type CalendarEntryTodayEntry = Schema.Schema.Type<
+  typeof CalendarEntryTodayEntrySchema
+>;
+export type CalendarEntryTodayEntries = Schema.Schema.Type<
+  typeof CalendarEntryTodayEntriesSchema
+>;
