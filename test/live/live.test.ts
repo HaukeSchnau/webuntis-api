@@ -4,7 +4,6 @@ import {
   layer as makeWebUntisLayer,
   WebUntisClient,
 } from "../../src/client.ts";
-import { RawViewApiClient } from "../../src/domains/raw-view-api/index.ts";
 import {
   HomeSchema,
   MobileDataSchema,
@@ -13,7 +12,9 @@ import {
 } from "../../src/domains/schemas.ts";
 import { ClientConfig } from "../../src/internal/config.ts";
 import { UnexpectedResponseError } from "../../src/internal/errors.ts";
+import { RawViewApiClient } from "../../src/internal/raw-view-api.ts";
 import { RequestPolicy } from "../../src/internal/request.ts";
+import { makeWebUntisRuntimeLayer } from "../../src/internal/runtime.ts";
 import { strictJsonParseOptions } from "../../src/internal/schema.ts";
 import {
   liveEnvMissing,
@@ -63,7 +64,14 @@ import {
 const hasLiveEnv = liveEnvMissing.length === 0;
 
 const liveLayer = Layer.unwrap(
-  ClientConfig.fromEnv().pipe(Effect.map(makeWebUntisLayer)),
+  ClientConfig.fromEnv().pipe(
+    Effect.map((config) =>
+      Layer.mergeAll(
+        makeWebUntisLayer(config),
+        makeWebUntisRuntimeLayer({ config }),
+      ),
+    ),
+  ),
 );
 
 describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
@@ -82,7 +90,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             }),
             strictJsonParseOptions,
           );
-          const startupActionsV2 = yield* client.app.getStartupActions;
+          const startupActionsV2 = yield* client.app.getStartupActions();
 
           expect(startupActionsV1).toEqual(startupActionsV2);
           expect(normalizeStartupActions(startupActionsV1)).toMatchSnapshot();
@@ -106,7 +114,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             }),
             strictJsonParseOptions,
           );
-          const homeV2 = yield* client.app.getHome;
+          const homeV2 = yield* client.app.getHome();
           const mobileDataV1 = decodeMobileDataV1V2(
             yield* rawViewApi.getJson("api/rest/view/v1/mobile/data", {
               policy: RequestPolicy.AuthOnly,
@@ -126,7 +134,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             }),
             strictJsonParseOptions,
           );
-          const clientMobileData = yield* client.app.getMobileData;
+          const clientMobileData = yield* client.app.getMobileData();
           const {
             schoolLoginName,
             ...mobileDataV3TenantWithoutSchoolLoginName
@@ -156,14 +164,14 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const todayMeta = yield* client.app.getTodayMeta;
-          const dashboardCards = yield* client.app.getDashboardCards;
+          const todayMeta = yield* client.app.getTodayMeta();
+          const dashboardCards = yield* client.app.getDashboardCards();
           const dashboardCardsDetail =
-            yield* client.app.getDashboardCardsDetail;
+            yield* client.app.getDashboardCardsDetail();
           const dashboardCardsStatus =
-            yield* client.app.getDashboardCardsStatus;
-          const menus = yield* client.app.getPlatformApplicationMenus;
-          const thirdPartyData = yield* client.app.getThirdPartyData;
+            yield* client.app.getDashboardCardsStatus();
+          const menus = yield* client.app.getPlatformApplicationMenus();
+          const thirdPartyData = yield* client.app.getThirdPartyData();
           const onboarding = yield* client.app.getOnboarding({
             type: "TIMETABLE",
           });
@@ -199,19 +207,20 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const schoolyears = yield* client.schoolyears.list;
-          const inbox = yield* client.messages.getInbox;
-          const drafts = yield* client.messages.getDrafts;
-          const messagePermissions = yield* client.messages.getPermissions;
-          const quickfilters = yield* client.messages.getRecipientQuickfilters;
+          const schoolyears = yield* client.schoolyears.list();
+          const inbox = yield* client.messages.getInbox();
+          const drafts = yield* client.messages.getDrafts();
+          const messagePermissions = yield* client.messages.getPermissions();
+          const quickfilters =
+            yield* client.messages.getRecipientQuickfilters();
           const staffFilter =
             yield* client.messages.getRecipientFilter("STAFF");
           const staffSearch = yield* client.messages.searchRecipients(
             "STAFF",
             "a",
           );
-          const sent = yield* client.messages.getSent;
-          const messageStatus = yield* client.messages.getStatus;
+          const sent = yield* client.messages.getSent();
+          const messageStatus = yield* client.messages.getStatus();
           const messageId = inbox.incomingMessages[0]?.id;
 
           expect(schoolyears.length).toBeGreaterThan(0);
@@ -250,8 +259,8 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const absencesMeta = yield* client.classreg.getAbsencesMeta;
-          const homeworkMeta = yield* client.classreg.getHomeworkMeta;
+          const absencesMeta = yield* client.classreg.getAbsencesMeta();
+          const homeworkMeta = yield* client.classreg.getHomeworkMeta();
 
           expect(absencesMeta.classes.length).toBeGreaterThan(0);
           expect(absencesMeta.reasons.length).toBeGreaterThan(0);
@@ -271,9 +280,9 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const exams = yield* client.exams.list;
-          const filter = yield* client.exams.getFilter;
-          const statistics = yield* client.exams.getStatistics;
+          const exams = yield* client.exams.list();
+          const filter = yield* client.exams.getFilter();
+          const statistics = yield* client.exams.getStatistics();
           const examId = exams.exams[0]?.examId;
 
           expect(exams.exams.length).toBeGreaterThan(0);
@@ -298,8 +307,8 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const contactData = yield* client.profile.getUserContactData;
-          const email = yield* client.profile.getUserEmail;
+          const contactData = yield* client.profile.getUserContactData();
+          const email = yield* client.profile.getUserEmail();
 
           expect(contactData).toHaveProperty("email");
           expect(email.email).toContain("@");
@@ -346,9 +355,9 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const appData = yield* client.app.getData;
+          const appData = yield* client.app.getData();
           const status = yield* client.session.getStatus();
-          const menu = yield* client.timetable.getMenu;
+          const menu = yield* client.timetable.getMenu();
           const calendar = yield* client.timetable.getCalendar();
           const search = yield* client.timetable.search({
             query: "10",
@@ -391,7 +400,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           if (roomId === undefined) {
             throw new Error("Expected at least one room");
           }
-          const timegrid = yield* client.timetable.getTimeGrid;
+          const timegrid = yield* client.timetable.getTimeGrid();
           const weekOverview = yield* client.timetable.getEntriesWeekOverview({
             start: "2026-03-16",
             end: "2026-03-20",
@@ -583,7 +592,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const appData = yield* client.app.getData;
+          const appData = yield* client.app.getData();
           const start = new Date().toISOString().slice(0, 10);
           const end = start;
           const filter = yield* client.timetable.getFilter({

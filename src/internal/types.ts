@@ -1,5 +1,7 @@
 import type { Redacted } from "effect";
 
+export const tokenFallbackValidityMs = 15 * 60 * 1_000;
+
 export interface Credentials {
   readonly username: string;
   readonly password: Redacted.Redacted<string>;
@@ -23,42 +25,71 @@ export interface WebUntisClientConfig extends Credentials {
   readonly discoveryEndpoint?: string | undefined;
 }
 
-export interface BootstrapState {
+export interface SessionState {
   readonly resolvedSchool?: ResolvedSchool | undefined;
   readonly token?: Redacted.Redacted<string> | undefined;
   readonly tokenExpiresAt?: number | undefined;
   readonly tenantId?: string | undefined;
-  readonly schoolYearId?: number | undefined;
+  readonly generation: number;
 }
 
-export interface AuthenticatedState extends BootstrapState {
+export interface AuthenticatedState extends SessionState {
   readonly resolvedSchool: ResolvedSchool;
   readonly token: Redacted.Redacted<string>;
+  readonly tenantId: string;
 }
 
-export interface BootstrapMetadata extends AuthenticatedState {
+export interface MetadataState {
+  readonly tenantId?: string | undefined;
+  readonly schoolYearId?: number | undefined;
+  readonly sessionGeneration: number;
+}
+
+export interface MetadataSnapshot extends AuthenticatedState {
   readonly tenantId: string;
   readonly schoolYearId: number;
 }
 
-export const emptyBootstrapState = (): BootstrapState => ({});
+export const emptySessionState = (): SessionState => ({
+  generation: 0,
+});
+
+export const emptyMetadataState = (): MetadataState => ({
+  sessionGeneration: -1,
+});
 
 export const hasFreshToken = (
-  state: BootstrapState,
+  state: SessionState,
   now = Date.now(),
 ): state is AuthenticatedState =>
   state.resolvedSchool !== undefined &&
   state.token !== undefined &&
+  state.tenantId !== undefined &&
   state.tokenExpiresAt !== undefined &&
   state.tokenExpiresAt - now > 60_000;
 
-export const hasBootstrapMetadata = (
-  state: BootstrapState,
-): state is BootstrapMetadata =>
-  state.resolvedSchool !== undefined &&
-  state.token !== undefined &&
-  state.tenantId !== undefined &&
-  state.schoolYearId !== undefined;
+export const hasMetadataForSession = (
+  metadata: MetadataState,
+  session: AuthenticatedState,
+): metadata is MetadataState & {
+  readonly tenantId: string;
+  readonly schoolYearId: number;
+} =>
+  metadata.tenantId !== undefined &&
+  metadata.schoolYearId !== undefined &&
+  metadata.sessionGeneration === session.generation;
+
+export const toMetadataSnapshot = (
+  session: AuthenticatedState,
+  metadata: MetadataState & {
+    readonly tenantId: string;
+    readonly schoolYearId: number;
+  },
+): MetadataSnapshot => ({
+  ...session,
+  tenantId: metadata.tenantId,
+  schoolYearId: metadata.schoolYearId,
+});
 
 export const resolveBaseUrl = (school: ResolvedSchool): string => {
   const serverUrl = school.serverUrl.replace(/\/+$/, "");

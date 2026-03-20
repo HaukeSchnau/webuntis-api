@@ -3,21 +3,9 @@ import * as HttpClient from "effect/unstable/http/HttpClient";
 import * as HttpClientError from "effect/unstable/http/HttpClientError";
 import type * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
 import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
-import { AuthClient } from "../../src/auth.ts";
-import { WebUntisClient } from "../../src/client.ts";
-import { AppClient } from "../../src/domains/app/index.ts";
-import { ClassregClient } from "../../src/domains/classreg/index.ts";
-import { ExamsClient } from "../../src/domains/exams/index.ts";
-import { MessagesClient } from "../../src/domains/messages/index.ts";
-import { ProfileClient } from "../../src/domains/profile/index.ts";
-import { RawViewApiClient } from "../../src/domains/raw-view-api/index.ts";
-import { SchoolyearsClient } from "../../src/domains/schoolyears/index.ts";
-import { SessionClient } from "../../src/domains/session/index.ts";
-import { TimetableClient } from "../../src/domains/timetable/index.ts";
-import { Bootstrap } from "../../src/internal/bootstrap.ts";
-import { ClientConfig } from "../../src/internal/config.ts";
-import { SchoolDiscovery } from "../../src/internal/discovery.ts";
-import { WebUntisHttp } from "../../src/internal/http.ts";
+import { makeWebUntisLayer } from "../../src/client.ts";
+import type { ClientConfig } from "../../src/internal/config.ts";
+import { makeWebUntisRuntimeLayer } from "../../src/internal/runtime.ts";
 
 export const testConfig: ClientConfig["Service"] = {
   schoolName: "IGS Lilienthal",
@@ -28,13 +16,15 @@ export const testConfig: ClientConfig["Service"] = {
   password: Redacted.make("secret"),
 };
 
-export const makeJwt = (expSecondsFromNow = 3_600) => {
+export const makeJwt = (expSecondsFromNow: number | undefined = 3_600) => {
   const header = "eyJhbGciOiJub25lIn0";
-  const payload = btoa(
-    JSON.stringify({
-      exp: Math.floor(Date.now() / 1_000) + expSecondsFromNow,
-    }),
-  )
+  const payloadValue =
+    expSecondsFromNow === undefined
+      ? {}
+      : {
+          exp: Math.floor(Date.now() / 1_000) + expSecondsFromNow,
+        };
+  const payload = btoa(JSON.stringify(payloadValue))
     .replace(/\+/g, "-")
     .replace(/\//g, "_")
     .replace(/=+$/g, "");
@@ -75,77 +65,15 @@ export const makeCoreTestLayer = (
   handler: Parameters<typeof makeMockHttpClient>[0],
   config: ClientConfig["Service"] = testConfig,
 ) => {
-  const baseLayer = Layer.mergeAll(
-    ClientConfig.layer(config),
-    Layer.succeed(HttpClient.HttpClient, makeMockHttpClient(handler)),
+  const transportLayer = Layer.succeed(
+    HttpClient.HttpClient,
+    makeMockHttpClient(handler),
   );
-  const discoveryLayer = SchoolDiscovery.layerNoDeps.pipe(
-    Layer.provideMerge(baseLayer),
-  );
-  const bootstrapLayer = Bootstrap.layerNoDeps.pipe(
-    Layer.provideMerge(discoveryLayer),
-  );
-  const authLayer = AuthClient.layerNoDeps.pipe(
-    Layer.provideMerge(bootstrapLayer),
-  );
-  const httpLayer = WebUntisHttp.layerNoDeps.pipe(
-    Layer.provideMerge(bootstrapLayer),
-  );
-  const appLayer = AppClient.layerNoDeps.pipe(Layer.provideMerge(httpLayer));
-  const classregLayer = ClassregClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const examsLayer = ExamsClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const messagesLayer = MessagesClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const profileLayer = ProfileClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const rawViewApiLayer = RawViewApiClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const schoolyearsLayer = SchoolyearsClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const sessionLayer = SessionClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const timetableLayer = TimetableClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const clientLayer = WebUntisClient.layerNoDeps.pipe(
-    Layer.provideMerge(
-      Layer.mergeAll(
-        authLayer,
-        appLayer,
-        classregLayer,
-        examsLayer,
-        messagesLayer,
-        profileLayer,
-        schoolyearsLayer,
-        sessionLayer,
-        timetableLayer,
-      ),
-    ),
-  );
+  const runtimeLayer = makeWebUntisRuntimeLayer({
+    config,
+    transportLayer,
+  });
+  const publicLayer = makeWebUntisLayer(config, transportLayer);
 
-  return Layer.mergeAll(
-    discoveryLayer,
-    bootstrapLayer,
-    authLayer,
-    httpLayer,
-    rawViewApiLayer,
-    appLayer,
-    classregLayer,
-    examsLayer,
-    messagesLayer,
-    profileLayer,
-    schoolyearsLayer,
-    sessionLayer,
-    timetableLayer,
-    clientLayer,
-  );
+  return Layer.mergeAll(runtimeLayer, publicLayer);
 };

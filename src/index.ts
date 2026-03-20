@@ -27,11 +27,5 @@ export type {
   TimetableSearchRequest,
 } from "./domains/timetable/index.ts";
 export { TimetableClient } from "./domains/timetable/index.ts";
-export { Bootstrap } from "./internal/bootstrap.ts";
 export { ClientConfig } from "./internal/config.ts";
-export { SchoolDiscovery } from "./internal/discovery.ts";
-export * from "./internal/errors.ts";
-export { WebUntisHttp } from "./internal/http.ts";
-export * from "./internal/request.ts";
-export * from "./internal/types.ts";
 export const clientConfigFromEnv = ClientConfig.fromEnv;

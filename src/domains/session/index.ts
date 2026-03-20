@@ -20,13 +20,14 @@ export class SessionClient extends ServiceMap.Service<
       const http = yield* WebUntisHttp;
 
       return SessionClient.of({
-        getStatus: (request = {}) =>
-          http.requestSchema(SessionRequests.getStatus, request),
+        getStatus: Effect.fn("SessionClient.getStatus")(function* (
+          request: SessionStatusRequest = {},
+        ) {
+          return yield* http.requestSchema(SessionRequests.getStatus, request);
+        }),
       });
     }),
   );
-
-  static readonly layer = this.layerNoDeps;
 }
 
 export type { SessionStatusRequest } from "./requests.ts";
