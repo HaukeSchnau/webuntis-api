@@ -12,9 +12,12 @@ interface EndpointCatalog {
 
 const endpointCatalog = JSON.parse(
   readFileSync(
-    new URL("../../research/webuntis/modern-rest-endpoints.json", import.meta.url),
-    "utf8"
-  )
+    new URL(
+      "../../research/webuntis/modern-rest-endpoints.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
 ) as EndpointCatalog;
 
 const groupByFamily = (endpoints: ReadonlyArray<string>) =>
@@ -25,20 +28,22 @@ const groupByFamily = (endpoints: ReadonlyArray<string>) =>
         const key = `${version}:${family}`;
         acc[key] = (acc[key] ?? 0) + 1;
         return acc;
-      }, {})
-    ).sort(([left], [right]) => left.localeCompare(right))
+      }, {}),
+    ).sort(([left], [right]) => left.localeCompare(right)),
   );
 
 describe("reverse-engineering artifacts", () => {
   it("keeps the mined REST endpoint catalog stable", () => {
-    expect(endpointCatalog.endpointCount).toBe(endpointCatalog.endpoints.length);
+    expect(endpointCatalog.endpointCount).toBe(
+      endpointCatalog.endpoints.length,
+    );
     expect({
       observedAt: endpointCatalog.observedAt,
       tenantHost: endpointCatalog.tenantHost,
       sourceBundle: endpointCatalog.sourceBundle,
       versionCounts: endpointCatalog.versionCounts,
       familyCounts: groupByFamily(endpointCatalog.endpoints),
-      endpoints: endpointCatalog.endpoints
+      endpoints: endpointCatalog.endpoints,
     }).toMatchSnapshot();
   });
 });

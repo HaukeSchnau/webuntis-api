@@ -8,13 +8,13 @@ export const UserContactDataSchema = Schema.Struct({
   postCode: Schema.NullOr(Schema.String),
   city: Schema.NullOr(Schema.String),
   areContactDetailsWriteable: Schema.Boolean,
-  userEmailMissingOrDifferentToMasterData: Schema.Boolean
+  userEmailMissingOrDifferentToMasterData: Schema.Boolean,
 });
 
 export type UserContactData = Schema.Schema.Type<typeof UserContactDataSchema>;
 
 export const UserEmailSchema = Schema.Struct({
-  email: Schema.String
+  email: Schema.String,
 });
 
 export type UserEmail = Schema.Schema.Type<typeof UserEmailSchema>;

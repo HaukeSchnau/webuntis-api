@@ -43,13 +43,18 @@ export interface BootstrapMetadata extends AuthenticatedState {
 
 export const emptyBootstrapState = (): BootstrapState => ({});
 
-export const hasFreshToken = (state: BootstrapState, now = Date.now()): state is AuthenticatedState =>
+export const hasFreshToken = (
+  state: BootstrapState,
+  now = Date.now(),
+): state is AuthenticatedState =>
   state.resolvedSchool !== undefined &&
   state.token !== undefined &&
   state.tokenExpiresAt !== undefined &&
   state.tokenExpiresAt - now > 60_000;
 
-export const hasBootstrapMetadata = (state: BootstrapState): state is BootstrapMetadata =>
+export const hasBootstrapMetadata = (
+  state: BootstrapState,
+): state is BootstrapMetadata =>
   state.resolvedSchool !== undefined &&
   state.token !== undefined &&
   state.tenantId !== undefined &&
@@ -61,12 +66,17 @@ export const resolveBaseUrl = (school: ResolvedSchool): string => {
     return serverUrl;
   }
   if (serverUrl.includes("/WebUntis/?school=")) {
-    return serverUrl.split("/?school=")[0]!;
+    const [baseUrl] = serverUrl.split("/?school=");
+    if (baseUrl !== undefined) {
+      return baseUrl;
+    }
   }
   return `${serverUrl}/WebUntis`;
 };
 
-export const resolveTenantHost = (config: WebUntisClientConfig): string | undefined => {
+export const resolveTenantHost = (
+  config: WebUntisClientConfig,
+): string | undefined => {
   if (config.server) {
     return config.server;
   }

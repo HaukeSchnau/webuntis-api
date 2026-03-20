@@ -2,5 +2,5 @@ import type { ParseOptions } from "effect/SchemaAST";
 
 export const strictJsonParseOptions = {
   onExcessProperty: "error",
-  errors: "all"
+  errors: "all",
 } satisfies ParseOptions;

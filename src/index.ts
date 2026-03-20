@@ -1,23 +1,37 @@
+import { ClientConfig } from "./internal/config.ts";
+
+export { AuthClient } from "./auth.ts";
 export {
-  Live as WebUntisClientLive,
+  layer,
+  makeWebUntisLayer,
   WebUntisClient,
-  layer as makeWebUntisLayer
 } from "./client.ts";
-export { AuthClient, Live as AuthClientLive } from "./core/auth.ts";
-export { Bootstrap, Live as BootstrapLive } from "./core/bootstrap.ts";
-export { ClientConfig, config as clientConfig, fromEnv as clientConfigFromEnv, Live as ClientConfigLive } from "./core/config.ts";
-export { SchoolDiscovery, Live as SchoolDiscoveryLive } from "./core/discovery.ts";
-export * from "./core/errors.ts";
-export { WebUntisHttp, Live as WebUntisHttpLive } from "./core/http.ts";
-export * from "./core/types.ts";
-export { makeAppClient } from "./domains/app.ts";
-export { makeCalendarEntryClient } from "./domains/calendar-entry.ts";
-export { makeClassregClient } from "./domains/classreg.ts";
-export { makeExamsClient } from "./domains/exams.ts";
-export { makeMessagesClient } from "./domains/messages.ts";
-export * from "./domains/profile.ts";
-export { makeRawViewApiClient } from "./domains/raw-view-api.ts";
+export type { OnboardingRequest } from "./domains/app/index.ts";
+export { AppClient } from "./domains/app/index.ts";
+export { ClassregClient } from "./domains/classreg/index.ts";
+export { ExamsClient } from "./domains/exams/index.ts";
+export { MessagesClient } from "./domains/messages/index.ts";
+export { ProfileClient } from "./domains/profile/index.ts";
 export * from "./domains/schemas.ts";
-export { makeSchoolyearsClient } from "./domains/schoolyears.ts";
-export * from "./domains/session.ts";
-export * from "./domains/timetable.ts";
+export { SchoolyearsClient } from "./domains/schoolyears/index.ts";
+export type { SessionStatusRequest } from "./domains/session/index.ts";
+export { SessionClient } from "./domains/session/index.ts";
+export type {
+  TimetableAvailableRoomsRequest,
+  TimetableCalendarRequest,
+  TimetableEntriesRequest,
+  TimetableEntriesSettingsRequest,
+  TimetableEntriesWeekOverviewRequest,
+  TimetableExternalCalendarRequest,
+  TimetableFilterRequest,
+  TimetableSearchRequest,
+} from "./domains/timetable/index.ts";
+export { TimetableClient } from "./domains/timetable/index.ts";
+export { Bootstrap } from "./internal/bootstrap.ts";
+export { ClientConfig } from "./internal/config.ts";
+export { SchoolDiscovery } from "./internal/discovery.ts";
+export * from "./internal/errors.ts";
+export { WebUntisHttp } from "./internal/http.ts";
+export * from "./internal/request.ts";
+export * from "./internal/types.ts";
+export const clientConfigFromEnv = ClientConfig.fromEnv;

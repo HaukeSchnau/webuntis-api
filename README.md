@@ -7,13 +7,13 @@ The client models the modern WebUntis REST surface as a portable Effect service 
 - `SchoolDiscovery` resolves a school name through the public WebUntis search API.
 - `AuthClient` performs the classic login handshake and mints the session-bound JWT from `/WebUntis/api/token/new`.
 - `WebUntisHttp` attaches cookies and bearer auth for modern `/api/rest/view/...` requests.
-- `WebUntisClient` exposes the first domain clients for `app`, `classreg`, `schoolyears`, `messages`, `profile`, `session`, `timetable`, plus a `rawViewApi` escape hatch.
+- `WebUntisClient` exposes the stable domain clients for `app`, `classreg`, `schoolyears`, `messages`, `profile`, `session`, and `timetable`.
   The client now also exposes a typed `exams` domain for list, filter, statistics, and detail reads.
   The `app` and `timetable` domains now also cover adjacent bootstrap routes such as `home`, `mobile/data`, `trigger/startup`, `today/meta`, `dashboard/cards`, `app/platform-application/menus`, `app/third-party/data`, `onboarding`, `timegrid`, `timetable/calendar`, `timetable/externalCalendar`, and `timetable/entriesWeekOverview`.
   The timetable domain also exposes typed `availableRooms` support through the confirmed-working `v2` query-parameter route.
   The `messages` domain now covers inbox, drafts, sent, recipient quickfilters, recipient filter/search helpers, reply-form lookup, and individual message detail in addition to status and permissions.
-  The timetable client also exposes experimental read probes for the currently restricted settings/format routes so tenant behavior changes are visible in the live suite.
   JSON decoders run with strict excess-property rejection so unexpected upstream fields fail fast instead of being silently dropped.
+  Reverse-engineering probes such as raw view access and unstable settings endpoints now live on internal services used by the live suite instead of the public package root.
 
 ## Runtime
 
@@ -32,6 +32,7 @@ Reverse-engineering artifacts live under [`research/webuntis`](./research/webunt
 ## Core Decisions
 
 - We optimize for broad coverage of read-only WebUntis endpoints first. Mutating business endpoints are out of scope for the public client surface.
+- We keep the public API read-only. Unstable or reverse-engineering helpers stay on internal services so the exported client remains coherent.
 - We keep a large live test suite against the tenant and treat snapshot churn as a feature, not a problem. Snapshot updates are expected when upstream changes, because the main goal is to surface response drift quickly.
 - We keep schemas as strict as the evidence allows: excess properties are rejected, literal unions are preferred over open strings when route behavior or shipped frontend code makes them trustworthy, and uncertain payload sections stay opaque until we have enough live or source evidence to model them safely.
 - We aim for idiomatic Effect v4 code throughout. When an Effect v4 or unstable-platform API choice is unclear, we resolve it against the local [`$context-repo`](/Users/haukeschnau/.agents/skills/context-repo/SKILL.md) docs and source.
