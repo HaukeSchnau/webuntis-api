@@ -1,5 +1,5 @@
 import { RequestPolicy, schemaRequest } from "../../internal/request.ts";
-import { SessionStatusSchema } from "../schemas/session.ts";
+import { SessionStatusSchema } from "./schema.ts";
 
 export interface SessionStatusRequest {
   readonly clientTimeZone?: string | undefined;

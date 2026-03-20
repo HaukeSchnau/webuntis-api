@@ -1,11 +1,8 @@
 import { Effect, Layer, ServiceMap } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
-import type {
-  ClassregAbsencesMeta,
-  ClassregHomeworkMeta,
-} from "../schemas/classreg.ts";
 import { ClassregRequests } from "./requests.ts";
+import type { ClassregAbsencesMeta, ClassregHomeworkMeta } from "./schema.ts";
 
 export interface ClassregClientShape {
   readonly getAbsencesMeta: () => Effect.Effect<

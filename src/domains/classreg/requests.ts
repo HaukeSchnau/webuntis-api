@@ -2,7 +2,7 @@ import { RequestPolicy, schemaRequest } from "../../internal/request.ts";
 import {
   ClassregAbsencesMetaSchema,
   ClassregHomeworkMetaSchema,
-} from "../schemas/classreg.ts";
+} from "./schema.ts";
 
 export const ClassregRequests = {
   getAbsencesMeta: schemaRequest<void, typeof ClassregAbsencesMetaSchema>({

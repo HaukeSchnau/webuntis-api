@@ -1,6 +1,7 @@
 import { Effect, Layer, ServiceMap } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
+import { AppRequests, type OnboardingRequest } from "./requests.ts";
 import type {
   AppData,
   AppPlatformApplicationMenus,
@@ -13,8 +14,7 @@ import type {
   Onboarding,
   StartupActions,
   TodayMeta,
-} from "../schemas/app.ts";
-import { AppRequests, type OnboardingRequest } from "./requests.ts";
+} from "./schema.ts";
 
 export interface AppClientShape {
   readonly getData: () => Effect.Effect<AppData, RequestFailure>;

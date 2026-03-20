@@ -11,7 +11,7 @@ import {
   MessagesInboxSchema,
   MessagesPermissionsSchema,
   MessagesStatusSchema,
-} from "../schemas/messages.ts";
+} from "./schema.ts";
 
 export interface MessageRecipientSearchRequest {
   readonly recipientOption: MessageRecipientOption;

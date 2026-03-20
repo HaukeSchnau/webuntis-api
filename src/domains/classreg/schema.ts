@@ -1,5 +1,5 @@
 import { Schema } from "effect";
-import { DateRangeSchema } from "./shared.ts";
+import { DateRangeSchema } from "../shared/schema.ts";
 
 export const ClassregIdNameSchema = Schema.Struct({
   id: Schema.Number,

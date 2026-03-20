@@ -1,19 +1,7 @@
 import { Effect, Layer, ServiceMap } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
-import type { TimeGrid } from "../schemas/shared.ts";
-import type {
-  TimetableAvailableRooms,
-  TimetableCalendar,
-  TimetableEntries,
-  TimetableEntriesSettings,
-  TimetableEntriesWeekOverview,
-  TimetableExternalCalendar,
-  TimetableFilter,
-  TimetableGrid,
-  TimetableMenu,
-  TimetableSearch,
-} from "../schemas/timetable.ts";
+import type { TimeGrid } from "../shared/schema.ts";
 import {
   type TimetableAvailableRoomsRequest,
   type TimetableCalendarRequest,
@@ -25,6 +13,18 @@ import {
   TimetableRequests,
   type TimetableSearchRequest,
 } from "./requests.ts";
+import type {
+  TimetableAvailableRooms,
+  TimetableCalendar,
+  TimetableEntries,
+  TimetableEntriesSettings,
+  TimetableEntriesWeekOverview,
+  TimetableExternalCalendar,
+  TimetableFilter,
+  TimetableGrid,
+  TimetableMenu,
+  TimetableSearch,
+} from "./schema.ts";
 
 export interface TimetableClientShape {
   readonly getTimeGrid: () => Effect.Effect<TimeGrid, RequestFailure>;

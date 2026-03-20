@@ -1,8 +1,8 @@
 import { Effect, Layer, ServiceMap } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
-import type { UserContactData, UserEmail } from "../schemas/profile.ts";
 import { ProfileRequests } from "./requests.ts";
+import type { UserContactData, UserEmail } from "./schema.ts";
 
 export interface ProfileClientShape {
   readonly getUserContactData: () => Effect.Effect<

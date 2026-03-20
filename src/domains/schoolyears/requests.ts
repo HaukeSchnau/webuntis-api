@@ -1,6 +1,6 @@
 import { Schema } from "effect";
 import { RequestPolicy, schemaRequest } from "../../internal/request.ts";
-import { SchoolyearSchema } from "../schemas/shared.ts";
+import { SchoolyearSchema } from "../shared/schema.ts";
 
 const SchoolyearsSchema = Schema.Array(SchoolyearSchema);
 

@@ -12,7 +12,7 @@ import {
   TimetableMenuSchema,
   type TimetableResourceType,
   TimetableSearchSchema,
-} from "../schemas/timetable.ts";
+} from "./schema.ts";
 
 export interface TimetableEntriesRequest {
   readonly start: string;

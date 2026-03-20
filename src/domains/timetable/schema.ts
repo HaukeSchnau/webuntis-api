@@ -1,5 +1,5 @@
 import { Schema } from "effect";
-import { TimeGridSchema, TimeRangeSchema } from "./shared.ts";
+import { TimeGridSchema, TimeRangeSchema } from "../shared/schema.ts";
 
 export const TimeGridTypeSchema = Schema.Literals([
   "CLOCK_HOURS",
