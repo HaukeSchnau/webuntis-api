@@ -58,6 +58,7 @@ const redactString = (value: string) =>
   value
     .replace(/^\d{4}-\d{2}-\d{2}T[^"]*$/g, "<redacted-datetime>")
     .replace(/^\d{4}-\d{2}-\d{2}$/g, "<redacted-date>")
+    .replace(/^\d{4}\.\d+\.\d+$/g, "<redacted-version>")
     .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "<redacted-email>")
     .replace(/[A-Z][A-ZÄÖÜ-]{1,}/g, "<redacted-label>");
 
