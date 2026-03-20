@@ -1,19 +1,16 @@
 import { Effect, Layer, ServiceMap } from "effect";
-import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
+import type * as HttpClient from "effect/unstable/http/HttpClient";
 import { AuthClient } from "./auth.ts";
 import { AppClient } from "./domains/app/index.ts";
 import { ClassregClient } from "./domains/classreg/index.ts";
 import { ExamsClient } from "./domains/exams/index.ts";
 import { MessagesClient } from "./domains/messages/index.ts";
 import { ProfileClient } from "./domains/profile/index.ts";
-import { RawViewApiClient } from "./domains/raw-view-api/index.ts";
 import { SchoolyearsClient } from "./domains/schoolyears/index.ts";
 import { SessionClient } from "./domains/session/index.ts";
 import { TimetableClient } from "./domains/timetable/index.ts";
-import { Bootstrap } from "./internal/bootstrap.ts";
-import { ClientConfig } from "./internal/config.ts";
-import { SchoolDiscovery } from "./internal/discovery.ts";
-import { WebUntisHttp } from "./internal/http.ts";
+import type { ClientConfig } from "./internal/config.ts";
+import { makeWebUntisRuntimeLayer } from "./internal/runtime.ts";
 
 export interface WebUntisClientShape {
   readonly auth: AuthClient["Service"];
@@ -61,71 +58,27 @@ export class WebUntisClient extends ServiceMap.Service<
   static readonly layer = this.layerNoDeps;
 }
 
-export const makeWebUntisLayer = (config: ClientConfig["Service"]) => {
-  const configLayer = ClientConfig.layer(config);
-  const transportLayer = Layer.mergeAll(configLayer, FetchHttpClient.layer);
-  const discoveryLayer = SchoolDiscovery.layerNoDeps.pipe(
-    Layer.provideMerge(transportLayer),
-  );
-  const bootstrapLayer = Bootstrap.layerNoDeps.pipe(
-    Layer.provideMerge(discoveryLayer),
-  );
-  const authLayer = AuthClient.layerNoDeps.pipe(
-    Layer.provideMerge(bootstrapLayer),
-  );
-  const httpLayer = WebUntisHttp.layerNoDeps.pipe(
-    Layer.provideMerge(bootstrapLayer),
-  );
-  const appLayer = AppClient.layerNoDeps.pipe(Layer.provideMerge(httpLayer));
-  const classregLayer = ClassregClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const examsLayer = ExamsClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const rawViewApiLayer = RawViewApiClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const schoolyearsLayer = SchoolyearsClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const messagesLayer = MessagesClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const profileLayer = ProfileClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const sessionLayer = SessionClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
-  const timetableLayer = TimetableClient.layerNoDeps.pipe(
-    Layer.provideMerge(httpLayer),
-  );
+export const makeWebUntisLayer = (
+  config: ClientConfig["Service"],
+  transportLayer?: Layer.Layer<HttpClient.HttpClient>,
+) => {
+  const runtimeLayer = makeWebUntisRuntimeLayer({ config, transportLayer });
   const servicesLayer = Layer.mergeAll(
-    authLayer,
-    appLayer,
-    classregLayer,
-    examsLayer,
-    rawViewApiLayer,
-    schoolyearsLayer,
-    messagesLayer,
-    profileLayer,
-    sessionLayer,
-    timetableLayer,
+    AuthClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
+    AppClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
+    ClassregClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
+    ExamsClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
+    MessagesClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
+    ProfileClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
+    SchoolyearsClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
+    SessionClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
+    TimetableClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
   );
   const clientLayer = WebUntisClient.layerNoDeps.pipe(
-    Layer.provideMerge(servicesLayer),
+    Layer.provide(servicesLayer),
   );
 
-  return Layer.mergeAll(
-    discoveryLayer,
-    bootstrapLayer,
-    httpLayer,
-    rawViewApiLayer,
-    servicesLayer,
-    clientLayer,
-  );
+  return Layer.mergeAll(servicesLayer, clientLayer);
 };
 
 export const layer = makeWebUntisLayer;
-export const Live = WebUntisClient.layerNoDeps;

@@ -8,7 +8,7 @@ For breaking API changes and upgrade notes, see [MIGRATION.md](./MIGRATION.md).
 
 ## What You Get
 
-- Explicit Effect v4 services with attached `layerNoDeps` and `layer` definitions.
+- Explicit Effect v4 services with focused `layerNoDeps` definitions and a single public `makeWebUntisLayer` entry point.
 - A small aggregate facade through `WebUntisClient` for convenience.
 - First-class domain services for `app`, `classreg`, `exams`, `messages`, `profile`, `schoolyears`, `session`, and `timetable`.
 - Descriptor-driven request construction, with explicit auth vs metadata header policy.
@@ -31,7 +31,9 @@ The service graph is split into a few distinct layers:
 
 - `ClientConfig` reads and validates `WEBUNTIS_*` config, including URL validation.
 - `SchoolDiscovery` resolves the school deterministically and fails on ambiguous matches.
-- `Bootstrap` manages cookies, token refresh, tenant metadata, and school-year metadata.
+- `SchoolResolver` caches the resolved tenant target.
+- `SessionState` manages cookies, login, token refresh, and auth retries.
+- `MetadataState` caches tenant and school-year headers per authenticated session.
 - `AuthClient` exposes authentication-specific operations.
 - `WebUntisHttp` executes typed request descriptors.
 - Domain services expose stable read-only business APIs.
@@ -56,8 +58,8 @@ import {
 
 const program = Effect.gen(function* () {
   const client = yield* WebUntisClient;
-  const appData = yield* client.app.getData;
-  const schoolyears = yield* client.schoolyears.list;
+  const appData = yield* client.app.getData();
+  const schoolyears = yield* client.schoolyears.list();
 
   return {
     school: appData.tenant.displayName,
@@ -90,8 +92,8 @@ const program = Effect.gen(function* () {
   const messages = yield* MessagesClient;
 
   const [home, inbox] = yield* Effect.all([
-    app.getHome,
-    messages.getInbox,
+    app.getHome(),
+    messages.getInbox(),
   ]);
 
   return {
@@ -155,6 +157,8 @@ The root package exports:
 
 The root package does not export internal raw view helpers or public mutating experimental profile routes.
 
+Internal runtime services such as `SchoolDiscovery`, `SchoolResolver`, `SessionState`, `MetadataState`, and `WebUntisHttp` are intentionally kept off the root barrel.
+
 If you need service types for your own signatures, prefer the service-native form:
 
 ```ts
@@ -204,7 +208,7 @@ bun run test
 
 The test suite is split into:
 
-- `test/unit` for config, bootstrap, discovery, and request-construction behavior
+- `test/unit` for config, session/metadata runtime behavior, discovery, and request-construction behavior
 - `test/contract` for schema strictness and positive payload fixtures
 - `test/live/smoke.test.ts` for a small credential-gated smoke suite
 - `test/live/live.test.ts` for broader live coverage and snapshot drift detection

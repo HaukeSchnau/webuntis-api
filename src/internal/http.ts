@@ -1,7 +1,6 @@
 import { Effect, Layer, type Schema, ServiceMap } from "effect";
 import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
 import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
-import { Bootstrap } from "./bootstrap.ts";
 import {
   type AuthError,
   type DecodeError,
@@ -10,13 +9,17 @@ import {
   TransportError,
   type TransportError as TransportErrorType,
 } from "./errors.ts";
+import { MetadataState } from "./metadata-state.ts";
 import {
   type RequestDescriptor,
   RequestPolicy,
   type RequestPolicy as RequestPolicyType,
+  resolveRequest,
   type SchemaRequestDescriptor,
 } from "./request.ts";
 import { strictJsonParseOptions } from "./schema.ts";
+import { SessionState } from "./session-state.ts";
+import type { AuthenticatedState, MetadataSnapshot } from "./types.ts";
 import { resolveBaseUrl } from "./types.ts";
 
 const defaultAcceptHeader = "application/json, text/plain, */*";
@@ -128,18 +131,21 @@ export class WebUntisHttp extends ServiceMap.Service<
   static readonly layerNoDeps = Layer.effect(
     this,
     Effect.gen(function* () {
-      const bootstrap = yield* Bootstrap;
+      const metadataState = yield* MetadataState;
+      const sessionState = yield* SessionState;
 
-      const execute: WebUntisHttpShape["execute"] = (
-        method,
-        path,
-        options = {},
+      const resolveState = (policy: RequestPolicyType) =>
+        policy === RequestPolicy.AuthOnly
+          ? sessionState.ensureAuthenticated()
+          : metadataState.ensureMetadata();
+
+      const buildRequest = (
+        state: AuthenticatedState | MetadataSnapshot,
+        method: "GET" | "POST" | "PUT",
+        path: string,
+        options: RequestOptions,
       ) =>
         Effect.gen(function* () {
-          const state = yield* (options.policy ?? RequestPolicy.Metadata) ===
-          RequestPolicy.AuthOnly
-            ? bootstrap.ensureAuthenticated
-            : bootstrap.ensureMetadata;
           const baseHeaders: Record<string, string> = {
             accept: defaultAcceptHeader,
           };
@@ -156,16 +162,16 @@ export class WebUntisHttp extends ServiceMap.Service<
             HttpClientRequest.bearerToken(state.token),
           );
 
-          if (state.tenantId) {
-            request = HttpClientRequest.setHeader(
-              request,
-              "Tenant-Id",
-              state.tenantId,
-            );
-          }
+          request = HttpClientRequest.setHeader(
+            request,
+            "Tenant-Id",
+            state.tenantId,
+          );
+
           if (
             (options.policy ?? RequestPolicy.Metadata) ===
               RequestPolicy.Metadata &&
+            "schoolYearId" in state &&
             state.schoolYearId !== undefined
           ) {
             request = HttpClientRequest.setHeader(
@@ -191,24 +197,44 @@ export class WebUntisHttp extends ServiceMap.Service<
             );
           }
 
-          const response = yield* bootstrap.client.execute(request).pipe(
-            Effect.mapError(
-              (error) =>
-                new TransportError({
-                  method,
-                  path,
-                  message: String(error),
-                  cause: error,
-                }),
+          return request;
+        });
+
+      const executeRequest = (
+        state: AuthenticatedState | MetadataSnapshot,
+        method: "GET" | "POST" | "PUT",
+        path: string,
+        options: RequestOptions,
+      ) =>
+        buildRequest(state, method, path, options).pipe(
+          Effect.flatMap((request) =>
+            sessionState.client.execute(request).pipe(
+              Effect.mapError(
+                (error) =>
+                  new TransportError({
+                    method,
+                    path,
+                    message: String(error),
+                    cause: error,
+                  }),
+              ),
             ),
-          );
+          ),
+        );
 
-          if (response.status < 200 || response.status >= 300) {
-            const body = yield* response.text.pipe(
-              Effect.catch(() => Effect.succeed("")),
-            );
+      const failIfNonSuccess = (
+        method: "GET" | "POST" | "PUT",
+        path: string,
+        response: HttpClientResponse.HttpClientResponse,
+      ) => {
+        if (response.status >= 200 && response.status < 300) {
+          return Effect.succeed(response);
+        }
 
-            return yield* Effect.fail(
+        return response.text.pipe(
+          Effect.catch(() => Effect.succeed("")),
+          Effect.flatMap((body) =>
+            Effect.fail(
               new TransportError({
                 method,
                 path,
@@ -216,10 +242,46 @@ export class WebUntisHttp extends ServiceMap.Service<
                 body,
                 message: `HTTP ${response.status} for ${method} ${path}`,
               }),
-            );
+            ),
+          ),
+        );
+      };
+
+      const execute: WebUntisHttpShape["execute"] = (
+        method,
+        path,
+        options = {},
+      ) =>
+        Effect.gen(function* () {
+          const policy = options.policy ?? RequestPolicy.Metadata;
+          const state = yield* resolveState(policy);
+          const initialResponse = yield* executeRequest(state, method, path, {
+            ...options,
+            policy,
+          });
+
+          if (
+            initialResponse.status !== 401 &&
+            initialResponse.status !== 403
+          ) {
+            return yield* failIfNonSuccess(method, path, initialResponse);
           }
 
-          return response;
+          yield* metadataState.clear();
+          yield* sessionState.clear();
+
+          const refreshedState = yield* resolveState(policy);
+          const retriedResponse = yield* executeRequest(
+            refreshedState,
+            method,
+            path,
+            {
+              ...options,
+              policy,
+            },
+          );
+
+          return yield* failIfNonSuccess(method, path, retriedResponse);
         });
 
       const decodeSchema = <S extends Schema.Top>(
@@ -264,42 +326,38 @@ export class WebUntisHttp extends ServiceMap.Service<
           ),
         );
 
-      const request: WebUntisHttpShape["request"] = (descriptor, input) =>
-        execute(
-          descriptor.method,
-          typeof descriptor.path === "function"
-            ? descriptor.path(input)
-            : descriptor.path,
-          {
-            body: descriptor.body?.(input),
-            headers: descriptor.headers?.(input),
-            policy: descriptor.policy,
-            query: descriptor.query?.(input),
-          },
-        );
+      const request: WebUntisHttpShape["request"] = (descriptor, input) => {
+        const resolved = resolveRequest(descriptor, input);
+
+        return execute(resolved.method, resolved.path, {
+          body: resolved.body,
+          headers: resolved.headers,
+          policy: resolved.policy,
+          query: resolved.query,
+        });
+      };
 
       const requestJson: WebUntisHttpShape["requestJson"] = (
         descriptor,
         input,
-      ) =>
-        decodeJson(
-          typeof descriptor.path === "function"
-            ? descriptor.path(input)
-            : descriptor.path,
-          request(descriptor, input),
-        );
+      ) => {
+        const resolved = resolveRequest(descriptor, input);
+
+        return decodeJson(resolved.path, request(descriptor, input));
+      };
 
       const requestSchema: WebUntisHttpShape["requestSchema"] = (
         descriptor,
         input,
-      ) =>
-        decodeSchema(
-          typeof descriptor.path === "function"
-            ? descriptor.path(input)
-            : descriptor.path,
+      ) => {
+        const resolved = resolveRequest(descriptor, input);
+
+        return decodeSchema(
+          resolved.path,
           descriptor.schema,
           request(descriptor, input),
         );
+      };
 
       return WebUntisHttp.of({
         execute,
@@ -324,6 +382,4 @@ export class WebUntisHttp extends ServiceMap.Service<
       });
     }),
   );
-
-  static readonly layer = this.layerNoDeps;
 }

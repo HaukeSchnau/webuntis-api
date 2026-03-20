@@ -15,6 +15,9 @@ describe("public structure", () => {
     expect(api).toHaveProperty("AppClient");
     expect(api).toHaveProperty("MessagesClient");
     expect(api).toHaveProperty("TimetableClient");
+    expect(api).not.toHaveProperty("WebUntisHttp");
+    expect(api).not.toHaveProperty("SchoolDiscovery");
+    expect(api).not.toHaveProperty("Bootstrap");
   });
 
   it.effect("wires explicit domain services onto the composed client", () =>
@@ -27,8 +30,8 @@ describe("public structure", () => {
       expect(client.app).toBe(app);
       expect(client.messages).toBe(messages);
       expect(client.timetable).toBe(timetable);
-      expect(typeof client.app.getHome).toBe("object");
-      expect(typeof client.messages.getStatus).toBe("object");
+      expect(typeof client.app.getHome).toBe("function");
+      expect(typeof client.messages.getStatus).toBe("function");
       expect(typeof client.timetable.getEntries).toBe("function");
     }).pipe(
       Effect.provide(

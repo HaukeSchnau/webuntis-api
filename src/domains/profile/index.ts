@@ -5,8 +5,11 @@ import type { UserContactData, UserEmail } from "../schemas/profile.ts";
 import { ProfileRequests } from "./requests.ts";
 
 export interface ProfileClientShape {
-  readonly getUserContactData: Effect.Effect<UserContactData, RequestFailure>;
-  readonly getUserEmail: Effect.Effect<UserEmail, RequestFailure>;
+  readonly getUserContactData: () => Effect.Effect<
+    UserContactData,
+    RequestFailure
+  >;
+  readonly getUserEmail: () => Effect.Effect<UserEmail, RequestFailure>;
 }
 
 export class ProfileClient extends ServiceMap.Service<
@@ -19,17 +22,21 @@ export class ProfileClient extends ServiceMap.Service<
       const http = yield* WebUntisHttp;
 
       return ProfileClient.of({
-        getUserContactData: http.requestSchema(
-          ProfileRequests.getUserContactData,
-          undefined,
+        getUserContactData: Effect.fn("ProfileClient.getUserContactData")(
+          function* () {
+            return yield* http.requestSchema(
+              ProfileRequests.getUserContactData,
+              undefined,
+            );
+          },
         ),
-        getUserEmail: http.requestSchema(
-          ProfileRequests.getUserEmail,
-          undefined,
-        ),
+        getUserEmail: Effect.fn("ProfileClient.getUserEmail")(function* () {
+          return yield* http.requestSchema(
+            ProfileRequests.getUserEmail,
+            undefined,
+          );
+        }),
       });
     }),
   );
-
-  static readonly layer = this.layerNoDeps;
 }

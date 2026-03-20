@@ -26,6 +26,15 @@ export interface SchemaRequestDescriptor<Input, S extends Schema.Top>
   readonly schema: S;
 }
 
+export interface ResolvedRequestDescriptor {
+  readonly method: "GET" | "POST" | "PUT";
+  readonly path: string;
+  readonly policy: RequestPolicy;
+  readonly query?: QueryParams | undefined;
+  readonly headers?: HeaderParams | undefined;
+  readonly body?: unknown;
+}
+
 export const request = <Input>(
   descriptor: RequestDescriptor<Input>,
 ): RequestDescriptor<Input> => descriptor;
@@ -41,3 +50,15 @@ export const pathFor = <Input>(
   typeof descriptor.path === "function"
     ? descriptor.path(input)
     : descriptor.path;
+
+export const resolveRequest = <Input>(
+  descriptor: RequestDescriptor<Input>,
+  input: Input,
+): ResolvedRequestDescriptor => ({
+  method: descriptor.method,
+  path: pathFor(descriptor, input),
+  policy: descriptor.policy,
+  query: descriptor.query?.(input),
+  headers: descriptor.headers?.(input),
+  body: descriptor.body?.(input),
+});

@@ -228,7 +228,7 @@ describe("request descriptors", () => {
 
     return Effect.gen(function* () {
       const classreg = yield* ClassregClient;
-      yield* classreg.getHomeworkMeta;
+      yield* classreg.getHomeworkMeta();
 
       const request = getLast(observed);
       expect(request.url.pathname).toBe(
@@ -263,7 +263,7 @@ describe("request descriptors", () => {
 
     return Effect.gen(function* () {
       const messages = yield* MessagesClient;
-      yield* messages.getPermissions;
+      yield* messages.getPermissions();
 
       const request = getLast(observed);
       expect(request.url.pathname).toBe(
@@ -278,7 +278,7 @@ describe("request descriptors", () => {
 
     return Effect.gen(function* () {
       const profile = yield* ProfileClient;
-      yield* profile.getUserEmail;
+      yield* profile.getUserEmail();
 
       const request = getLast(observed);
       expect(request.url.pathname).toBe(
@@ -293,7 +293,7 @@ describe("request descriptors", () => {
 
     return Effect.gen(function* () {
       const schoolyears = yield* SchoolyearsClient;
-      yield* schoolyears.list;
+      yield* schoolyears.list();
 
       const request = getLast(observed);
       expect(request.url.pathname).toBe(

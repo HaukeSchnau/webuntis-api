@@ -5,7 +5,7 @@ import type { Schoolyear } from "../schemas/shared.ts";
 import { SchoolyearsRequests } from "./requests.ts";
 
 export interface SchoolyearsClientShape {
-  readonly list: Effect.Effect<ReadonlyArray<Schoolyear>, RequestFailure>;
+  readonly list: () => Effect.Effect<ReadonlyArray<Schoolyear>, RequestFailure>;
 }
 
 export class SchoolyearsClient extends ServiceMap.Service<
@@ -18,10 +18,10 @@ export class SchoolyearsClient extends ServiceMap.Service<
       const http = yield* WebUntisHttp;
 
       return SchoolyearsClient.of({
-        list: http.requestSchema(SchoolyearsRequests.list, undefined),
+        list: Effect.fn("SchoolyearsClient.list")(function* () {
+          return yield* http.requestSchema(SchoolyearsRequests.list, undefined);
+        }),
       });
     }),
   );
-
-  static readonly layer = this.layerNoDeps;
 }

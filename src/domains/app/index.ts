@@ -17,22 +17,31 @@ import type {
 import { AppRequests, type OnboardingRequest } from "./requests.ts";
 
 export interface AppClientShape {
-  readonly getData: Effect.Effect<AppData, RequestFailure>;
-  readonly getHome: Effect.Effect<Home, RequestFailure>;
-  readonly getMobileData: Effect.Effect<MobileData, RequestFailure>;
-  readonly getStartupActions: Effect.Effect<StartupActions, RequestFailure>;
-  readonly getPlatformApplicationMenus: Effect.Effect<
+  readonly getData: () => Effect.Effect<AppData, RequestFailure>;
+  readonly getHome: () => Effect.Effect<Home, RequestFailure>;
+  readonly getMobileData: () => Effect.Effect<MobileData, RequestFailure>;
+  readonly getStartupActions: () => Effect.Effect<
+    StartupActions,
+    RequestFailure
+  >;
+  readonly getPlatformApplicationMenus: () => Effect.Effect<
     AppPlatformApplicationMenus,
     RequestFailure
   >;
-  readonly getThirdPartyData: Effect.Effect<AppThirdPartyData, RequestFailure>;
-  readonly getTodayMeta: Effect.Effect<TodayMeta, RequestFailure>;
-  readonly getDashboardCards: Effect.Effect<DashboardCards, RequestFailure>;
-  readonly getDashboardCardsDetail: Effect.Effect<
+  readonly getThirdPartyData: () => Effect.Effect<
+    AppThirdPartyData,
+    RequestFailure
+  >;
+  readonly getTodayMeta: () => Effect.Effect<TodayMeta, RequestFailure>;
+  readonly getDashboardCards: () => Effect.Effect<
+    DashboardCards,
+    RequestFailure
+  >;
+  readonly getDashboardCardsDetail: () => Effect.Effect<
     DashboardCardsDetail,
     RequestFailure
   >;
-  readonly getDashboardCardsStatus: Effect.Effect<
+  readonly getDashboardCardsStatus: () => Effect.Effect<
     DashboardCardsStatus,
     RequestFailure
   >;
@@ -50,41 +59,77 @@ export class AppClient extends ServiceMap.Service<AppClient, AppClientShape>()(
       const http = yield* WebUntisHttp;
 
       return AppClient.of({
-        getData: http.requestSchema(AppRequests.getData, undefined),
-        getHome: http.requestSchema(AppRequests.getHome, undefined),
-        getMobileData: http.requestSchema(AppRequests.getMobileData, undefined),
-        getStartupActions: http.requestSchema(
-          AppRequests.getStartupActions,
-          undefined,
+        getData: Effect.fn("AppClient.getData")(function* () {
+          return yield* http.requestSchema(AppRequests.getData, undefined);
+        }),
+        getHome: Effect.fn("AppClient.getHome")(function* () {
+          return yield* http.requestSchema(AppRequests.getHome, undefined);
+        }),
+        getMobileData: Effect.fn("AppClient.getMobileData")(function* () {
+          return yield* http.requestSchema(
+            AppRequests.getMobileData,
+            undefined,
+          );
+        }),
+        getStartupActions: Effect.fn("AppClient.getStartupActions")(
+          function* () {
+            return yield* http.requestSchema(
+              AppRequests.getStartupActions,
+              undefined,
+            );
+          },
         ),
-        getPlatformApplicationMenus: http.requestSchema(
-          AppRequests.getPlatformApplicationMenus,
-          undefined,
+        getPlatformApplicationMenus: Effect.fn(
+          "AppClient.getPlatformApplicationMenus",
+        )(function* () {
+          return yield* http.requestSchema(
+            AppRequests.getPlatformApplicationMenus,
+            undefined,
+          );
+        }),
+        getThirdPartyData: Effect.fn("AppClient.getThirdPartyData")(
+          function* () {
+            return yield* http.requestSchema(
+              AppRequests.getThirdPartyData,
+              undefined,
+            );
+          },
         ),
-        getThirdPartyData: http.requestSchema(
-          AppRequests.getThirdPartyData,
-          undefined,
+        getTodayMeta: Effect.fn("AppClient.getTodayMeta")(function* () {
+          return yield* http.requestSchema(AppRequests.getTodayMeta, undefined);
+        }),
+        getDashboardCards: Effect.fn("AppClient.getDashboardCards")(
+          function* () {
+            return yield* http.requestSchema(
+              AppRequests.getDashboardCards,
+              undefined,
+            );
+          },
         ),
-        getTodayMeta: http.requestSchema(AppRequests.getTodayMeta, undefined),
-        getDashboardCards: http.requestSchema(
-          AppRequests.getDashboardCards,
-          undefined,
+        getDashboardCardsDetail: Effect.fn("AppClient.getDashboardCardsDetail")(
+          function* () {
+            return yield* http.requestSchema(
+              AppRequests.getDashboardCardsDetail,
+              undefined,
+            );
+          },
         ),
-        getDashboardCardsDetail: http.requestSchema(
-          AppRequests.getDashboardCardsDetail,
-          undefined,
+        getDashboardCardsStatus: Effect.fn("AppClient.getDashboardCardsStatus")(
+          function* () {
+            return yield* http.requestSchema(
+              AppRequests.getDashboardCardsStatus,
+              undefined,
+            );
+          },
         ),
-        getDashboardCardsStatus: http.requestSchema(
-          AppRequests.getDashboardCardsStatus,
-          undefined,
-        ),
-        getOnboarding: (request) =>
-          http.requestSchema(AppRequests.getOnboarding, request),
+        getOnboarding: Effect.fn("AppClient.getOnboarding")(function* (
+          request: OnboardingRequest,
+        ) {
+          return yield* http.requestSchema(AppRequests.getOnboarding, request);
+        }),
       });
     }),
   );
-
-  static readonly layer = this.layerNoDeps;
 }
 
 export type { OnboardingRequest } from "./requests.ts";

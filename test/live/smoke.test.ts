@@ -28,11 +28,11 @@ describe.skipIf(!hasLiveEnv)("live WebUntis smoke", () => {
         Effect.gen(function* () {
           const auth = yield* AuthClient;
           const client = yield* WebUntisClient;
-          const state = yield* auth.ensureAuthenticated;
+          const state = yield* auth.ensureAuthenticated();
           expect(state.resolvedSchool?.server).toContain(".webuntis.com");
           expect(state.token).toBeDefined();
 
-          const appData = yield* client.app.getData;
+          const appData = yield* client.app.getData();
           expect(appData.currentSchoolYear.id).toBeGreaterThan(0);
           expect(normalizeAppData(appData)).toMatchSnapshot();
         }),
@@ -44,9 +44,9 @@ describe.skipIf(!hasLiveEnv)("live WebUntis smoke", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const home = yield* client.app.getHome;
-          const mobileData = yield* client.app.getMobileData;
-          const startupActions = yield* client.app.getStartupActions;
+          const home = yield* client.app.getHome();
+          const mobileData = yield* client.app.getMobileData();
+          const startupActions = yield* client.app.getStartupActions();
 
           expect(home.schoolName).toContain("IGS");
           expect(mobileData.schoolYear.id).toBeGreaterThan(0);

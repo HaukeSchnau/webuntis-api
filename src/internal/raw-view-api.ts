@@ -1,17 +1,7 @@
 import { Effect, Layer, ServiceMap } from "effect";
-import { WebUntisHttp } from "../../internal/http.ts";
-import type {
-  HeaderParams,
-  QueryParams,
-  RequestPolicy,
-} from "../../internal/request.ts";
+import { type RequestOptions, WebUntisHttp } from "./http.ts";
 
-export interface RawViewApiRequest {
-  readonly query?: QueryParams | undefined;
-  readonly headers?: HeaderParams | undefined;
-  readonly policy?: RequestPolicy | undefined;
-  readonly body?: unknown;
-}
+export type RawViewApiRequest = RequestOptions;
 
 export interface RawViewApiClientShape {
   readonly getJson: (
@@ -59,6 +49,4 @@ export class RawViewApiClient extends ServiceMap.Service<
       });
     }),
   );
-
-  static readonly layer = this.layerNoDeps;
 }
