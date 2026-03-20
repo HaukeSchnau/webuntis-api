@@ -2,63 +2,171 @@
 
 Headless WebUntis client built on the Effect v4 beta ecosystem.
 
-The client models the modern WebUntis REST surface as a portable Effect service graph:
+This package models the modern WebUntis REST surface as explicit `ServiceMap.Service` services. You can consume the aggregate `WebUntisClient`, or you can depend on focused domain services such as `AppClient`, `MessagesClient`, `SchoolyearsClient`, or `TimetableClient`.
 
-- `SchoolDiscovery` resolves a school name through the public WebUntis search API.
-- `AuthClient` performs the classic login handshake and mints the session-bound JWT from `/WebUntis/api/token/new`.
-- `WebUntisHttp` attaches cookies and bearer auth for modern `/api/rest/view/...` requests.
-- `WebUntisClient` exposes the stable domain clients for `app`, `classreg`, `schoolyears`, `messages`, `profile`, `session`, and `timetable`.
-  The client now also exposes a typed `exams` domain for list, filter, statistics, and detail reads.
-  The `app` and `timetable` domains now also cover adjacent bootstrap routes such as `home`, `mobile/data`, `trigger/startup`, `today/meta`, `dashboard/cards`, `app/platform-application/menus`, `app/third-party/data`, `onboarding`, `timegrid`, `timetable/calendar`, `timetable/externalCalendar`, and `timetable/entriesWeekOverview`.
-  The timetable domain also exposes typed `availableRooms` support through the confirmed-working `v2` query-parameter route.
-  The `messages` domain now covers inbox, drafts, sent, recipient quickfilters, recipient filter/search helpers, reply-form lookup, and individual message detail in addition to status and permissions.
-  JSON decoders run with strict excess-property rejection so unexpected upstream fields fail fast instead of being silently dropped.
-  Reverse-engineering probes such as raw view access and unstable settings endpoints now live on internal services used by the live suite instead of the public package root.
+For breaking API changes and upgrade notes, see [MIGRATION.md](./MIGRATION.md).
 
-## Runtime
+## What You Get
+
+- Explicit Effect v4 services with attached `layerNoDeps` and `layer` definitions.
+- A small aggregate facade through `WebUntisClient` for convenience.
+- First-class domain services for `app`, `classreg`, `exams`, `messages`, `profile`, `schoolyears`, `session`, and `timetable`.
+- Descriptor-driven request construction, with explicit auth vs metadata header policy.
+- Strict schema decoding with excess-property rejection.
+- Internal-only reverse-engineering helpers for unstable or raw routes.
+
+## Runtime Model
 
 This package is headless. It does not depend on a browser at runtime.
 
-The current implementation targets the modern REST-first WebUntis flow:
+The current implementation follows the modern WebUntis flow:
 
 1. School discovery via `https://schoolsearch.webuntis.com/schoolquery2`
 2. Session bootstrap via `GET /WebUntis/index.do`
 3. Credential submission via `POST /WebUntis/j_spring_security_check`
 4. Token minting via `GET /WebUntis/api/token/new`
-5. Bearer-authenticated requests to `/WebUntis/api/rest/view/v1/...` plus selected confirmed newer routes such as `v2/home`, `v2/trigger/startup`, `v3/mobile/data`, and `v2/timetable/availableRooms`
+5. Bearer-authenticated requests to `/WebUntis/api/rest/view/...`
 
-Reverse-engineering artifacts live under [`research/webuntis`](./research/webuntis).
+The service graph is split into a few distinct layers:
 
-## Core Decisions
+- `ClientConfig` reads and validates `WEBUNTIS_*` config, including URL validation.
+- `SchoolDiscovery` resolves the school deterministically and fails on ambiguous matches.
+- `Bootstrap` manages cookies, token refresh, tenant metadata, and school-year metadata.
+- `AuthClient` exposes authentication-specific operations.
+- `WebUntisHttp` executes typed request descriptors.
+- Domain services expose stable read-only business APIs.
 
-- We optimize for broad coverage of read-only WebUntis endpoints first. Mutating business endpoints are out of scope for the public client surface.
-- We keep the public API read-only. Unstable or reverse-engineering helpers stay on internal services so the exported client remains coherent.
-- We keep a large live test suite against the tenant and treat snapshot churn as a feature, not a problem. Snapshot updates are expected when upstream changes, because the main goal is to surface response drift quickly.
-- We keep schemas as strict as the evidence allows: excess properties are rejected, literal unions are preferred over open strings when route behavior or shipped frontend code makes them trustworthy, and uncertain payload sections stay opaque until we have enough live or source evidence to model them safely.
-- We aim for idiomatic Effect v4 code throughout. When an Effect v4 or unstable-platform API choice is unclear, we resolve it against the local [`$context-repo`](/Users/haukeschnau/.agents/skills/context-repo/SKILL.md) docs and source.
-- Live API exploration is done with [`$agent-browser`](/Users/haukeschnau/.agents/skills/agent-browser/SKILL.md), preferably through subagents, so runtime findings come from the real frontend and not from hand-wavy guesses.
-
-## Development
-
-Install dependencies:
+## Install
 
 ```bash
 bun install
 ```
 
-Run the static checks:
+## Quick Start
 
-```bash
-bun run typecheck
+The most familiar entry point is still the aggregate `WebUntisClient`.
+
+```ts
+import { Effect, Layer } from "effect";
+import {
+  WebUntisClient,
+  clientConfigFromEnv,
+  makeWebUntisLayer,
+} from "webuntis-api";
+
+const program = Effect.gen(function* () {
+  const client = yield* WebUntisClient;
+  const appData = yield* client.app.getData;
+  const schoolyears = yield* client.schoolyears.list;
+
+  return {
+    school: appData.tenant.displayName,
+    schoolyears,
+  };
+});
+
+const layer = Layer.unwrap(
+  clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)),
+);
+
+await Effect.runPromise(program.pipe(Effect.provide(layer)));
 ```
 
-Run tests:
+## Preferred v4 Style
 
-```bash
-bun run test
+For new code, prefer yielding focused services directly. That keeps dependencies explicit and matches the current Effect v4 style better than pushing everything through one large facade.
+
+```ts
+import { Effect, Layer } from "effect";
+import {
+  AppClient,
+  MessagesClient,
+  clientConfigFromEnv,
+  makeWebUntisLayer,
+} from "webuntis-api";
+
+const program = Effect.gen(function* () {
+  const app = yield* AppClient;
+  const messages = yield* MessagesClient;
+
+  const [home, inbox] = yield* Effect.all([
+    app.getHome,
+    messages.getInbox,
+  ]);
+
+  return {
+    schoolName: home.schoolName,
+    inboxCount: inbox.incomingMessages.length,
+  };
+});
+
+const layer = Layer.unwrap(
+  clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)),
+);
+
+await Effect.runPromise(program.pipe(Effect.provide(layer)));
 ```
 
-The live integration suite activates automatically when these environment variables are set:
+The domain services are especially useful when a program only needs one slice of the API:
+
+```ts
+import { Effect, Layer } from "effect";
+import {
+  TimetableClient,
+  clientConfigFromEnv,
+  makeWebUntisLayer,
+} from "webuntis-api";
+
+const program = Effect.gen(function* () {
+  const timetable = yield* TimetableClient;
+
+  return yield* timetable.getEntries({
+    start: "2026-03-23",
+    end: "2026-03-27",
+    resourceType: "CLASS",
+    resources: [1],
+  });
+});
+
+const layer = Layer.unwrap(
+  clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)),
+);
+
+await Effect.runPromise(program.pipe(Effect.provide(layer)));
+```
+
+## Public API Shape
+
+The root package exports:
+
+- `WebUntisClient` as the convenience aggregate service
+- `AuthClient`
+- `AppClient`
+- `ClassregClient`
+- `ExamsClient`
+- `MessagesClient`
+- `ProfileClient`
+- `SchoolyearsClient`
+- `SessionClient`
+- `TimetableClient`
+- `ClientConfig`
+- `clientConfigFromEnv`
+- `makeWebUntisLayer`
+
+The root package does not export internal raw view helpers or public mutating experimental profile routes.
+
+If you need service types for your own signatures, prefer the service-native form:
+
+```ts
+import type { AppClient, TimetableClient } from "webuntis-api";
+
+type AppService = AppClient["Service"];
+type TimetableService = TimetableClient["Service"];
+```
+
+## Configuration
+
+The live layer reads these environment variables:
 
 ```bash
 export WEBUNTIS_SCHOOL_NAME="IGS Lilienthal"
@@ -72,14 +180,42 @@ Optional overrides:
 - `WEBUNTIS_SERVER`
 - `WEBUNTIS_SERVER_URL`
 - `WEBUNTIS_TENANT_ID`
+- `WEBUNTIS_DISCOVERY_ENDPOINT`
 
-Without credentials, the live suite is skipped and the tests explain which variables are missing.
+Notable behavior changes:
+
+- `WEBUNTIS_SERVER_URL` is now validated during config loading.
+- School discovery now fails on ambiguous results unless you pin the tenant via `WEBUNTIS_SCHOOL_LOGIN_NAME`, `WEBUNTIS_SERVER`, `WEBUNTIS_SERVER_URL`, or `WEBUNTIS_TENANT_ID`.
+
+## Testing
+
+Run the static checks:
+
+```bash
+bun run typecheck
+bun run lint
+```
+
+Run the tests:
+
+```bash
+bun run test
+```
+
+The test suite is split into:
+
+- `test/unit` for config, bootstrap, discovery, and request-construction behavior
+- `test/contract` for schema strictness and positive payload fixtures
+- `test/live/smoke.test.ts` for a small credential-gated smoke suite
+- `test/live/live.test.ts` for broader live coverage and snapshot drift detection
+
+Without live credentials, the credential-gated tests are skipped and report which `WEBUNTIS_*` variables are missing.
 
 ## Encrypted Live Credentials
 
-The repository now keeps the live-test credentials in an encrypted SOPS file at [`secrets/webuntis-live.env`](./secrets/webuntis-live.env).
+The repository keeps live-test credentials in an encrypted SOPS file at [`secrets/webuntis-live.env`](./secrets/webuntis-live.env).
 
-SOPS is configured through [`.sops.yaml`](./.sops.yaml) and uses an `age` recipient. Only the public recipient is committed. The matching private key must be available locally at the standard SOPS path:
+SOPS is configured through [`.sops.yaml`](./.sops.yaml) and uses an `age` recipient. Only the public recipient is committed. The matching private key must be available locally at:
 
 ```bash
 ~/.config/sops/age/keys.txt
@@ -87,7 +223,7 @@ SOPS is configured through [`.sops.yaml`](./.sops.yaml) and uses an `age` recipi
 
 You can override that location with `SOPS_AGE_KEY_FILE`.
 
-If you do not already have `sops` and `age`, install them with Nix:
+If `sops` and `age` are not installed locally, install them with Nix:
 
 ```bash
 nix shell nixpkgs#sops nixpkgs#age
@@ -99,8 +235,6 @@ Convenience commands:
 bun run test:live:sops
 bun run test:live:sops:update
 ```
-
-Those scripts decrypt the repository secret just-in-time and export the resulting `WEBUNTIS_*` variables for the current process before running the live Vitest suite.
 
 To rotate or edit the encrypted live-test credentials:
 
@@ -114,36 +248,12 @@ To decrypt the file manually for inspection without writing plaintext into the r
 sops decrypt secrets/webuntis-live.env
 ```
 
-Future developers and agents need the matching private key provisioned out of band before they can use the encrypted credentials. Do not commit plaintext `.env` files to the repo.
+## Design Notes
 
-## Example
+- We optimize for broad read-only WebUntis coverage first.
+- Stable business routes belong on public domain services.
+- Reverse-engineering probes stay internal so the exported package surface remains coherent.
+- Snapshot churn in the live suite is treated as evidence of upstream change, not as noise to suppress.
+- Strict decoding is evidence-driven: we keep schemas narrow where behavior is stable and leave uncertain payloads opaque until the live API or shipped frontend code justifies tighter modeling.
 
-```ts
-import { Effect, Layer } from "effect";
-import { WebUntisClient, clientConfigFromEnv, makeWebUntisLayer } from "webuntis-api";
-
-const program = Effect.gen(function*() {
-  const client = yield* WebUntisClient;
-  const appData = yield* client.app.getData;
-  const schoolyears = yield* client.schoolyears.list;
-
-  return {
-    school: appData.tenant.displayName,
-    schoolyears
-  };
-});
-
-const layer = Layer.unwrap(
-  clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer))
-);
-
-await Effect.runPromise(program.pipe(Effect.provide(layer)));
-```
-
-## Testing Strategy
-
-- Live tests use `@effect/vitest` against a real tenant.
-- Snapshot tests normalize volatile live payload fields, and we expect to refresh those snapshots whenever the upstream API legitimately changes.
-- The live suite also pins the current behavior of adjacent routes such as `classreg/absences/meta`, `classreg/homework/meta`, `session/status`, `today/meta`, `dashboard/cards`, `timetable/menu`, `timetable/search`, `timetable/entriesWeekOverview`, the currently failing `profile` summary/admin endpoints, and currently blocked read-only routes such as `messages-of-the-day`, `rooms`, `teachers`, and `subjects`.
-- Reverse-engineering snapshot tests pin the mined frontend endpoint inventory so upstream bundle drift is obvious.
-- Strict decoding is intentionally evidence-driven. When a route only returns empty arrays on the live tenant, we keep the container exact and leave the item payload opaque until live responses or shipped frontend code justify a narrower schema.
+Reverse-engineering artifacts live under [`research/webuntis`](./research/webuntis).
