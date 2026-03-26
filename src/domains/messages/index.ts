@@ -1,12 +1,17 @@
 import { Effect, Layer, ServiceMap } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
-import { MessagesRequests } from "./requests.ts";
+import {
+  type MessageDetailRequest,
+  type MessageRecipientFilterRequest,
+  type MessageRecipientSearchRequest,
+  type MessageReplyFormRequest,
+  MessagesRequests,
+} from "./requests.ts";
 import type {
   MessageDetail,
   MessageDrafts,
   MessageRecipientFilter,
-  MessageRecipientOption,
   MessageRecipientQuickfilters,
   MessageRecipientSearch,
   MessageReplyForm,
@@ -28,19 +33,18 @@ export interface MessagesClientShape {
     RequestFailure
   >;
   readonly getRecipientFilter: (
-    recipientOption: MessageRecipientOption,
+    request: MessageRecipientFilterRequest,
   ) => Effect.Effect<MessageRecipientFilter, RequestFailure>;
   readonly searchRecipients: (
-    recipientOption: MessageRecipientOption,
-    searchText: string,
+    request: MessageRecipientSearchRequest,
   ) => Effect.Effect<MessageRecipientSearch, RequestFailure>;
   readonly getSent: () => Effect.Effect<MessageSent, RequestFailure>;
   readonly getStatus: () => Effect.Effect<MessagesStatus, RequestFailure>;
   readonly getReplyForm: (
-    id: number,
+    request: MessageReplyFormRequest,
   ) => Effect.Effect<MessageReplyForm, RequestFailure>;
   readonly getMessage: (
-    id: number,
+    request: MessageDetailRequest,
   ) => Effect.Effect<MessageDetail, RequestFailure>;
 }
 
@@ -83,24 +87,18 @@ export class MessagesClient extends ServiceMap.Service<
           );
         }),
         getRecipientFilter: Effect.fn("MessagesClient.getRecipientFilter")(
-          function* (recipientOption: MessageRecipientOption) {
+          function* (request: MessageRecipientFilterRequest) {
             return yield* http.requestSchema(
               MessagesRequests.getRecipientFilter,
-              recipientOption,
+              request,
             );
           },
         ),
         searchRecipients: Effect.fn("MessagesClient.searchRecipients")(
-          function* (
-            recipientOption: MessageRecipientOption,
-            searchText: string,
-          ) {
+          function* (request: MessageRecipientSearchRequest) {
             return yield* http.requestSchema(
               MessagesRequests.searchRecipients,
-              {
-                recipientOption,
-                searchText,
-              },
+              request,
             );
           },
         ),
@@ -114,16 +112,29 @@ export class MessagesClient extends ServiceMap.Service<
           );
         }),
         getReplyForm: Effect.fn("MessagesClient.getReplyForm")(function* (
-          id: number,
+          request: MessageReplyFormRequest,
         ) {
-          return yield* http.requestSchema(MessagesRequests.getReplyForm, id);
+          return yield* http.requestSchema(
+            MessagesRequests.getReplyForm,
+            request,
+          );
         }),
         getMessage: Effect.fn("MessagesClient.getMessage")(function* (
-          id: number,
+          request: MessageDetailRequest,
         ) {
-          return yield* http.requestSchema(MessagesRequests.getMessage, id);
+          return yield* http.requestSchema(
+            MessagesRequests.getMessage,
+            request,
+          );
         }),
       });
     }),
   );
 }
+
+export type {
+  MessageDetailRequest,
+  MessageRecipientFilterRequest,
+  MessageRecipientSearchRequest,
+  MessageReplyFormRequest,
+} from "./requests.ts";

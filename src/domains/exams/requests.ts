@@ -6,6 +6,10 @@ import {
   ExamsSchema,
 } from "./schema.ts";
 
+export interface ExamDetailRequest {
+  readonly id: number;
+}
+
 export const ExamsRequests = {
   list: schemaRequest<void, typeof ExamsSchema>({
     method: "GET",
@@ -25,9 +29,9 @@ export const ExamsRequests = {
     policy: RequestPolicy.AuthOnly,
     schema: ExamStatisticsSchema,
   }),
-  getExam: schemaRequest<number, typeof ExamDetailSchema>({
+  getExam: schemaRequest<ExamDetailRequest, typeof ExamDetailSchema>({
     method: "GET",
-    path: (id) => `api/rest/view/v1/exams/${id}`,
+    path: (request) => `api/rest/view/v1/exams/${request.id}`,
     policy: RequestPolicy.AuthOnly,
     schema: ExamDetailSchema,
   }),

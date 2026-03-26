@@ -151,6 +151,58 @@ const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
           maxFileSize: 10,
           maxFileCount: 3,
         });
+      case "/WebUntis/api/rest/view/v1/messages/recipients/STAFF/filter":
+        return jsonResponse({
+          filters: [
+            {
+              type: "STAFF",
+              items: ["Teachers"],
+            },
+          ],
+        });
+      case "/WebUntis/api/rest/view/v1/messages/recipients/STAFF/search":
+        return jsonResponse([
+          {
+            personId: 1,
+            className: null,
+            displayName: "Anna Teacher",
+            imageUrl: null,
+            role: "STAFF",
+          },
+        ]);
+      case "/WebUntis/api/rest/view/v1/messages/42":
+        return jsonResponse({
+          id: 42,
+          subject: "Subject",
+          content: "Body",
+          sender: {
+            className: null,
+            displayName: "Teacher",
+            imageUrl: null,
+            userId: 2,
+          },
+          sentDateTime: "2026-03-16T08:00:00",
+          allowMessageDeletion: false,
+          attachments: [],
+          blobAttachment: null,
+          storageAttachments: [],
+          isReply: false,
+          isReplyAllowed: true,
+          isReportMessage: false,
+          isReplyForbidden: false,
+          replyHistory: [],
+          requestConfirmation: null,
+        });
+      case "/WebUntis/api/rest/view/v1/messages/42/reply-form":
+        return jsonResponse({
+          subject: "Reply",
+          recipient: {
+            id: 1,
+            className: null,
+            displayName: "Teacher",
+          },
+          replyHistory: [],
+        });
       case "/WebUntis/api/rest/view/v1/profile/user-email":
         return jsonResponse({
           email: "teacher@example.com",
@@ -190,6 +242,45 @@ const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
             },
           ],
           errors: [],
+        });
+      case "/WebUntis/api/rest/view/v1/timetable/grid":
+        return jsonResponse({
+          firstDayOfWeek: "MONDAY",
+          studentFormat: 1,
+          classFormat: 1,
+          subjectFormat: 1,
+          teacherFormat: 1,
+          roomFormat: 1,
+          resourceFormat: 1,
+          formatDefinitions: [
+            {
+              id: 1,
+              name: "Default",
+              longname: "Default",
+              showStartEndTimeOfSlots: true,
+              showStartEndTime: true,
+              showCancellations: true,
+              showExternalCalendars: false,
+              hideDetails: false,
+              minRows: 6,
+              duration: {
+                start: "08:00",
+                end: "13:00",
+              },
+              timeGridType: "CLOCK_HOURS",
+              timeGridDays: ["MONDAY"],
+              timeGridSlots: [
+                {
+                  name: "1",
+                  number: 1,
+                  duration: {
+                    start: "08:00",
+                    end: "08:45",
+                  },
+                },
+              ],
+            },
+          ],
         });
       default:
         return jsonResponse([]);
@@ -245,7 +336,7 @@ describe("request descriptors", () => {
 
       return Effect.gen(function* () {
         const exams = yield* ExamsClient;
-        yield* exams.getExam(42);
+        yield* exams.getExam({ id: 42 });
 
         const request = getLast(observed);
         expect(request.url.pathname).toBe(
@@ -270,6 +361,55 @@ describe("request descriptors", () => {
         "/WebUntis/api/rest/view/v1/messages/permissions",
       );
       expect(request.headers["x-webuntis-api-school-year-id"]).toBe("7");
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
+
+  it.effect("message recipient routes use request-object inputs", () => {
+    const observed: Array<ObservedRequest> = [];
+
+    return Effect.gen(function* () {
+      const messages = yield* MessagesClient;
+      yield* messages.getRecipientFilter({ recipientOption: "STAFF" });
+
+      const filterRequest = getLast(observed);
+      expect(filterRequest.url.pathname).toBe(
+        "/WebUntis/api/rest/view/v1/messages/recipients/STAFF/filter",
+      );
+
+      yield* messages.searchRecipients({
+        recipientOption: "STAFF",
+        searchText: "anna",
+      });
+
+      const searchRequest = getLast(observed);
+      expect(searchRequest.url.pathname).toBe(
+        "/WebUntis/api/rest/view/v1/messages/recipients/STAFF/search",
+      );
+      expect(searchRequest.query["searchText"]).toBe("anna");
+      expect(
+        searchRequest.headers["x-webuntis-api-school-year-id"],
+      ).toBeUndefined();
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
+
+  it.effect("message detail routes use request-object ids", () => {
+    const observed: Array<ObservedRequest> = [];
+
+    return Effect.gen(function* () {
+      const messages = yield* MessagesClient;
+      yield* messages.getMessage({ id: 42 });
+
+      const detailRequest = getLast(observed);
+      expect(detailRequest.url.pathname).toBe(
+        "/WebUntis/api/rest/view/v1/messages/42",
+      );
+
+      yield* messages.getReplyForm({ id: 42 });
+
+      const replyRequest = getLast(observed);
+      expect(replyRequest.url.pathname).toBe(
+        "/WebUntis/api/rest/view/v1/messages/42/reply-form",
+      );
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
 
@@ -352,4 +492,20 @@ describe("request descriptors", () => {
       }).pipe(Effect.provide(makeRecorderLayer(observed)));
     },
   );
+
+  it.effect("timetable grid routes use request-object inputs", () => {
+    const observed: Array<ObservedRequest> = [];
+
+    return Effect.gen(function* () {
+      const timetable = yield* TimetableClient;
+      yield* timetable.getGrid({ timetableType: "SUBSTITUTION" });
+
+      const request = getLast(observed);
+      expect(request.url.pathname).toBe(
+        "/WebUntis/api/rest/view/v1/timetable/grid",
+      );
+      expect(request.query["timetableType"]).toBe("SUBSTITUTION");
+      expect(request.headers["x-webuntis-api-school-year-id"]).toBe("7");
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
 });

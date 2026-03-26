@@ -10,6 +10,7 @@ import {
   type TimetableEntriesWeekOverviewRequest,
   type TimetableExternalCalendarRequest,
   type TimetableFilterRequest,
+  type TimetableGridRequest,
   TimetableRequests,
   type TimetableSearchRequest,
 } from "./requests.ts";
@@ -29,7 +30,7 @@ import type {
 export interface TimetableClientShape {
   readonly getTimeGrid: () => Effect.Effect<TimeGrid, RequestFailure>;
   readonly getGrid: (
-    timetableType?: string,
+    request?: TimetableGridRequest,
   ) => Effect.Effect<TimetableGrid, RequestFailure>;
   readonly getFilter: (
     request: TimetableFilterRequest,
@@ -75,12 +76,9 @@ export class TimetableClient extends ServiceMap.Service<
           );
         }),
         getGrid: Effect.fn("TimetableClient.getGrid")(function* (
-          timetableType?: string,
+          request: TimetableGridRequest = {},
         ) {
-          return yield* http.requestSchema(
-            TimetableRequests.getGrid,
-            timetableType,
-          );
+          return yield* http.requestSchema(TimetableRequests.getGrid, request);
         }),
         getFilter: Effect.fn("TimetableClient.getFilter")(function* (
           request: TimetableFilterRequest,
@@ -162,5 +160,6 @@ export type {
   TimetableEntriesWeekOverviewRequest,
   TimetableExternalCalendarRequest,
   TimetableFilterRequest,
+  TimetableGridRequest,
   TimetableSearchRequest,
 } from "./requests.ts";

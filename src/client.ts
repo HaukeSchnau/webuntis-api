@@ -10,7 +10,7 @@ import { SchoolyearsClient } from "./domains/schoolyears/index.ts";
 import { SessionClient } from "./domains/session/index.ts";
 import { TimetableClient } from "./domains/timetable/index.ts";
 import type { ClientConfig } from "./internal/config.ts";
-import { makeWebUntisRuntimeLayer } from "./internal/runtime.ts";
+import { makeWebUntisCoreLayer } from "./internal/runtime.ts";
 
 export interface WebUntisClientShape {
   readonly auth: AuthClient["Service"];
@@ -62,23 +62,25 @@ export const makeWebUntisLayer = (
   config: ClientConfig["Service"],
   transportLayer?: Layer.Layer<HttpClient.HttpClient>,
 ) => {
-  const runtimeLayer = makeWebUntisRuntimeLayer({ config, transportLayer });
-  const servicesLayer = Layer.mergeAll(
-    AuthClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
-    AppClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
-    ClassregClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
-    ExamsClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
-    MessagesClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
-    ProfileClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
-    SchoolyearsClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
-    SessionClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
-    TimetableClient.layerNoDeps.pipe(Layer.provide(runtimeLayer)),
-  );
-  const clientLayer = WebUntisClient.layerNoDeps.pipe(
-    Layer.provide(servicesLayer),
+  const coreLayer = makeWebUntisCoreLayer({ config, transportLayer });
+
+  const domainServicesLayer = Layer.mergeAll(
+    AuthClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
+    AppClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
+    ClassregClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
+    ExamsClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
+    MessagesClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
+    ProfileClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
+    SchoolyearsClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
+    SessionClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
+    TimetableClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
   );
 
-  return Layer.mergeAll(servicesLayer, clientLayer);
+  const aggregateLayer = WebUntisClient.layerNoDeps.pipe(
+    Layer.provide(domainServicesLayer),
+  );
+
+  return Layer.mergeAll(domainServicesLayer, aggregateLayer);
 };
 
 export const layer = makeWebUntisLayer;

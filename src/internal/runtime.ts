@@ -14,42 +14,27 @@ export interface WebUntisRuntimeOptions {
   readonly transportLayer?: Layer.Layer<HttpClient.HttpClient>;
 }
 
-export const makeWebUntisRuntimeLayer = ({
+export const makeWebUntisCoreLayer = ({
   config,
   transportLayer = FetchHttpClient.layer,
 }: WebUntisRuntimeOptions) => {
   const baseLayer = Layer.mergeAll(ClientConfig.layer(config), transportLayer);
   const discoveryLayer = SchoolDiscovery.layerNoDeps.pipe(
-    Layer.provide(baseLayer),
+    Layer.provideMerge(baseLayer),
   );
   const schoolResolverLayer = SchoolResolver.layerNoDeps.pipe(
-    Layer.provide(Layer.mergeAll(ClientConfig.layer(config), discoveryLayer)),
+    Layer.provideMerge(discoveryLayer),
   );
   const sessionLayer = SessionState.layerNoDeps.pipe(
-    Layer.provide(
-      Layer.mergeAll(
-        ClientConfig.layer(config),
-        transportLayer,
-        schoolResolverLayer,
-      ),
-    ),
+    Layer.provideMerge(schoolResolverLayer),
   );
   const metadataLayer = MetadataState.layerNoDeps.pipe(
-    Layer.provide(sessionLayer),
+    Layer.provideMerge(sessionLayer),
   );
   const httpLayer = WebUntisHttp.layerNoDeps.pipe(
-    Layer.provide(Layer.mergeAll(sessionLayer, metadataLayer)),
+    Layer.provideMerge(metadataLayer),
   );
-  const rawViewApiLayer = RawViewApiClient.layerNoDeps.pipe(
-    Layer.provide(httpLayer),
-  );
-
-  return Layer.mergeAll(
-    discoveryLayer,
-    schoolResolverLayer,
-    sessionLayer,
-    metadataLayer,
-    httpLayer,
-    rawViewApiLayer,
-  );
+  return RawViewApiClient.layerNoDeps.pipe(Layer.provideMerge(httpLayer));
 };
+
+export const makeWebUntisRuntimeLayer = makeWebUntisCoreLayer;

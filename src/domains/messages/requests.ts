@@ -18,6 +18,18 @@ export interface MessageRecipientSearchRequest {
   readonly searchText: string;
 }
 
+export interface MessageRecipientFilterRequest {
+  readonly recipientOption: MessageRecipientOption;
+}
+
+export interface MessageReplyFormRequest {
+  readonly id: number;
+}
+
+export interface MessageDetailRequest {
+  readonly id: number;
+}
+
 export const MessagesRequests = {
   getInbox: schemaRequest<void, typeof MessagesInboxSchema>({
     method: "GET",
@@ -47,12 +59,12 @@ export const MessagesRequests = {
     schema: MessageRecipientQuickfiltersSchema,
   }),
   getRecipientFilter: schemaRequest<
-    MessageRecipientOption,
+    MessageRecipientFilterRequest,
     typeof MessageRecipientFilterSchema
   >({
     method: "GET",
-    path: (recipientOption) =>
-      `api/rest/view/v1/messages/recipients/${encodeURIComponent(recipientOption)}/filter`,
+    path: (request) =>
+      `api/rest/view/v1/messages/recipients/${encodeURIComponent(request.recipientOption)}/filter`,
     policy: RequestPolicy.AuthOnly,
     schema: MessageRecipientFilterSchema,
   }),
@@ -79,15 +91,18 @@ export const MessagesRequests = {
     policy: RequestPolicy.Metadata,
     schema: MessagesStatusSchema,
   }),
-  getReplyForm: schemaRequest<number, typeof MessageReplyFormSchema>({
+  getReplyForm: schemaRequest<
+    MessageReplyFormRequest,
+    typeof MessageReplyFormSchema
+  >({
     method: "GET",
-    path: (id) => `api/rest/view/v1/messages/${id}/reply-form`,
+    path: (request) => `api/rest/view/v1/messages/${request.id}/reply-form`,
     policy: RequestPolicy.AuthOnly,
     schema: MessageReplyFormSchema,
   }),
-  getMessage: schemaRequest<number, typeof MessageDetailSchema>({
+  getMessage: schemaRequest<MessageDetailRequest, typeof MessageDetailSchema>({
     method: "GET",
-    path: (id) => `api/rest/view/v1/messages/${id}`,
+    path: (request) => `api/rest/view/v1/messages/${request.id}`,
     policy: RequestPolicy.AuthOnly,
     schema: MessageDetailSchema,
   }),

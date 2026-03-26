@@ -1,5 +1,9 @@
 import { Schema } from "effect";
-import { TimeGridSchema, TimeRangeSchema } from "../shared/schema.ts";
+import {
+  JsonObjectSchema,
+  TimeGridSchema,
+  TimeRangeSchema,
+} from "../shared/schema.ts";
 
 export const TimeGridTypeSchema = Schema.Literals([
   "CLOCK_HOURS",
@@ -140,24 +144,26 @@ export const TimetableSubjectFilterItemSchema = Schema.Struct({
 export const TimetableRoomFilterItemSchema = Schema.Struct({
   room: DisplayResourceSchema,
   capacity: Schema.Number,
-  roomGroups: Schema.Array(Schema.Unknown),
+  roomGroups: Schema.Array(JsonObjectSchema),
   building: Schema.NullOr(DisplayResourceSchema),
   department: Schema.NullOr(TimetableDepartmentSchema),
 });
 
+export const TimetableFilterSelectionSchema = JsonObjectSchema;
+export const TimetableFilterResourceGroupSchema = JsonObjectSchema;
 export const TimetableFilterSchema = Schema.Struct({
   resourceType: TimetableResourceTypeSchema,
-  preSelected: Schema.NullOr(Schema.Unknown),
-  buildings: Schema.Array(Schema.Unknown),
+  preSelected: Schema.NullOr(TimetableFilterSelectionSchema),
+  buildings: Schema.Array(JsonObjectSchema),
   departments: Schema.Array(TimetableDepartmentSchema),
-  roomGroups: Schema.Array(Schema.Unknown),
-  resourceTypes: Schema.Array(Schema.Unknown),
-  assignmentGroups: Schema.Array(Schema.Unknown),
+  roomGroups: Schema.Array(TimetableFilterResourceGroupSchema),
+  resourceTypes: Schema.Array(JsonObjectSchema),
+  assignmentGroups: Schema.Array(JsonObjectSchema),
   classes: Schema.Array(TimetableClassFilterItemSchema),
-  resources: Schema.Array(Schema.Unknown),
+  resources: Schema.Array(JsonObjectSchema),
   rooms: Schema.Array(TimetableRoomFilterItemSchema),
   subjects: Schema.Array(TimetableSubjectFilterItemSchema),
-  students: Schema.Array(Schema.Unknown),
+  students: Schema.Array(JsonObjectSchema),
   teachers: Schema.Array(TimetableTeacherFilterItemSchema),
 });
 
@@ -192,6 +198,8 @@ export const DayDataStatusSchema = Schema.Literals([
 
 export type DayDataStatus = Schema.Schema.Type<typeof DayDataStatusSchema>;
 
+export const TimetableEntrySchema = JsonObjectSchema;
+export const TimetableEntriesErrorSchema = JsonObjectSchema;
 export const TimetableEntryDaySchema = Schema.Struct({
   date: Schema.String,
   resourceType: TimetableResourceTypeSchema,
@@ -201,16 +209,16 @@ export const TimetableEntryDaySchema = Schema.Struct({
     longName: Schema.String,
     displayName: Schema.String,
   }),
-  status: Schema.String,
-  dayEntries: Schema.Array(Schema.Unknown),
-  gridEntries: Schema.Array(Schema.Unknown),
-  backEntries: Schema.Array(Schema.Unknown),
+  status: DayDataStatusSchema,
+  dayEntries: Schema.Array(TimetableEntrySchema),
+  gridEntries: Schema.Array(TimetableEntrySchema),
+  backEntries: Schema.Array(TimetableEntrySchema),
 });
 
 export const TimetableEntriesSchema = Schema.Struct({
   format: Schema.Number,
   days: Schema.Array(TimetableEntryDaySchema),
-  errors: Schema.Array(Schema.Unknown),
+  errors: Schema.Array(TimetableEntriesErrorSchema),
 });
 
 export type TimetableEntries = Schema.Schema.Type<
@@ -218,7 +226,7 @@ export type TimetableEntries = Schema.Schema.Type<
 >;
 
 export const TimetableCalendarSchema = Schema.Struct({
-  integrations: Schema.Array(Schema.Unknown),
+  integrations: Schema.Array(JsonObjectSchema),
 });
 
 export type TimetableCalendar = Schema.Schema.Type<
@@ -226,8 +234,8 @@ export type TimetableCalendar = Schema.Schema.Type<
 >;
 
 export const TimetableWeekOverviewCellSchema = Schema.Struct({
-  backEntries: Schema.Array(Schema.Unknown),
-  gridEntries: Schema.Array(Schema.Unknown),
+  backEntries: Schema.Array(TimetableEntrySchema),
+  gridEntries: Schema.Array(TimetableEntrySchema),
 });
 
 export const TimetableWeekOverviewDayResourceSchema = Schema.Struct({
@@ -256,7 +264,10 @@ export type TimetableEntriesWeekOverview = Schema.Schema.Type<
   typeof TimetableEntriesWeekOverviewSchema
 >;
 
-export const TimetableExternalCalendarSchema = Schema.Array(Schema.Unknown);
+export const TimetableExternalCalendarItemSchema = JsonObjectSchema;
+export const TimetableExternalCalendarSchema = Schema.Array(
+  TimetableExternalCalendarItemSchema,
+);
 
 export type TimetableExternalCalendar = Schema.Schema.Type<
   typeof TimetableExternalCalendarSchema

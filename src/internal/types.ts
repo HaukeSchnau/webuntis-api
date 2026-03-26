@@ -13,7 +13,7 @@ export interface ResolvedSchool {
   readonly server: string;
   readonly serverUrl: string;
   readonly schoolId: number;
-  readonly tenantId: string;
+  readonly tenantId?: string | undefined;
 }
 
 export interface WebUntisClientConfig extends Credentials {
@@ -36,7 +36,6 @@ export interface SessionState {
 export interface AuthenticatedState extends SessionState {
   readonly resolvedSchool: ResolvedSchool;
   readonly token: Redacted.Redacted<string>;
-  readonly tenantId: string;
 }
 
 export interface MetadataState {
@@ -64,7 +63,6 @@ export const hasFreshToken = (
 ): state is AuthenticatedState =>
   state.resolvedSchool !== undefined &&
   state.token !== undefined &&
-  state.tenantId !== undefined &&
   state.tokenExpiresAt !== undefined &&
   state.tokenExpiresAt - now > 60_000;
 
@@ -92,17 +90,25 @@ export const toMetadataSnapshot = (
 });
 
 export const resolveBaseUrl = (school: ResolvedSchool): string => {
-  const serverUrl = school.serverUrl.replace(/\/+$/, "");
-  if (serverUrl.endsWith("/WebUntis")) {
-    return serverUrl;
+  const rawServerUrl = /^[a-z]+:\/\//i.test(school.serverUrl)
+    ? school.serverUrl
+    : `https://${school.serverUrl.replace(/^\/+/, "")}`;
+  const url = new URL(rawServerUrl);
+  const pathname = url.pathname.replace(/\/+$/, "");
+
+  if (pathname === "" || pathname === "/") {
+    return `${url.origin}/WebUntis`;
   }
-  if (serverUrl.includes("/WebUntis/?school=")) {
-    const [baseUrl] = serverUrl.split("/?school=");
-    if (baseUrl !== undefined) {
-      return baseUrl;
-    }
+
+  if (pathname === "/WebUntis" || pathname === "/WebUntis/index.do") {
+    return `${url.origin}/WebUntis`;
   }
-  return `${serverUrl}/WebUntis`;
+
+  if (pathname.startsWith("/WebUntis/")) {
+    return `${url.origin}/WebUntis`;
+  }
+
+  return `${url.origin}${pathname}/WebUntis`;
 };
 
 export const resolveTenantHost = (

@@ -15,6 +15,8 @@ describe("public structure", () => {
     expect(api).toHaveProperty("AppClient");
     expect(api).toHaveProperty("MessagesClient");
     expect(api).toHaveProperty("TimetableClient");
+    expect(api).toHaveProperty("TransportError");
+    expect(api).not.toHaveProperty("HomeSchema");
     expect(api).not.toHaveProperty("WebUntisHttp");
     expect(api).not.toHaveProperty("SchoolDiscovery");
     expect(api).not.toHaveProperty("Bootstrap");

@@ -4,8 +4,11 @@ import {
   AppPlatformApplicationMenuSchema,
   ClassregAbsencesMetaSchema,
   ClassregHomeworkMetaSchema,
+  DashboardCardSchema,
   ExamFilterSchema,
   HomeCellSchema,
+  MessageAttachmentSchema,
+  MessageRecipientSchema,
   MessageSummarySchema,
   MessagesPermissionsSchema,
   MobileDataSchema,
@@ -14,6 +17,9 @@ import {
   StartupActionsSchema,
   TimeGridSchema,
   TimetableEntriesWeekOverviewSchema,
+  TimetableEntrySchema,
+  TimetableExternalCalendarItemSchema,
+  TimetableFilterSelectionSchema,
   TimetableFormatDefinitionSchema,
 } from "../../src/domains/schemas.ts";
 import { strictJsonParseOptions } from "../../src/internal/schema.ts";
@@ -229,6 +235,44 @@ describe("strict schema decoding", () => {
         strictJsonParseOptions,
       ),
     ).toThrow();
+  });
+
+  it("rejects non-object dashboard card payloads", () => {
+    const decode = Schema.decodeUnknownSync(DashboardCardSchema);
+
+    expect(() => decode("not-an-object", strictJsonParseOptions)).toThrow();
+  });
+
+  it("rejects non-object message attachment payloads", () => {
+    const decode = Schema.decodeUnknownSync(MessageAttachmentSchema);
+
+    expect(() => decode(123, strictJsonParseOptions)).toThrow();
+  });
+
+  it("rejects non-object message recipient payloads", () => {
+    const decode = Schema.decodeUnknownSync(MessageRecipientSchema);
+
+    expect(() => decode(null, strictJsonParseOptions)).toThrow();
+  });
+
+  it("rejects non-object timetable filter selections", () => {
+    const decode = Schema.decodeUnknownSync(TimetableFilterSelectionSchema);
+
+    expect(() => decode("CLASS", strictJsonParseOptions)).toThrow();
+  });
+
+  it("rejects non-object timetable entry payloads", () => {
+    const decode = Schema.decodeUnknownSync(TimetableEntrySchema);
+
+    expect(() => decode(false, strictJsonParseOptions)).toThrow();
+  });
+
+  it("rejects non-object timetable external calendar payloads", () => {
+    const decode = Schema.decodeUnknownSync(
+      TimetableExternalCalendarItemSchema,
+    );
+
+    expect(() => decode(7, strictJsonParseOptions)).toThrow();
   });
 
   it("rejects unsupported classreg excuse status types", () => {

@@ -213,12 +213,13 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           const messagePermissions = yield* client.messages.getPermissions();
           const quickfilters =
             yield* client.messages.getRecipientQuickfilters();
-          const staffFilter =
-            yield* client.messages.getRecipientFilter("STAFF");
-          const staffSearch = yield* client.messages.searchRecipients(
-            "STAFF",
-            "a",
-          );
+          const staffFilter = yield* client.messages.getRecipientFilter({
+            recipientOption: "STAFF",
+          });
+          const staffSearch = yield* client.messages.searchRecipients({
+            recipientOption: "STAFF",
+            searchText: "a",
+          });
           const sent = yield* client.messages.getSent();
           const messageStatus = yield* client.messages.getStatus();
           const messageId = inbox.incomingMessages[0]?.id;
@@ -229,8 +230,10 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           if (messageId === undefined) {
             throw new Error("Expected at least one inbox message");
           }
-          const detail = yield* client.messages.getMessage(messageId);
-          const replyForm = yield* client.messages.getReplyForm(messageId);
+          const detail = yield* client.messages.getMessage({ id: messageId });
+          const replyForm = yield* client.messages.getReplyForm({
+            id: messageId,
+          });
 
           expect(normalizeMessagesInbox(inbox)).toMatchSnapshot();
           expect(normalizeMessageDrafts(drafts)).toMatchSnapshot();
@@ -292,7 +295,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           if (examId === undefined) {
             throw new Error("Expected at least one exam");
           }
-          const detail = yield* client.exams.getExam(examId);
+          const detail = yield* client.exams.getExam({ id: examId });
 
           expect(normalizeExams(exams)).toMatchSnapshot();
           expect(normalizeExamFilter(filter)).toMatchSnapshot();

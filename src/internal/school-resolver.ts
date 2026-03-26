@@ -43,7 +43,7 @@ export class SchoolResolver extends ServiceMap.Service<
             clientConfig.serverUrl ??
             `https://${tenantHost}/WebUntis/?school=${clientConfig.schoolLoginName}`,
           schoolId: 0,
-          tenantId: clientConfig.tenantId ?? "unknown",
+          tenantId: clientConfig.tenantId,
         };
       };
 

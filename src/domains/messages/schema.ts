@@ -1,4 +1,5 @@
 import { Schema } from "effect";
+import { JsonObjectSchema } from "../shared/schema.ts";
 
 export const MessagesStatusSchema = Schema.Struct({
   unreadMessagesCount: Schema.Number,
@@ -30,7 +31,7 @@ export type MessageSummary = Schema.Schema.Type<typeof MessageSummarySchema>;
 
 export const MessagesInboxSchema = Schema.Struct({
   incomingMessages: Schema.Array(MessageSummarySchema),
-  readConfirmationMessages: Schema.Array(Schema.Unknown),
+  readConfirmationMessages: Schema.Array(JsonObjectSchema),
 });
 
 export type MessagesInbox = Schema.Schema.Type<typeof MessagesInboxSchema>;
@@ -110,6 +111,11 @@ export type MessageRecipientSearch = Schema.Schema.Type<
   typeof MessageRecipientSearchSchema
 >;
 
+export const MessageAttachmentSchema = JsonObjectSchema;
+export const MessageRecipientSchema = JsonObjectSchema;
+export const MessageReplyHistoryEntrySchema = JsonObjectSchema;
+export const MessageRequestConfirmationSchema = JsonObjectSchema;
+
 export const MessageDetailSchema = Schema.Struct({
   id: Schema.Number,
   subject: Schema.String,
@@ -117,15 +123,15 @@ export const MessageDetailSchema = Schema.Struct({
   sender: MessageSenderSchema,
   sentDateTime: Schema.String,
   allowMessageDeletion: Schema.Boolean,
-  attachments: Schema.Array(Schema.Unknown),
-  blobAttachment: Schema.NullOr(Schema.Unknown),
-  storageAttachments: Schema.Array(Schema.Unknown),
+  attachments: Schema.Array(MessageAttachmentSchema),
+  blobAttachment: Schema.NullOr(MessageAttachmentSchema),
+  storageAttachments: Schema.Array(MessageAttachmentSchema),
   isReply: Schema.Boolean,
   isReplyAllowed: Schema.Boolean,
   isReportMessage: Schema.Boolean,
   isReplyForbidden: Schema.Boolean,
-  replyHistory: Schema.Array(Schema.Unknown),
-  requestConfirmation: Schema.NullOr(Schema.Unknown),
+  replyHistory: Schema.Array(MessageReplyHistoryEntrySchema),
+  requestConfirmation: Schema.NullOr(MessageRequestConfirmationSchema),
 });
 
 export type MessageDetail = Schema.Schema.Type<typeof MessageDetailSchema>;
@@ -135,12 +141,12 @@ export const MessageReplyHistoryItemSchema = Schema.Struct({
   subject: Schema.String,
   content: Schema.NullOr(Schema.String),
   sender: MessageSenderSchema,
-  recipients: Schema.Array(Schema.Unknown),
+  recipients: Schema.Array(MessageRecipientSchema),
   sentDateTime: Schema.String,
   isRevoked: Schema.Boolean,
-  attachments: Schema.Array(Schema.Unknown),
-  blobAttachment: Schema.NullOr(Schema.Unknown),
-  storageAttachments: Schema.Array(Schema.Unknown),
+  attachments: Schema.Array(MessageAttachmentSchema),
+  blobAttachment: Schema.NullOr(MessageAttachmentSchema),
+  storageAttachments: Schema.Array(MessageAttachmentSchema),
 });
 
 export const MessageReplyFormSchema = Schema.Struct({
