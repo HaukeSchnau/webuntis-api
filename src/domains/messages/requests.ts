@@ -1,5 +1,6 @@
 import { RequestPolicy, schemaRequest } from "../../internal/request.ts";
 import {
+  MessageComposeRecipientsSchema,
   MessageDetailSchema,
   MessageDraftsSchema,
   MessageRecipientFilterSchema,
@@ -20,6 +21,12 @@ export interface MessageRecipientSearchRequest {
 
 export interface MessageRecipientFilterRequest {
   readonly recipientOption: MessageRecipientOption;
+}
+
+export interface MessageComposeRecipientsRequest {
+  readonly recipientOption: MessageRecipientOption;
+  readonly filters?: ReadonlyArray<unknown> | undefined;
+  readonly searchText?: string | undefined;
 }
 
 export interface MessageReplyFormRequest {
@@ -67,6 +74,20 @@ export const MessagesRequests = {
       `api/rest/view/v1/messages/recipients/${encodeURIComponent(request.recipientOption)}/filter`,
     policy: RequestPolicy.AuthOnly,
     schema: MessageRecipientFilterSchema,
+  }),
+  filterComposeRecipients: schemaRequest<
+    MessageComposeRecipientsRequest,
+    typeof MessageComposeRecipientsSchema
+  >({
+    method: "POST",
+    path: (request) =>
+      `api/rest/view/v2/messages/recipients/${encodeURIComponent(request.recipientOption)}/filter`,
+    body: (request) => ({
+      filters: request.filters ?? [],
+      searchText: request.searchText ?? "",
+    }),
+    policy: RequestPolicy.AuthOnly,
+    schema: MessageComposeRecipientsSchema,
   }),
   searchRecipients: schemaRequest<
     MessageRecipientSearchRequest,

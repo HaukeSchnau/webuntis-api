@@ -5,7 +5,9 @@ import {
   AppPlatformApplicationMenusSchema,
   AppThirdPartyDataSchema,
   ClassregAbsencesMetaSchema,
+  ClassregHomeworkListSchema,
   ClassregHomeworkMetaSchema,
+  ClassregLessonTopicsMetaSchema,
   DashboardCardsDetailSchema,
   DashboardCardsSchema,
   DashboardCardsStatusSchema,
@@ -14,6 +16,7 @@ import {
   ExamStatisticsSchema,
   ExamsSchema,
   HomeSchema,
+  MessageComposeRecipientsSchema,
   MessageDetailSchema,
   MessageDraftsSchema,
   MessageRecipientFilterSchema,
@@ -276,6 +279,36 @@ const fixtures = [
     },
   },
   {
+    name: "ClassregHomeworkList",
+    schema: ClassregHomeworkListSchema,
+    value: {
+      homeworkList: [
+        {
+          attachments: [],
+          id: 222,
+          createdByUser: "PER",
+          lessonId: 14894,
+          completed: false,
+          date: "2025-08-14",
+          dueDate: "2025-08-19",
+          remark: "",
+          subject: { id: 318, name: "sn1", nameShort: "sn1" },
+          homework: "Ideen fur ein Video einsammeln.",
+        },
+      ],
+    },
+  },
+  {
+    name: "ClassregLessonTopicsMeta",
+    schema: ClassregLessonTopicsMetaSchema,
+    value: {
+      teachingMethods: [],
+      blockTopicAllowed: true,
+      futureTopicAllowed: true,
+      oneDriveAllowed: false,
+    },
+  },
+  {
     name: "Exams",
     schema: ExamsSchema,
     value: {
@@ -409,6 +442,22 @@ const fixtures = [
         role: "STAFF",
       },
     ],
+  },
+  {
+    name: "MessageComposeRecipients",
+    schema: MessageComposeRecipientsSchema,
+    value: {
+      users: [
+        {
+          id: 7,
+          displayName: "SEI",
+          imageUrl: null,
+          role: "TEACHER",
+          tags: [],
+          className: null,
+        },
+      ],
+    },
   },
   {
     name: "MessageSent",

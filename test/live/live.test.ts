@@ -21,7 +21,9 @@ import {
   normalizeAppPlatformApplicationMenus,
   normalizeAppThirdPartyData,
   normalizeClassregAbsencesMeta,
+  normalizeClassregHomeworkList,
   normalizeClassregHomeworkMeta,
+  normalizeClassregLessonTopicsMeta,
   normalizeDashboardCards,
   normalizeDashboardCardsDetail,
   normalizeDashboardCardsStatus,
@@ -30,6 +32,7 @@ import {
   normalizeExamStatistics,
   normalizeExams,
   normalizeHome,
+  normalizeMessageComposeRecipients,
   normalizeMessageDetail,
   normalizeMessageDrafts,
   normalizeMessageRecipientFilter,
@@ -216,6 +219,11 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           const staffFilter = yield* client.messages.getRecipientFilter({
             recipientOption: "STAFF",
           });
+          const composeRecipients =
+            yield* client.messages.filterComposeRecipients({
+              recipientOption: "STAFF",
+              searchText: "sei",
+            });
           const staffSearch = yield* client.messages.searchRecipients({
             recipientOption: "STAFF",
             searchText: "a",
@@ -227,6 +235,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           expect(schoolyears.length).toBeGreaterThan(0);
           expect(messageId).toBeDefined();
           expect(staffFilter.filters.length).toBeGreaterThan(0);
+          expect(composeRecipients.users.length).toBeGreaterThan(0);
           if (messageId === undefined) {
             throw new Error("Expected at least one inbox message");
           }
@@ -247,6 +256,9 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             normalizeMessageRecipientFilter(staffFilter),
           ).toMatchSnapshot();
           expect(
+            normalizeMessageComposeRecipients(composeRecipients),
+          ).toMatchSnapshot();
+          expect(
             normalizeMessageRecipientSearch(staffSearch),
           ).toMatchSnapshot();
           expect(normalizeMessageSent(sent)).toMatchSnapshot();
@@ -258,12 +270,21 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
     );
 
     it.effect(
-      "reads classreg meta endpoints",
+      "reads classreg meta and homework endpoints",
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
+          const appData = yield* client.app.getData();
           const absencesMeta = yield* client.classreg.getAbsencesMeta();
           const homeworkMeta = yield* client.classreg.getHomeworkMeta();
+          const lessonTopicsMeta = yield* client.classreg.getLessonTopicsMeta();
+          const homeworkList = yield* client.classreg.getHomeworkList({
+            classId: null,
+            teacherId: null,
+            subjectId: null,
+            dateRange: appData.currentSchoolYear.dateRange,
+            dateRangeType: "SCHOOLYEAR",
+          });
 
           expect(absencesMeta.classes.length).toBeGreaterThan(0);
           expect(absencesMeta.reasons.length).toBeGreaterThan(0);
@@ -272,8 +293,14 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           expect(homeworkMeta.teachers.length).toBeGreaterThan(0);
           expect(homeworkMeta.subjects.length).toBeGreaterThan(0);
           expect(homeworkMeta.schoolYears.length).toBeGreaterThan(0);
+          expect(Array.isArray(lessonTopicsMeta.teachingMethods)).toBe(true);
+          expect(homeworkList.homeworkList.length).toBeGreaterThan(0);
           expect(normalizeClassregAbsencesMeta(absencesMeta)).toMatchSnapshot();
           expect(normalizeClassregHomeworkMeta(homeworkMeta)).toMatchSnapshot();
+          expect(
+            normalizeClassregLessonTopicsMeta(lessonTopicsMeta),
+          ).toMatchSnapshot();
+          expect(normalizeClassregHomeworkList(homeworkList)).toMatchSnapshot();
         }),
       30_000,
     );

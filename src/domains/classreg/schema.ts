@@ -1,5 +1,5 @@
 import { Schema } from "effect";
-import { DateRangeSchema } from "../shared/schema.ts";
+import { DateRangeSchema, JsonObjectSchema } from "../shared/schema.ts";
 
 export const ClassregIdNameSchema = Schema.Struct({
   id: Schema.Number,
@@ -61,4 +61,45 @@ export const ClassregHomeworkMetaSchema = Schema.Struct({
 
 export type ClassregHomeworkMeta = Schema.Schema.Type<
   typeof ClassregHomeworkMetaSchema
+>;
+
+export const ClassregHomeworkDateRangeTypeSchema = Schema.Literals([
+  "WEEK",
+  "SCHOOLYEAR",
+]);
+
+export type ClassregHomeworkDateRangeType = Schema.Schema.Type<
+  typeof ClassregHomeworkDateRangeTypeSchema
+>;
+
+export const ClassregHomeworkItemSchema = Schema.Struct({
+  attachments: Schema.Array(JsonObjectSchema),
+  id: Schema.Number,
+  createdByUser: Schema.String,
+  lessonId: Schema.Number,
+  completed: Schema.Boolean,
+  date: Schema.String,
+  dueDate: Schema.String,
+  remark: Schema.String,
+  subject: Schema.NullOr(ClassregIdNameShortSchema),
+  homework: Schema.String,
+});
+
+export const ClassregHomeworkListSchema = Schema.Struct({
+  homeworkList: Schema.Array(ClassregHomeworkItemSchema),
+});
+
+export type ClassregHomeworkList = Schema.Schema.Type<
+  typeof ClassregHomeworkListSchema
+>;
+
+export const ClassregLessonTopicsMetaSchema = Schema.Struct({
+  teachingMethods: Schema.Array(Schema.Unknown),
+  blockTopicAllowed: Schema.Boolean,
+  futureTopicAllowed: Schema.Boolean,
+  oneDriveAllowed: Schema.Boolean,
+});
+
+export type ClassregLessonTopicsMeta = Schema.Schema.Type<
+  typeof ClassregLessonTopicsMetaSchema
 >;

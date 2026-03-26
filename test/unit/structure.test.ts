@@ -2,6 +2,7 @@ import { describe, expect, it } from "@effect/vitest";
 import { Effect } from "effect";
 import { WebUntisClient } from "../../src/client.ts";
 import { AppClient } from "../../src/domains/app/index.ts";
+import { ClassregClient } from "../../src/domains/classreg/index.ts";
 import { MessagesClient } from "../../src/domains/messages/index.ts";
 import { TimetableClient } from "../../src/domains/timetable/index.ts";
 import * as api from "../../src/index.ts";
@@ -26,14 +27,18 @@ describe("public structure", () => {
     Effect.gen(function* () {
       const client = yield* WebUntisClient;
       const app = yield* AppClient;
+      const classreg = yield* ClassregClient;
       const messages = yield* MessagesClient;
       const timetable = yield* TimetableClient;
 
       expect(client.app).toBe(app);
+      expect(client.classreg).toBe(classreg);
       expect(client.messages).toBe(messages);
       expect(client.timetable).toBe(timetable);
       expect(typeof client.app.getHome).toBe("function");
+      expect(typeof client.classreg.getHomeworkList).toBe("function");
       expect(typeof client.messages.getStatus).toBe("function");
+      expect(typeof client.messages.filterComposeRecipients).toBe("function");
       expect(typeof client.timetable.getEntries).toBe("function");
     }).pipe(
       Effect.provide(

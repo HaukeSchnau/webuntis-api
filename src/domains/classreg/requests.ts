@@ -1,8 +1,22 @@
 import { RequestPolicy, schemaRequest } from "../../internal/request.ts";
 import {
   ClassregAbsencesMetaSchema,
+  type ClassregHomeworkDateRangeType,
+  ClassregHomeworkListSchema,
   ClassregHomeworkMetaSchema,
+  ClassregLessonTopicsMetaSchema,
 } from "./schema.ts";
+
+export interface ClassregHomeworkListRequest {
+  readonly classId: number | null;
+  readonly teacherId: number | null;
+  readonly subjectId: number | null;
+  readonly dateRange: {
+    readonly start: string;
+    readonly end: string;
+  };
+  readonly dateRangeType: ClassregHomeworkDateRangeType;
+}
 
 export const ClassregRequests = {
   getAbsencesMeta: schemaRequest<void, typeof ClassregAbsencesMetaSchema>({
@@ -16,5 +30,24 @@ export const ClassregRequests = {
     path: "api/rest/view/v1/classreg/homework/meta",
     policy: RequestPolicy.AuthOnly,
     schema: ClassregHomeworkMetaSchema,
+  }),
+  getHomeworkList: schemaRequest<
+    ClassregHomeworkListRequest,
+    typeof ClassregHomeworkListSchema
+  >({
+    method: "POST",
+    path: "api/rest/view/v1/classreg/homework/list",
+    body: (request) => request,
+    policy: RequestPolicy.AuthOnly,
+    schema: ClassregHomeworkListSchema,
+  }),
+  getLessonTopicsMeta: schemaRequest<
+    void,
+    typeof ClassregLessonTopicsMetaSchema
+  >({
+    method: "GET",
+    path: "api/rest/view/v1/classreg/lesson-topics/meta",
+    policy: RequestPolicy.AuthOnly,
+    schema: ClassregLessonTopicsMetaSchema,
   }),
 } as const;
