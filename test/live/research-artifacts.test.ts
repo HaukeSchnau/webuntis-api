@@ -20,6 +20,11 @@ const endpointCatalog = JSON.parse(
   ),
 ) as EndpointCatalog;
 
+const runtimeRouteMap = readFileSync(
+  new URL("../../docs/research/webuntis/runtime-route-map.md", import.meta.url),
+  "utf8",
+);
+
 const groupByFamily = (endpoints: ReadonlyArray<string>) =>
   Object.fromEntries(
     Object.entries(
@@ -45,5 +50,9 @@ describe("reverse-engineering artifacts", () => {
       familyCounts: groupByFamily(endpointCatalog.endpoints),
       endpoints: endpointCatalog.endpoints,
     }).toMatchSnapshot();
+  });
+
+  it("keeps the runtime route map stable", () => {
+    expect(runtimeRouteMap).toMatchSnapshot();
   });
 });
