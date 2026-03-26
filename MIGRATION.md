@@ -77,6 +77,7 @@ Before, raw view helpers and unstable routes leaked into the root export surface
 After:
 
 - raw view helpers are internal-only
+- schemas moved to the `webuntis-api/schemas` subpath
 - public mutating experimental profile routes are removed
 - the root package is intentionally read-only and stable-focused
 
@@ -117,6 +118,19 @@ Request behavior is now modeled explicitly:
 
 This mostly matters if you were working in repository internals or extending the client with new endpoints. New endpoints should follow the `requests.ts` plus `index.ts` domain pattern.
 
+Several non-trivial lookup methods also moved from positional arguments to request objects:
+
+```ts
+yield* messages.getRecipientFilter({ recipientOption: "STAFF" });
+yield* messages.searchRecipients({
+  recipientOption: "STAFF",
+  searchText: "anna",
+});
+yield* messages.getMessage({ id: 123 });
+yield* exams.getExam({ id: 42 });
+yield* timetable.getGrid({ timetableType: "STANDARD" });
+```
+
 ## Repo Layout
 
 The implementation moved from the older flat structure to:
@@ -131,6 +145,8 @@ If you maintained local patches on top of the old layout, expect path changes.
 
 1. Replace inferred client-factory types with `ServiceClass["Service"]` where needed.
 2. Update programs to `yield*` the specific domain services they use.
-3. Remove any dependency on root-exported raw or experimental write routes.
-4. Re-check env configuration, especially tenant pinning and `WEBUNTIS_SERVER_URL`.
-5. Run `bun run typecheck`, `bun run test:unit`, and your live suite.
+3. Switch schema imports to `webuntis-api/schemas`.
+4. Update positional lookup calls to the new request-object form.
+5. Remove any dependency on root-exported raw or experimental write routes.
+6. Re-check env configuration, especially tenant pinning and `WEBUNTIS_SERVER_URL`.
+7. Run `bun run typecheck`, `bun run test:unit`, and your live suite.

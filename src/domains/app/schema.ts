@@ -1,6 +1,7 @@
 import { Schema } from "effect";
 import {
   HolidaySchema,
+  JsonObjectSchema,
   SchoolyearSchema,
   SchoolyearWithTimeGridSchema,
   TenantSchema,
@@ -47,14 +48,16 @@ export type AppThirdPartyData = Schema.Schema.Type<
   typeof AppThirdPartyDataSchema
 >;
 
+export const DashboardCardSchema = JsonObjectSchema;
 export const DashboardCardsSchema = Schema.Struct({
-  dashboardCards: Schema.Array(Schema.Unknown),
+  dashboardCards: Schema.Array(DashboardCardSchema),
 });
 
 export type DashboardCards = Schema.Schema.Type<typeof DashboardCardsSchema>;
 
+export const DashboardCardsDetailItemSchema = JsonObjectSchema;
 export const DashboardCardsDetailSchema = Schema.Struct({
-  dashboardCardsDetails: Schema.Array(Schema.Unknown),
+  dashboardCardsDetails: Schema.Array(DashboardCardsDetailItemSchema),
 });
 
 export type DashboardCardsDetail = Schema.Schema.Type<
@@ -71,7 +74,7 @@ export type DashboardCardsStatus = Schema.Schema.Type<
 
 export const TodayMetaSchema = Schema.Struct({
   greetingName: Schema.String,
-  calendar: Schema.NullOr(Schema.Unknown),
+  calendar: Schema.NullOr(JsonObjectSchema),
 });
 
 export type TodayMeta = Schema.Schema.Type<typeof TodayMetaSchema>;
@@ -90,7 +93,7 @@ export const HomeCellTypeSchema = Schema.Literals([
 export type HomeCellType = Schema.Schema.Type<typeof HomeCellTypeSchema>;
 
 export const HomeCellSchema = Schema.Struct({
-  badge: Schema.NullOr(Schema.Unknown),
+  badge: Schema.NullOr(JsonObjectSchema),
   type: HomeCellTypeSchema,
 });
 
@@ -101,7 +104,7 @@ export const HomeSectionSchema = Schema.Struct({
 export const HomeSchema = Schema.Struct({
   schoolName: Schema.String,
   sections: Schema.Array(HomeSectionSchema),
-  integrationsSection: Schema.Array(Schema.Unknown),
+  integrationsSection: Schema.Array(JsonObjectSchema),
   isEmailUpdateRequired: Schema.Boolean,
 });
 
@@ -137,8 +140,8 @@ export type MobilePermission = Schema.Schema.Type<
 export const MobileUserSchema = Schema.Struct({
   id: Schema.Number,
   username: Schema.String,
-  person: Schema.NullOr(Schema.Unknown),
-  referencedStudents: Schema.Array(Schema.Unknown),
+  person: Schema.NullOr(JsonObjectSchema),
+  referencedStudents: Schema.Array(JsonObjectSchema),
   locale: Schema.String,
   departmentId: Schema.Number,
   role: Schema.String,

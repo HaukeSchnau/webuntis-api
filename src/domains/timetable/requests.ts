@@ -64,6 +64,10 @@ export interface TimetableEntriesWeekOverviewRequest {
   readonly timetableType?: string | undefined;
 }
 
+export interface TimetableGridRequest {
+  readonly timetableType?: string | undefined;
+}
+
 export const TimetableRequests = {
   getTimeGrid: schemaRequest<void, typeof TimeGridSchema>({
     method: "GET",
@@ -71,10 +75,12 @@ export const TimetableRequests = {
     policy: RequestPolicy.Metadata,
     schema: TimeGridSchema,
   }),
-  getGrid: schemaRequest<string | undefined, typeof TimetableGridSchema>({
+  getGrid: schemaRequest<TimetableGridRequest, typeof TimetableGridSchema>({
     method: "GET",
     path: "api/rest/view/v1/timetable/grid",
-    query: (timetableType) => ({ timetableType: timetableType ?? "STANDARD" }),
+    query: (request) => ({
+      timetableType: request.timetableType ?? "STANDARD",
+    }),
     policy: RequestPolicy.Metadata,
     schema: TimetableGridSchema,
   }),

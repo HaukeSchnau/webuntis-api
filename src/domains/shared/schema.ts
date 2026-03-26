@@ -1,5 +1,7 @@
 import { Schema } from "effect";
 
+export const JsonObjectSchema = Schema.Record(Schema.String, Schema.Json);
+
 export const DateRangeSchema = Schema.Struct({
   start: Schema.String,
   end: Schema.String,

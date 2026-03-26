@@ -1,8 +1,14 @@
 import { describe, expect, it } from "@effect/vitest";
-import { Effect } from "effect";
+import { Effect, Schema } from "effect";
 import { AuthClient } from "../../src/auth.ts";
+import { DecodeError } from "../../src/internal/errors.ts";
 import { WebUntisHttp } from "../../src/internal/http.ts";
-import { jsonResponse, makeCoreTestLayer, makeJwt } from "./helpers.ts";
+import {
+  jsonResponse,
+  makeCoreTestLayer,
+  makeJwt,
+  testConfig,
+} from "./helpers.ts";
 
 describe("bootstrap and transport", () => {
   it.effect(
@@ -114,7 +120,7 @@ describe("bootstrap and transport", () => {
   );
 
   it.effect(
-    "skips metadata bootstrap when the school-year header is disabled",
+    "skips metadata bootstrap when auth-only routes already know the tenant id",
     () => {
       let metadataCalls = 0;
       const finalHeaders: Array<Readonly<Record<string, string>>> = [];
@@ -133,35 +139,38 @@ describe("bootstrap and transport", () => {
         ).toBeUndefined();
       }).pipe(
         Effect.provide(
-          makeCoreTestLayer((request) => {
-            const { pathname } = new URL(request.url);
+          makeCoreTestLayer(
+            (request) => {
+              const { pathname } = new URL(request.url);
 
-            if (pathname.endsWith("/index.do")) {
-              return new Response("", {
-                status: 200,
-                headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
-              });
-            }
-            if (pathname.endsWith("/j_spring_security_check")) {
-              return new Response("", {
-                status: 302,
-                headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
-              });
-            }
-            if (pathname.endsWith("/api/token/new")) {
-              return new Response(makeJwt(), { status: 200 });
-            }
-            if (pathname.endsWith("/api/rest/view/v1/app/data")) {
-              metadataCalls += 1;
-              return jsonResponse({
-                currentSchoolYear: { id: 7 },
-                tenant: { id: "tenant-42" },
-              });
-            }
+              if (pathname.endsWith("/index.do")) {
+                return new Response("", {
+                  status: 200,
+                  headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
+                });
+              }
+              if (pathname.endsWith("/j_spring_security_check")) {
+                return new Response("", {
+                  status: 302,
+                  headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
+                });
+              }
+              if (pathname.endsWith("/api/token/new")) {
+                return new Response(makeJwt(), { status: 200 });
+              }
+              if (pathname.endsWith("/api/rest/view/v1/app/data")) {
+                metadataCalls += 1;
+                return jsonResponse({
+                  currentSchoolYear: { id: 7 },
+                  tenant: { id: "tenant-42" },
+                });
+              }
 
-            finalHeaders.push(request.headers);
-            return jsonResponse({ ok: true });
-          }),
+              finalHeaders.push(request.headers);
+              return jsonResponse({ ok: true });
+            },
+            { ...testConfig, tenantId: "tenant-42" },
+          ),
         ),
       );
     },
@@ -281,6 +290,78 @@ describe("bootstrap and transport", () => {
   );
 
   it.effect(
+    "bootstraps tenant metadata for auth-only routes when tenant id is not configured",
+    () => {
+      let metadataCalls = 0;
+      const finalHeaders: Array<Readonly<Record<string, string>>> = [];
+
+      return Effect.gen(function* () {
+        const http = yield* WebUntisHttp;
+        yield* http.get("api/rest/view/v1/schoolyears", {
+          policy: "auth-only",
+        });
+
+        expect(metadataCalls).toBe(1);
+        expect(finalHeaders).toHaveLength(1);
+        expect(
+          finalHeaders[0]?.["Tenant-Id"] ?? finalHeaders[0]?.["tenant-id"],
+        ).toBe("tenant-42");
+        expect(
+          finalHeaders[0]?.["x-webuntis-api-school-year-id"] ??
+            finalHeaders[0]?.["X-Webuntis-Api-School-Year-Id"],
+        ).toBeUndefined();
+      }).pipe(
+        Effect.provide(
+          makeCoreTestLayer((request) => {
+            const { pathname } = new URL(request.url);
+
+            if (pathname.endsWith("/index.do")) {
+              return new Response("", {
+                status: 200,
+                headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
+              });
+            }
+            if (pathname.endsWith("/j_spring_security_check")) {
+              return new Response("", {
+                status: 302,
+                headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
+              });
+            }
+            if (pathname.endsWith("/api/token/new")) {
+              return new Response(makeJwt(), { status: 200 });
+            }
+            if (pathname.endsWith("/api/rest/view/v1/app/data")) {
+              metadataCalls += 1;
+              return jsonResponse({
+                currentSchoolYear: { id: 7 },
+                tenant: { id: "tenant-42" },
+              });
+            }
+            if (pathname.endsWith("/api/rest/view/v1/schoolyears")) {
+              finalHeaders.push(request.headers);
+              return jsonResponse([
+                {
+                  id: 7,
+                  name: "2025/2026",
+                  dateRange: {
+                    start: "2026-03-16",
+                    end: "2026-03-20",
+                  },
+                },
+              ]);
+            }
+
+            throw new Error(
+              `Unexpected request: ${request.method} ${request.url}`,
+            );
+          }),
+        ),
+      );
+    },
+    30_000,
+  );
+
+  it.effect(
     "fails fast when the login handshake returns html instead of a redirect",
     () =>
       Effect.gen(function* () {
@@ -307,6 +388,119 @@ describe("bootstrap and transport", () => {
                   "content-type": "text/html",
                   "set-cookie": "JSESSIONID=login; Path=/;",
                 },
+              });
+            }
+
+            throw new Error(
+              `Unexpected request: ${request.method} ${request.url}`,
+            );
+          }),
+        ),
+      ),
+    30_000,
+  );
+
+  it.effect(
+    "maps malformed JSON responses to DecodeError through WebUntisHttp",
+    () =>
+      Effect.gen(function* () {
+        const http = yield* WebUntisHttp;
+        const error = yield* Effect.flip(
+          http.getSchema(
+            "api/rest/view/v1/messages/status",
+            Schema.Struct({
+              unreadMessagesCount: Schema.Number,
+            }),
+          ),
+        );
+
+        expect(error).toBeInstanceOf(DecodeError);
+      }).pipe(
+        Effect.provide(
+          makeCoreTestLayer((request) => {
+            const { pathname } = new URL(request.url);
+
+            if (pathname.endsWith("/index.do")) {
+              return new Response("", {
+                status: 200,
+                headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
+              });
+            }
+            if (pathname.endsWith("/j_spring_security_check")) {
+              return new Response("", {
+                status: 302,
+                headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
+              });
+            }
+            if (pathname.endsWith("/api/token/new")) {
+              return new Response(makeJwt(), { status: 200 });
+            }
+            if (pathname.endsWith("/api/rest/view/v1/app/data")) {
+              return jsonResponse({
+                currentSchoolYear: { id: 7 },
+                tenant: { id: "tenant-42" },
+              });
+            }
+            if (pathname.endsWith("/api/rest/view/v1/messages/status")) {
+              return new Response("{invalid-json", {
+                status: 200,
+                headers: { "content-type": "application/json" },
+              });
+            }
+
+            throw new Error(
+              `Unexpected request: ${request.method} ${request.url}`,
+            );
+          }),
+        ),
+      ),
+    30_000,
+  );
+
+  it.effect(
+    "maps schema drift responses to DecodeError through WebUntisHttp",
+    () =>
+      Effect.gen(function* () {
+        const http = yield* WebUntisHttp;
+        const error = yield* Effect.flip(
+          http.getSchema(
+            "api/rest/view/v1/messages/status",
+            Schema.Struct({
+              unreadMessagesCount: Schema.Number,
+            }),
+          ),
+        );
+
+        expect(error).toBeInstanceOf(DecodeError);
+      }).pipe(
+        Effect.provide(
+          makeCoreTestLayer((request) => {
+            const { pathname } = new URL(request.url);
+
+            if (pathname.endsWith("/index.do")) {
+              return new Response("", {
+                status: 200,
+                headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
+              });
+            }
+            if (pathname.endsWith("/j_spring_security_check")) {
+              return new Response("", {
+                status: 302,
+                headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
+              });
+            }
+            if (pathname.endsWith("/api/token/new")) {
+              return new Response(makeJwt(), { status: 200 });
+            }
+            if (pathname.endsWith("/api/rest/view/v1/app/data")) {
+              return jsonResponse({
+                currentSchoolYear: { id: 7 },
+                tenant: { id: "tenant-42" },
+              });
+            }
+            if (pathname.endsWith("/api/rest/view/v1/messages/status")) {
+              return jsonResponse({
+                unreadMessagesCount: "0",
               });
             }
 

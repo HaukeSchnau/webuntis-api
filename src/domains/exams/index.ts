@@ -1,7 +1,7 @@
 import { Effect, Layer, ServiceMap } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
-import { ExamsRequests } from "./requests.ts";
+import { type ExamDetailRequest, ExamsRequests } from "./requests.ts";
 import type {
   ExamDetail,
   ExamFilter,
@@ -13,7 +13,9 @@ export interface ExamsClientShape {
   readonly list: () => Effect.Effect<Exams, RequestFailure>;
   readonly getFilter: () => Effect.Effect<ExamFilter, RequestFailure>;
   readonly getStatistics: () => Effect.Effect<ExamStatistics, RequestFailure>;
-  readonly getExam: (id: number) => Effect.Effect<ExamDetail, RequestFailure>;
+  readonly getExam: (
+    request: ExamDetailRequest,
+  ) => Effect.Effect<ExamDetail, RequestFailure>;
 }
 
 export class ExamsClient extends ServiceMap.Service<
@@ -38,10 +40,14 @@ export class ExamsClient extends ServiceMap.Service<
             undefined,
           );
         }),
-        getExam: Effect.fn("ExamsClient.getExam")(function* (id: number) {
-          return yield* http.requestSchema(ExamsRequests.getExam, id);
+        getExam: Effect.fn("ExamsClient.getExam")(function* (
+          request: ExamDetailRequest,
+        ) {
+          return yield* http.requestSchema(ExamsRequests.getExam, request);
         }),
       });
     }),
   );
 }
+
+export type { ExamDetailRequest } from "./requests.ts";

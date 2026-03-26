@@ -154,8 +154,15 @@ The root package exports:
 - `ClientConfig`
 - `clientConfigFromEnv`
 - `makeWebUntisLayer`
+- `DiscoveryError`, `AuthError`, `TransportError`, `DecodeError`, and `ConfigurationError`
 
-The root package does not export internal raw view helpers or public mutating experimental profile routes.
+Schemas are exported from the dedicated subpath instead of the root barrel:
+
+```ts
+import { HomeSchema, TimetableEntriesSchema } from "webuntis-api/schemas";
+```
+
+The root package does not export internal raw view helpers, broad schema wildcards, or public mutating experimental profile routes.
 
 Internal runtime services such as `SchoolDiscovery`, `SchoolResolver`, `SessionState`, `MetadataState`, and `WebUntisHttp` are intentionally kept off the root barrel.
 
@@ -166,6 +173,17 @@ import type { AppClient, TimetableClient } from "webuntis-api";
 
 type AppService = AppClient["Service"];
 type TimetableService = TimetableClient["Service"];
+```
+
+The non-trivial id/filter methods now take request objects instead of positional parameters:
+
+```ts
+const exam = yield* exams.getExam({ id: 42 });
+const staff = yield* messages.getRecipientFilter({ recipientOption: "STAFF" });
+const results = yield* messages.searchRecipients({
+  recipientOption: "STAFF",
+  searchText: "anna",
+});
 ```
 
 ## Configuration
@@ -258,6 +276,6 @@ sops decrypt secrets/webuntis-live.env
 - Stable business routes belong on public domain services.
 - Reverse-engineering probes stay internal so the exported package surface remains coherent.
 - Snapshot churn in the live suite is treated as evidence of upstream change, not as noise to suppress.
-- Strict decoding is evidence-driven: we keep schemas narrow where behavior is stable and leave uncertain payloads opaque until the live API or shipped frontend code justifies tighter modeling.
+- Strict decoding is evidence-driven: we keep schemas narrow where behavior is stable and use structured JSON objects where upstream payloads are still intentionally loose.
 
-Reverse-engineering artifacts live under [`research/webuntis`](./research/webuntis).
+Reverse-engineering artifacts live under [`docs/research/webuntis`](./docs/research/webuntis).

@@ -14,6 +14,7 @@ import {
   type RequestDescriptor,
   RequestPolicy,
   type RequestPolicy as RequestPolicyType,
+  type ResolvedRequestDescriptor,
   resolveRequest,
   type SchemaRequestDescriptor,
 } from "./request.ts";
@@ -162,11 +163,13 @@ export class WebUntisHttp extends ServiceMap.Service<
             HttpClientRequest.bearerToken(state.token),
           );
 
-          request = HttpClientRequest.setHeader(
-            request,
-            "Tenant-Id",
-            state.tenantId,
-          );
+          if (state.tenantId !== undefined) {
+            request = HttpClientRequest.setHeader(
+              request,
+              "Tenant-Id",
+              state.tenantId,
+            );
+          }
 
           if (
             (options.policy ?? RequestPolicy.Metadata) ===
@@ -254,7 +257,18 @@ export class WebUntisHttp extends ServiceMap.Service<
       ) =>
         Effect.gen(function* () {
           const policy = options.policy ?? RequestPolicy.Metadata;
-          const state = yield* resolveState(policy);
+          const state =
+            policy === RequestPolicy.AuthOnly
+              ? yield* sessionState
+                  .ensureAuthenticated()
+                  .pipe(
+                    Effect.flatMap((session) =>
+                      session.tenantId !== undefined
+                        ? Effect.succeed(session)
+                        : metadataState.ensureMetadata(),
+                    ),
+                  )
+              : yield* metadataState.ensureMetadata();
           const initialResponse = yield* executeRequest(state, method, path, {
             ...options,
             policy,
@@ -326,15 +340,19 @@ export class WebUntisHttp extends ServiceMap.Service<
           ),
         );
 
-      const request: WebUntisHttpShape["request"] = (descriptor, input) => {
-        const resolved = resolveRequest(descriptor, input);
-
-        return execute(resolved.method, resolved.path, {
+      const executeResolved = (
+        resolved: ResolvedRequestDescriptor,
+      ): Effect.Effect<HttpClientResponse.HttpClientResponse, RequestFailure> =>
+        execute(resolved.method, resolved.path, {
           body: resolved.body,
           headers: resolved.headers,
           policy: resolved.policy,
           query: resolved.query,
         });
+
+      const request: WebUntisHttpShape["request"] = (descriptor, input) => {
+        const resolved = resolveRequest(descriptor, input);
+        return executeResolved(resolved);
       };
 
       const requestJson: WebUntisHttpShape["requestJson"] = (
@@ -342,8 +360,7 @@ export class WebUntisHttp extends ServiceMap.Service<
         input,
       ) => {
         const resolved = resolveRequest(descriptor, input);
-
-        return decodeJson(resolved.path, request(descriptor, input));
+        return decodeJson(resolved.path, executeResolved(resolved));
       };
 
       const requestSchema: WebUntisHttpShape["requestSchema"] = (
@@ -355,7 +372,7 @@ export class WebUntisHttp extends ServiceMap.Service<
         return decodeSchema(
           resolved.path,
           descriptor.schema,
-          request(descriptor, input),
+          executeResolved(resolved),
         );
       };
 

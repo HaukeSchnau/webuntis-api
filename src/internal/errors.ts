@@ -1,39 +1,60 @@
-import { Data } from "effect";
+import { Schema } from "effect";
 import * as HttpClientError from "effect/unstable/http/HttpClientError";
 
-export class DiscoveryError extends Data.TaggedError("DiscoveryError")<{
-  readonly query: string;
-  readonly message: string;
-  readonly matches?: ReadonlyArray<string> | undefined;
-  readonly cause?: unknown;
-}> {}
+export class DiscoveryError extends Schema.TaggedErrorClass<DiscoveryError>()(
+  "DiscoveryError",
+  {
+    query: Schema.String,
+    message: Schema.String,
+    matches: Schema.optional(Schema.Array(Schema.String)),
+    cause: Schema.optional(Schema.Unknown),
+  },
+) {}
 
-export class AuthError extends Data.TaggedError("AuthError")<{
-  readonly stage: "discovery" | "bootstrap" | "login" | "token" | "metadata";
-  readonly message: string;
-  readonly status?: number | undefined;
-  readonly cause?: unknown;
-}> {}
+export class AuthError extends Schema.TaggedErrorClass<AuthError>()(
+  "AuthError",
+  {
+    stage: Schema.Literals([
+      "discovery",
+      "bootstrap",
+      "login",
+      "token",
+      "metadata",
+    ]),
+    message: Schema.String,
+    status: Schema.optional(Schema.Number),
+    cause: Schema.optional(Schema.Unknown),
+  },
+) {}
 
-export class TransportError extends Data.TaggedError("TransportError")<{
-  readonly method: string;
-  readonly path: string;
-  readonly message: string;
-  readonly status?: number | undefined;
-  readonly body?: string | undefined;
-  readonly cause?: unknown;
-}> {}
+export class TransportError extends Schema.TaggedErrorClass<TransportError>()(
+  "TransportError",
+  {
+    method: Schema.String,
+    path: Schema.String,
+    message: Schema.String,
+    status: Schema.optional(Schema.Number),
+    body: Schema.optional(Schema.String),
+    cause: Schema.optional(Schema.Unknown),
+  },
+) {}
 
-export class DecodeError extends Data.TaggedError("DecodeError")<{
-  readonly path: string;
-  readonly message: string;
-  readonly cause?: unknown;
-}> {}
+export class DecodeError extends Schema.TaggedErrorClass<DecodeError>()(
+  "DecodeError",
+  {
+    path: Schema.String,
+    message: Schema.String,
+    cause: Schema.optional(Schema.Unknown),
+  },
+) {}
 
-export class ConfigurationError extends Data.TaggedError("ConfigurationError")<{
-  readonly message: string;
-  readonly cause?: unknown;
-}> {}
+export class ConfigurationError extends Schema.TaggedErrorClass<ConfigurationError>()(
+  "ConfigurationError",
+  {
+    message: Schema.String,
+    cause: Schema.optional(Schema.Unknown),
+  },
+) {}
 
 export type WebUntisError =
   | DiscoveryError
