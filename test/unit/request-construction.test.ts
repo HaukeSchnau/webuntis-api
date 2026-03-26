@@ -15,7 +15,27 @@ interface ObservedRequest {
   readonly url: URL;
   readonly query: Readonly<Record<string, string>>;
   readonly headers: Readonly<Record<string, string>>;
+  readonly body: string | undefined;
 }
+
+const decodeBody = (body: {
+  readonly _tag: string;
+  readonly body?: unknown;
+}) => {
+  if (body._tag === "Empty") {
+    return undefined;
+  }
+  if (body._tag === "Uint8Array" && body.body instanceof Uint8Array) {
+    return new TextDecoder().decode(body.body);
+  }
+  if (body._tag === "Raw") {
+    return typeof body.body === "string"
+      ? body.body
+      : JSON.stringify(body.body);
+  }
+
+  return undefined;
+};
 
 const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
   makeCoreTestLayer((request) => {
@@ -50,6 +70,7 @@ const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
         Array.from(request.urlParams, ([key, value]) => [key, String(value)]),
       ),
       headers: request.headers,
+      body: decodeBody(request.body),
     });
 
     switch (url.pathname) {
@@ -73,6 +94,34 @@ const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
                 end: "2026-03-20",
               },
               parentId: 0,
+            },
+          ],
+        });
+      case "/WebUntis/api/rest/view/v1/classreg/lesson-topics/meta":
+        return jsonResponse({
+          teachingMethods: [],
+          blockTopicAllowed: true,
+          futureTopicAllowed: true,
+          oneDriveAllowed: false,
+        });
+      case "/WebUntis/api/rest/view/v1/classreg/homework/list":
+        return jsonResponse({
+          homeworkList: [
+            {
+              attachments: [],
+              id: 222,
+              createdByUser: "PER",
+              lessonId: 14894,
+              completed: false,
+              date: "2025-08-14",
+              dueDate: "2025-08-19",
+              remark: "",
+              subject: {
+                id: 318,
+                name: "sn1",
+                nameShort: "sn1",
+              },
+              homework: "Ideen fur ein Video einsammeln.",
             },
           ],
         });
@@ -157,6 +206,19 @@ const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
             {
               type: "STAFF",
               items: ["Teachers"],
+            },
+          ],
+        });
+      case "/WebUntis/api/rest/view/v2/messages/recipients/STAFF/filter":
+        return jsonResponse({
+          users: [
+            {
+              id: 7,
+              displayName: "SEI",
+              imageUrl: null,
+              role: "TEACHER",
+              tags: [],
+              className: null,
             },
           ],
         });
@@ -314,18 +376,63 @@ describe("request descriptors", () => {
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
 
-  it.effect("classreg routes stay auth-only", () => {
+  it.effect("classreg read-only routes use the proven live contracts", () => {
     const observed: Array<ObservedRequest> = [];
 
     return Effect.gen(function* () {
       const classreg = yield* ClassregClient;
       yield* classreg.getHomeworkMeta();
 
-      const request = getLast(observed);
-      expect(request.url.pathname).toBe(
+      const homeworkMetaRequest = getLast(observed);
+      expect(homeworkMetaRequest.url.pathname).toBe(
         "/WebUntis/api/rest/view/v1/classreg/homework/meta",
       );
-      expect(request.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
+      expect(
+        homeworkMetaRequest.headers["x-webuntis-api-school-year-id"],
+      ).toBeUndefined();
+
+      yield* classreg.getLessonTopicsMeta();
+
+      const lessonTopicsMetaRequest = getLast(observed);
+      expect(lessonTopicsMetaRequest.method).toBe("GET");
+      expect(lessonTopicsMetaRequest.url.pathname).toBe(
+        "/WebUntis/api/rest/view/v1/classreg/lesson-topics/meta",
+      );
+      expect(
+        lessonTopicsMetaRequest.headers["x-webuntis-api-school-year-id"],
+      ).toBeUndefined();
+
+      yield* classreg.getHomeworkList({
+        classId: null,
+        teacherId: null,
+        subjectId: null,
+        dateRange: {
+          start: "2025-08-14",
+          end: "2026-07-01",
+        },
+        dateRangeType: "SCHOOLYEAR",
+      });
+
+      const homeworkListRequest = getLast(observed);
+      expect(homeworkListRequest.method).toBe("POST");
+      expect(homeworkListRequest.url.pathname).toBe(
+        "/WebUntis/api/rest/view/v1/classreg/homework/list",
+      );
+      expect(homeworkListRequest.body).toBe(
+        JSON.stringify({
+          classId: null,
+          teacherId: null,
+          subjectId: null,
+          dateRange: {
+            start: "2025-08-14",
+            end: "2026-07-01",
+          },
+          dateRangeType: "SCHOOLYEAR",
+        }),
+      );
+      expect(
+        homeworkListRequest.headers["x-webuntis-api-school-year-id"],
+      ).toBeUndefined();
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
 
@@ -364,33 +471,56 @@ describe("request descriptors", () => {
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
 
-  it.effect("message recipient routes use request-object inputs", () => {
-    const observed: Array<ObservedRequest> = [];
+  it.effect(
+    "message recipient routes keep legacy v1 and additive v2 contracts",
+    () => {
+      const observed: Array<ObservedRequest> = [];
 
-    return Effect.gen(function* () {
-      const messages = yield* MessagesClient;
-      yield* messages.getRecipientFilter({ recipientOption: "STAFF" });
+      return Effect.gen(function* () {
+        const messages = yield* MessagesClient;
+        yield* messages.getRecipientFilter({ recipientOption: "STAFF" });
 
-      const filterRequest = getLast(observed);
-      expect(filterRequest.url.pathname).toBe(
-        "/WebUntis/api/rest/view/v1/messages/recipients/STAFF/filter",
-      );
+        const filterRequest = getLast(observed);
+        expect(filterRequest.url.pathname).toBe(
+          "/WebUntis/api/rest/view/v1/messages/recipients/STAFF/filter",
+        );
 
-      yield* messages.searchRecipients({
-        recipientOption: "STAFF",
-        searchText: "anna",
-      });
+        yield* messages.filterComposeRecipients({
+          recipientOption: "STAFF",
+          searchText: "sei",
+        });
 
-      const searchRequest = getLast(observed);
-      expect(searchRequest.url.pathname).toBe(
-        "/WebUntis/api/rest/view/v1/messages/recipients/STAFF/search",
-      );
-      expect(searchRequest.query["searchText"]).toBe("anna");
-      expect(
-        searchRequest.headers["x-webuntis-api-school-year-id"],
-      ).toBeUndefined();
-    }).pipe(Effect.provide(makeRecorderLayer(observed)));
-  });
+        const composeRequest = getLast(observed);
+        expect(composeRequest.method).toBe("POST");
+        expect(composeRequest.url.pathname).toBe(
+          "/WebUntis/api/rest/view/v2/messages/recipients/STAFF/filter",
+        );
+        expect(composeRequest.body).toBe(
+          JSON.stringify({
+            filters: [],
+            searchText: "sei",
+          }),
+        );
+        expect(
+          composeRequest.headers["x-webuntis-api-school-year-id"],
+        ).toBeUndefined();
+
+        yield* messages.searchRecipients({
+          recipientOption: "STAFF",
+          searchText: "anna",
+        });
+
+        const searchRequest = getLast(observed);
+        expect(searchRequest.url.pathname).toBe(
+          "/WebUntis/api/rest/view/v1/messages/recipients/STAFF/search",
+        );
+        expect(searchRequest.query["searchText"]).toBe("anna");
+        expect(
+          searchRequest.headers["x-webuntis-api-school-year-id"],
+        ).toBeUndefined();
+      }).pipe(Effect.provide(makeRecorderLayer(observed)));
+    },
+  );
 
   it.effect("message detail routes use request-object ids", () => {
     const observed: Array<ObservedRequest> = [];

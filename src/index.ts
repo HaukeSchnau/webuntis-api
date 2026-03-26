@@ -8,10 +8,12 @@ export {
 } from "./client.ts";
 export type { OnboardingRequest } from "./domains/app/index.ts";
 export { AppClient } from "./domains/app/index.ts";
+export type { ClassregHomeworkListRequest } from "./domains/classreg/index.ts";
 export { ClassregClient } from "./domains/classreg/index.ts";
 export type { ExamDetailRequest } from "./domains/exams/index.ts";
 export { ExamsClient } from "./domains/exams/index.ts";
 export type {
+  MessageComposeRecipientsRequest,
   MessageDetailRequest,
   MessageRecipientFilterRequest,
   MessageRecipientSearchRequest,

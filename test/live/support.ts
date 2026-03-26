@@ -3,7 +3,9 @@ import type {
   AppPlatformApplicationMenus,
   AppThirdPartyData,
   ClassregAbsencesMeta,
+  ClassregHomeworkList,
   ClassregHomeworkMeta,
+  ClassregLessonTopicsMeta,
   DashboardCards,
   DashboardCardsDetail,
   DashboardCardsStatus,
@@ -12,6 +14,7 @@ import type {
   ExamStatistics,
   Exams,
   Home,
+  MessageComposeRecipients,
   MessageDetail,
   MessageDrafts,
   MessageRecipientFilter,
@@ -105,8 +108,13 @@ export const normalizeAppThirdPartyData = (value: AppThirdPartyData) =>
   normalizeUnknown(value);
 export const normalizeClassregAbsencesMeta = (value: ClassregAbsencesMeta) =>
   normalizeUnknown(value);
+export const normalizeClassregHomeworkList = (value: ClassregHomeworkList) =>
+  normalizeUnknown(value);
 export const normalizeClassregHomeworkMeta = (value: ClassregHomeworkMeta) =>
   normalizeUnknown(value);
+export const normalizeClassregLessonTopicsMeta = (
+  value: ClassregLessonTopicsMeta,
+) => normalizeUnknown(value);
 export const normalizeDashboardCards = (value: DashboardCards) =>
   normalizeUnknown(value);
 export const normalizeDashboardCardsDetail = (value: DashboardCardsDetail) =>
@@ -121,6 +129,9 @@ export const normalizeExams = (value: Exams) => normalizeUnknown(value);
 export const normalizeExamStatistics = (value: ExamStatistics) =>
   normalizeUnknown(value);
 export const normalizeHome = (value: Home) => normalizeUnknown(value);
+export const normalizeMessageComposeRecipients = (
+  value: MessageComposeRecipients,
+) => normalizeUnknown(value);
 export const normalizeMessageDetail = (value: MessageDetail) =>
   normalizeUnknown(value);
 export const normalizeMessageDrafts = (value: MessageDrafts) =>

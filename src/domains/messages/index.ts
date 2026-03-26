@@ -2,6 +2,7 @@ import { Effect, Layer, ServiceMap } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
 import {
+  type MessageComposeRecipientsRequest,
   type MessageDetailRequest,
   type MessageRecipientFilterRequest,
   type MessageRecipientSearchRequest,
@@ -9,6 +10,7 @@ import {
   MessagesRequests,
 } from "./requests.ts";
 import type {
+  MessageComposeRecipients,
   MessageDetail,
   MessageDrafts,
   MessageRecipientFilter,
@@ -35,6 +37,9 @@ export interface MessagesClientShape {
   readonly getRecipientFilter: (
     request: MessageRecipientFilterRequest,
   ) => Effect.Effect<MessageRecipientFilter, RequestFailure>;
+  readonly filterComposeRecipients: (
+    request: MessageComposeRecipientsRequest,
+  ) => Effect.Effect<MessageComposeRecipients, RequestFailure>;
   readonly searchRecipients: (
     request: MessageRecipientSearchRequest,
   ) => Effect.Effect<MessageRecipientSearch, RequestFailure>;
@@ -94,6 +99,14 @@ export class MessagesClient extends ServiceMap.Service<
             );
           },
         ),
+        filterComposeRecipients: Effect.fn(
+          "MessagesClient.filterComposeRecipients",
+        )(function* (request: MessageComposeRecipientsRequest) {
+          return yield* http.requestSchema(
+            MessagesRequests.filterComposeRecipients,
+            request,
+          );
+        }),
         searchRecipients: Effect.fn("MessagesClient.searchRecipients")(
           function* (request: MessageRecipientSearchRequest) {
             return yield* http.requestSchema(
@@ -133,6 +146,7 @@ export class MessagesClient extends ServiceMap.Service<
 }
 
 export type {
+  MessageComposeRecipientsRequest,
   MessageDetailRequest,
   MessageRecipientFilterRequest,
   MessageRecipientSearchRequest,

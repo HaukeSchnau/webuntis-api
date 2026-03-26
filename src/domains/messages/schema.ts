@@ -111,6 +111,23 @@ export type MessageRecipientSearch = Schema.Schema.Type<
   typeof MessageRecipientSearchSchema
 >;
 
+export const MessageComposeRecipientUserSchema = Schema.Struct({
+  id: Schema.Number,
+  displayName: Schema.String,
+  imageUrl: Schema.NullOr(Schema.String),
+  role: Schema.String,
+  tags: Schema.Array(Schema.Unknown),
+  className: Schema.NullOr(Schema.String),
+});
+
+export const MessageComposeRecipientsSchema = Schema.Struct({
+  users: Schema.Array(MessageComposeRecipientUserSchema),
+});
+
+export type MessageComposeRecipients = Schema.Schema.Type<
+  typeof MessageComposeRecipientsSchema
+>;
+
 export const MessageAttachmentSchema = JsonObjectSchema;
 export const MessageRecipientSchema = JsonObjectSchema;
 export const MessageReplyHistoryEntrySchema = JsonObjectSchema;

@@ -1,8 +1,16 @@
 import { Effect, Layer, ServiceMap } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
-import { ClassregRequests } from "./requests.ts";
-import type { ClassregAbsencesMeta, ClassregHomeworkMeta } from "./schema.ts";
+import {
+  ClassregRequests,
+  type ClassregHomeworkListRequest,
+} from "./requests.ts";
+import type {
+  ClassregAbsencesMeta,
+  ClassregHomeworkList,
+  ClassregHomeworkMeta,
+  ClassregLessonTopicsMeta,
+} from "./schema.ts";
 
 export interface ClassregClientShape {
   readonly getAbsencesMeta: () => Effect.Effect<
@@ -11,6 +19,13 @@ export interface ClassregClientShape {
   >;
   readonly getHomeworkMeta: () => Effect.Effect<
     ClassregHomeworkMeta,
+    RequestFailure
+  >;
+  readonly getHomeworkList: (
+    request: ClassregHomeworkListRequest,
+  ) => Effect.Effect<ClassregHomeworkList, RequestFailure>;
+  readonly getLessonTopicsMeta: () => Effect.Effect<
+    ClassregLessonTopicsMeta,
     RequestFailure
   >;
 }
@@ -41,7 +56,25 @@ export class ClassregClient extends ServiceMap.Service<
             );
           },
         ),
+        getHomeworkList: Effect.fn("ClassregClient.getHomeworkList")(function* (
+          request: ClassregHomeworkListRequest,
+        ) {
+          return yield* http.requestSchema(
+            ClassregRequests.getHomeworkList,
+            request,
+          );
+        }),
+        getLessonTopicsMeta: Effect.fn("ClassregClient.getLessonTopicsMeta")(
+          function* () {
+            return yield* http.requestSchema(
+              ClassregRequests.getLessonTopicsMeta,
+              undefined,
+            );
+          },
+        ),
       });
     }),
   );
 }
+
+export type { ClassregHomeworkListRequest } from "./requests.ts";
