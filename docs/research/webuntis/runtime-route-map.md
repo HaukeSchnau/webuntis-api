@@ -127,9 +127,9 @@ It is narrower than `modern-rest-endpoints.json`: only routes and requests that 
   - `GET /WebUntis/api/token/new`
 - Section-specific traffic: not observed
 - Notes:
-  - This route appeared lazy-loaded or interaction-gated in this pass.
-  - The screen chrome and sub-navigation rendered, but no dedicated `teacher-lessons` data route fired before further interaction.
-  - Treat the absence of section-specific traffic here as an observation, not proof that no such endpoint exists.
+  - The route loaded an embedded legacy shell via `https://igs-lilienthal.webuntis.com/WebUntis/embedded.do?showSidebar=true`.
+  - No modern `api/rest/view/...` request fired on initial route load in this pass.
+  - Treat this as evidence that the top-level `Unterricht` shell still delegates to legacy WebUntis before deeper interaction, not proof that no modern subview endpoints exist.
 
 ### `/messages/lists`
 
@@ -167,7 +167,7 @@ It is narrower than `modern-rest-endpoints.json`: only routes and requests that 
 - Section-specific traffic: yes
 - Notes:
   - The current public client already covers `exams` and `exams/filter`.
-  - The additional `app/platform-application/exam-integrations` request was emitted by the live UI and is not currently modeled in `src/domains/app`.
+  - The additional `app/platform-application/exam-integrations` request is emitted by the live UI and is now modeled in `AppClient.getExamIntegrations()`.
 
 ### `/exam-statistics`
 
@@ -205,8 +205,9 @@ It is narrower than `modern-rest-endpoints.json`: only routes and requests that 
   - no dedicated class-register read route observed before further interaction
 - Section-specific traffic: not observed
 - Notes:
-  - The top-level class-register shell rendered, but it did not eagerly fetch a dedicated `classreg` read model on first load in this session.
-  - Treat this as a lazy-loading observation rather than proof that the route is data-free.
+  - The route loaded an embedded legacy shell via `https://igs-lilienthal.webuntis.com/WebUntis/embedded.do?showSidebar=true`.
+  - No modern `api/rest/view/...` request fired on initial route load in this pass.
+  - Treat this as evidence that the top-level `Klassenbuch` screen is a legacy wrapper on first load, not proof that the route is data-free.
 
 ### `/homework`
 
@@ -243,7 +244,7 @@ It is narrower than `modern-rest-endpoints.json`: only routes and requests that 
   - This route currently looked like another lazy shell.
   - Further exploration would need a report-specific selector or filter interaction to reveal the backing read endpoints, if any.
 
-### `/profile`
+### `/contact-details`
 
 - Visible entrypoint: top-level `Kontaktdaten`
 - Visible sub-navigation: none beyond the global left navigation in this session
@@ -251,8 +252,9 @@ It is narrower than `modern-rest-endpoints.json`: only routes and requests that 
   - no dedicated profile read route observed before further interaction
 - Section-specific traffic: not observed
 - Notes:
-  - The route itself did not eagerly call `v1/profile/user-contact-data` or `v1/profile/user-email` during this browser pass.
-  - That does not invalidate the existing client coverage, but it means the SPA route-to-endpoint mapping for contact data is still incomplete.
+  - The route loaded an embedded legacy shell via `https://igs-lilienthal.webuntis.com/WebUntis/embedded.do?showSidebar=true`.
+  - No modern `api/rest/view/...` request fired on initial route load in this pass, including `v1/profile/user-contact-data` and `v1/profile/user-email`.
+  - That does not invalidate the existing client coverage, but it means the route-level mapping for contact data currently points to a legacy wrapper rather than a modern SPA screen.
 
 ## Message Compose Flow
 
@@ -283,17 +285,15 @@ Drift note:
 
 - The route map shows a mixed-version frontend rather than a clean all-`v2` migration.
 - Top-level list and timetable screens still lean heavily on `v1`.
+- Several seemingly missing top-level surfaces are not modern REST screens at all on first load; they currently resolve to legacy `embedded.do` wrappers.
 - Newer compose-recipient behavior has already moved at least one live interaction to `v2`.
 - The most likely next implementation target is a focused follow-up on message recipient route compatibility, ideally with cross-tenant caution before changing the public client behavior.
 
 ## Read-Only Blind Spots
 
-- Missing route coverage:
-  - `GET /WebUntis/api/rest/view/v1/app/platform-application/exam-integrations` is emitted by the live `Prüfungen` surface and is not currently exposed by the client.
 - Route mapping still incomplete:
-  - `Kontaktdaten` currently resolves to `/profile`, but this browser pass did not reveal which interaction actually triggers the proven `profile/user-contact-data` and `profile/user-email` endpoints.
-  - `Klassenbuch` resolves to `/absences`, but the shell does not eagerly reveal which endpoints back `Abwesenheiten`, `Fehlzeiten`, `Klassendienste`, or `Befreiungen`.
-  - `Unterricht` subviews such as `Lehrkraft`, `Klasse`, `Schüler*in`, `Lehrkraft - Tag`, `Klasse - Tag`, and `Stundenliste Klasse` still need route-by-route probing with deeper interaction.
+  - `Kontaktdaten` currently resolves to `/contact-details`, but the route loads a legacy embedded shell and this browser pass did not reveal which interaction actually triggers the proven `profile/user-contact-data` and `profile/user-email` endpoints.
+  - `Klassenbuch` resolves to `/absences`, but the shell loads legacy `embedded.do` content before it reveals which endpoints back `Abwesenheiten`, `Fehlzeiten`, `Klassendienste`, or `Befreiungen`.
+  - `Unterricht` subviews such as `Lehrkraft`, `Klasse`, `Schüler*in`, `Lehrkraft - Tag`, `Klasse - Tag`, and `Stundenliste Klasse` still need route-by-route probing inside the legacy shell or on directly opened modern subviews.
 - Schema follow-up opportunities:
-  - If `exam-integrations` is added, it should ship with a strict schema instead of another raw JSON passthrough.
   - The browser evidence around `exams/statistics` suggests a follow-up raw payload capture would be worthwhile to tighten remaining generic shapes such as `countPerGrade`.
