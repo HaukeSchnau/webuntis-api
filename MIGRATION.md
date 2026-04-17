@@ -4,7 +4,7 @@ This release intentionally reshapes the package toward explicit Effect v4 servic
 
 ## High-Level Changes
 
-- Services now follow the `Context.Service` style directly.
+- Services now follow the `ServiceMap.Service` style directly.
 - The package exports first-class domain services instead of pushing everything through inferred client factory types.
 - Request construction now goes through reusable typed descriptors.
 - Internal or unstable helpers are no longer exported from the package root.
