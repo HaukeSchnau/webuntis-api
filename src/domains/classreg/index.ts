@@ -2,8 +2,8 @@ import { Context, Effect, Layer } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
 import {
-  ClassregRequests,
   type ClassregHomeworkListRequest,
+  ClassregRequests,
 } from "./requests.ts";
 import type {
   ClassregAbsencesMeta,

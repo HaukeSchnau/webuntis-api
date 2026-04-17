@@ -119,9 +119,13 @@ export class SchoolDiscovery extends Context.Service<
       const resolve: SchoolDiscoveryShape["resolve"] = (query) =>
         search(query).pipe(
           Effect.flatMap((schools) => {
+            const normalizedQuery = query.trim().toLowerCase();
             const exactMatches = schools.filter(
               (school) =>
-                school.displayName.toLowerCase() === query.toLowerCase(),
+                school.displayName.toLowerCase() === normalizedQuery ||
+                school.loginName.toLowerCase() === normalizedQuery ||
+                school.server.toLowerCase() === normalizedQuery ||
+                school.serverUrl.toLowerCase() === normalizedQuery,
             );
 
             if (exactMatches.length === 1) {
@@ -148,6 +152,13 @@ export class SchoolDiscovery extends Context.Service<
                   message: `No WebUntis tenant matched ${JSON.stringify(query)}`,
                 }),
               );
+            }
+
+            if (schools.length === 1) {
+              const match = schools[0];
+              if (match !== undefined) {
+                return Effect.succeed(match);
+              }
             }
 
             return Effect.fail(
