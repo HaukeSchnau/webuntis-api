@@ -1,4 +1,4 @@
-import { Effect, Layer, ServiceMap } from "effect";
+import { Context, Effect, Layer } from "effect";
 import type {
   AuthError,
   DecodeError,
@@ -21,10 +21,9 @@ export interface AuthClientShape {
   readonly clear: () => Effect.Effect<void>;
 }
 
-export class AuthClient extends ServiceMap.Service<
-  AuthClient,
-  AuthClientShape
->()("webuntis/AuthClient") {
+export class AuthClient extends Context.Service<AuthClient, AuthClientShape>()(
+  "webuntis/AuthClient",
+) {
   static readonly layerNoDeps = Layer.effect(
     this,
     Effect.gen(function* () {

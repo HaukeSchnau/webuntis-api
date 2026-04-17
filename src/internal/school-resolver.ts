@@ -1,4 +1,4 @@
-import { Effect, Layer, ServiceMap, SynchronizedRef } from "effect";
+import { Context, Effect, Layer, SynchronizedRef } from "effect";
 import { ClientConfig } from "./config.ts";
 import { SchoolDiscovery } from "./discovery.ts";
 import type { DecodeError, DiscoveryError, TransportError } from "./errors.ts";
@@ -13,7 +13,7 @@ export interface SchoolResolverShape {
   readonly clear: () => Effect.Effect<void>;
 }
 
-export class SchoolResolver extends ServiceMap.Service<
+export class SchoolResolver extends Context.Service<
   SchoolResolver,
   SchoolResolverShape
 >()("webuntis/internal/SchoolResolver") {

@@ -21,13 +21,13 @@
     "format:check": "biome format ."
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.8",
-    "@types/node": "^24.6.1",
-    "vitest": "^4.0.18"
+    "@biomejs/biome": "^2.4.12",
+    "@types/node": "^25.6.0",
+    "vitest": "^4.1.4"
   },
   "dependencies": {
-    "@effect/vitest": "^4.0.0-beta.30",
-    "@typescript/native-preview": "^7.0.0-dev.20260311.1",
-    "effect": "^4.0.0-beta.30"
+    "@effect/vitest": "^4.0.0-beta.50",
+    "@typescript/native-preview": "^7.0.0-dev.20260417.1",
+    "effect": "^4.0.0-beta.50"
   }
 }

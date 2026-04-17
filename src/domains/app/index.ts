@@ -1,4 +1,4 @@
-import { Effect, Layer, ServiceMap } from "effect";
+import { Context, Effect, Layer } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
 import { AppRequests, type OnboardingRequest } from "./requests.ts";
@@ -50,7 +50,7 @@ export interface AppClientShape {
   ) => Effect.Effect<Onboarding, RequestFailure>;
 }
 
-export class AppClient extends ServiceMap.Service<AppClient, AppClientShape>()(
+export class AppClient extends Context.Service<AppClient, AppClientShape>()(
   "webuntis/AppClient",
 ) {
   static readonly layerNoDeps = Layer.effect(

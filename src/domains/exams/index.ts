@@ -1,4 +1,4 @@
-import { Effect, Layer, ServiceMap } from "effect";
+import { Context, Effect, Layer } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
 import { type ExamDetailRequest, ExamsRequests } from "./requests.ts";
@@ -18,7 +18,7 @@ export interface ExamsClientShape {
   ) => Effect.Effect<ExamDetail, RequestFailure>;
 }
 
-export class ExamsClient extends ServiceMap.Service<
+export class ExamsClient extends Context.Service<
   ExamsClient,
   ExamsClientShape
 >()("webuntis/ExamsClient") {

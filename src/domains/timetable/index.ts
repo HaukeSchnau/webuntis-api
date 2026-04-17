@@ -1,4 +1,4 @@
-import { Effect, Layer, ServiceMap } from "effect";
+import { Context, Effect, Layer } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
 import type { TimeGrid } from "../shared/schema.ts";
@@ -59,7 +59,7 @@ export interface TimetableClientShape {
   ) => Effect.Effect<TimetableEntriesWeekOverview, RequestFailure>;
 }
 
-export class TimetableClient extends ServiceMap.Service<
+export class TimetableClient extends Context.Service<
   TimetableClient,
   TimetableClientShape
 >()("webuntis/TimetableClient") {

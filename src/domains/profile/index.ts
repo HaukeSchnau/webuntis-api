@@ -1,4 +1,4 @@
-import { Effect, Layer, ServiceMap } from "effect";
+import { Context, Effect, Layer } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
 import { ProfileRequests } from "./requests.ts";
@@ -12,7 +12,7 @@ export interface ProfileClientShape {
   readonly getUserEmail: () => Effect.Effect<UserEmail, RequestFailure>;
 }
 
-export class ProfileClient extends ServiceMap.Service<
+export class ProfileClient extends Context.Service<
   ProfileClient,
   ProfileClientShape
 >()("webuntis/ProfileClient") {

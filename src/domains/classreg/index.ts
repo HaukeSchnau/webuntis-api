@@ -1,9 +1,9 @@
-import { Effect, Layer, ServiceMap } from "effect";
+import { Context, Effect, Layer } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
 import {
-  ClassregRequests,
   type ClassregHomeworkListRequest,
+  ClassregRequests,
 } from "./requests.ts";
 import type {
   ClassregAbsencesMeta,
@@ -30,7 +30,7 @@ export interface ClassregClientShape {
   >;
 }
 
-export class ClassregClient extends ServiceMap.Service<
+export class ClassregClient extends Context.Service<
   ClassregClient,
   ClassregClientShape
 >()("webuntis/ClassregClient") {
