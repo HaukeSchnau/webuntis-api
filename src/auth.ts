@@ -21,10 +21,9 @@ export interface AuthClientShape {
   readonly clear: () => Effect.Effect<void>;
 }
 
-export class AuthClient extends Context.Service<
-  AuthClient,
-  AuthClientShape
->()("webuntis/AuthClient") {
+export class AuthClient extends Context.Service<AuthClient, AuthClientShape>()(
+  "webuntis/AuthClient",
+) {
   static readonly layerNoDeps = Layer.effect(
     this,
     Effect.gen(function* () {

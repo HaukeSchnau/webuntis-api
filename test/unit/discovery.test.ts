@@ -53,6 +53,55 @@ describe("school discovery", () => {
     ),
   );
 
+  it.effect("resolves a sole login-name match", () =>
+    Effect.gen(function* () {
+      const discovery = yield* SchoolDiscovery;
+      const school = yield* discovery.resolve("igs-lilienthal");
+
+      expect(school.displayName).toBe("IGS Lilienthal");
+      expect(school.loginName).toBe("igs-lilienthal");
+      expect(school.server).toBe("igs-lilienthal.webuntis.com");
+    }).pipe(
+      Effect.provide(
+        makeCoreTestLayer(
+          (request) => {
+            const { pathname } = new URL(request.url);
+
+            if (pathname === "/schoolquery2") {
+              return jsonResponse({
+                result: {
+                  schools: [
+                    {
+                      server: "igs-lilienthal.webuntis.com",
+                      address: "",
+                      displayName: "IGS Lilienthal",
+                      loginName: "igs-lilienthal",
+                      schoolId: 1,
+                      serverUrl:
+                        "https://igs-lilienthal.webuntis.com/WebUntis/?school=igs-lilienthal",
+                      tenantId: "tenant-42",
+                    },
+                  ],
+                },
+                id: "wu_schulsuche-1",
+                jsonrpc: "2.0",
+              });
+            }
+
+            throw new Error(
+              `Unexpected request: ${request.method} ${request.url}`,
+            );
+          },
+          {
+            ...testConfig,
+            schoolLoginName: undefined,
+            serverUrl: undefined,
+          },
+        ),
+      ),
+    ),
+  );
+
   it.effect("fails when school discovery results are ambiguous", () =>
     Effect.gen(function* () {
       const discovery = yield* SchoolDiscovery;
