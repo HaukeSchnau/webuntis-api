@@ -74,8 +74,11 @@ export type AppExamIntegrationViewType = Schema.Schema.Type<
 >;
 
 export const AppExamIntegrationSchema = Schema.Struct({
+  active: Schema.optional(Schema.Boolean),
   id: Schema.Number,
   menuName: Schema.String,
+  mobileAppLink: Schema.optional(Schema.Boolean),
+  mobileView: Schema.optional(Schema.Boolean),
   openInTab: Schema.Boolean,
   role: AppExamIntegrationRoleSchema,
   url: Schema.String,
