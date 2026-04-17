@@ -235,8 +235,11 @@ const fixtures = [
     schema: AppExamIntegrationsSchema,
     value: [
       {
+        active: true,
         id: 1,
         menuName: "Gradebook",
+        mobileAppLink: false,
+        mobileView: false,
         openInTab: true,
         role: "DEFAULT",
         url: "https://example.com/exams",

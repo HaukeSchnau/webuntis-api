@@ -77,8 +77,11 @@ const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
       case "/WebUntis/api/rest/view/v1/app/platform-application/exam-integrations":
         return jsonResponse([
           {
+            active: true,
             id: 5,
             menuName: "Gradebook",
+            mobileAppLink: false,
+            mobileView: false,
             openInTab: true,
             role: "DEFAULT",
             url: "https://example.com/exams",
@@ -396,8 +399,11 @@ describe("request descriptors", () => {
 
       expect(integrations).toEqual([
         {
+          active: true,
           id: 5,
           menuName: "Gradebook",
+          mobileAppLink: false,
+          mobileView: false,
           openInTab: true,
           role: "DEFAULT",
           url: "https://example.com/exams",
