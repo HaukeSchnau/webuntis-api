@@ -1,4 +1,4 @@
-import { Effect, Layer, ServiceMap } from "effect";
+import { Context, Effect, Layer } from "effect";
 import { type RequestOptions, WebUntisHttp } from "./http.ts";
 
 export type RawViewApiRequest = RequestOptions;
@@ -30,7 +30,7 @@ export interface RawViewApiClientShape {
   ) => ReturnType<WebUntisHttp["Service"]["put"]>;
 }
 
-export class RawViewApiClient extends ServiceMap.Service<
+export class RawViewApiClient extends Context.Service<
   RawViewApiClient,
   RawViewApiClientShape
 >()("webuntis/internal/RawViewApiClient") {

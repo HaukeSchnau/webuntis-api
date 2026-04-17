@@ -1,4 +1,4 @@
-import { Effect, Layer, Schema, ServiceMap, SynchronizedRef } from "effect";
+import { Context, Effect, Layer, Schema, SynchronizedRef } from "effect";
 import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
 import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
 import {
@@ -39,7 +39,7 @@ export interface MetadataStateShape {
   readonly clear: () => Effect.Effect<void>;
 }
 
-export class MetadataState extends ServiceMap.Service<
+export class MetadataState extends Context.Service<
   MetadataState,
   MetadataStateShape
 >()("webuntis/internal/MetadataState") {

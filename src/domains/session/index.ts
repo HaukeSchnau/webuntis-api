@@ -1,4 +1,4 @@
-import { Effect, Layer, ServiceMap } from "effect";
+import { Context, Effect, Layer } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
 import { SessionRequests, type SessionStatusRequest } from "./requests.ts";
@@ -10,7 +10,7 @@ export interface SessionClientShape {
   ) => Effect.Effect<SessionStatus, RequestFailure>;
 }
 
-export class SessionClient extends ServiceMap.Service<
+export class SessionClient extends Context.Service<
   SessionClient,
   SessionClientShape
 >()("webuntis/SessionClient") {

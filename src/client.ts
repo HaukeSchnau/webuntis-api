@@ -1,4 +1,4 @@
-import { Effect, Layer, ServiceMap } from "effect";
+import { Context, Effect, Layer } from "effect";
 import type * as HttpClient from "effect/unstable/http/HttpClient";
 import { AuthClient } from "./auth.ts";
 import { AppClient } from "./domains/app/index.ts";
@@ -24,7 +24,7 @@ export interface WebUntisClientShape {
   readonly timetable: TimetableClient["Service"];
 }
 
-export class WebUntisClient extends ServiceMap.Service<
+export class WebUntisClient extends Context.Service<
   WebUntisClient,
   WebUntisClientShape
 >()("webuntis/WebUntisClient") {

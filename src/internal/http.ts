@@ -1,4 +1,4 @@
-import { Effect, Layer, type Schema, ServiceMap } from "effect";
+import { Context, Effect, Layer, type Schema } from "effect";
 import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
 import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
 import {
@@ -125,7 +125,7 @@ export interface WebUntisHttpShape {
   >;
 }
 
-export class WebUntisHttp extends ServiceMap.Service<
+export class WebUntisHttp extends Context.Service<
   WebUntisHttp,
   WebUntisHttpShape
 >()("webuntis/internal/WebUntisHttp") {

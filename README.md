@@ -2,7 +2,7 @@
 
 Headless WebUntis client built on the Effect v4 beta ecosystem.
 
-This package models the modern WebUntis REST surface as explicit `ServiceMap.Service` services. You can consume the aggregate `WebUntisClient`, or you can depend on focused domain services such as `AppClient`, `MessagesClient`, `SchoolyearsClient`, or `TimetableClient`.
+This package models the modern WebUntis REST surface as explicit `Context.Service` services. You can consume the aggregate `WebUntisClient`, or you can depend on focused domain services such as `AppClient`, `MessagesClient`, `SchoolyearsClient`, or `TimetableClient`.
 
 For breaking API changes and upgrade notes, see [MIGRATION.md](./MIGRATION.md).
 

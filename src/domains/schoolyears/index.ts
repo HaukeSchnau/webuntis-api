@@ -1,4 +1,4 @@
-import { Effect, Layer, ServiceMap } from "effect";
+import { Context, Effect, Layer } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
 import type { Schoolyear } from "../shared/schema.ts";
@@ -8,7 +8,7 @@ export interface SchoolyearsClientShape {
   readonly list: () => Effect.Effect<ReadonlyArray<Schoolyear>, RequestFailure>;
 }
 
-export class SchoolyearsClient extends ServiceMap.Service<
+export class SchoolyearsClient extends Context.Service<
   SchoolyearsClient,
   SchoolyearsClientShape
 >()("webuntis/SchoolyearsClient") {

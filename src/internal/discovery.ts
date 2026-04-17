@@ -1,4 +1,4 @@
-import { Effect, Layer, Schema, ServiceMap } from "effect";
+import { Context, Effect, Layer, Schema } from "effect";
 import * as HttpClient from "effect/unstable/http/HttpClient";
 import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
 import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
@@ -53,7 +53,7 @@ export interface SchoolDiscoveryShape {
   >;
 }
 
-export class SchoolDiscovery extends ServiceMap.Service<
+export class SchoolDiscovery extends Context.Service<
   SchoolDiscovery,
   SchoolDiscoveryShape
 >()("webuntis/internal/SchoolDiscovery") {

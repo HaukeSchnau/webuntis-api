@@ -1,4 +1,4 @@
-import { ConfigProvider, Effect, Layer, Option, ServiceMap } from "effect";
+import { ConfigProvider, Context, Effect, Layer, Option } from "effect";
 import * as Config from "effect/Config";
 import { ConfigurationError } from "./errors.ts";
 import type { WebUntisClientConfig } from "./types.ts";
@@ -19,7 +19,7 @@ const optionalString = (name: string) =>
     Config.map((value) => (Option.isSome(value) ? value.value : undefined)),
   );
 
-export class ClientConfig extends ServiceMap.Service<
+export class ClientConfig extends Context.Service<
   ClientConfig,
   WebUntisClientConfig
 >()("webuntis/internal/ClientConfig") {
