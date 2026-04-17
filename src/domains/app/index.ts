@@ -4,6 +4,7 @@ import { WebUntisHttp } from "../../internal/http.ts";
 import { AppRequests, type OnboardingRequest } from "./requests.ts";
 import type {
   AppData,
+  AppExamIntegrations,
   AppPlatformApplicationMenus,
   AppThirdPartyData,
   DashboardCards,
@@ -30,6 +31,10 @@ export interface AppClientShape {
   >;
   readonly getThirdPartyData: () => Effect.Effect<
     AppThirdPartyData,
+    RequestFailure
+  >;
+  readonly getExamIntegrations: () => Effect.Effect<
+    AppExamIntegrations,
     RequestFailure
   >;
   readonly getTodayMeta: () => Effect.Effect<TodayMeta, RequestFailure>;
@@ -91,6 +96,14 @@ export class AppClient extends Context.Service<AppClient, AppClientShape>()(
           function* () {
             return yield* http.requestSchema(
               AppRequests.getThirdPartyData,
+              undefined,
+            );
+          },
+        ),
+        getExamIntegrations: Effect.fn("AppClient.getExamIntegrations")(
+          function* () {
+            return yield* http.requestSchema(
+              AppRequests.getExamIntegrations,
               undefined,
             );
           },

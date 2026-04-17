@@ -952,14 +952,16 @@ exports[`live WebUntis integration > with live layer > reads additional app boot
 ]
 `;
 
-exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 6`] = `
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 6`] = `[]`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 7`] = `
 {
   "playgroundUrl": null,
   "sleekplanToken": "<redacted>",
 }
 `;
 
-exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 7`] = `
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 8`] = `
 {
   "step": "timetable--date-picker",
   "time": "<redacted-datetime>",

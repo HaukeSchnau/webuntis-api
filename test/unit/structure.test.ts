@@ -36,6 +36,7 @@ describe("public structure", () => {
       expect(client.messages).toBe(messages);
       expect(client.timetable).toBe(timetable);
       expect(typeof client.app.getHome).toBe("function");
+      expect(typeof client.app.getExamIntegrations).toBe("function");
       expect(typeof client.classreg.getHomeworkList).toBe("function");
       expect(typeof client.messages.getStatus).toBe("function");
       expect(typeof client.messages.filterComposeRecipients).toBe("function");

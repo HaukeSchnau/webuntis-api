@@ -1,5 +1,6 @@
 import type {
   AppData,
+  AppExamIntegrations,
   AppPlatformApplicationMenus,
   AppThirdPartyData,
   ClassregAbsencesMeta,
@@ -104,6 +105,8 @@ export const normalizeAppData = (value: AppData) => normalizeUnknown(value);
 export const normalizeAppPlatformApplicationMenus = (
   value: AppPlatformApplicationMenus,
 ) => normalizeUnknown(value);
+export const normalizeAppExamIntegrations = (value: AppExamIntegrations) =>
+  normalizeUnknown(value);
 export const normalizeAppThirdPartyData = (value: AppThirdPartyData) =>
   normalizeUnknown(value);
 export const normalizeClassregAbsencesMeta = (value: ClassregAbsencesMeta) =>

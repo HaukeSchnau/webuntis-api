@@ -18,6 +18,7 @@ import { makeWebUntisRuntimeLayer } from "../../src/internal/runtime.ts";
 import { strictJsonParseOptions } from "../../src/internal/schema.ts";
 import {
   liveEnvMissing,
+  normalizeAppExamIntegrations,
   normalizeAppPlatformApplicationMenus,
   normalizeAppThirdPartyData,
   normalizeClassregAbsencesMeta,
@@ -174,6 +175,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           const dashboardCardsStatus =
             yield* client.app.getDashboardCardsStatus();
           const menus = yield* client.app.getPlatformApplicationMenus();
+          const examIntegrations = yield* client.app.getExamIntegrations();
           const thirdPartyData = yield* client.app.getThirdPartyData();
           const onboarding = yield* client.app.getOnboarding({
             type: "TIMETABLE",
@@ -188,6 +190,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             0,
           );
           expect(menus.length).toBeGreaterThan(0);
+          expect(Array.isArray(examIntegrations)).toBe(true);
           expect(thirdPartyData).toHaveProperty("sleekplanToken");
           expect(onboarding.type).toBe("TIMETABLE");
           expect(normalizeTodayMeta(todayMeta)).toMatchSnapshot();
@@ -199,6 +202,9 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             normalizeDashboardCardsStatus(dashboardCardsStatus),
           ).toMatchSnapshot();
           expect(normalizeAppPlatformApplicationMenus(menus)).toMatchSnapshot();
+          expect(
+            normalizeAppExamIntegrations(examIntegrations),
+          ).toMatchSnapshot();
           expect(normalizeAppThirdPartyData(thirdPartyData)).toMatchSnapshot();
           expect(normalizeOnboarding(onboarding)).toMatchSnapshot();
         }),

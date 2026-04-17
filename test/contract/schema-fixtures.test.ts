@@ -2,6 +2,7 @@ import { describe, expect, it } from "@effect/vitest";
 import { Schema } from "effect";
 import {
   AppDataSchema,
+  AppExamIntegrationsSchema,
   AppPlatformApplicationMenusSchema,
   AppThirdPartyDataSchema,
   ClassregAbsencesMetaSchema,
@@ -228,6 +229,20 @@ const fixtures = [
     name: "AppThirdPartyData",
     schema: AppThirdPartyDataSchema,
     value: { playgroundUrl: null, sleekplanToken: "token" },
+  },
+  {
+    name: "AppExamIntegrations",
+    schema: AppExamIntegrationsSchema,
+    value: [
+      {
+        id: 1,
+        menuName: "Gradebook",
+        openInTab: true,
+        role: "DEFAULT",
+        url: "https://example.com/exams",
+        viewType: "EXAMLIST",
+      },
+    ],
   },
   {
     name: "TodayMeta",
