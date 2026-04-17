@@ -1,6 +1,7 @@
 import { RequestPolicy, schemaRequest } from "../../internal/request.ts";
 import {
   AppDataSchema,
+  AppExamIntegrationsSchema,
   AppPlatformApplicationMenusSchema,
   AppThirdPartyDataSchema,
   DashboardCardsDetailSchema,
@@ -57,6 +58,12 @@ export const AppRequests = {
     path: "api/rest/view/v1/app/third-party/data",
     policy: RequestPolicy.AuthOnly,
     schema: AppThirdPartyDataSchema,
+  }),
+  getExamIntegrations: schemaRequest<void, typeof AppExamIntegrationsSchema>({
+    method: "GET",
+    path: "api/rest/view/v1/app/platform-application/exam-integrations",
+    policy: RequestPolicy.AuthOnly,
+    schema: AppExamIntegrationsSchema,
   }),
   getTodayMeta: schemaRequest<void, typeof TodayMetaSchema>({
     method: "GET",

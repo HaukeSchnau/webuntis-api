@@ -74,6 +74,17 @@ const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
     });
 
     switch (url.pathname) {
+      case "/WebUntis/api/rest/view/v1/app/platform-application/exam-integrations":
+        return jsonResponse([
+          {
+            id: 5,
+            menuName: "Gradebook",
+            openInTab: true,
+            role: "DEFAULT",
+            url: "https://example.com/exams",
+            viewType: "EXAMLIST",
+          },
+        ]);
       case "/WebUntis/api/rest/view/v1/onboarding":
         return jsonResponse({
           type: "TIMETABLE",
@@ -372,6 +383,33 @@ describe("request descriptors", () => {
         "/WebUntis/api/rest/view/v1/onboarding",
       );
       expect(request.query["type"]).toBe("TIMETABLE");
+      expect(request.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
+
+  it.effect("app exam integrations routes stay auth-only", () => {
+    const observed: Array<ObservedRequest> = [];
+
+    return Effect.gen(function* () {
+      const app = yield* AppClient;
+      const integrations = yield* app.getExamIntegrations();
+
+      expect(integrations).toEqual([
+        {
+          id: 5,
+          menuName: "Gradebook",
+          openInTab: true,
+          role: "DEFAULT",
+          url: "https://example.com/exams",
+          viewType: "EXAMLIST",
+        },
+      ]);
+
+      const request = getLast(observed);
+      expect(request.method).toBe("GET");
+      expect(request.url.pathname).toBe(
+        "/WebUntis/api/rest/view/v1/app/platform-application/exam-integrations",
+      );
       expect(request.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });

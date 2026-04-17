@@ -48,6 +48,49 @@ export type AppThirdPartyData = Schema.Schema.Type<
   typeof AppThirdPartyDataSchema
 >;
 
+export const AppExamIntegrationRoleSchema = Schema.Literals([
+  "ADMIN",
+  "STUDENT",
+  "PARENT",
+  "DIRECTORATE",
+  "STAFF",
+  "TEACHER",
+  "OTHER",
+  "DEFAULT",
+]);
+
+export type AppExamIntegrationRole = Schema.Schema.Type<
+  typeof AppExamIntegrationRoleSchema
+>;
+
+export const AppExamIntegrationViewTypeSchema = Schema.Literals([
+  "OVERVIEW",
+  "DETAIL",
+  "EXAMLIST",
+]);
+
+export type AppExamIntegrationViewType = Schema.Schema.Type<
+  typeof AppExamIntegrationViewTypeSchema
+>;
+
+export const AppExamIntegrationSchema = Schema.Struct({
+  id: Schema.Number,
+  menuName: Schema.String,
+  openInTab: Schema.Boolean,
+  role: AppExamIntegrationRoleSchema,
+  url: Schema.String,
+  viewType: AppExamIntegrationViewTypeSchema,
+});
+
+export const AppExamIntegrationsSchema = Schema.Array(AppExamIntegrationSchema);
+
+export type AppExamIntegration = Schema.Schema.Type<
+  typeof AppExamIntegrationSchema
+>;
+export type AppExamIntegrations = Schema.Schema.Type<
+  typeof AppExamIntegrationsSchema
+>;
+
 export const DashboardCardSchema = JsonObjectSchema;
 export const DashboardCardsSchema = Schema.Struct({
   dashboardCards: Schema.Array(DashboardCardSchema),
