@@ -196,7 +196,7 @@ export const TimetableRequests = {
       end: request.end,
       resourceType: request.resourceType,
       resources: request.resources.join(","),
-      timetableType: request.timetableType ?? "OVERVIEW_WEEK",
+      timetableType: request.timetableType,
     }),
     policy: RequestPolicy.Metadata,
     schema: TimetableEntriesWeekOverviewSchema,

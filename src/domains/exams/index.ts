@@ -1,7 +1,12 @@
 import { Context, Effect, Layer } from "effect";
 import type { RequestFailure } from "../../internal/http.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
-import { type ExamDetailRequest, ExamsRequests } from "./requests.ts";
+import {
+  type ExamDateRangeRequest,
+  type ExamDetailRequest,
+  type ExamsListRequest,
+  ExamsRequests,
+} from "./requests.ts";
 import type {
   ExamDetail,
   ExamFilter,
@@ -10,9 +15,15 @@ import type {
 } from "./schema.ts";
 
 export interface ExamsClientShape {
-  readonly list: () => Effect.Effect<Exams, RequestFailure>;
-  readonly getFilter: () => Effect.Effect<ExamFilter, RequestFailure>;
-  readonly getStatistics: () => Effect.Effect<ExamStatistics, RequestFailure>;
+  readonly list: (
+    request?: ExamsListRequest,
+  ) => Effect.Effect<Exams, RequestFailure>;
+  readonly getFilter: (
+    request?: ExamDateRangeRequest,
+  ) => Effect.Effect<ExamFilter, RequestFailure>;
+  readonly getStatistics: (
+    request?: ExamDateRangeRequest,
+  ) => Effect.Effect<ExamStatistics, RequestFailure>;
   readonly getExam: (
     request: ExamDetailRequest,
   ) => Effect.Effect<ExamDetail, RequestFailure>;
@@ -28,16 +39,22 @@ export class ExamsClient extends Context.Service<
       const http = yield* WebUntisHttp;
 
       return ExamsClient.of({
-        list: Effect.fn("ExamsClient.list")(function* () {
-          return yield* http.requestSchema(ExamsRequests.list, undefined);
+        list: Effect.fn("ExamsClient.list")(function* (
+          request?: ExamsListRequest,
+        ) {
+          return yield* http.requestSchema(ExamsRequests.list, request);
         }),
-        getFilter: Effect.fn("ExamsClient.getFilter")(function* () {
-          return yield* http.requestSchema(ExamsRequests.getFilter, undefined);
+        getFilter: Effect.fn("ExamsClient.getFilter")(function* (
+          request?: ExamDateRangeRequest,
+        ) {
+          return yield* http.requestSchema(ExamsRequests.getFilter, request);
         }),
-        getStatistics: Effect.fn("ExamsClient.getStatistics")(function* () {
+        getStatistics: Effect.fn("ExamsClient.getStatistics")(function* (
+          request?: ExamDateRangeRequest,
+        ) {
           return yield* http.requestSchema(
             ExamsRequests.getStatistics,
-            undefined,
+            request,
           );
         }),
         getExam: Effect.fn("ExamsClient.getExam")(function* (
@@ -50,4 +67,8 @@ export class ExamsClient extends Context.Service<
   );
 }
 
-export type { ExamDetailRequest } from "./requests.ts";
+export type {
+  ExamDateRangeRequest,
+  ExamDetailRequest,
+  ExamsListRequest,
+} from "./requests.ts";

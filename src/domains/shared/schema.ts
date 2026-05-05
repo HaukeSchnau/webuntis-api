@@ -47,6 +47,12 @@ export const TenantSchema = Schema.Struct({
   wuHostName: Schema.optional(Schema.NullOr(Schema.String)),
 });
 
+export const UserPersonSchema = Schema.Struct({
+  displayName: Schema.String,
+  id: Schema.Number,
+  imageUrl: Schema.NullOr(Schema.String),
+});
+
 export const UserSchema = Schema.Struct({
   id: Schema.Number,
   locale: Schema.String,
@@ -55,7 +61,7 @@ export const UserSchema = Schema.Struct({
   permissions: Schema.Struct({
     views: Schema.Array(Schema.String),
   }),
-  person: Schema.optional(JsonObjectSchema),
+  person: Schema.optional(UserPersonSchema),
   roles: Schema.Array(Schema.String),
   students: Schema.optional(Schema.Array(JsonObjectSchema)),
   lastLogin: Schema.optional(Schema.String),
