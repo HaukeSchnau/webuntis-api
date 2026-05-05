@@ -139,6 +139,22 @@ const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
             },
           ],
         });
+      case "/WebUntis/api/rest/view/v1/exams":
+        return jsonResponse({
+          exams: [],
+          withDeleted: false,
+        });
+      case "/WebUntis/api/rest/view/v1/exams/filter":
+        return jsonResponse({
+          examTypes: [],
+          subjects: [],
+          classes: [],
+          teachers: [],
+        });
+      case "/WebUntis/api/rest/view/v1/exams/statistics":
+        return jsonResponse({
+          exams: [],
+        });
       case "/WebUntis/api/rest/view/v1/exams/42":
         return jsonResponse({
           examId: 42,
@@ -318,6 +334,11 @@ const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
             },
           ],
           errors: [],
+        });
+      case "/WebUntis/api/rest/view/v1/timetable/entriesWeekOverview":
+        return jsonResponse({
+          slots: [],
+          days: [],
         });
       case "/WebUntis/api/rest/view/v1/timetable/grid":
         return jsonResponse({
@@ -500,6 +521,49 @@ describe("request descriptors", () => {
     },
   );
 
+  it.effect("exam list routes accept browser-observed date filters", () => {
+    const observed: Array<ObservedRequest> = [];
+
+    return Effect.gen(function* () {
+      const exams = yield* ExamsClient;
+      yield* exams.list({
+        start: "2026-05-04",
+        end: "2026-05-10",
+        withDeleted: false,
+      });
+
+      const listRequest = getLast(observed);
+      expect(listRequest.url.pathname).toBe("/WebUntis/api/rest/view/v1/exams");
+      expect(listRequest.query["start"]).toBe("2026-05-04");
+      expect(listRequest.query["end"]).toBe("2026-05-10");
+      expect(listRequest.query["withDeleted"]).toBe("false");
+
+      yield* exams.getFilter({
+        start: "2026-05-04",
+        end: "2026-05-10",
+      });
+
+      const filterRequest = getLast(observed);
+      expect(filterRequest.url.pathname).toBe(
+        "/WebUntis/api/rest/view/v1/exams/filter",
+      );
+      expect(filterRequest.query["start"]).toBe("2026-05-04");
+      expect(filterRequest.query["end"]).toBe("2026-05-10");
+
+      yield* exams.getStatistics({
+        start: "2026-05-04",
+        end: "2026-05-10",
+      });
+
+      const statisticsRequest = getLast(observed);
+      expect(statisticsRequest.url.pathname).toBe(
+        "/WebUntis/api/rest/view/v1/exams/statistics",
+      );
+      expect(statisticsRequest.query["start"]).toBe("2026-05-04");
+      expect(statisticsRequest.query["end"]).toBe("2026-05-10");
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
+
   it.effect("message permissions routes require metadata headers", () => {
     const observed: Array<ObservedRequest> = [];
 
@@ -680,6 +744,30 @@ describe("request descriptors", () => {
       );
       expect(request.query["timetableType"]).toBe("SUBSTITUTION");
       expect(request.headers["x-webuntis-api-school-year-id"]).toBe("7");
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
+
+  it.effect("timetable week overview matches browser query shape", () => {
+    const observed: Array<ObservedRequest> = [];
+
+    return Effect.gen(function* () {
+      const timetable = yield* TimetableClient;
+      yield* timetable.getEntriesWeekOverview({
+        start: "2026-05-04",
+        end: "2026-05-08",
+        resourceType: "ROOM",
+        resources: [],
+      });
+
+      const request = getLast(observed);
+      expect(request.url.pathname).toBe(
+        "/WebUntis/api/rest/view/v1/timetable/entriesWeekOverview",
+      );
+      expect(request.query["start"]).toBe("2026-05-04");
+      expect(request.query["end"]).toBe("2026-05-08");
+      expect(request.query["resourceType"]).toBe("ROOM");
+      expect(request.query["resources"]).toBe("");
+      expect(request.query["timetableType"]).toBeUndefined();
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
 });

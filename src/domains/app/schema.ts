@@ -17,7 +17,13 @@ export const AppDataSchema = Schema.Struct({
   settings: Schema.Array(Schema.String),
   holidays: Schema.Array(HolidaySchema),
   isPlayground: Schema.optional(Schema.Boolean),
-  oneDriveData: Schema.optional(JsonObjectSchema),
+  oneDriveData: Schema.optional(
+    Schema.Struct({
+      hasOneDriveRight: Schema.Boolean,
+      oneDriveClientVersion: Schema.String,
+      oneDriveClientId: Schema.String,
+    }),
+  ),
   ui2020: Schema.optional(Schema.Boolean),
   pollingJobs: Schema.optional(Schema.Array(JsonObjectSchema)),
   isSupportAccessOpen: Schema.optional(Schema.Boolean),

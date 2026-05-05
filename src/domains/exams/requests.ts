@@ -10,22 +10,44 @@ export interface ExamDetailRequest {
   readonly id: number;
 }
 
+export interface ExamDateRangeRequest {
+  readonly start?: string | undefined;
+  readonly end?: string | undefined;
+}
+
+export interface ExamsListRequest extends ExamDateRangeRequest {
+  readonly withDeleted?: boolean | undefined;
+}
+
 export const ExamsRequests = {
-  list: schemaRequest<void, typeof ExamsSchema>({
+  list: schemaRequest<ExamsListRequest | undefined, typeof ExamsSchema>({
     method: "GET",
     path: "api/rest/view/v1/exams",
+    query: (request) => ({
+      start: request?.start,
+      end: request?.end,
+      withDeleted: request?.withDeleted,
+    }),
     policy: RequestPolicy.AuthOnly,
     schema: ExamsSchema,
   }),
-  getFilter: schemaRequest<void, typeof ExamFilterSchema>({
+  getFilter: schemaRequest<
+    ExamDateRangeRequest | undefined,
+    typeof ExamFilterSchema
+  >({
     method: "GET",
     path: "api/rest/view/v1/exams/filter",
+    query: (request) => ({ start: request?.start, end: request?.end }),
     policy: RequestPolicy.AuthOnly,
     schema: ExamFilterSchema,
   }),
-  getStatistics: schemaRequest<void, typeof ExamStatisticsSchema>({
+  getStatistics: schemaRequest<
+    ExamDateRangeRequest | undefined,
+    typeof ExamStatisticsSchema
+  >({
     method: "GET",
     path: "api/rest/view/v1/exams/statistics",
+    query: (request) => ({ start: request?.start, end: request?.end }),
     policy: RequestPolicy.AuthOnly,
     schema: ExamStatisticsSchema,
   }),
