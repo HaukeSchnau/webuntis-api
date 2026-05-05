@@ -80,6 +80,7 @@ exports[`live WebUntis smoke > with live layer > bootstraps auth and reads app m
       ],
     },
   },
+  "departments": [],
   "holidays": [
     {
       "bookable": false,
@@ -369,6 +370,14 @@ exports[`live WebUntis smoke > with live layer > bootstraps auth and reads app m
       "start": "<redacted-datetime>",
     },
   ],
+  "isPlayground": false,
+  "isSupportAccessOpen": true,
+  "licenceExpiresAt": "<redacted-date>",
+  "oneDriveData": {
+    "hasOneDriveRight": false,
+    "oneDriveClientId": "d4acf9ca-5400-48f0-96db-e356769fa9fb",
+    "oneDriveClientVersion": "V8",
+  },
   "permissions": [
     "<redacted-label>:R:0:<redacted-label>",
     "<redacted-label>_<redacted-label>:R:1:<redacted-label>",
@@ -399,6 +408,7 @@ exports[`live WebUntis smoke > with live layer > bootstraps auth and reads app m
     "<redacted-label>:<redacted-label>:0:<redacted-label>",
     "<redacted-label>:<redacted-label>:0:<redacted-label>",
   ],
+  "pollingJobs": [],
   "settings": [
     "system.linesperpage:50",
     "system.firstDayOfWeek:2",
@@ -409,10 +419,13 @@ exports[`live WebUntis smoke > with live layer > bootstraps auth and reads app m
     "displayName": "<redacted-label> Lilienthal",
     "id": "6603700",
     "name": "igs-lilienthal",
+    "wuHostName": null,
   },
+  "ui2020": true,
   "user": {
     "email": "<redacted-email>",
     "id": 3711,
+    "lastLogin": "<redacted-datetime>",
     "locale": "de",
     "name": "hauke.studienbuch",
     "permissions": {
@@ -467,9 +480,15 @@ exports[`live WebUntis smoke > with live layer > bootstraps auth and reads app m
         "<redacted-label>",
       ],
     },
+    "person": {
+      "displayName": "",
+      "id": -1,
+      "imageUrl": null,
+    },
     "roles": [
       "<redacted-label>",
     ],
+    "students": [],
   },
 }
 `;

@@ -15,16 +15,20 @@ import type { ResolvedSchool } from "./types.ts";
 
 const SchoolSearchResultSchema = Schema.Struct({
   server: Schema.String,
+  useMobileServiceUrlAndroid: Schema.optional(Schema.Boolean),
   address: Schema.String,
   displayName: Schema.String,
   loginName: Schema.String,
   schoolId: Schema.Number,
+  useMobileServiceUrlIos: Schema.optional(Schema.Boolean),
   serverUrl: Schema.String,
   tenantId: Schema.String,
+  mobileServiceUrl: Schema.optional(Schema.NullOr(Schema.String)),
 });
 
 const SearchSchoolRpcResponseSchema = Schema.Struct({
   result: Schema.Struct({
+    size: Schema.optional(Schema.Number),
     schools: Schema.Array(SchoolSearchResultSchema),
   }),
   id: Schema.String,

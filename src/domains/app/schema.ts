@@ -9,12 +9,19 @@ import {
 } from "../shared/schema.ts";
 
 export const AppDataSchema = Schema.Struct({
+  departments: Schema.optional(Schema.Array(JsonObjectSchema)),
   currentSchoolYear: SchoolyearWithTimeGridSchema,
   tenant: TenantSchema,
   user: UserSchema,
   permissions: Schema.Array(Schema.String),
   settings: Schema.Array(Schema.String),
   holidays: Schema.Array(HolidaySchema),
+  isPlayground: Schema.optional(Schema.Boolean),
+  oneDriveData: Schema.optional(JsonObjectSchema),
+  ui2020: Schema.optional(Schema.Boolean),
+  pollingJobs: Schema.optional(Schema.Array(JsonObjectSchema)),
+  isSupportAccessOpen: Schema.optional(Schema.Boolean),
+  licenceExpiresAt: Schema.optional(Schema.String),
 });
 
 export type AppData = Schema.Schema.Type<typeof AppDataSchema>;

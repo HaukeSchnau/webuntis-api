@@ -21,16 +21,20 @@ describe("school discovery", () => {
             if (pathname === "/schoolquery2") {
               return jsonResponse({
                 result: {
+                  size: 0,
                   schools: [
                     {
                       server: "igs-lilienthal.webuntis.com",
+                      useMobileServiceUrlAndroid: false,
                       address: "",
                       displayName: "IGS Lilienthal",
                       loginName: "igs-lilienthal",
                       schoolId: 1,
+                      useMobileServiceUrlIos: false,
                       serverUrl:
                         "https://igs-lilienthal.webuntis.com/WebUntis/?school=igs-lilienthal",
                       tenantId: "tenant-42",
+                      mobileServiceUrl: null,
                     },
                   ],
                 },
