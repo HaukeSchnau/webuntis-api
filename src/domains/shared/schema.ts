@@ -44,6 +44,7 @@ export const TenantSchema = Schema.Struct({
   displayName: Schema.String,
   id: Schema.String,
   name: Schema.String,
+  wuHostName: Schema.optional(Schema.NullOr(Schema.String)),
 });
 
 export const UserSchema = Schema.Struct({
@@ -54,7 +55,10 @@ export const UserSchema = Schema.Struct({
   permissions: Schema.Struct({
     views: Schema.Array(Schema.String),
   }),
+  person: Schema.optional(JsonObjectSchema),
   roles: Schema.Array(Schema.String),
+  students: Schema.optional(Schema.Array(JsonObjectSchema)),
+  lastLogin: Schema.optional(Schema.String),
 });
 
 export const HolidaySchema = Schema.Struct({

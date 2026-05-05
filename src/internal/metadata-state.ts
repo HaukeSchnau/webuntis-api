@@ -23,12 +23,29 @@ import {
 } from "./types.ts";
 
 const BootstrapAppDataSchema = Schema.Struct({
+  departments: Schema.optional(Schema.Unknown),
   currentSchoolYear: Schema.Struct({
     id: Schema.Number,
+    dateRange: Schema.optional(Schema.Unknown),
+    name: Schema.optional(Schema.String),
+    timeGrid: Schema.optional(Schema.Unknown),
   }),
   tenant: Schema.Struct({
     id: Schema.String,
+    displayName: Schema.optional(Schema.String),
+    name: Schema.optional(Schema.String),
+    wuHostName: Schema.optional(Schema.NullOr(Schema.String)),
   }),
+  user: Schema.optional(Schema.Unknown),
+  permissions: Schema.optional(Schema.Unknown),
+  settings: Schema.optional(Schema.Unknown),
+  holidays: Schema.optional(Schema.Unknown),
+  isPlayground: Schema.optional(Schema.Boolean),
+  oneDriveData: Schema.optional(Schema.Unknown),
+  ui2020: Schema.optional(Schema.Boolean),
+  pollingJobs: Schema.optional(Schema.Unknown),
+  isSupportAccessOpen: Schema.optional(Schema.Boolean),
+  licenceExpiresAt: Schema.optional(Schema.String),
 });
 
 export interface MetadataStateShape {
