@@ -194,13 +194,13 @@ Notable behavior changes:
 Run the static checks:
 
 ```bash
-bun run lint
+just lint
 ```
 
 Run the tests:
 
 ```bash
-bun run test
+just test
 ```
 
 The test suite is split into:
@@ -233,8 +233,8 @@ nix shell nixpkgs#sops nixpkgs#age
 Convenience commands:
 
 ```bash
-bun run test:live:sops
-bun run test:live:sops:update
+just test-live-sops
+just test-live-sops-update
 ```
 
 To rotate or edit the encrypted live-test credentials:
