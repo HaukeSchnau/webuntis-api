@@ -80,8 +80,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
           const rawViewApi = yield* RawViewApiClient;
-          const decodeStartupActions = Schema.decodeUnknownSync(StartupActionsSchema);
-          const startupActionsV1 = decodeStartupActions(
+          const startupActionsV1 = yield* Schema.decodeUnknownEffect(StartupActionsSchema)(
             yield* rawViewApi.getJson("api/rest/view/v1/trigger/startup", {
               policy: RequestPolicy.AuthOnly,
             }),
@@ -102,29 +101,26 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
           const rawViewApi = yield* RawViewApiClient;
-          const decodeHome = Schema.decodeUnknownSync(HomeSchema);
-          const decodeMobileDataV1V2 = Schema.decodeUnknownSync(MobileDataV1V2Schema);
-          const homeV1 = decodeHome(
+          const homeV1 = yield* Schema.decodeUnknownEffect(HomeSchema)(
             yield* rawViewApi.getJson("api/rest/view/v1/home", {
               policy: RequestPolicy.AuthOnly,
             }),
             strictJsonParseOptions,
           );
           const homeV2 = yield* client.app.getHome();
-          const mobileDataV1 = decodeMobileDataV1V2(
+          const mobileDataV1 = yield* Schema.decodeUnknownEffect(MobileDataV1V2Schema)(
             yield* rawViewApi.getJson("api/rest/view/v1/mobile/data", {
               policy: RequestPolicy.AuthOnly,
             }),
             strictJsonParseOptions,
           );
-          const mobileDataV2 = decodeMobileDataV1V2(
+          const mobileDataV2 = yield* Schema.decodeUnknownEffect(MobileDataV1V2Schema)(
             yield* rawViewApi.getJson("api/rest/view/v2/mobile/data", {
               policy: RequestPolicy.AuthOnly,
             }),
             strictJsonParseOptions,
           );
-          const decodeMobileDataV3 = Schema.decodeUnknownSync(MobileDataSchema);
-          const mobileDataV3 = decodeMobileDataV3(
+          const mobileDataV3 = yield* Schema.decodeUnknownEffect(MobileDataSchema)(
             yield* rawViewApi.getJson("api/rest/view/v3/mobile/data", {
               policy: RequestPolicy.AuthOnly,
             }),

@@ -32,6 +32,22 @@ const decodeBody = (body: { readonly _tag: string; readonly body?: unknown }) =>
   return undefined;
 };
 
+const expectedHomeworkListBody = JSON.stringify({
+  classId: null,
+  teacherId: null,
+  subjectId: null,
+  dateRange: {
+    start: "2025-08-14",
+    end: "2026-07-01",
+  },
+  dateRangeType: "SCHOOLYEAR",
+});
+
+const expectedComposeRecipientsBody = JSON.stringify({
+  filters: [],
+  searchText: "sei",
+});
+
 const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
   makeCoreTestLayer((request) => {
     const url = new URL(request.url);
@@ -472,18 +488,7 @@ describe("request descriptors", () => {
       expect(homeworkListRequest.url.pathname).toBe(
         "/WebUntis/api/rest/view/v1/classreg/homework/list",
       );
-      expect(homeworkListRequest.body).toBe(
-        JSON.stringify({
-          classId: null,
-          teacherId: null,
-          subjectId: null,
-          dateRange: {
-            start: "2025-08-14",
-            end: "2026-07-01",
-          },
-          dateRangeType: "SCHOOLYEAR",
-        }),
-      );
+      expect(homeworkListRequest.body).toBe(expectedHomeworkListBody);
       expect(homeworkListRequest.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
@@ -575,12 +580,7 @@ describe("request descriptors", () => {
       expect(composeRequest.url.pathname).toBe(
         "/WebUntis/api/rest/view/v2/messages/recipients/STAFF/filter",
       );
-      expect(composeRequest.body).toBe(
-        JSON.stringify({
-          filters: [],
-          searchText: "sei",
-        }),
-      );
+      expect(composeRequest.body).toBe(expectedComposeRecipientsBody);
       expect(composeRequest.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
 
       yield* messages.searchRecipients({
