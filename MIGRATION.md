@@ -148,4 +148,4 @@ If you maintained local patches on top of the old layout, expect path changes.
 4. Update positional lookup calls to the new request-object form.
 5. Remove any dependency on root-exported raw or experimental write routes.
 6. Re-check env configuration, especially tenant pinning and `WEBUNTIS_SERVER_URL`.
-7. Run `bun run lint`, `bun run test:unit`, and your live suite.
+7. Run `just lint`, `just test-unit`, and your live suite.
