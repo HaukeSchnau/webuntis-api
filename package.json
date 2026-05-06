@@ -1,13 +1,38 @@
 {
   "name": "webuntis-api",
+  "version": "0.1.0",
+  "description": "Read-only Effect client for WebUntis APIs.",
   "type": "module",
-  "private": true,
   "sideEffects": false,
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "MIGRATION.md"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./schemas": "./src/domains/schemas.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./schemas": {
+      "types": "./dist/schemas.d.ts",
+      "import": "./dist/schemas.js"
+    }
+  },
+  "publishConfig": {
+    "registry": "https://npm.schnau.dev"
   },
   "scripts": {
+    "build": "tsdown",
+    "pack:check": "bun run build && publint --strict && attw --pack . --profile esm-only",
+    "prepack": "bun run build",
+    "prepublishOnly": "bun run typecheck && bun run lint && bun run test && bun run pack:check",
     "test": "vitest run",
     "test:unit": "vitest run test/unit",
     "test:contract": "vitest run test/contract",
@@ -21,13 +46,16 @@
     "format:check": "biome format ."
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
     "@biomejs/biome": "^2.4.14",
     "@types/node": "^25.6.0",
+    "@typescript/native-preview": "^7.0.0-dev.20260505.1",
+    "@effect/vitest": "^4.0.0-beta.60",
+    "publint": "^0.3.19",
+    "tsdown": "^0.21.10",
     "vitest": "^4.1.5"
   },
   "dependencies": {
-    "@effect/vitest": "^4.0.0-beta.60",
-    "@typescript/native-preview": "^7.0.0-dev.20260505.1",
     "effect": "^4.0.0-beta.60"
   }
 }
