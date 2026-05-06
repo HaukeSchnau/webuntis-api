@@ -3,12 +3,7 @@ import { Effect, Schema } from "effect";
 import { AuthClient } from "../../src/auth.ts";
 import { DecodeError } from "../../src/internal/errors.ts";
 import { WebUntisHttp } from "../../src/internal/http.ts";
-import {
-  jsonResponse,
-  makeCoreTestLayer,
-  makeJwt,
-  testConfig,
-} from "./helpers.ts";
+import { jsonResponse, makeCoreTestLayer, makeJwt, testConfig } from "./helpers.ts";
 
 describe("bootstrap and transport", () => {
   it.effect(
@@ -54,9 +49,7 @@ describe("bootstrap and transport", () => {
               return new Response(makeJwt(), { status: 200 });
             }
 
-            throw new Error(
-              `Unexpected request: ${request.method} ${request.url}`,
-            );
+            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
           }),
         ),
       );
@@ -76,9 +69,7 @@ describe("bootstrap and transport", () => {
         expect(finalHeaders).toHaveLength(1);
         expect(finalHeaders[0]?.["authorization"]).toContain("Bearer ");
         expect(finalHeaders[0]?.["cookie"]).toContain("JSESSIONID=login");
-        expect(
-          finalHeaders[0]?.["Tenant-Id"] ?? finalHeaders[0]?.["tenant-id"],
-        ).toBe("tenant-42");
+        expect(finalHeaders[0]?.["Tenant-Id"] ?? finalHeaders[0]?.["tenant-id"]).toBe("tenant-42");
         expect(
           finalHeaders[0]?.["X-Webuntis-Api-School-Year-Id"] ??
             finalHeaders[0]?.["x-webuntis-api-school-year-id"],
@@ -279,9 +270,7 @@ describe("bootstrap and transport", () => {
               return new Response(makeJwt(undefined), { status: 200 });
             }
 
-            throw new Error(
-              `Unexpected request: ${request.method} ${request.url}`,
-            );
+            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
           }),
         ),
       );
@@ -303,9 +292,7 @@ describe("bootstrap and transport", () => {
 
         expect(metadataCalls).toBe(1);
         expect(finalHeaders).toHaveLength(1);
-        expect(
-          finalHeaders[0]?.["Tenant-Id"] ?? finalHeaders[0]?.["tenant-id"],
-        ).toBe("tenant-42");
+        expect(finalHeaders[0]?.["Tenant-Id"] ?? finalHeaders[0]?.["tenant-id"]).toBe("tenant-42");
         expect(
           finalHeaders[0]?.["x-webuntis-api-school-year-id"] ??
             finalHeaders[0]?.["X-Webuntis-Api-School-Year-Id"],
@@ -351,9 +338,7 @@ describe("bootstrap and transport", () => {
               ]);
             }
 
-            throw new Error(
-              `Unexpected request: ${request.method} ${request.url}`,
-            );
+            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
           }),
         ),
       );
@@ -369,7 +354,7 @@ describe("bootstrap and transport", () => {
         const error = yield* Effect.flip(auth.ensureAuthenticated());
 
         expect(error).toBeInstanceOf(Error);
-        expect(String(error)).toContain("login");
+        expect(error.message).toContain("login");
       }).pipe(
         Effect.provide(
           makeCoreTestLayer((request) => {
@@ -391,9 +376,7 @@ describe("bootstrap and transport", () => {
               });
             }
 
-            throw new Error(
-              `Unexpected request: ${request.method} ${request.url}`,
-            );
+            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
           }),
         ),
       ),
@@ -448,9 +431,7 @@ describe("bootstrap and transport", () => {
               });
             }
 
-            throw new Error(
-              `Unexpected request: ${request.method} ${request.url}`,
-            );
+            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
           }),
         ),
       ),
@@ -504,9 +485,7 @@ describe("bootstrap and transport", () => {
               });
             }
 
-            throw new Error(
-              `Unexpected request: ${request.method} ${request.url}`,
-            );
+            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
           }),
         ),
       ),
@@ -578,9 +557,7 @@ describe("bootstrap and transport", () => {
               return jsonResponse({ unreadMessagesCount: 0 });
             }
 
-            throw new Error(
-              `Unexpected request: ${request.method} ${request.url}`,
-            );
+            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
           }),
         ),
       );

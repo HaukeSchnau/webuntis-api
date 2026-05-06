@@ -84,13 +84,7 @@ export const CalendarEntryTodayEntrySchema = Schema.Struct({
   type: CalendarEntryTodayTypeSchema,
 });
 
-export const CalendarEntryTodayEntriesSchema = Schema.Array(
-  CalendarEntryTodayEntrySchema,
-);
+export const CalendarEntryTodayEntriesSchema = Schema.Array(CalendarEntryTodayEntrySchema);
 
-export type CalendarEntryTodayEntry = Schema.Schema.Type<
-  typeof CalendarEntryTodayEntrySchema
->;
-export type CalendarEntryTodayEntries = Schema.Schema.Type<
-  typeof CalendarEntryTodayEntriesSchema
->;
+export type CalendarEntryTodayEntry = Schema.Schema.Type<typeof CalendarEntryTodayEntrySchema>;
+export type CalendarEntryTodayEntries = Schema.Schema.Type<typeof CalendarEntryTodayEntriesSchema>;

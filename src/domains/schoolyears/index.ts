@@ -8,10 +8,9 @@ export interface SchoolyearsClientShape {
   readonly list: () => Effect.Effect<ReadonlyArray<Schoolyear>, RequestFailure>;
 }
 
-export class SchoolyearsClient extends Context.Service<
-  SchoolyearsClient,
-  SchoolyearsClientShape
->()("webuntis/SchoolyearsClient") {
+export class SchoolyearsClient extends Context.Service<SchoolyearsClient, SchoolyearsClientShape>()(
+  "webuntis/SchoolyearsClient",
+) {
   static readonly layerNoDeps = Layer.effect(
     this,
     Effect.gen(function* () {

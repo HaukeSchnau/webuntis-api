@@ -45,22 +45,15 @@ const searchPayload = (query: string) => ({
 export interface SchoolDiscoveryShape {
   readonly search: (
     query: string,
-  ) => Effect.Effect<
-    ReadonlyArray<ResolvedSchool>,
-    DiscoveryError | TransportError | DecodeError
-  >;
+  ) => Effect.Effect<ReadonlyArray<ResolvedSchool>, DiscoveryError | TransportError | DecodeError>;
   readonly resolve: (
     query: string,
-  ) => Effect.Effect<
-    ResolvedSchool,
-    DiscoveryError | TransportError | DecodeError
-  >;
+  ) => Effect.Effect<ResolvedSchool, DiscoveryError | TransportError | DecodeError>;
 }
 
-export class SchoolDiscovery extends Context.Service<
-  SchoolDiscovery,
-  SchoolDiscoveryShape
->()("webuntis/internal/SchoolDiscovery") {
+export class SchoolDiscovery extends Context.Service<SchoolDiscovery, SchoolDiscoveryShape>()(
+  "webuntis/internal/SchoolDiscovery",
+) {
   static readonly layerNoDeps = Layer.effect(
     this,
     Effect.gen(function* () {
@@ -69,8 +62,7 @@ export class SchoolDiscovery extends Context.Service<
 
       const search: SchoolDiscoveryShape["search"] = (query) =>
         HttpClientRequest.post(
-          config.discoveryEndpoint ??
-            "https://schoolsearch.webuntis.com/schoolquery2",
+          config.discoveryEndpoint ?? "https://schoolsearch.webuntis.com/schoolquery2",
         ).pipe(
           HttpClientRequest.acceptJson,
           HttpClientRequest.bodyJson(searchPayload(query)),
@@ -169,9 +161,7 @@ export class SchoolDiscovery extends Context.Service<
               new DiscoveryError({
                 query,
                 message: `School discovery for ${JSON.stringify(query)} was ambiguous; provide WEBUNTIS_SCHOOL_LOGIN_NAME and server details`,
-                matches: schools.map(
-                  (school) => `${school.displayName} <${school.serverUrl}>`,
-                ),
+                matches: schools.map((school) => `${school.displayName} <${school.serverUrl}>`),
               }),
             );
           }),

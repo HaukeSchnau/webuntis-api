@@ -44,10 +44,7 @@ export const AppRequests = {
     policy: RequestPolicy.AuthOnly,
     schema: StartupActionsSchema,
   }),
-  getPlatformApplicationMenus: schemaRequest<
-    void,
-    typeof AppPlatformApplicationMenusSchema
-  >({
+  getPlatformApplicationMenus: schemaRequest<void, typeof AppPlatformApplicationMenusSchema>({
     method: "GET",
     path: "api/rest/view/v1/app/platform-application/menus",
     policy: RequestPolicy.AuthOnly,
@@ -77,19 +74,13 @@ export const AppRequests = {
     policy: RequestPolicy.AuthOnly,
     schema: DashboardCardsSchema,
   }),
-  getDashboardCardsDetail: schemaRequest<
-    void,
-    typeof DashboardCardsDetailSchema
-  >({
+  getDashboardCardsDetail: schemaRequest<void, typeof DashboardCardsDetailSchema>({
     method: "GET",
     path: "api/rest/view/v1/dashboard/cards/detail",
     policy: RequestPolicy.AuthOnly,
     schema: DashboardCardsDetailSchema,
   }),
-  getDashboardCardsStatus: schemaRequest<
-    void,
-    typeof DashboardCardsStatusSchema
-  >({
+  getDashboardCardsStatus: schemaRequest<void, typeof DashboardCardsStatusSchema>({
     method: "GET",
     path: "api/rest/view/v1/dashboard/cards/status",
     policy: RequestPolicy.AuthOnly,

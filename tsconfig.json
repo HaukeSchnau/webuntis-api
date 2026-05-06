@@ -15,5 +15,7 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true
-  }
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts", "*.config.ts"],
+  "exclude": ["dist", "node_modules"]
 }

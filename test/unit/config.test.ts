@@ -9,8 +9,7 @@ describe("config loading", () => {
       const config = yield* ClientConfig.fromEnv({
         schoolName: "IGS Lilienthal",
         schoolLoginName: "igs-lilienthal",
-        serverUrl:
-          "https://igs-lilienthal.webuntis.com/WebUntis/?school=igs-lilienthal",
+        serverUrl: "https://igs-lilienthal.webuntis.com/WebUntis/?school=igs-lilienthal",
         username: "tester",
         password: "secret",
       });
@@ -21,14 +20,12 @@ describe("config loading", () => {
     }),
   );
 
-  it.effect(
-    "returns a typed configuration error for missing required env vars",
-    () =>
-      Effect.gen(function* () {
-        const error = yield* Effect.flip(ClientConfig.fromEnv({}));
+  it.effect("returns a typed configuration error for missing required env vars", () =>
+    Effect.gen(function* () {
+      const error = yield* Effect.flip(ClientConfig.fromEnv({}));
 
-        expect(error).toBeInstanceOf(ConfigurationError);
-      }),
+      expect(error).toBeInstanceOf(ConfigurationError);
+    }),
   );
 
   it.effect("rejects invalid serverUrl values as configuration errors", () =>

@@ -10,10 +10,9 @@ export interface SessionClientShape {
   ) => Effect.Effect<SessionStatus, RequestFailure>;
 }
 
-export class SessionClient extends Context.Service<
-  SessionClient,
-  SessionClientShape
->()("webuntis/SessionClient") {
+export class SessionClient extends Context.Service<SessionClient, SessionClientShape>()(
+  "webuntis/SessionClient",
+) {
   static readonly layerNoDeps = Layer.effect(
     this,
     Effect.gen(function* () {

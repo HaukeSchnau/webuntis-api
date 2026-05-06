@@ -18,10 +18,7 @@ interface ObservedRequest {
   readonly body: string | undefined;
 }
 
-const decodeBody = (body: {
-  readonly _tag: string;
-  readonly body?: unknown;
-}) => {
+const decodeBody = (body: { readonly _tag: string; readonly body?: unknown }) => {
   if (body._tag === "Empty") {
     return undefined;
   }
@@ -29,9 +26,7 @@ const decodeBody = (body: {
     return new TextDecoder().decode(body.body);
   }
   if (body._tag === "Raw") {
-    return typeof body.body === "string"
-      ? body.body
-      : JSON.stringify(body.body);
+    return typeof body.body === "string" ? body.body : JSON.stringify(body.body);
   }
 
   return undefined;
@@ -403,9 +398,7 @@ describe("request descriptors", () => {
 
       const request = getLast(observed);
       expect(request.method).toBe("GET");
-      expect(request.url.pathname).toBe(
-        "/WebUntis/api/rest/view/v1/onboarding",
-      );
+      expect(request.url.pathname).toBe("/WebUntis/api/rest/view/v1/onboarding");
       expect(request.query["type"]).toBe("TIMETABLE");
       expect(request.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
@@ -452,9 +445,7 @@ describe("request descriptors", () => {
       expect(homeworkMetaRequest.url.pathname).toBe(
         "/WebUntis/api/rest/view/v1/classreg/homework/meta",
       );
-      expect(
-        homeworkMetaRequest.headers["x-webuntis-api-school-year-id"],
-      ).toBeUndefined();
+      expect(homeworkMetaRequest.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
 
       yield* classreg.getLessonTopicsMeta();
 
@@ -463,9 +454,7 @@ describe("request descriptors", () => {
       expect(lessonTopicsMetaRequest.url.pathname).toBe(
         "/WebUntis/api/rest/view/v1/classreg/lesson-topics/meta",
       );
-      expect(
-        lessonTopicsMetaRequest.headers["x-webuntis-api-school-year-id"],
-      ).toBeUndefined();
+      expect(lessonTopicsMetaRequest.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
 
       yield* classreg.getHomeworkList({
         classId: null,
@@ -495,31 +484,22 @@ describe("request descriptors", () => {
           dateRangeType: "SCHOOLYEAR",
         }),
       );
-      expect(
-        homeworkListRequest.headers["x-webuntis-api-school-year-id"],
-      ).toBeUndefined();
+      expect(homeworkListRequest.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
 
-  it.effect(
-    "exam detail routes use id path segments without school-year headers",
-    () => {
-      const observed: Array<ObservedRequest> = [];
+  it.effect("exam detail routes use id path segments without school-year headers", () => {
+    const observed: Array<ObservedRequest> = [];
 
-      return Effect.gen(function* () {
-        const exams = yield* ExamsClient;
-        yield* exams.getExam({ id: 42 });
+    return Effect.gen(function* () {
+      const exams = yield* ExamsClient;
+      yield* exams.getExam({ id: 42 });
 
-        const request = getLast(observed);
-        expect(request.url.pathname).toBe(
-          "/WebUntis/api/rest/view/v1/exams/42",
-        );
-        expect(
-          request.headers["x-webuntis-api-school-year-id"],
-        ).toBeUndefined();
-      }).pipe(Effect.provide(makeRecorderLayer(observed)));
-    },
-  );
+      const request = getLast(observed);
+      expect(request.url.pathname).toBe("/WebUntis/api/rest/view/v1/exams/42");
+      expect(request.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
 
   it.effect("exam list routes accept browser-observed date filters", () => {
     const observed: Array<ObservedRequest> = [];
@@ -544,9 +524,7 @@ describe("request descriptors", () => {
       });
 
       const filterRequest = getLast(observed);
-      expect(filterRequest.url.pathname).toBe(
-        "/WebUntis/api/rest/view/v1/exams/filter",
-      );
+      expect(filterRequest.url.pathname).toBe("/WebUntis/api/rest/view/v1/exams/filter");
       expect(filterRequest.query["start"]).toBe("2026-05-04");
       expect(filterRequest.query["end"]).toBe("2026-05-10");
 
@@ -556,9 +534,7 @@ describe("request descriptors", () => {
       });
 
       const statisticsRequest = getLast(observed);
-      expect(statisticsRequest.url.pathname).toBe(
-        "/WebUntis/api/rest/view/v1/exams/statistics",
-      );
+      expect(statisticsRequest.url.pathname).toBe("/WebUntis/api/rest/view/v1/exams/statistics");
       expect(statisticsRequest.query["start"]).toBe("2026-05-04");
       expect(statisticsRequest.query["end"]).toBe("2026-05-10");
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
@@ -572,63 +548,54 @@ describe("request descriptors", () => {
       yield* messages.getPermissions();
 
       const request = getLast(observed);
-      expect(request.url.pathname).toBe(
-        "/WebUntis/api/rest/view/v1/messages/permissions",
-      );
+      expect(request.url.pathname).toBe("/WebUntis/api/rest/view/v1/messages/permissions");
       expect(request.headers["x-webuntis-api-school-year-id"]).toBe("7");
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
 
-  it.effect(
-    "message recipient routes keep legacy v1 and additive v2 contracts",
-    () => {
-      const observed: Array<ObservedRequest> = [];
+  it.effect("message recipient routes keep legacy v1 and additive v2 contracts", () => {
+    const observed: Array<ObservedRequest> = [];
 
-      return Effect.gen(function* () {
-        const messages = yield* MessagesClient;
-        yield* messages.getRecipientFilter({ recipientOption: "STAFF" });
+    return Effect.gen(function* () {
+      const messages = yield* MessagesClient;
+      yield* messages.getRecipientFilter({ recipientOption: "STAFF" });
 
-        const filterRequest = getLast(observed);
-        expect(filterRequest.url.pathname).toBe(
-          "/WebUntis/api/rest/view/v1/messages/recipients/STAFF/filter",
-        );
+      const filterRequest = getLast(observed);
+      expect(filterRequest.url.pathname).toBe(
+        "/WebUntis/api/rest/view/v1/messages/recipients/STAFF/filter",
+      );
 
-        yield* messages.filterComposeRecipients({
-          recipientOption: "STAFF",
+      yield* messages.filterComposeRecipients({
+        recipientOption: "STAFF",
+        searchText: "sei",
+      });
+
+      const composeRequest = getLast(observed);
+      expect(composeRequest.method).toBe("POST");
+      expect(composeRequest.url.pathname).toBe(
+        "/WebUntis/api/rest/view/v2/messages/recipients/STAFF/filter",
+      );
+      expect(composeRequest.body).toBe(
+        JSON.stringify({
+          filters: [],
           searchText: "sei",
-        });
+        }),
+      );
+      expect(composeRequest.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
 
-        const composeRequest = getLast(observed);
-        expect(composeRequest.method).toBe("POST");
-        expect(composeRequest.url.pathname).toBe(
-          "/WebUntis/api/rest/view/v2/messages/recipients/STAFF/filter",
-        );
-        expect(composeRequest.body).toBe(
-          JSON.stringify({
-            filters: [],
-            searchText: "sei",
-          }),
-        );
-        expect(
-          composeRequest.headers["x-webuntis-api-school-year-id"],
-        ).toBeUndefined();
+      yield* messages.searchRecipients({
+        recipientOption: "STAFF",
+        searchText: "anna",
+      });
 
-        yield* messages.searchRecipients({
-          recipientOption: "STAFF",
-          searchText: "anna",
-        });
-
-        const searchRequest = getLast(observed);
-        expect(searchRequest.url.pathname).toBe(
-          "/WebUntis/api/rest/view/v1/messages/recipients/STAFF/search",
-        );
-        expect(searchRequest.query["searchText"]).toBe("anna");
-        expect(
-          searchRequest.headers["x-webuntis-api-school-year-id"],
-        ).toBeUndefined();
-      }).pipe(Effect.provide(makeRecorderLayer(observed)));
-    },
-  );
+      const searchRequest = getLast(observed);
+      expect(searchRequest.url.pathname).toBe(
+        "/WebUntis/api/rest/view/v1/messages/recipients/STAFF/search",
+      );
+      expect(searchRequest.query["searchText"]).toBe("anna");
+      expect(searchRequest.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
 
   it.effect("message detail routes use request-object ids", () => {
     const observed: Array<ObservedRequest> = [];
@@ -638,16 +605,12 @@ describe("request descriptors", () => {
       yield* messages.getMessage({ id: 42 });
 
       const detailRequest = getLast(observed);
-      expect(detailRequest.url.pathname).toBe(
-        "/WebUntis/api/rest/view/v1/messages/42",
-      );
+      expect(detailRequest.url.pathname).toBe("/WebUntis/api/rest/view/v1/messages/42");
 
       yield* messages.getReplyForm({ id: 42 });
 
       const replyRequest = getLast(observed);
-      expect(replyRequest.url.pathname).toBe(
-        "/WebUntis/api/rest/view/v1/messages/42/reply-form",
-      );
+      expect(replyRequest.url.pathname).toBe("/WebUntis/api/rest/view/v1/messages/42/reply-form");
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
 
@@ -659,9 +622,7 @@ describe("request descriptors", () => {
       yield* profile.getUserEmail();
 
       const request = getLast(observed);
-      expect(request.url.pathname).toBe(
-        "/WebUntis/api/rest/view/v1/profile/user-email",
-      );
+      expect(request.url.pathname).toBe("/WebUntis/api/rest/view/v1/profile/user-email");
       expect(request.headers["x-webuntis-api-school-year-id"]).toBe("7");
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
@@ -674,62 +635,48 @@ describe("request descriptors", () => {
       yield* schoolyears.list();
 
       const request = getLast(observed);
-      expect(request.url.pathname).toBe(
-        "/WebUntis/api/rest/view/v1/schoolyears",
-      );
+      expect(request.url.pathname).toBe("/WebUntis/api/rest/view/v1/schoolyears");
       expect(request.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
 
-  it.effect(
-    "session status routes post bodies without school-year headers",
-    () => {
-      const observed: Array<ObservedRequest> = [];
+  it.effect("session status routes post bodies without school-year headers", () => {
+    const observed: Array<ObservedRequest> = [];
 
-      return Effect.gen(function* () {
-        const session = yield* SessionClient;
-        yield* session.getStatus({ clientTimeZone: "Europe/Berlin" });
+    return Effect.gen(function* () {
+      const session = yield* SessionClient;
+      yield* session.getStatus({ clientTimeZone: "Europe/Berlin" });
 
-        const request = getLast(observed);
-        expect(request.method).toBe("POST");
-        expect(request.url.pathname).toBe(
-          "/WebUntis/api/rest/view/v1/session/status",
-        );
-        expect(
-          request.headers["x-webuntis-api-school-year-id"],
-        ).toBeUndefined();
-      }).pipe(Effect.provide(makeRecorderLayer(observed)));
-    },
-  );
+      const request = getLast(observed);
+      expect(request.method).toBe("POST");
+      expect(request.url.pathname).toBe("/WebUntis/api/rest/view/v1/session/status");
+      expect(request.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
 
-  it.effect(
-    "timetable entry routes encode query params and metadata headers",
-    () => {
-      const observed: Array<ObservedRequest> = [];
+  it.effect("timetable entry routes encode query params and metadata headers", () => {
+    const observed: Array<ObservedRequest> = [];
 
-      return Effect.gen(function* () {
-        const timetable = yield* TimetableClient;
-        yield* timetable.getEntries({
-          start: "2026-03-16",
-          end: "2026-03-20",
-          resourceType: "ROOM",
-          resources: [1, 2],
-          timetableType: "STANDARD",
-          format: 3,
-          layout: "START_TIME",
-          periodTypes: "STANDARD",
-        });
+    return Effect.gen(function* () {
+      const timetable = yield* TimetableClient;
+      yield* timetable.getEntries({
+        start: "2026-03-16",
+        end: "2026-03-20",
+        resourceType: "ROOM",
+        resources: [1, 2],
+        timetableType: "STANDARD",
+        format: 3,
+        layout: "START_TIME",
+        periodTypes: "STANDARD",
+      });
 
-        const request = getLast(observed);
-        expect(request.url.pathname).toBe(
-          "/WebUntis/api/rest/view/v1/timetable/entries",
-        );
-        expect(request.query["resources"]).toBe("1,2");
-        expect(request.query["resourceType"]).toBe("ROOM");
-        expect(request.headers["x-webuntis-api-school-year-id"]).toBe("7");
-      }).pipe(Effect.provide(makeRecorderLayer(observed)));
-    },
-  );
+      const request = getLast(observed);
+      expect(request.url.pathname).toBe("/WebUntis/api/rest/view/v1/timetable/entries");
+      expect(request.query["resources"]).toBe("1,2");
+      expect(request.query["resourceType"]).toBe("ROOM");
+      expect(request.headers["x-webuntis-api-school-year-id"]).toBe("7");
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
 
   it.effect("timetable grid routes use request-object inputs", () => {
     const observed: Array<ObservedRequest> = [];
@@ -739,9 +686,7 @@ describe("request descriptors", () => {
       yield* timetable.getGrid({ timetableType: "SUBSTITUTION" });
 
       const request = getLast(observed);
-      expect(request.url.pathname).toBe(
-        "/WebUntis/api/rest/view/v1/timetable/grid",
-      );
+      expect(request.url.pathname).toBe("/WebUntis/api/rest/view/v1/timetable/grid");
       expect(request.query["timetableType"]).toBe("SUBSTITUTION");
       expect(request.headers["x-webuntis-api-school-year-id"]).toBe("7");
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
@@ -760,9 +705,7 @@ describe("request descriptors", () => {
       });
 
       const request = getLast(observed);
-      expect(request.url.pathname).toBe(
-        "/WebUntis/api/rest/view/v1/timetable/entriesWeekOverview",
-      );
+      expect(request.url.pathname).toBe("/WebUntis/api/rest/view/v1/timetable/entriesWeekOverview");
       expect(request.query["start"]).toBe("2026-05-04");
       expect(request.query["end"]).toBe("2026-05-08");
       expect(request.query["resourceType"]).toBe("ROOM");

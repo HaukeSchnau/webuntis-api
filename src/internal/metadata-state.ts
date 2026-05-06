@@ -11,10 +11,7 @@ import {
 } from "./errors.ts";
 import { strictJsonParseOptions } from "./schema.ts";
 import { SessionState } from "./session-state.ts";
-import type {
-  MetadataState as MetadataCache,
-  MetadataSnapshot,
-} from "./types.ts";
+import type { MetadataState as MetadataCache, MetadataSnapshot } from "./types.ts";
 import {
   emptyMetadataState,
   hasMetadataForSession,
@@ -56,17 +53,14 @@ export interface MetadataStateShape {
   readonly clear: () => Effect.Effect<void>;
 }
 
-export class MetadataState extends Context.Service<
-  MetadataState,
-  MetadataStateShape
->()("webuntis/internal/MetadataState") {
+export class MetadataState extends Context.Service<MetadataState, MetadataStateShape>()(
+  "webuntis/internal/MetadataState",
+) {
   static readonly layerNoDeps = Layer.effect(
     this,
     Effect.gen(function* () {
       const sessionState = yield* SessionState;
-      const stateRef = yield* SynchronizedRef.make<MetadataCache>(
-        emptyMetadataState(),
-      );
+      const stateRef = yield* SynchronizedRef.make<MetadataCache>(emptyMetadataState());
 
       const fetchMetadata = () =>
         Effect.gen(function* () {
@@ -75,25 +69,16 @@ export class MetadataState extends Context.Service<
             .execute(
               HttpClientRequest.get(
                 `${resolveBaseUrl(session.resolvedSchool)}/api/rest/view/v1/app/data`,
-              ).pipe(
-                HttpClientRequest.acceptJson,
-                HttpClientRequest.bearerToken(session.token),
-              ),
+              ).pipe(HttpClientRequest.acceptJson, HttpClientRequest.bearerToken(session.token)),
             )
             .pipe(
               Effect.mapError((error) =>
-                httpClientErrorToTransportError(
-                  "GET",
-                  "api/rest/view/v1/app/data",
-                  error,
-                ),
+                httpClientErrorToTransportError("GET", "api/rest/view/v1/app/data", error),
               ),
             );
 
           if (response.status < 200 || response.status >= 300) {
-            const body = yield* response.text.pipe(
-              Effect.catch(() => Effect.succeed("")),
-            );
+            const body = yield* response.text.pipe(Effect.catch(() => Effect.succeed("")));
 
             return yield* Effect.fail(
               new AuthError({
@@ -108,9 +93,7 @@ export class MetadataState extends Context.Service<
             BootstrapAppDataSchema,
             strictJsonParseOptions,
           )(response).pipe(
-            Effect.mapError((error) =>
-              decodeError("api/rest/view/v1/app/data", error),
-            ),
+            Effect.mapError((error) => decodeError("api/rest/view/v1/app/data", error)),
           );
 
           const metadata = {
@@ -128,10 +111,7 @@ export class MetadataState extends Context.Service<
 
           return yield* SynchronizedRef.modifyEffect(stateRef, (metadata) =>
             hasMetadataForSession(metadata, session)
-              ? Effect.succeed([
-                  toMetadataSnapshot(session, metadata),
-                  metadata,
-                ] as const)
+              ? Effect.succeed([toMetadataSnapshot(session, metadata), metadata] as const)
               : fetchMetadata(),
           );
         });

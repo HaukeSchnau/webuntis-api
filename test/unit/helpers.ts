@@ -10,8 +10,7 @@ import { makeWebUntisRuntimeLayer } from "../../src/internal/runtime.ts";
 export const testConfig: ClientConfig["Service"] = {
   schoolName: "IGS Lilienthal",
   schoolLoginName: "igs-lilienthal",
-  serverUrl:
-    "https://igs-lilienthal.webuntis.com/WebUntis/?school=igs-lilienthal",
+  serverUrl: "https://igs-lilienthal.webuntis.com/WebUntis/?school=igs-lilienthal",
   username: "tester",
   password: Redacted.make("secret"),
 };
@@ -32,25 +31,25 @@ export const makeJwt = (expSecondsFromNow: number | undefined = 3_600) => {
   return `${header}.${payload}.signature`;
 };
 
-export const jsonResponse = (body: unknown, init: ResponseInit = {}) =>
-  new Response(JSON.stringify(body), {
-    status: 200,
-    headers: {
-      "content-type": "application/json",
-      ...(init.headers ?? {}),
-    },
+export const jsonResponse = (body: unknown, init: ResponseInit = {}) => {
+  const headers = new Headers(init.headers);
+  if (!headers.has("content-type")) {
+    headers.set("content-type", "application/json");
+  }
+
+  return new Response(JSON.stringify(body), {
     ...init,
+    status: 200,
+    headers,
   });
+};
 
 export const makeMockHttpClient = (
-  handler: (
-    request: HttpClientRequest.HttpClientRequest,
-  ) => Response | Promise<Response>,
+  handler: (request: HttpClientRequest.HttpClientRequest) => Response | Promise<Response>,
 ) =>
   HttpClient.make((request) =>
     Effect.tryPromise({
-      try: async () =>
-        HttpClientResponse.fromWeb(request, await handler(request)),
+      try: async () => HttpClientResponse.fromWeb(request, await handler(request)),
       catch: (cause) =>
         new HttpClientError.HttpClientError({
           reason: new HttpClientError.TransportError({
@@ -65,10 +64,7 @@ export const makeCoreTestLayer = (
   handler: Parameters<typeof makeMockHttpClient>[0],
   config: ClientConfig["Service"] = testConfig,
 ) => {
-  const transportLayer = Layer.succeed(
-    HttpClient.HttpClient,
-    makeMockHttpClient(handler),
-  );
+  const transportLayer = Layer.succeed(HttpClient.HttpClient, makeMockHttpClient(handler));
   const runtimeLayer = makeWebUntisRuntimeLayer({
     config,
     transportLayer,

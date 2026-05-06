@@ -12,10 +12,7 @@ interface EndpointCatalog {
 
 const endpointCatalog = JSON.parse(
   readFileSync(
-    new URL(
-      "../../docs/research/webuntis/modern-rest-endpoints.json",
-      import.meta.url,
-    ),
+    new URL("../../docs/research/webuntis/modern-rest-endpoints.json", import.meta.url),
     "utf8",
   ),
 ) as EndpointCatalog;
@@ -39,9 +36,7 @@ const groupByFamily = (endpoints: ReadonlyArray<string>) =>
 
 describe("reverse-engineering artifacts", () => {
   it("keeps the mined REST endpoint catalog stable", () => {
-    expect(endpointCatalog.endpointCount).toBe(
-      endpointCatalog.endpoints.length,
-    );
+    expect(endpointCatalog.endpointCount).toBe(endpointCatalog.endpoints.length);
     expect({
       observedAt: endpointCatalog.observedAt,
       tenantHost: endpointCatalog.tenantHost,

@@ -6,6 +6,7 @@ import {
   type DecodeError,
   type DiscoveryError,
   decodeError,
+  errorMessage,
   TransportError,
   type TransportError as TransportErrorType,
 } from "./errors.ts";
@@ -25,16 +26,10 @@ import { resolveBaseUrl } from "./types.ts";
 
 const defaultAcceptHeader = "application/json, text/plain, */*";
 
-export type RequestFailure =
-  | DiscoveryError
-  | AuthError
-  | TransportErrorType
-  | DecodeError;
+export type RequestFailure = DiscoveryError | AuthError | TransportErrorType | DecodeError;
 
 export interface RequestOptions {
-  readonly query?: Readonly<
-    Record<string, string | number | boolean | undefined>
-  >;
+  readonly query?: Readonly<Record<string, string | number | boolean | undefined>>;
   readonly headers?: Readonly<Record<string, string | undefined>>;
   readonly policy?: RequestPolicyType | undefined;
   readonly body?: unknown;
@@ -68,11 +63,7 @@ export interface WebUntisHttpShape {
     path: string,
     schema: S,
     options?: RequestOptions,
-  ) => Effect.Effect<
-    Schema.Schema.Type<S>,
-    RequestFailure,
-    S["DecodingServices"]
-  >;
+  ) => Effect.Effect<Schema.Schema.Type<S>, RequestFailure, S["DecodingServices"]>;
   readonly post: (
     path: string,
     options?: RequestOptions,
@@ -85,11 +76,7 @@ export interface WebUntisHttpShape {
     path: string,
     schema: S,
     options?: RequestOptions,
-  ) => Effect.Effect<
-    Schema.Schema.Type<S>,
-    RequestFailure,
-    S["DecodingServices"]
-  >;
+  ) => Effect.Effect<Schema.Schema.Type<S>, RequestFailure, S["DecodingServices"]>;
   readonly put: (
     path: string,
     options?: RequestOptions,
@@ -102,11 +89,7 @@ export interface WebUntisHttpShape {
     path: string,
     schema: S,
     options?: RequestOptions,
-  ) => Effect.Effect<
-    Schema.Schema.Type<S>,
-    RequestFailure,
-    S["DecodingServices"]
-  >;
+  ) => Effect.Effect<Schema.Schema.Type<S>, RequestFailure, S["DecodingServices"]>;
   readonly request: <Input>(
     descriptor: RequestDescriptor<Input>,
     input: Input,
@@ -118,17 +101,12 @@ export interface WebUntisHttpShape {
   readonly requestSchema: <Input, S extends Schema.Top>(
     descriptor: SchemaRequestDescriptor<Input, S>,
     input: Input,
-  ) => Effect.Effect<
-    Schema.Schema.Type<S>,
-    RequestFailure,
-    S["DecodingServices"]
-  >;
+  ) => Effect.Effect<Schema.Schema.Type<S>, RequestFailure, S["DecodingServices"]>;
 }
 
-export class WebUntisHttp extends Context.Service<
-  WebUntisHttp,
-  WebUntisHttpShape
->()("webuntis/internal/WebUntisHttp") {
+export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShape>()(
+  "webuntis/internal/WebUntisHttp",
+) {
   static readonly layerNoDeps = Layer.effect(
     this,
     Effect.gen(function* () {
@@ -157,23 +135,16 @@ export class WebUntisHttp extends Context.Service<
 
           let request = HttpClientRequest.make(method)(url).pipe(
             HttpClientRequest.setUrlParams(options.query ?? {}),
-            HttpClientRequest.setHeaders(
-              mergeHeaders(baseHeaders, options.headers),
-            ),
+            HttpClientRequest.setHeaders(mergeHeaders(baseHeaders, options.headers)),
             HttpClientRequest.bearerToken(state.token),
           );
 
           if (state.tenantId !== undefined) {
-            request = HttpClientRequest.setHeader(
-              request,
-              "Tenant-Id",
-              state.tenantId,
-            );
+            request = HttpClientRequest.setHeader(request, "Tenant-Id", state.tenantId);
           }
 
           if (
-            (options.policy ?? RequestPolicy.Metadata) ===
-              RequestPolicy.Metadata &&
+            (options.policy ?? RequestPolicy.Metadata) === RequestPolicy.Metadata &&
             "schoolYearId" in state &&
             state.schoolYearId !== undefined
           ) {
@@ -184,16 +155,13 @@ export class WebUntisHttp extends Context.Service<
             );
           }
           if (method !== "GET" && options.body !== undefined) {
-            request = yield* HttpClientRequest.bodyJson(
-              request,
-              options.body,
-            ).pipe(
+            request = yield* HttpClientRequest.bodyJson(request, options.body).pipe(
               Effect.mapError(
                 (error) =>
                   new TransportError({
                     method,
                     path,
-                    message: String(error),
+                    message: errorMessage(error),
                     cause: error,
                   }),
               ),
@@ -217,7 +185,7 @@ export class WebUntisHttp extends Context.Service<
                   new TransportError({
                     method,
                     path,
-                    message: String(error),
+                    message: errorMessage(error),
                     cause: error,
                   }),
               ),
@@ -250,11 +218,7 @@ export class WebUntisHttp extends Context.Service<
         );
       };
 
-      const execute: WebUntisHttpShape["execute"] = (
-        method,
-        path,
-        options = {},
-      ) =>
+      const execute: WebUntisHttpShape["execute"] = (method, path, options = {}) =>
         Effect.gen(function* () {
           const policy = options.policy ?? RequestPolicy.Metadata;
           const state =
@@ -274,10 +238,7 @@ export class WebUntisHttp extends Context.Service<
             policy,
           });
 
-          if (
-            initialResponse.status !== 401 &&
-            initialResponse.status !== 403
-          ) {
+          if (initialResponse.status !== 401 && initialResponse.status !== 403) {
             return yield* failIfNonSuccess(method, path, initialResponse);
           }
 
@@ -285,15 +246,10 @@ export class WebUntisHttp extends Context.Service<
           yield* sessionState.clear();
 
           const refreshedState = yield* resolveState(policy);
-          const retriedResponse = yield* executeRequest(
-            refreshedState,
-            method,
-            path,
-            {
-              ...options,
-              policy,
-            },
-          );
+          const retriedResponse = yield* executeRequest(refreshedState, method, path, {
+            ...options,
+            policy,
+          });
 
           return yield* failIfNonSuccess(method, path, retriedResponse);
         });
@@ -301,10 +257,7 @@ export class WebUntisHttp extends Context.Service<
       const decodeSchema = <S extends Schema.Top>(
         path: string,
         schema: S,
-        effect: Effect.Effect<
-          HttpClientResponse.HttpClientResponse,
-          RequestFailure
-        >,
+        effect: Effect.Effect<HttpClientResponse.HttpClientResponse, RequestFailure>,
       ) =>
         effect.pipe(
           Effect.flatMap((response) =>
@@ -313,30 +266,19 @@ export class WebUntisHttp extends Context.Service<
               strictJsonParseOptions,
             )(response).pipe(
               Effect.mapError((error) =>
-                error instanceof TransportError
-                  ? error
-                  : decodeError(path, error),
+                error instanceof TransportError ? error : decodeError(path, error),
               ),
             ),
           ),
-        ) as Effect.Effect<
-          Schema.Schema.Type<S>,
-          RequestFailure,
-          S["DecodingServices"]
-        >;
+        ) as Effect.Effect<Schema.Schema.Type<S>, RequestFailure, S["DecodingServices"]>;
 
       const decodeJson = (
         path: string,
-        effect: Effect.Effect<
-          HttpClientResponse.HttpClientResponse,
-          RequestFailure
-        >,
+        effect: Effect.Effect<HttpClientResponse.HttpClientResponse, RequestFailure>,
       ) =>
         effect.pipe(
           Effect.flatMap((response) =>
-            response.json.pipe(
-              Effect.mapError((error) => decodeError(path, error)),
-            ),
+            response.json.pipe(Effect.mapError((error) => decodeError(path, error))),
           ),
         );
 
@@ -355,42 +297,29 @@ export class WebUntisHttp extends Context.Service<
         return executeResolved(resolved);
       };
 
-      const requestJson: WebUntisHttpShape["requestJson"] = (
-        descriptor,
-        input,
-      ) => {
+      const requestJson: WebUntisHttpShape["requestJson"] = (descriptor, input) => {
         const resolved = resolveRequest(descriptor, input);
         return decodeJson(resolved.path, executeResolved(resolved));
       };
 
-      const requestSchema: WebUntisHttpShape["requestSchema"] = (
-        descriptor,
-        input,
-      ) => {
+      const requestSchema: WebUntisHttpShape["requestSchema"] = (descriptor, input) => {
         const resolved = resolveRequest(descriptor, input);
 
-        return decodeSchema(
-          resolved.path,
-          descriptor.schema,
-          executeResolved(resolved),
-        );
+        return decodeSchema(resolved.path, descriptor.schema, executeResolved(resolved));
       };
 
       return WebUntisHttp.of({
         execute,
         get: (path, options) => execute("GET", path, options),
-        getJson: (path, options) =>
-          decodeJson(path, execute("GET", path, options)),
+        getJson: (path, options) => decodeJson(path, execute("GET", path, options)),
         getSchema: (path, schema, options) =>
           decodeSchema(path, schema, execute("GET", path, options)),
         post: (path, options) => execute("POST", path, options),
-        postJson: (path, options) =>
-          decodeJson(path, execute("POST", path, options)),
+        postJson: (path, options) => decodeJson(path, execute("POST", path, options)),
         postSchema: (path, schema, options) =>
           decodeSchema(path, schema, execute("POST", path, options)),
         put: (path, options) => execute("PUT", path, options),
-        putJson: (path, options) =>
-          decodeJson(path, execute("PUT", path, options)),
+        putJson: (path, options) => decodeJson(path, execute("PUT", path, options)),
         putSchema: (path, schema, options) =>
           decodeSchema(path, schema, execute("PUT", path, options)),
         request,

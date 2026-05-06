@@ -12,10 +12,7 @@ import {
   type TransportError,
 } from "./errors.ts";
 import { SchoolResolver } from "./school-resolver.ts";
-import type {
-  AuthenticatedState,
-  SessionState as SessionCache,
-} from "./types.ts";
+import type { AuthenticatedState, SessionState as SessionCache } from "./types.ts";
 import {
   emptySessionState,
   hasFreshToken,
@@ -64,10 +61,9 @@ export interface SessionStateShape {
   readonly clear: () => Effect.Effect<void>;
 }
 
-export class SessionState extends Context.Service<
-  SessionState,
-  SessionStateShape
->()("webuntis/internal/SessionState") {
+export class SessionState extends Context.Service<SessionState, SessionStateShape>()(
+  "webuntis/internal/SessionState",
+) {
   static readonly layerNoDeps = Layer.effect(
     this,
     Effect.gen(function* () {
@@ -75,9 +71,7 @@ export class SessionState extends Context.Service<
       const clientConfig = yield* ClientConfig;
       const schoolResolver = yield* SchoolResolver;
       const cookiesRef = yield* Ref.make(Cookies.empty);
-      const stateRef = yield* SynchronizedRef.make<SessionCache>(
-        emptySessionState(),
-      );
+      const stateRef = yield* SynchronizedRef.make<SessionCache>(emptySessionState());
       const client = baseClient.pipe(HttpClient.withCookiesRef(cookiesRef));
 
       const refreshSessionState = (previous: SessionCache) =>
@@ -87,17 +81,11 @@ export class SessionState extends Context.Service<
 
           const seedResponse = yield* client
             .execute(
-              HttpClientRequest.get(`${baseUrl}/index.do`).pipe(
-                HttpClientRequest.acceptJson,
-              ),
+              HttpClientRequest.get(`${baseUrl}/index.do`).pipe(HttpClientRequest.acceptJson),
             )
             .pipe(
               Effect.mapError((error) =>
-                httpClientErrorToTransportError(
-                  "GET",
-                  `${baseUrl}/index.do`,
-                  error,
-                ),
+                httpClientErrorToTransportError("GET", `${baseUrl}/index.do`, error),
               ),
             );
 
@@ -173,11 +161,7 @@ export class SessionState extends Context.Service<
                 redirect: "manual",
               }),
               Effect.mapError((error) =>
-                httpClientErrorToTransportError(
-                  "GET",
-                  `${baseUrl}/api/token/new`,
-                  error,
-                ),
+                httpClientErrorToTransportError("GET", `${baseUrl}/api/token/new`, error),
               ),
             );
 
@@ -193,18 +177,11 @@ export class SessionState extends Context.Service<
 
           const tokenString = (yield* tokenResponse.text.pipe(
             Effect.mapError((error) =>
-              httpClientErrorToTransportError(
-                "GET",
-                `${baseUrl}/api/token/new`,
-                error,
-              ),
+              httpClientErrorToTransportError("GET", `${baseUrl}/api/token/new`, error),
             ),
           )).trim();
 
-          if (
-            tokenString.length === 0 ||
-            loginResponseLooksLikeHtml(tokenString)
-          ) {
+          if (tokenString.length === 0 || loginResponseLooksLikeHtml(tokenString)) {
             return yield* Effect.fail(
               new AuthError({
                 stage: "token",
@@ -217,9 +194,7 @@ export class SessionState extends Context.Service<
             resolvedSchool: school,
             tenantId: clientConfig.tenantId ?? school.tenantId,
             token: Redacted.make(tokenString),
-            tokenExpiresAt:
-              parseJwtExpiration(tokenString) ??
-              Date.now() + tokenFallbackValidityMs,
+            tokenExpiresAt: parseJwtExpiration(tokenString) ?? Date.now() + tokenFallbackValidityMs,
             generation: previous.generation + 1,
           } satisfies AuthenticatedState;
         });
@@ -241,9 +216,7 @@ export class SessionState extends Context.Service<
         );
 
       const refreshToken = () =>
-        refreshSession().pipe(
-          Effect.map((state) => Redacted.value(state.token)),
-        );
+        refreshSession().pipe(Effect.map((state) => Redacted.value(state.token)));
 
       const clear = () =>
         Ref.set(cookiesRef, Cookies.empty).pipe(

@@ -41,9 +41,7 @@ export const AppPlatformApplicationMenuSchema = Schema.Struct({
   redirectUrl: Schema.String,
 });
 
-export const AppPlatformApplicationMenusSchema = Schema.Array(
-  AppPlatformApplicationMenuSchema,
-);
+export const AppPlatformApplicationMenusSchema = Schema.Array(AppPlatformApplicationMenuSchema);
 
 export type AppPlatformApplicationMenu = Schema.Schema.Type<
   typeof AppPlatformApplicationMenuSchema
@@ -57,9 +55,7 @@ export const AppThirdPartyDataSchema = Schema.Struct({
   sleekplanToken: Schema.String,
 });
 
-export type AppThirdPartyData = Schema.Schema.Type<
-  typeof AppThirdPartyDataSchema
->;
+export type AppThirdPartyData = Schema.Schema.Type<typeof AppThirdPartyDataSchema>;
 
 export const AppExamIntegrationRoleSchema = Schema.Literals([
   "ADMIN",
@@ -72,15 +68,9 @@ export const AppExamIntegrationRoleSchema = Schema.Literals([
   "DEFAULT",
 ]);
 
-export type AppExamIntegrationRole = Schema.Schema.Type<
-  typeof AppExamIntegrationRoleSchema
->;
+export type AppExamIntegrationRole = Schema.Schema.Type<typeof AppExamIntegrationRoleSchema>;
 
-export const AppExamIntegrationViewTypeSchema = Schema.Literals([
-  "OVERVIEW",
-  "DETAIL",
-  "EXAMLIST",
-]);
+export const AppExamIntegrationViewTypeSchema = Schema.Literals(["OVERVIEW", "DETAIL", "EXAMLIST"]);
 
 export type AppExamIntegrationViewType = Schema.Schema.Type<
   typeof AppExamIntegrationViewTypeSchema
@@ -100,12 +90,8 @@ export const AppExamIntegrationSchema = Schema.Struct({
 
 export const AppExamIntegrationsSchema = Schema.Array(AppExamIntegrationSchema);
 
-export type AppExamIntegration = Schema.Schema.Type<
-  typeof AppExamIntegrationSchema
->;
-export type AppExamIntegrations = Schema.Schema.Type<
-  typeof AppExamIntegrationsSchema
->;
+export type AppExamIntegration = Schema.Schema.Type<typeof AppExamIntegrationSchema>;
+export type AppExamIntegrations = Schema.Schema.Type<typeof AppExamIntegrationsSchema>;
 
 export const DashboardCardSchema = JsonObjectSchema;
 export const DashboardCardsSchema = Schema.Struct({
@@ -119,17 +105,13 @@ export const DashboardCardsDetailSchema = Schema.Struct({
   dashboardCardsDetails: Schema.Array(DashboardCardsDetailItemSchema),
 });
 
-export type DashboardCardsDetail = Schema.Schema.Type<
-  typeof DashboardCardsDetailSchema
->;
+export type DashboardCardsDetail = Schema.Schema.Type<typeof DashboardCardsDetailSchema>;
 
 export const DashboardCardsStatusSchema = Schema.Struct({
   unreadCardsCount: Schema.Number,
 });
 
-export type DashboardCardsStatus = Schema.Schema.Type<
-  typeof DashboardCardsStatusSchema
->;
+export type DashboardCardsStatus = Schema.Schema.Type<typeof DashboardCardsStatusSchema>;
 
 export const TodayMetaSchema = Schema.Struct({
   greetingName: Schema.String,
@@ -192,9 +174,7 @@ export const MobilePermissionSchema = Schema.Literals([
   "CHANGE_OWN_PASSWORD",
 ]);
 
-export type MobilePermission = Schema.Schema.Type<
-  typeof MobilePermissionSchema
->;
+export type MobilePermission = Schema.Schema.Type<typeof MobilePermissionSchema>;
 
 export const MobileUserSchema = Schema.Struct({
   id: Schema.Number,

@@ -1,9 +1,6 @@
 import { describe, expect, it, layer } from "@effect/vitest";
 import { Effect, Layer, Schema } from "effect";
-import {
-  layer as makeWebUntisLayer,
-  WebUntisClient,
-} from "../../src/client.ts";
+import { layer as makeWebUntisLayer, WebUntisClient } from "../../src/client.ts";
 import {
   HomeSchema,
   MobileDataSchema,
@@ -70,10 +67,7 @@ const hasLiveEnv = liveEnvMissing.length === 0;
 const liveLayer = Layer.unwrap(
   ClientConfig.fromEnv().pipe(
     Effect.map((config) =>
-      Layer.mergeAll(
-        makeWebUntisLayer(config),
-        makeWebUntisRuntimeLayer({ config }),
-      ),
+      Layer.mergeAll(makeWebUntisLayer(config), makeWebUntisRuntimeLayer({ config })),
     ),
   ),
 );
@@ -86,8 +80,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
           const rawViewApi = yield* RawViewApiClient;
-          const decodeStartupActions =
-            Schema.decodeUnknownSync(StartupActionsSchema);
+          const decodeStartupActions = Schema.decodeUnknownSync(StartupActionsSchema);
           const startupActionsV1 = decodeStartupActions(
             yield* rawViewApi.getJson("api/rest/view/v1/trigger/startup", {
               policy: RequestPolicy.AuthOnly,
@@ -110,8 +103,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           const client = yield* WebUntisClient;
           const rawViewApi = yield* RawViewApiClient;
           const decodeHome = Schema.decodeUnknownSync(HomeSchema);
-          const decodeMobileDataV1V2 =
-            Schema.decodeUnknownSync(MobileDataV1V2Schema);
+          const decodeMobileDataV1V2 = Schema.decodeUnknownSync(MobileDataV1V2Schema);
           const homeV1 = decodeHome(
             yield* rawViewApi.getJson("api/rest/view/v1/home", {
               policy: RequestPolicy.AuthOnly,
@@ -139,10 +131,8 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             strictJsonParseOptions,
           );
           const clientMobileData = yield* client.app.getMobileData();
-          const {
-            schoolLoginName,
-            ...mobileDataV3TenantWithoutSchoolLoginName
-          } = mobileDataV3.tenant;
+          const { schoolLoginName: _schoolLoginName, ...mobileDataV3TenantWithoutSchoolLoginName } =
+            mobileDataV3.tenant;
 
           expect(homeV1).not.toEqual(homeV2);
           expect(mobileDataV1).toEqual(mobileDataV2);
@@ -170,10 +160,8 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           const client = yield* WebUntisClient;
           const todayMeta = yield* client.app.getTodayMeta();
           const dashboardCards = yield* client.app.getDashboardCards();
-          const dashboardCardsDetail =
-            yield* client.app.getDashboardCardsDetail();
-          const dashboardCardsStatus =
-            yield* client.app.getDashboardCardsStatus();
+          const dashboardCardsDetail = yield* client.app.getDashboardCardsDetail();
+          const dashboardCardsStatus = yield* client.app.getDashboardCardsStatus();
           const menus = yield* client.app.getPlatformApplicationMenus();
           const examIntegrations = yield* client.app.getExamIntegrations();
           const thirdPartyData = yield* client.app.getThirdPartyData();
@@ -183,28 +171,18 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
 
           expect(todayMeta.greetingName.length).toBeGreaterThan(0);
           expect(Array.isArray(dashboardCards.dashboardCards)).toBe(true);
-          expect(
-            Array.isArray(dashboardCardsDetail.dashboardCardsDetails),
-          ).toBe(true);
-          expect(dashboardCardsStatus.unreadCardsCount).toBeGreaterThanOrEqual(
-            0,
-          );
+          expect(Array.isArray(dashboardCardsDetail.dashboardCardsDetails)).toBe(true);
+          expect(dashboardCardsStatus.unreadCardsCount).toBeGreaterThanOrEqual(0);
           expect(menus.length).toBeGreaterThan(0);
           expect(Array.isArray(examIntegrations)).toBe(true);
           expect(thirdPartyData).toHaveProperty("sleekplanToken");
           expect(onboarding.type).toBe("TIMETABLE");
           expect(normalizeTodayMeta(todayMeta)).toMatchSnapshot();
           expect(normalizeDashboardCards(dashboardCards)).toMatchSnapshot();
-          expect(
-            normalizeDashboardCardsDetail(dashboardCardsDetail),
-          ).toMatchSnapshot();
-          expect(
-            normalizeDashboardCardsStatus(dashboardCardsStatus),
-          ).toMatchSnapshot();
+          expect(normalizeDashboardCardsDetail(dashboardCardsDetail)).toMatchSnapshot();
+          expect(normalizeDashboardCardsStatus(dashboardCardsStatus)).toMatchSnapshot();
           expect(normalizeAppPlatformApplicationMenus(menus)).toMatchSnapshot();
-          expect(
-            normalizeAppExamIntegrations(examIntegrations),
-          ).toMatchSnapshot();
+          expect(normalizeAppExamIntegrations(examIntegrations)).toMatchSnapshot();
           expect(normalizeAppThirdPartyData(thirdPartyData)).toMatchSnapshot();
           expect(normalizeOnboarding(onboarding)).toMatchSnapshot();
         }),
@@ -220,16 +198,14 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           const inbox = yield* client.messages.getInbox();
           const drafts = yield* client.messages.getDrafts();
           const messagePermissions = yield* client.messages.getPermissions();
-          const quickfilters =
-            yield* client.messages.getRecipientQuickfilters();
+          const quickfilters = yield* client.messages.getRecipientQuickfilters();
           const staffFilter = yield* client.messages.getRecipientFilter({
             recipientOption: "STAFF",
           });
-          const composeRecipients =
-            yield* client.messages.filterComposeRecipients({
-              recipientOption: "STAFF",
-              searchText: "sei",
-            });
+          const composeRecipients = yield* client.messages.filterComposeRecipients({
+            recipientOption: "STAFF",
+            searchText: "sei",
+          });
           const staffSearch = yield* client.messages.searchRecipients({
             recipientOption: "STAFF",
             searchText: "a",
@@ -244,21 +220,11 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
 
           expect(normalizeMessagesInbox(inbox)).toMatchSnapshot();
           expect(normalizeMessageDrafts(drafts)).toMatchSnapshot();
-          expect(
-            normalizeMessagesPermissions(messagePermissions),
-          ).toMatchSnapshot();
-          expect(
-            normalizeMessageRecipientQuickfilters(quickfilters),
-          ).toMatchSnapshot();
-          expect(
-            normalizeMessageRecipientFilter(staffFilter),
-          ).toMatchSnapshot();
-          expect(
-            normalizeMessageComposeRecipients(composeRecipients),
-          ).toMatchSnapshot();
-          expect(
-            normalizeMessageRecipientSearch(staffSearch),
-          ).toMatchSnapshot();
+          expect(normalizeMessagesPermissions(messagePermissions)).toMatchSnapshot();
+          expect(normalizeMessageRecipientQuickfilters(quickfilters)).toMatchSnapshot();
+          expect(normalizeMessageRecipientFilter(staffFilter)).toMatchSnapshot();
+          expect(normalizeMessageComposeRecipients(composeRecipients)).toMatchSnapshot();
+          expect(normalizeMessageRecipientSearch(staffSearch)).toMatchSnapshot();
           expect(normalizeMessageSent(sent)).toMatchSnapshot();
           expect(normalizeMessagesStatus(messageStatus)).toMatchSnapshot();
 
@@ -303,9 +269,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           expect(homeworkList.homeworkList.length).toBeGreaterThan(0);
           expect(normalizeClassregAbsencesMeta(absencesMeta)).toMatchSnapshot();
           expect(normalizeClassregHomeworkMeta(homeworkMeta)).toMatchSnapshot();
-          expect(
-            normalizeClassregLessonTopicsMeta(lessonTopicsMeta),
-          ).toMatchSnapshot();
+          expect(normalizeClassregLessonTopicsMeta(lessonTopicsMeta)).toMatchSnapshot();
           expect(normalizeClassregHomeworkList(homeworkList)).toMatchSnapshot();
         }),
       30_000,
@@ -373,14 +337,10 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           expect(profileError).toBeInstanceOf(UnexpectedResponseError);
           expect(adminDetailsError).toBeInstanceOf(UnexpectedResponseError);
           expect(
-            normalizeUnexpectedResponse(
-              profileError as UnexpectedResponseError,
-            ),
+            normalizeUnexpectedResponse(profileError as UnexpectedResponseError),
           ).toMatchSnapshot();
           expect(
-            normalizeUnexpectedResponse(
-              adminDetailsError as UnexpectedResponseError,
-            ),
+            normalizeUnexpectedResponse(adminDetailsError as UnexpectedResponseError),
           ).toMatchSnapshot();
         }),
       30_000,
@@ -411,9 +371,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           expect(normalizeTimetableMenu(menu)).toMatchSnapshot();
           expect(normalizeTimetableSearch(search)).toMatchSnapshot();
           expect(normalizeTimetableCalendar(calendar)).toMatchSnapshot();
-          expect(
-            normalizeTimetableAvailableRooms(availableRooms),
-          ).toMatchSnapshot();
+          expect(normalizeTimetableAvailableRooms(availableRooms)).toMatchSnapshot();
         }),
       30_000,
     );
@@ -430,8 +388,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             timetableType: "OVERVIEW_WEEK",
           });
           const roomId = (
-            roomFilter.rooms.find((room) => room.room.shortName === "1.12") ??
-            roomFilter.rooms[0]
+            roomFilter.rooms.find((room) => room.room.shortName === "1.12") ?? roomFilter.rooms[0]
           )?.room.id;
           if (roomId === undefined) {
             throw new Error("Expected at least one room");
@@ -453,12 +410,8 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           expect(weekOverview.days.length).toBeGreaterThan(0);
           expect(Array.isArray(externalCalendar)).toBe(true);
           expect(normalizeTimeGrid(timegrid)).toMatchSnapshot();
-          expect(
-            normalizeTimetableEntriesWeekOverview(weekOverview),
-          ).toMatchSnapshot();
-          expect(
-            normalizeTimetableExternalCalendar(externalCalendar),
-          ).toMatchSnapshot();
+          expect(normalizeTimetableEntriesWeekOverview(weekOverview)).toMatchSnapshot();
+          expect(normalizeTimetableExternalCalendar(externalCalendar)).toMatchSnapshot();
         }),
       30_000,
     );
@@ -469,12 +422,9 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         Effect.gen(function* () {
           const rawViewApi = yield* RawViewApiClient;
           const formatListError = yield* Effect.flip(
-            rawViewApi.getJson(
-              "api/rest/view/v1/timetable/settings/format/list",
-              {
-                policy: RequestPolicy.AuthOnly,
-              },
-            ),
+            rawViewApi.getJson("api/rest/view/v1/timetable/settings/format/list", {
+              policy: RequestPolicy.AuthOnly,
+            }),
           );
           const generalSettingsError = yield* Effect.flip(
             rawViewApi.getJson("api/rest/view/v1/timetable/settings/general", {
@@ -482,33 +432,22 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             }),
           );
           const visibilityRestrictionError = yield* Effect.flip(
-            rawViewApi.getJson(
-              "api/rest/view/v1/timetable/settings/visibilityRestriction",
-              {
-                policy: RequestPolicy.AuthOnly,
-              },
-            ),
+            rawViewApi.getJson("api/rest/view/v1/timetable/settings/visibilityRestriction", {
+              policy: RequestPolicy.AuthOnly,
+            }),
           );
 
           expect(formatListError).toBeInstanceOf(UnexpectedResponseError);
           expect(generalSettingsError).toBeInstanceOf(UnexpectedResponseError);
-          expect(visibilityRestrictionError).toBeInstanceOf(
-            UnexpectedResponseError,
-          );
+          expect(visibilityRestrictionError).toBeInstanceOf(UnexpectedResponseError);
           expect(
-            normalizeUnexpectedResponse(
-              formatListError as UnexpectedResponseError,
-            ),
+            normalizeUnexpectedResponse(formatListError as UnexpectedResponseError),
           ).toMatchSnapshot();
           expect(
-            normalizeUnexpectedResponse(
-              generalSettingsError as UnexpectedResponseError,
-            ),
+            normalizeUnexpectedResponse(generalSettingsError as UnexpectedResponseError),
           ).toMatchSnapshot();
           expect(
-            normalizeUnexpectedResponse(
-              visibilityRestrictionError as UnexpectedResponseError,
-            ),
+            normalizeUnexpectedResponse(visibilityRestrictionError as UnexpectedResponseError),
           ).toMatchSnapshot();
         }),
       30_000,
@@ -536,8 +475,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             resourceType: "SUBJECT",
           });
           const roomId = (
-            roomFilter.rooms.find((room) => room.room.shortName === "1.12") ??
-            roomFilter.rooms[0]
+            roomFilter.rooms.find((room) => room.room.shortName === "1.12") ?? roomFilter.rooms[0]
           )?.room.id;
           const teacherId = teacherFilter.teachers[0]?.teacher.id;
           const subjectId = subjectFilter.subjects[0]?.subject.id;
@@ -550,52 +488,37 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             }),
           );
           const staticTeachersError = yield* Effect.flip(
-            rawViewApi.getJson(
-              "api/rest/view/v1/messages/recipients/static/teachers",
-              {
-                policy: RequestPolicy.AuthOnly,
-              },
-            ),
+            rawViewApi.getJson("api/rest/view/v1/messages/recipients/static/teachers", {
+              policy: RequestPolicy.AuthOnly,
+            }),
           );
           const staticUsersError = yield* Effect.flip(
-            rawViewApi.getJson(
-              "api/rest/view/v1/messages/recipients/static/users",
-              {
-                policy: RequestPolicy.AuthOnly,
-              },
-            ),
+            rawViewApi.getJson("api/rest/view/v1/messages/recipients/static/users", {
+              policy: RequestPolicy.AuthOnly,
+            }),
           );
           const staticPersonsError = yield* Effect.flip(
-            rawViewApi.getJson(
-              "api/rest/view/v1/messages/recipients/static/persons",
-              {
-                policy: RequestPolicy.AuthOnly,
-              },
-            ),
+            rawViewApi.getJson("api/rest/view/v1/messages/recipients/static/persons", {
+              policy: RequestPolicy.AuthOnly,
+            }),
           );
           const messagesOfTheDayFormError = yield* Effect.flip(
             rawViewApi.getJson("api/rest/view/v1/messages-of-the-day/form", {
               policy: RequestPolicy.AuthOnly,
             }),
           );
-          const roomsError = yield* Effect.flip(
-            rawViewApi.getJson("api/rest/view/v1/rooms"),
-          );
+          const roomsError = yield* Effect.flip(rawViewApi.getJson("api/rest/view/v1/rooms"));
           const roomDetailError = yield* Effect.flip(
             rawViewApi.getJson(`api/rest/view/v1/rooms/${roomId}`),
           );
           const buildingsError = yield* Effect.flip(
             rawViewApi.getJson("api/rest/view/v1/buildings"),
           );
-          const teachersError = yield* Effect.flip(
-            rawViewApi.getJson("api/rest/view/v1/teachers"),
-          );
+          const teachersError = yield* Effect.flip(rawViewApi.getJson("api/rest/view/v1/teachers"));
           const teacherDetailError = yield* Effect.flip(
             rawViewApi.getJson(`api/rest/view/v1/teachers/${teacherId}`),
           );
-          const subjectsError = yield* Effect.flip(
-            rawViewApi.getJson("api/rest/view/v1/subjects"),
-          );
+          const subjectsError = yield* Effect.flip(rawViewApi.getJson("api/rest/view/v1/subjects"));
           const subjectDetailError = yield* Effect.flip(
             rawViewApi.getJson(`api/rest/view/v1/subjects/${subjectId}`),
           );
@@ -615,9 +538,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             subjectDetailError,
           ]) {
             expect(error).toBeInstanceOf(UnexpectedResponseError);
-            expect(
-              normalizeUnexpectedResponse(error as UnexpectedResponseError),
-            ).toMatchSnapshot();
+            expect(normalizeUnexpectedResponse(error as UnexpectedResponseError)).toMatchSnapshot();
           }
         }),
       30_000,
@@ -667,11 +588,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
 describe.skipIf(hasLiveEnv)("live WebUntis integration", () => {
   it("documents the required environment variables", () => {
     expect(liveEnvMissing).toEqual(
-      expect.arrayContaining([
-        "WEBUNTIS_SCHOOL_NAME",
-        "WEBUNTIS_USERNAME",
-        "WEBUNTIS_PASSWORD",
-      ]),
+      expect.arrayContaining(["WEBUNTIS_SCHOOL_NAME", "WEBUNTIS_USERNAME", "WEBUNTIS_PASSWORD"]),
     );
   });
 });

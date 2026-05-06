@@ -30,10 +30,9 @@ export interface RawViewApiClientShape {
   ) => ReturnType<WebUntisHttp["Service"]["put"]>;
 }
 
-export class RawViewApiClient extends Context.Service<
-  RawViewApiClient,
-  RawViewApiClientShape
->()("webuntis/internal/RawViewApiClient") {
+export class RawViewApiClient extends Context.Service<RawViewApiClient, RawViewApiClientShape>()(
+  "webuntis/internal/RawViewApiClient",
+) {
   static readonly layerNoDeps = Layer.effect(
     this,
     Effect.gen(function* () {

@@ -13,25 +13,19 @@ export interface SchoolResolverShape {
   readonly clear: () => Effect.Effect<void>;
 }
 
-export class SchoolResolver extends Context.Service<
-  SchoolResolver,
-  SchoolResolverShape
->()("webuntis/internal/SchoolResolver") {
+export class SchoolResolver extends Context.Service<SchoolResolver, SchoolResolverShape>()(
+  "webuntis/internal/SchoolResolver",
+) {
   static readonly layerNoDeps = Layer.effect(
     this,
     Effect.gen(function* () {
       const clientConfig = yield* ClientConfig;
       const discovery = yield* SchoolDiscovery;
-      const cacheRef = yield* SynchronizedRef.make<ResolvedSchool | undefined>(
-        undefined,
-      );
+      const cacheRef = yield* SynchronizedRef.make<ResolvedSchool | undefined>(undefined);
 
       const resolveConfiguredSchool = (): ResolvedSchool | undefined => {
         const tenantHost = resolveTenantHost(clientConfig);
-        if (
-          tenantHost === undefined ||
-          clientConfig.schoolLoginName === undefined
-        ) {
+        if (tenantHost === undefined || clientConfig.schoolLoginName === undefined) {
           return undefined;
         }
 

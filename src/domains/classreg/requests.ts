@@ -31,20 +31,14 @@ export const ClassregRequests = {
     policy: RequestPolicy.AuthOnly,
     schema: ClassregHomeworkMetaSchema,
   }),
-  getHomeworkList: schemaRequest<
-    ClassregHomeworkListRequest,
-    typeof ClassregHomeworkListSchema
-  >({
+  getHomeworkList: schemaRequest<ClassregHomeworkListRequest, typeof ClassregHomeworkListSchema>({
     method: "POST",
     path: "api/rest/view/v1/classreg/homework/list",
     body: (request) => request,
     policy: RequestPolicy.AuthOnly,
     schema: ClassregHomeworkListSchema,
   }),
-  getLessonTopicsMeta: schemaRequest<
-    void,
-    typeof ClassregLessonTopicsMetaSchema
-  >({
+  getLessonTopicsMeta: schemaRequest<void, typeof ClassregLessonTopicsMetaSchema>({
     method: "GET",
     path: "api/rest/view/v1/classreg/lesson-topics/meta",
     policy: RequestPolicy.AuthOnly,

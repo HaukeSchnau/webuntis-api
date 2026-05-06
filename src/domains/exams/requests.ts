@@ -1,10 +1,5 @@
 import { RequestPolicy, schemaRequest } from "../../internal/request.ts";
-import {
-  ExamDetailSchema,
-  ExamFilterSchema,
-  ExamStatisticsSchema,
-  ExamsSchema,
-} from "./schema.ts";
+import { ExamDetailSchema, ExamFilterSchema, ExamStatisticsSchema, ExamsSchema } from "./schema.ts";
 
 export interface ExamDetailRequest {
   readonly id: number;
@@ -31,20 +26,14 @@ export const ExamsRequests = {
     policy: RequestPolicy.AuthOnly,
     schema: ExamsSchema,
   }),
-  getFilter: schemaRequest<
-    ExamDateRangeRequest | undefined,
-    typeof ExamFilterSchema
-  >({
+  getFilter: schemaRequest<ExamDateRangeRequest | undefined, typeof ExamFilterSchema>({
     method: "GET",
     path: "api/rest/view/v1/exams/filter",
     query: (request) => ({ start: request?.start, end: request?.end }),
     policy: RequestPolicy.AuthOnly,
     schema: ExamFilterSchema,
   }),
-  getStatistics: schemaRequest<
-    ExamDateRangeRequest | undefined,
-    typeof ExamStatisticsSchema
-  >({
+  getStatistics: schemaRequest<ExamDateRangeRequest | undefined, typeof ExamStatisticsSchema>({
     method: "GET",
     path: "api/rest/view/v1/exams/statistics",
     query: (request) => ({ start: request?.start, end: request?.end }),

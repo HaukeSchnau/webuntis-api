@@ -84,10 +84,7 @@ export const TimetableRequests = {
     policy: RequestPolicy.Metadata,
     schema: TimetableGridSchema,
   }),
-  getFilter: schemaRequest<
-    TimetableFilterRequest,
-    typeof TimetableFilterSchema
-  >({
+  getFilter: schemaRequest<TimetableFilterRequest, typeof TimetableFilterSchema>({
     method: "GET",
     path: "api/rest/view/v1/timetable/filter",
     query: (request) => ({
@@ -118,10 +115,7 @@ export const TimetableRequests = {
     policy: RequestPolicy.AuthOnly,
     schema: TimetableMenuSchema,
   }),
-  getCalendar: schemaRequest<
-    TimetableCalendarRequest,
-    typeof TimetableCalendarSchema
-  >({
+  getCalendar: schemaRequest<TimetableCalendarRequest, typeof TimetableCalendarSchema>({
     method: "GET",
     path: "api/rest/view/v1/timetable/calendar",
     query: (request) => ({
@@ -166,10 +160,7 @@ export const TimetableRequests = {
     policy: RequestPolicy.AuthOnly,
     schema: TimetableAvailableRoomsSchema,
   }),
-  getEntries: schemaRequest<
-    TimetableEntriesRequest,
-    typeof TimetableEntriesSchema
-  >({
+  getEntries: schemaRequest<TimetableEntriesRequest, typeof TimetableEntriesSchema>({
     method: "GET",
     path: "api/rest/view/v1/timetable/entries",
     query: (request) => ({

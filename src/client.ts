@@ -24,10 +24,9 @@ export interface WebUntisClientShape {
   readonly timetable: TimetableClient["Service"];
 }
 
-export class WebUntisClient extends Context.Service<
-  WebUntisClient,
-  WebUntisClientShape
->()("webuntis/WebUntisClient") {
+export class WebUntisClient extends Context.Service<WebUntisClient, WebUntisClientShape>()(
+  "webuntis/WebUntisClient",
+) {
   static readonly layerNoDeps = Layer.effect(
     this,
     Effect.gen(function* () {
@@ -76,9 +75,7 @@ export const makeWebUntisLayer = (
     TimetableClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
   );
 
-  const aggregateLayer = WebUntisClient.layerNoDeps.pipe(
-    Layer.provide(domainServicesLayer),
-  );
+  const aggregateLayer = WebUntisClient.layerNoDeps.pipe(Layer.provide(domainServicesLayer));
 
   return Layer.mergeAll(domainServicesLayer, aggregateLayer);
 };
