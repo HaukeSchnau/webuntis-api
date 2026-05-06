@@ -90,13 +90,11 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
             );
 
           if (seedResponse.status < 200 || seedResponse.status >= 400) {
-            return yield* Effect.fail(
-              new AuthError({
-                stage: "bootstrap",
-                status: seedResponse.status,
-                message: `Seed request failed for ${school.server}`,
-              }),
-            );
+            return yield* new AuthError({
+              stage: "bootstrap",
+              status: seedResponse.status,
+              message: `Seed request failed for ${school.server}`,
+            });
           }
 
           const loginResponse = yield* client
@@ -123,13 +121,11 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
             );
 
           if (loginResponse.status < 200 || loginResponse.status >= 400) {
-            return yield* Effect.fail(
-              new AuthError({
-                stage: "login",
-                status: loginResponse.status,
-                message: `WebUntis login handshake failed for ${clientConfig.username}`,
-              }),
-            );
+            return yield* new AuthError({
+              stage: "login",
+              status: loginResponse.status,
+              message: `WebUntis login handshake failed for ${clientConfig.username}`,
+            });
           }
 
           if (loginResponse.status === 200) {
@@ -144,13 +140,11 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
             );
 
             if (loginResponseLooksLikeHtml(loginBody)) {
-              return yield* Effect.fail(
-                new AuthError({
-                  stage: "login",
-                  status: loginResponse.status,
-                  message: "WebUntis login returned HTML instead of a redirect",
-                }),
-              );
+              return yield* new AuthError({
+                stage: "login",
+                status: loginResponse.status,
+                message: "WebUntis login returned HTML instead of a redirect",
+              });
             }
           }
 
@@ -166,13 +160,11 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
             );
 
           if (tokenResponse.status < 200 || tokenResponse.status >= 300) {
-            return yield* Effect.fail(
-              new AuthError({
-                stage: "token",
-                status: tokenResponse.status,
-                message: `Token minting failed for ${school.server}`,
-              }),
-            );
+            return yield* new AuthError({
+              stage: "token",
+              status: tokenResponse.status,
+              message: `Token minting failed for ${school.server}`,
+            });
           }
 
           const tokenString = (yield* tokenResponse.text.pipe(
@@ -182,12 +174,10 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
           )).trim();
 
           if (tokenString.length === 0 || loginResponseLooksLikeHtml(tokenString)) {
-            return yield* Effect.fail(
-              new AuthError({
-                stage: "token",
-                message: "Token minting redirected to anonymous WebUntis HTML",
-              }),
-            );
+            return yield* new AuthError({
+              stage: "token",
+              message: "Token minting redirected to anonymous WebUntis HTML",
+            });
           }
 
           return {

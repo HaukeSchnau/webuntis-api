@@ -17,8 +17,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "plugins": [
       {
-        "name": "@effect/language-service",
-        "includeSuggestionsInTsc": false
+        "name": "@effect/language-service"
       }
     ]
   },

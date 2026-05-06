@@ -80,13 +80,11 @@ export class MetadataState extends Context.Service<MetadataState, MetadataStateS
           if (response.status < 200 || response.status >= 300) {
             const body = yield* response.text.pipe(Effect.catch(() => Effect.succeed("")));
 
-            return yield* Effect.fail(
-              new AuthError({
-                stage: "metadata",
-                status: response.status,
-                message: `Metadata bootstrap failed: ${body}`,
-              }),
-            );
+            return yield* new AuthError({
+              stage: "metadata",
+              status: response.status,
+              message: `Metadata bootstrap failed: ${body}`,
+            });
           }
 
           const appData = yield* HttpClientResponse.schemaBodyJson(
