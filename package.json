@@ -28,6 +28,7 @@
   "scripts": {
     "build": "tsdown",
     "pack:check": "bun run build && publint --strict && attw --pack . --profile esm-only",
+    "prepare": "effect-tsgo patch",
     "prepack": "bun run build",
     "prepublishOnly": "bun run lint && bun run test && bun run pack:check",
     "test": "vitest run",
@@ -46,6 +47,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
+    "@effect/tsgo": "^0.5.2",
     "@effect/vitest": "^4.0.0-beta.60",
     "@types/node": "^25.6.0",
     "@typescript/native-preview": "^7.0.0-dev.20260505.1",
