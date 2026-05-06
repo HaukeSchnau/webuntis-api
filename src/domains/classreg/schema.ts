@@ -12,11 +12,7 @@ export const ClassregIdNameShortSchema = Schema.Struct({
   nameShort: Schema.String,
 });
 
-export const ClassregExcuseStatusTypeSchema = Schema.Literals([
-  "OPEN",
-  "EXCUSED",
-  "NOT_EXCUSED",
-]);
+export const ClassregExcuseStatusTypeSchema = Schema.Literals(["OPEN", "EXCUSED", "NOT_EXCUSED"]);
 
 export const ClassregAbsenceReasonSchema = Schema.Struct({
   id: Schema.Number,
@@ -41,9 +37,7 @@ export const ClassregAbsencesMetaSchema = Schema.Struct({
   filterIsActiveForMissingAbsenceParentNotification: Schema.Boolean,
 });
 
-export type ClassregAbsencesMeta = Schema.Schema.Type<
-  typeof ClassregAbsencesMetaSchema
->;
+export type ClassregAbsencesMeta = Schema.Schema.Type<typeof ClassregAbsencesMetaSchema>;
 
 export const ClassregHomeworkMetaSchoolyearSchema = Schema.Struct({
   id: Schema.Number,
@@ -59,14 +53,9 @@ export const ClassregHomeworkMetaSchema = Schema.Struct({
   schoolYears: Schema.Array(ClassregHomeworkMetaSchoolyearSchema),
 });
 
-export type ClassregHomeworkMeta = Schema.Schema.Type<
-  typeof ClassregHomeworkMetaSchema
->;
+export type ClassregHomeworkMeta = Schema.Schema.Type<typeof ClassregHomeworkMetaSchema>;
 
-export const ClassregHomeworkDateRangeTypeSchema = Schema.Literals([
-  "WEEK",
-  "SCHOOLYEAR",
-]);
+export const ClassregHomeworkDateRangeTypeSchema = Schema.Literals(["WEEK", "SCHOOLYEAR"]);
 
 export type ClassregHomeworkDateRangeType = Schema.Schema.Type<
   typeof ClassregHomeworkDateRangeTypeSchema
@@ -89,9 +78,7 @@ export const ClassregHomeworkListSchema = Schema.Struct({
   homeworkList: Schema.Array(ClassregHomeworkItemSchema),
 });
 
-export type ClassregHomeworkList = Schema.Schema.Type<
-  typeof ClassregHomeworkListSchema
->;
+export type ClassregHomeworkList = Schema.Schema.Type<typeof ClassregHomeworkListSchema>;
 
 export const ClassregLessonTopicsMetaSchema = Schema.Struct({
   teachingMethods: Schema.Array(Schema.Unknown),
@@ -100,6 +87,4 @@ export const ClassregLessonTopicsMetaSchema = Schema.Struct({
   oneDriveAllowed: Schema.Boolean,
 });
 
-export type ClassregLessonTopicsMeta = Schema.Schema.Type<
-  typeof ClassregLessonTopicsMetaSchema
->;
+export type ClassregLessonTopicsMeta = Schema.Schema.Type<typeof ClassregLessonTopicsMetaSchema>;

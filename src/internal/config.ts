@@ -19,10 +19,9 @@ const optionalString = (name: string) =>
     Config.map((value) => (Option.isSome(value) ? value.value : undefined)),
   );
 
-export class ClientConfig extends Context.Service<
-  ClientConfig,
-  WebUntisClientConfig
->()("webuntis/internal/ClientConfig") {
+export class ClientConfig extends Context.Service<ClientConfig, WebUntisClientConfig>()(
+  "webuntis/internal/ClientConfig",
+) {
   static readonly config = Config.unwrap({
     schoolName: Config.string("WEBUNTIS_SCHOOL_NAME"),
     schoolLoginName: optionalString("WEBUNTIS_SCHOOL_LOGIN_NAME"),
@@ -62,9 +61,7 @@ export class ClientConfig extends Context.Service<
               WEBUNTIS_USERNAME: env.username,
               WEBUNTIS_PASSWORD: env.password,
               WEBUNTIS_DISCOVERY_ENDPOINT: env.discoveryEndpoint,
-            }).filter(
-              (entry): entry is [string, string] => entry[1] !== undefined,
-            ),
+            }).filter((entry): entry is [string, string] => entry[1] !== undefined),
           ),
         }),
       )
@@ -94,8 +91,7 @@ export class ClientConfig extends Context.Service<
     ]).pipe(Effect.as(config));
   };
 
-  static readonly layer = (clientConfig: WebUntisClientConfig) =>
-    Layer.succeed(this, clientConfig);
+  static readonly layer = (clientConfig: WebUntisClientConfig) => Layer.succeed(this, clientConfig);
 
   static readonly Live = Layer.effect(this, this.fromEnv());
 }

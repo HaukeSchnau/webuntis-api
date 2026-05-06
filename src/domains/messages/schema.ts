@@ -44,9 +44,7 @@ export const MessageRecipientOptionSchema = Schema.Literals([
   "CUSTOM",
 ]);
 
-export type MessageRecipientOption = Schema.Schema.Type<
-  typeof MessageRecipientOptionSchema
->;
+export type MessageRecipientOption = Schema.Schema.Type<typeof MessageRecipientOptionSchema>;
 
 export const MessagesPermissionsSchema = Schema.Struct({
   recipientOptions: Schema.Array(MessageRecipientOptionSchema),
@@ -59,9 +57,7 @@ export const MessagesPermissionsSchema = Schema.Struct({
   maxFileCount: Schema.Number,
 });
 
-export type MessagesPermissions = Schema.Schema.Type<
-  typeof MessagesPermissionsSchema
->;
+export type MessagesPermissions = Schema.Schema.Type<typeof MessagesPermissionsSchema>;
 
 export const MessageQuickfilterItemSchema = Schema.Struct({
   id: Schema.Number,
@@ -91,9 +87,7 @@ export const MessageRecipientFilterSchema = Schema.Struct({
   filters: Schema.Array(MessageRecipientFilterGroupSchema),
 });
 
-export type MessageRecipientFilter = Schema.Schema.Type<
-  typeof MessageRecipientFilterSchema
->;
+export type MessageRecipientFilter = Schema.Schema.Type<typeof MessageRecipientFilterSchema>;
 
 export const MessageRecipientSearchResultSchema = Schema.Struct({
   personId: Schema.Number,
@@ -103,13 +97,9 @@ export const MessageRecipientSearchResultSchema = Schema.Struct({
   role: Schema.String,
 });
 
-export const MessageRecipientSearchSchema = Schema.Array(
-  MessageRecipientSearchResultSchema,
-);
+export const MessageRecipientSearchSchema = Schema.Array(MessageRecipientSearchResultSchema);
 
-export type MessageRecipientSearch = Schema.Schema.Type<
-  typeof MessageRecipientSearchSchema
->;
+export type MessageRecipientSearch = Schema.Schema.Type<typeof MessageRecipientSearchSchema>;
 
 export const MessageComposeRecipientUserSchema = Schema.Struct({
   id: Schema.Number,
@@ -124,9 +114,7 @@ export const MessageComposeRecipientsSchema = Schema.Struct({
   users: Schema.Array(MessageComposeRecipientUserSchema),
 });
 
-export type MessageComposeRecipients = Schema.Schema.Type<
-  typeof MessageComposeRecipientsSchema
->;
+export type MessageComposeRecipients = Schema.Schema.Type<typeof MessageComposeRecipientsSchema>;
 
 export const MessageAttachmentSchema = JsonObjectSchema;
 export const MessageRecipientSchema = JsonObjectSchema;
@@ -176,9 +164,7 @@ export const MessageReplyFormSchema = Schema.Struct({
   replyHistory: Schema.Array(MessageReplyHistoryItemSchema),
 });
 
-export type MessageReplyForm = Schema.Schema.Type<
-  typeof MessageReplyFormSchema
->;
+export type MessageReplyForm = Schema.Schema.Type<typeof MessageReplyFormSchema>;
 
 export const MessageDraftSummarySchema = Schema.Struct({
   id: Schema.Number,

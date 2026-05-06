@@ -57,10 +57,7 @@ export const emptyMetadataState = (): MetadataState => ({
   sessionGeneration: -1,
 });
 
-export const hasFreshToken = (
-  state: SessionState,
-  now = Date.now(),
-): state is AuthenticatedState =>
+export const hasFreshToken = (state: SessionState, now = Date.now()): state is AuthenticatedState =>
   state.resolvedSchool !== undefined &&
   state.token !== undefined &&
   state.tokenExpiresAt !== undefined &&
@@ -111,9 +108,7 @@ export const resolveBaseUrl = (school: ResolvedSchool): string => {
   return `${url.origin}${pathname}/WebUntis`;
 };
 
-export const resolveTenantHost = (
-  config: WebUntisClientConfig,
-): string | undefined => {
+export const resolveTenantHost = (config: WebUntisClientConfig): string | undefined => {
   if (config.server) {
     return config.server;
   }

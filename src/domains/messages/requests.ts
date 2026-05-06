@@ -56,10 +56,7 @@ export const MessagesRequests = {
     policy: RequestPolicy.Metadata,
     schema: MessagesPermissionsSchema,
   }),
-  getRecipientQuickfilters: schemaRequest<
-    void,
-    typeof MessageRecipientQuickfiltersSchema
-  >({
+  getRecipientQuickfilters: schemaRequest<void, typeof MessageRecipientQuickfiltersSchema>({
     method: "GET",
     path: "api/rest/view/v1/messages/recipients/quickfilters",
     policy: RequestPolicy.AuthOnly,
@@ -112,10 +109,7 @@ export const MessagesRequests = {
     policy: RequestPolicy.Metadata,
     schema: MessagesStatusSchema,
   }),
-  getReplyForm: schemaRequest<
-    MessageReplyFormRequest,
-    typeof MessageReplyFormSchema
-  >({
+  getReplyForm: schemaRequest<MessageReplyFormRequest, typeof MessageReplyFormSchema>({
     method: "GET",
     path: (request) => `api/rest/view/v1/messages/${request.id}/reply-form`,
     policy: RequestPolicy.AuthOnly,

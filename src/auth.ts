@@ -1,10 +1,5 @@
 import { Context, Effect, Layer } from "effect";
-import type {
-  AuthError,
-  DecodeError,
-  DiscoveryError,
-  TransportError,
-} from "./internal/errors.ts";
+import type { AuthError, DecodeError, DiscoveryError, TransportError } from "./internal/errors.ts";
 import { MetadataState } from "./internal/metadata-state.ts";
 import { SessionState } from "./internal/session-state.ts";
 import type { AuthenticatedState } from "./internal/types.ts";
@@ -31,11 +26,9 @@ export class AuthClient extends Context.Service<AuthClient, AuthClientShape>()(
       const metadataState = yield* MetadataState;
 
       return AuthClient.of({
-        ensureAuthenticated: Effect.fn("AuthClient.ensureAuthenticated")(
-          function* () {
-            return yield* sessionState.ensureAuthenticated();
-          },
-        ),
+        ensureAuthenticated: Effect.fn("AuthClient.ensureAuthenticated")(function* () {
+          return yield* sessionState.ensureAuthenticated();
+        }),
         refreshToken: Effect.fn("AuthClient.refreshToken")(function* () {
           return yield* sessionState.refreshToken();
         }),

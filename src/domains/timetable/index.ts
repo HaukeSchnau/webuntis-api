@@ -59,10 +59,9 @@ export interface TimetableClientShape {
   ) => Effect.Effect<TimetableEntriesWeekOverview, RequestFailure>;
 }
 
-export class TimetableClient extends Context.Service<
-  TimetableClient,
-  TimetableClientShape
->()("webuntis/TimetableClient") {
+export class TimetableClient extends Context.Service<TimetableClient, TimetableClientShape>()(
+  "webuntis/TimetableClient",
+) {
   static readonly layerNoDeps = Layer.effect(
     this,
     Effect.gen(function* () {
@@ -70,10 +69,7 @@ export class TimetableClient extends Context.Service<
 
       return TimetableClient.of({
         getTimeGrid: Effect.fn("TimetableClient.getTimeGrid")(function* () {
-          return yield* http.requestSchema(
-            TimetableRequests.getTimeGrid,
-            undefined,
-          );
+          return yield* http.requestSchema(TimetableRequests.getTimeGrid, undefined);
         }),
         getGrid: Effect.fn("TimetableClient.getGrid")(function* (
           request: TimetableGridRequest = {},
@@ -83,69 +79,43 @@ export class TimetableClient extends Context.Service<
         getFilter: Effect.fn("TimetableClient.getFilter")(function* (
           request: TimetableFilterRequest,
         ) {
-          return yield* http.requestSchema(
-            TimetableRequests.getFilter,
-            request,
-          );
+          return yield* http.requestSchema(TimetableRequests.getFilter, request);
         }),
-        getEntriesSettings: Effect.fn("TimetableClient.getEntriesSettings")(
-          function* (request: TimetableEntriesSettingsRequest) {
-            return yield* http.requestSchema(
-              TimetableRequests.getEntriesSettings,
-              request,
-            );
-          },
-        ),
+        getEntriesSettings: Effect.fn("TimetableClient.getEntriesSettings")(function* (
+          request: TimetableEntriesSettingsRequest,
+        ) {
+          return yield* http.requestSchema(TimetableRequests.getEntriesSettings, request);
+        }),
         getMenu: Effect.fn("TimetableClient.getMenu")(function* () {
-          return yield* http.requestSchema(
-            TimetableRequests.getMenu,
-            undefined,
-          );
+          return yield* http.requestSchema(TimetableRequests.getMenu, undefined);
         }),
         getCalendar: Effect.fn("TimetableClient.getCalendar")(function* (
           request: TimetableCalendarRequest = {},
         ) {
-          return yield* http.requestSchema(
-            TimetableRequests.getCalendar,
-            request,
-          );
+          return yield* http.requestSchema(TimetableRequests.getCalendar, request);
         }),
-        getExternalCalendar: Effect.fn("TimetableClient.getExternalCalendar")(
-          function* (request: TimetableExternalCalendarRequest = {}) {
-            return yield* http.requestSchema(
-              TimetableRequests.getExternalCalendar,
-              request,
-            );
-          },
-        ),
-        search: Effect.fn("TimetableClient.search")(function* (
-          request: TimetableSearchRequest,
+        getExternalCalendar: Effect.fn("TimetableClient.getExternalCalendar")(function* (
+          request: TimetableExternalCalendarRequest = {},
         ) {
+          return yield* http.requestSchema(TimetableRequests.getExternalCalendar, request);
+        }),
+        search: Effect.fn("TimetableClient.search")(function* (request: TimetableSearchRequest) {
           return yield* http.requestSchema(TimetableRequests.search, request);
         }),
-        getAvailableRooms: Effect.fn("TimetableClient.getAvailableRooms")(
-          function* (request: TimetableAvailableRoomsRequest) {
-            return yield* http.requestSchema(
-              TimetableRequests.getAvailableRooms,
-              request,
-            );
-          },
-        ),
+        getAvailableRooms: Effect.fn("TimetableClient.getAvailableRooms")(function* (
+          request: TimetableAvailableRoomsRequest,
+        ) {
+          return yield* http.requestSchema(TimetableRequests.getAvailableRooms, request);
+        }),
         getEntries: Effect.fn("TimetableClient.getEntries")(function* (
           request: TimetableEntriesRequest,
         ) {
-          return yield* http.requestSchema(
-            TimetableRequests.getEntries,
-            request,
-          );
+          return yield* http.requestSchema(TimetableRequests.getEntries, request);
         }),
-        getEntriesWeekOverview: Effect.fn(
-          "TimetableClient.getEntriesWeekOverview",
-        )(function* (request: TimetableEntriesWeekOverviewRequest) {
-          return yield* http.requestSchema(
-            TimetableRequests.getEntriesWeekOverview,
-            request,
-          );
+        getEntriesWeekOverview: Effect.fn("TimetableClient.getEntriesWeekOverview")(function* (
+          request: TimetableEntriesWeekOverviewRequest,
+        ) {
+          return yield* http.requestSchema(TimetableRequests.getEntriesWeekOverview, request);
         }),
       });
     }),

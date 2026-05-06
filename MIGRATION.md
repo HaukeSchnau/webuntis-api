@@ -91,9 +91,7 @@ The recommended wiring pattern is:
 import { Effect, Layer } from "effect";
 import { clientConfigFromEnv, makeWebUntisLayer } from "webuntis-api";
 
-const layer = Layer.unwrap(
-  clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)),
-);
+const layer = Layer.unwrap(clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)));
 ```
 
 That layer provides the aggregate client plus the focused domain services.
@@ -121,14 +119,15 @@ This mostly matters if you were working in repository internals or extending the
 Several non-trivial lookup methods also moved from positional arguments to request objects:
 
 ```ts
-yield* messages.getRecipientFilter({ recipientOption: "STAFF" });
-yield* messages.searchRecipients({
-  recipientOption: "STAFF",
-  searchText: "anna",
-});
-yield* messages.getMessage({ id: 123 });
-yield* exams.getExam({ id: 42 });
-yield* timetable.getGrid({ timetableType: "STANDARD" });
+yield * messages.getRecipientFilter({ recipientOption: "STAFF" });
+yield *
+  messages.searchRecipients({
+    recipientOption: "STAFF",
+    searchText: "anna",
+  });
+yield * messages.getMessage({ id: 123 });
+yield * exams.getExam({ id: 42 });
+yield * timetable.getGrid({ timetableType: "STANDARD" });
 ```
 
 ## Repo Layout
@@ -149,4 +148,4 @@ If you maintained local patches on top of the old layout, expect path changes.
 4. Update positional lookup calls to the new request-object form.
 5. Remove any dependency on root-exported raw or experimental write routes.
 6. Re-check env configuration, especially tenant pinning and `WEBUNTIS_SERVER_URL`.
-7. Run `bun run typecheck`, `bun run test:unit`, and your live suite.
+7. Run `bun run lint`, `bun run test:unit`, and your live suite.

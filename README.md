@@ -50,11 +50,7 @@ The most familiar entry point is still the aggregate `WebUntisClient`.
 
 ```ts
 import { Effect, Layer } from "effect";
-import {
-  WebUntisClient,
-  clientConfigFromEnv,
-  makeWebUntisLayer,
-} from "webuntis-api";
+import { WebUntisClient, clientConfigFromEnv, makeWebUntisLayer } from "webuntis-api";
 
 const program = Effect.gen(function* () {
   const client = yield* WebUntisClient;
@@ -67,9 +63,7 @@ const program = Effect.gen(function* () {
   };
 });
 
-const layer = Layer.unwrap(
-  clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)),
-);
+const layer = Layer.unwrap(clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)));
 
 await Effect.runPromise(program.pipe(Effect.provide(layer)));
 ```
@@ -80,21 +74,13 @@ For new code, prefer yielding focused services directly. That keeps dependencies
 
 ```ts
 import { Effect, Layer } from "effect";
-import {
-  AppClient,
-  MessagesClient,
-  clientConfigFromEnv,
-  makeWebUntisLayer,
-} from "webuntis-api";
+import { AppClient, MessagesClient, clientConfigFromEnv, makeWebUntisLayer } from "webuntis-api";
 
 const program = Effect.gen(function* () {
   const app = yield* AppClient;
   const messages = yield* MessagesClient;
 
-  const [home, inbox] = yield* Effect.all([
-    app.getHome(),
-    messages.getInbox(),
-  ]);
+  const [home, inbox] = yield* Effect.all([app.getHome(), messages.getInbox()]);
 
   return {
     schoolName: home.schoolName,
@@ -102,9 +88,7 @@ const program = Effect.gen(function* () {
   };
 });
 
-const layer = Layer.unwrap(
-  clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)),
-);
+const layer = Layer.unwrap(clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)));
 
 await Effect.runPromise(program.pipe(Effect.provide(layer)));
 ```
@@ -113,11 +97,7 @@ The domain services are especially useful when a program only needs one slice of
 
 ```ts
 import { Effect, Layer } from "effect";
-import {
-  TimetableClient,
-  clientConfigFromEnv,
-  makeWebUntisLayer,
-} from "webuntis-api";
+import { TimetableClient, clientConfigFromEnv, makeWebUntisLayer } from "webuntis-api";
 
 const program = Effect.gen(function* () {
   const timetable = yield* TimetableClient;
@@ -130,9 +110,7 @@ const program = Effect.gen(function* () {
   });
 });
 
-const layer = Layer.unwrap(
-  clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)),
-);
+const layer = Layer.unwrap(clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)));
 
 await Effect.runPromise(program.pipe(Effect.provide(layer)));
 ```
@@ -178,12 +156,14 @@ type TimetableService = TimetableClient["Service"];
 The non-trivial id/filter methods now take request objects instead of positional parameters:
 
 ```ts
-const exam = yield* exams.getExam({ id: 42 });
-const staff = yield* messages.getRecipientFilter({ recipientOption: "STAFF" });
-const results = yield* messages.searchRecipients({
-  recipientOption: "STAFF",
-  searchText: "anna",
-});
+const exam = yield * exams.getExam({ id: 42 });
+const staff = yield * messages.getRecipientFilter({ recipientOption: "STAFF" });
+const results =
+  yield *
+  messages.searchRecipients({
+    recipientOption: "STAFF",
+    searchText: "anna",
+  });
 ```
 
 ## Configuration
@@ -214,7 +194,6 @@ Notable behavior changes:
 Run the static checks:
 
 ```bash
-bun run typecheck
 bun run lint
 ```
 

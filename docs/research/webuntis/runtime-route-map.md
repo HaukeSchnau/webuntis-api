@@ -273,7 +273,7 @@ Observed behavior:
 Observed request body while typing `sei`:
 
 ```json
-{"filters":[],"searchText":"sei"}
+{ "filters": [], "searchText": "sei" }
 ```
 
 Drift note:

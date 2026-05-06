@@ -26,10 +26,7 @@ import type {
 export interface MessagesClientShape {
   readonly getInbox: () => Effect.Effect<MessagesInbox, RequestFailure>;
   readonly getDrafts: () => Effect.Effect<MessageDrafts, RequestFailure>;
-  readonly getPermissions: () => Effect.Effect<
-    MessagesPermissions,
-    RequestFailure
-  >;
+  readonly getPermissions: () => Effect.Effect<MessagesPermissions, RequestFailure>;
   readonly getRecipientQuickfilters: () => Effect.Effect<
     MessageRecipientQuickfilters,
     RequestFailure
@@ -53,10 +50,9 @@ export interface MessagesClientShape {
   ) => Effect.Effect<MessageDetail, RequestFailure>;
 }
 
-export class MessagesClient extends Context.Service<
-  MessagesClient,
-  MessagesClientShape
->()("webuntis/MessagesClient") {
+export class MessagesClient extends Context.Service<MessagesClient, MessagesClientShape>()(
+  "webuntis/MessagesClient",
+) {
   static readonly layerNoDeps = Layer.effect(
     this,
     Effect.gen(function* () {
@@ -64,81 +60,49 @@ export class MessagesClient extends Context.Service<
 
       return MessagesClient.of({
         getInbox: Effect.fn("MessagesClient.getInbox")(function* () {
-          return yield* http.requestSchema(
-            MessagesRequests.getInbox,
-            undefined,
-          );
+          return yield* http.requestSchema(MessagesRequests.getInbox, undefined);
         }),
         getDrafts: Effect.fn("MessagesClient.getDrafts")(function* () {
-          return yield* http.requestSchema(
-            MessagesRequests.getDrafts,
-            undefined,
-          );
+          return yield* http.requestSchema(MessagesRequests.getDrafts, undefined);
         }),
-        getPermissions: Effect.fn("MessagesClient.getPermissions")(
+        getPermissions: Effect.fn("MessagesClient.getPermissions")(function* () {
+          return yield* http.requestSchema(MessagesRequests.getPermissions, undefined);
+        }),
+        getRecipientQuickfilters: Effect.fn("MessagesClient.getRecipientQuickfilters")(
           function* () {
-            return yield* http.requestSchema(
-              MessagesRequests.getPermissions,
-              undefined,
-            );
+            return yield* http.requestSchema(MessagesRequests.getRecipientQuickfilters, undefined);
           },
         ),
-        getRecipientQuickfilters: Effect.fn(
-          "MessagesClient.getRecipientQuickfilters",
-        )(function* () {
-          return yield* http.requestSchema(
-            MessagesRequests.getRecipientQuickfilters,
-            undefined,
-          );
+        getRecipientFilter: Effect.fn("MessagesClient.getRecipientFilter")(function* (
+          request: MessageRecipientFilterRequest,
+        ) {
+          return yield* http.requestSchema(MessagesRequests.getRecipientFilter, request);
         }),
-        getRecipientFilter: Effect.fn("MessagesClient.getRecipientFilter")(
-          function* (request: MessageRecipientFilterRequest) {
-            return yield* http.requestSchema(
-              MessagesRequests.getRecipientFilter,
-              request,
-            );
-          },
-        ),
-        filterComposeRecipients: Effect.fn(
-          "MessagesClient.filterComposeRecipients",
-        )(function* (request: MessageComposeRecipientsRequest) {
-          return yield* http.requestSchema(
-            MessagesRequests.filterComposeRecipients,
-            request,
-          );
+        filterComposeRecipients: Effect.fn("MessagesClient.filterComposeRecipients")(function* (
+          request: MessageComposeRecipientsRequest,
+        ) {
+          return yield* http.requestSchema(MessagesRequests.filterComposeRecipients, request);
         }),
-        searchRecipients: Effect.fn("MessagesClient.searchRecipients")(
-          function* (request: MessageRecipientSearchRequest) {
-            return yield* http.requestSchema(
-              MessagesRequests.searchRecipients,
-              request,
-            );
-          },
-        ),
+        searchRecipients: Effect.fn("MessagesClient.searchRecipients")(function* (
+          request: MessageRecipientSearchRequest,
+        ) {
+          return yield* http.requestSchema(MessagesRequests.searchRecipients, request);
+        }),
         getSent: Effect.fn("MessagesClient.getSent")(function* () {
           return yield* http.requestSchema(MessagesRequests.getSent, undefined);
         }),
         getStatus: Effect.fn("MessagesClient.getStatus")(function* () {
-          return yield* http.requestSchema(
-            MessagesRequests.getStatus,
-            undefined,
-          );
+          return yield* http.requestSchema(MessagesRequests.getStatus, undefined);
         }),
         getReplyForm: Effect.fn("MessagesClient.getReplyForm")(function* (
           request: MessageReplyFormRequest,
         ) {
-          return yield* http.requestSchema(
-            MessagesRequests.getReplyForm,
-            request,
-          );
+          return yield* http.requestSchema(MessagesRequests.getReplyForm, request);
         }),
         getMessage: Effect.fn("MessagesClient.getMessage")(function* (
           request: MessageDetailRequest,
         ) {
-          return yield* http.requestSchema(
-            MessagesRequests.getMessage,
-            request,
-          );
+          return yield* http.requestSchema(MessagesRequests.getMessage, request);
         }),
       });
     }),

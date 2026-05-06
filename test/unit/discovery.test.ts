@@ -43,9 +43,7 @@ describe("school discovery", () => {
               });
             }
 
-            throw new Error(
-              `Unexpected request: ${request.method} ${request.url}`,
-            );
+            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
           },
           {
             ...testConfig,
@@ -92,9 +90,7 @@ describe("school discovery", () => {
               });
             }
 
-            throw new Error(
-              `Unexpected request: ${request.method} ${request.url}`,
-            );
+            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
           },
           {
             ...testConfig,
@@ -153,9 +149,7 @@ describe("school discovery", () => {
               });
             }
 
-            throw new Error(
-              `Unexpected request: ${request.method} ${request.url}`,
-            );
+            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
           },
           {
             ...testConfig,
@@ -192,9 +186,7 @@ describe("school discovery", () => {
               });
             }
 
-            throw new Error(
-              `Unexpected request: ${request.method} ${request.url}`,
-            );
+            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
           },
           {
             ...testConfig,

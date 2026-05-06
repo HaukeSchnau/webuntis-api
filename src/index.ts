@@ -1,11 +1,7 @@
 import { ClientConfig } from "./internal/config.ts";
 
 export { AuthClient } from "./auth.ts";
-export {
-  layer,
-  makeWebUntisLayer,
-  WebUntisClient,
-} from "./client.ts";
+export { layer, makeWebUntisLayer, WebUntisClient } from "./client.ts";
 export type { OnboardingRequest } from "./domains/app/index.ts";
 export { AppClient } from "./domains/app/index.ts";
 export type { ClassregHomeworkListRequest } from "./domains/classreg/index.ts";

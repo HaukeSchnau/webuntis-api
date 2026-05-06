@@ -268,9 +268,7 @@ describe("strict schema decoding", () => {
   });
 
   it("rejects non-object timetable external calendar payloads", () => {
-    const decode = Schema.decodeUnknownSync(
-      TimetableExternalCalendarItemSchema,
-    );
+    const decode = Schema.decodeUnknownSync(TimetableExternalCalendarItemSchema);
 
     expect(() => decode(7, strictJsonParseOptions)).toThrow();
   });

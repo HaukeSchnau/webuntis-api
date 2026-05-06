@@ -338,9 +338,7 @@ const fixtures = [
     name: "ExamFilter",
     schema: ExamFilterSchema,
     value: {
-      examTypes: [
-        { id: 1, shortName: "K", longName: "Klausur", displayName: "Klausur" },
-      ],
+      examTypes: [{ id: 1, shortName: "K", longName: "Klausur", displayName: "Klausur" }],
       subjects: [displayResource],
       classes: [displayResource],
       teachers: [teacherResource],
@@ -737,9 +735,7 @@ const fixtures = [
   {
     name: "TimetableAvailableRooms",
     schema: TimetableAvailableRoomsSchema,
-    value: [
-      { id: 1, name: "Room 1", longName: "Room 1", displayName: "Room 1" },
-    ],
+    value: [{ id: 1, name: "Room 1", longName: "Room 1", displayName: "Room 1" }],
   },
   {
     name: "TimetableEntries",

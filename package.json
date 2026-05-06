@@ -2,16 +2,13 @@
   "name": "webuntis-api",
   "version": "0.1.0",
   "description": "Read-only Effect client for WebUntis APIs.",
-  "type": "module",
-  "sideEffects": false,
-  "engines": {
-    "node": ">=20.19.0"
-  },
   "files": [
     "dist",
     "README.md",
     "MIGRATION.md"
   ],
+  "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -32,7 +29,7 @@
     "build": "tsdown",
     "pack:check": "bun run build && publint --strict && attw --pack . --profile esm-only",
     "prepack": "bun run build",
-    "prepublishOnly": "bun run typecheck && bun run lint && bun run test && bun run pack:check",
+    "prepublishOnly": "bun run lint && bun run test && bun run pack:check",
     "test": "vitest run",
     "test:unit": "vitest run test/unit",
     "test:contract": "vitest run test/contract",
@@ -40,22 +37,26 @@
     "test:live:sops": "./scripts/run-live-tests.sh",
     "test:live:sops:update": "./scripts/run-live-tests.sh -u",
     "test:watch": "vitest",
-    "typecheck": "tsgo --noEmit",
-    "lint": "biome check .",
-    "format": "biome format --write .",
-    "format:check": "biome format ."
+    "lint": "oxlint .",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check ."
+  },
+  "dependencies": {
+    "effect": "^4.0.0-beta.60"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
-    "@biomejs/biome": "^2.4.14",
+    "@effect/vitest": "^4.0.0-beta.60",
     "@types/node": "^25.6.0",
     "@typescript/native-preview": "^7.0.0-dev.20260505.1",
-    "@effect/vitest": "^4.0.0-beta.60",
+    "oxfmt": "^0.48.0",
+    "oxlint": "^1.63.0",
+    "oxlint-tsgolint": "^0.22.1",
     "publint": "^0.3.19",
     "tsdown": "^0.21.10",
     "vitest": "^4.1.5"
   },
-  "dependencies": {
-    "effect": "^4.0.0-beta.60"
+  "engines": {
+    "node": ">=20.19.0"
   }
 }
