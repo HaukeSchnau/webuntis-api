@@ -2,23 +2,23 @@ default:
     @just --list
 
 build:
-    bun run tsdown
+    pnpm exec tsdown
 
 pack-check: build
-    bun run publint --strict
-    bun run attw --pack . --profile esm-only
+    pnpm exec publint --strict
+    pnpm exec attw --pack . --profile esm-only
 
 test:
-    bun run vitest run
+    pnpm exec vp test run
 
 test-unit:
-    bun run vitest run test/unit
+    pnpm exec vp test run test/unit
 
 test-contract:
-    bun run vitest run test/contract
+    pnpm exec vp test run test/contract
 
 test-live:
-    bun run vitest run test/live
+    pnpm exec vp test run test/live
 
 test-live-sops:
     ./scripts/run-live-tests.sh
@@ -27,13 +27,16 @@ test-live-sops-update:
     ./scripts/run-live-tests.sh -u
 
 test-watch:
-    bun run vitest
+    pnpm exec vp test
 
 lint:
-    bun run oxlint .
+    pnpm exec vp lint
 
 format:
-    bun run oxfmt --write .
+    pnpm exec vp fmt . --write
 
 format-check:
-    bun run oxfmt --check .
+    pnpm exec vp fmt --check
+
+check:
+    pnpm exec vp check

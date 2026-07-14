@@ -1,18 +1,7 @@
 import { defineConfig } from "tsdown/config";
 
-export default defineConfig({
-  entry: {
-    index: "./src/index.ts",
-    schemas: "./src/domains/schemas.ts",
-  },
-  format: "esm",
-  platform: "node",
-  target: "node20",
-  dts: true,
-  sourcemap: true,
-  clean: true,
-  fixedExtension: false,
-  deps: {
-    skipNodeModulesBundle: true,
-  },
-});
+import { packConfig } from "./pack.config.ts";
+
+// TODO: Remove this adapter and use `vp pack` once Vite+ bundles tsdown >=0.22.7,
+// which supports declaration generation with this project's TypeScript 7 toolchain.
+export default defineConfig(packConfig);
