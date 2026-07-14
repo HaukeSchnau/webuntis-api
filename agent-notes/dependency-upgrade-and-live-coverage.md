@@ -1,0 +1,48 @@
+# Dependency Upgrade and Live Coverage
+
+## Active goal
+
+Upgrade every package to its latest appropriate published version, repair all regressions, verify the complete local and live API suites, then inspect the authenticated WebUntis app read-only for missing routes and loose schemas.
+
+## Constraints and assumptions
+
+- Never invoke a server-state-changing route except authentication/session bootstrap.
+- Treat "latest" as the latest stable release unless the project intentionally follows a prerelease channel (Effect v4 and TypeScript native preview).
+- Preserve the package's Effect v4 architecture and strict, evidence-driven schema policy.
+- Use upstream source/docs under `~/context` plus current official changelogs and package metadata.
+- Replace the obsolete `@typescript/native-preview` backend with stable `typescript` 7: `@effect/tsgo` 0.21 only resolves `typescript` or an explicit `@typescript/native` alias.
+
+## Workstreams
+
+- [x] Dependency inventory and upstream migration research
+- [x] Manifest/lockfile upgrade
+- [x] Static, unit, contract, build, and package verification
+- [x] SOPS-backed live API verification
+- [x] Authenticated browser route/network exploration
+- [x] Evidence-backed route/schema additions
+- [x] Full regression verification
+
+## Current status
+
+- Repository started clean at `main` (`chore: move package scripts to just`).
+- Existing research includes a 2026-05-05 blind-spot report and runtime route map.
+- Live credentials are expected through the encrypted SOPS workflow in `scripts/run-live-tests.sh`.
+- Upgraded direct packages; migrated the removed `@typescript/native-preview` backend to stable `typescript` 7.
+- Live browser evidence on 2026-07-14 shows no active school year. `app/data.currentSchoolYear` and mobile `schoolYear` are `null`; the SPA omits the school-year header in this state even though auth-only `timegrid` still describes the most recent grid.
+- Live Vitest files must run sequentially because concurrent login sessions for the same account produce intermittent 401 responses.
+- Current bundle comparison found the same 254 literal modern REST routes as the March catalog; the live exploration report is in `docs/research/webuntis/read-only-blind-spots-2026-07-14.md`.
+
+## Verification log
+
+- Formatting, Oxc lint/type diagnostics, unit tests (35), and contract tests (66) pass after the first repair pass.
+- Build, publint, and are-the-types-wrong passed on the upgraded stack.
+- Live update run passes all 17 executable tests and refreshed the inactive-year snapshots; one inverse credential-documentation test is intentionally skipped when credentials exist.
+- Final non-update verification passed: format check, Oxc lint/type diagnostics, 104 local tests (15 live skips without injected credentials), build, publint, are-the-types-wrong, and 17 live tests (one inverse environment test skipped).
+- `bun outdated` reports no outdated direct dependencies.
+
+## Follow-up opportunities
+
+- Effect and `@effect/vitest` must stay aligned at beta.98; `@effect/tsgo` 0.21 patches stable TypeScript 7.0.2.
+- Does the available live user expose any new read surfaces or non-empty payloads that can tighten currently loose schemas?
+- Repeat timetable/date-dependent browser exploration after a new school year becomes active.
+- Capture non-empty payloads for the loose fields listed in the 2026-07-14 blind-spot report before tightening them.

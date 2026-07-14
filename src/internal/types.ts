@@ -46,7 +46,7 @@ export interface MetadataState {
 
 export interface MetadataSnapshot extends AuthenticatedState {
   readonly tenantId: string;
-  readonly schoolYearId: number;
+  readonly schoolYearId?: number | undefined;
 }
 
 export const emptySessionState = (): SessionState => ({
@@ -68,17 +68,12 @@ export const hasMetadataForSession = (
   session: AuthenticatedState,
 ): metadata is MetadataState & {
   readonly tenantId: string;
-  readonly schoolYearId: number;
-} =>
-  metadata.tenantId !== undefined &&
-  metadata.schoolYearId !== undefined &&
-  metadata.sessionGeneration === session.generation;
+} => metadata.tenantId !== undefined && metadata.sessionGeneration === session.generation;
 
 export const toMetadataSnapshot = (
   session: AuthenticatedState,
   metadata: MetadataState & {
     readonly tenantId: string;
-    readonly schoolYearId: number;
   },
 ): MetadataSnapshot => ({
   ...session,

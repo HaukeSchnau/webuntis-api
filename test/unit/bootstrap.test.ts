@@ -111,6 +111,56 @@ describe("bootstrap and transport", () => {
   );
 
   it.effect(
+    "omits the school-year header when no school year is active",
+    () => {
+      const finalHeaders: Array<Readonly<Record<string, string>>> = [];
+
+      return Effect.gen(function* () {
+        const http = yield* WebUntisHttp;
+        yield* http.get("api/rest/view/v1/messages/status");
+
+        expect(finalHeaders).toHaveLength(1);
+        expect(finalHeaders[0]?.["Tenant-Id"] ?? finalHeaders[0]?.["tenant-id"]).toBe("tenant-42");
+        expect(
+          finalHeaders[0]?.["X-Webuntis-Api-School-Year-Id"] ??
+            finalHeaders[0]?.["x-webuntis-api-school-year-id"],
+        ).toBeUndefined();
+      }).pipe(
+        Effect.provide(
+          makeCoreTestLayer((request) => {
+            const { pathname } = new URL(request.url);
+
+            if (pathname.endsWith("/index.do")) {
+              return new Response("", {
+                status: 200,
+                headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
+              });
+            }
+            if (pathname.endsWith("/j_spring_security_check")) {
+              return new Response("", {
+                status: 302,
+                headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
+              });
+            }
+            if (pathname.endsWith("/api/token/new")) {
+              return new Response(makeJwt(), { status: 200 });
+            }
+            if (pathname.endsWith("/api/rest/view/v1/app/data")) {
+              return jsonResponse({
+                currentSchoolYear: null,
+                tenant: { id: "tenant-42" },
+              });
+            }
+            finalHeaders.push(request.headers);
+            return jsonResponse({ ok: true });
+          }),
+        ),
+      );
+    },
+    30_000,
+  );
+
+  it.effect(
     "skips metadata bootstrap when auth-only routes already know the tenant id",
     () => {
       let metadataCalls = 0;

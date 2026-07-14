@@ -28,7 +28,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis smoke", () => {
           expect(state.token).toBeDefined();
 
           const appData = yield* client.app.getData();
-          expect(appData.currentSchoolYear.id).toBeGreaterThan(0);
+          expect(appData.currentSchoolYear === null || appData.currentSchoolYear.id > 0).toBe(true);
           expect(normalizeAppData(appData)).toMatchSnapshot();
         }),
       30_000,
@@ -44,7 +44,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis smoke", () => {
           const startupActions = yield* client.app.getStartupActions();
 
           expect(home.schoolName).toContain("IGS");
-          expect(mobileData.schoolYear.id).toBeGreaterThan(0);
+          expect(mobileData.schoolYear === null || mobileData.schoolYear.id > 0).toBe(true);
           expect(Array.isArray(startupActions.startupActions)).toBe(true);
           expect(normalizeHome(home)).toMatchSnapshot();
           expect(normalizeMobileData(mobileData)).toMatchSnapshot();

@@ -268,8 +268,8 @@ exports[`reverse-engineering artifacts > keeps the mined REST endpoint catalog s
     "view:v3": 3,
     "view:v4": 2,
   },
-  "observedAt": "2026-03-11",
-  "sourceBundle": "https://igs-lilienthal.webuntis.com/assets/index-B54Mbe15.js",
+  "observedAt": "2026-07-14",
+  "sourceBundle": "https://igs-lilienthal.webuntis.com/assets/index-Bzf1Gf3l.js",
   "tenantHost": "igs-lilienthal.webuntis.com",
   "versionCounts": {
     "session": 2,

@@ -1,11 +1,12 @@
 # WebUntis Reverse-Engineering Artifacts
 
-These artifacts capture the current headless integration findings from March 2026.
+These artifacts capture the current headless integration findings through July 2026.
 
 - `school-discovery.json` documents the public school-search contract used from `https://webuntis.com/`.
 - `auth-flow.md` documents the classic login handshake, cookie bootstrap, and token minting behavior.
-- `modern-rest-endpoints.json` catalogs the modern REST-style endpoints discovered from the shipped frontend bundle at `https://igs-lilienthal.webuntis.com/assets/index-B54Mbe15.js`.
+- `modern-rest-endpoints.json` catalogs the modern REST-style endpoints discovered from the current shipped frontend bundle.
 - `runtime-route-map.md` maps selected live UI routes to the XHR traffic actually observed in an authenticated staff session on `igs-lilienthal.webuntis.com`.
+- `read-only-blind-spots-2026-07-14.md` records the inactive-school-year browser pass, current bundle comparison, and remaining coverage limits.
 
 Notes:
 

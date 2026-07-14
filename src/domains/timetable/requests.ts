@@ -72,7 +72,7 @@ export const TimetableRequests = {
   getTimeGrid: schemaRequest<void, typeof TimeGridSchema>({
     method: "GET",
     path: "api/rest/view/v1/timegrid",
-    policy: RequestPolicy.Metadata,
+    policy: RequestPolicy.AuthOnly,
     schema: TimeGridSchema,
   }),
   getGrid: schemaRequest<TimetableGridRequest, typeof TimetableGridSchema>({

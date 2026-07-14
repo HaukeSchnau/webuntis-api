@@ -10,7 +10,7 @@ import {
 
 export const AppDataSchema = Schema.Struct({
   departments: Schema.optional(Schema.Array(JsonObjectSchema)),
-  currentSchoolYear: SchoolyearWithTimeGridSchema,
+  currentSchoolYear: Schema.NullOr(SchoolyearWithTimeGridSchema),
   tenant: TenantSchema,
   user: UserSchema,
   permissions: Schema.Array(Schema.String),
@@ -93,14 +93,34 @@ export const AppExamIntegrationsSchema = Schema.Array(AppExamIntegrationSchema);
 export type AppExamIntegration = Schema.Schema.Type<typeof AppExamIntegrationSchema>;
 export type AppExamIntegrations = Schema.Schema.Type<typeof AppExamIntegrationsSchema>;
 
-export const DashboardCardSchema = JsonObjectSchema;
+export const DashboardCardSchema = Schema.Struct({
+  hasAttachments: Schema.Boolean,
+  headerColor: Schema.String,
+  icon: Schema.String,
+  id: Schema.Number,
+  orderNo: Schema.Number,
+  status: Schema.String,
+  subtitle: Schema.String,
+  title: Schema.String,
+});
 export const DashboardCardsSchema = Schema.Struct({
   dashboardCards: Schema.Array(DashboardCardSchema),
 });
 
 export type DashboardCards = Schema.Schema.Type<typeof DashboardCardsSchema>;
 
-export const DashboardCardsDetailItemSchema = JsonObjectSchema;
+export const DashboardCardsDetailItemSchema = Schema.Struct({
+  attachments: Schema.Array(JsonObjectSchema),
+  canDelete: Schema.Boolean,
+  canEdit: Schema.Boolean,
+  color: Schema.String,
+  content: Schema.String,
+  icon: Schema.String,
+  id: Schema.Number,
+  status: Schema.String,
+  subtitle: Schema.String,
+  title: Schema.String,
+});
 export const DashboardCardsDetailSchema = Schema.Struct({
   dashboardCardsDetails: Schema.Array(DashboardCardsDetailItemSchema),
 });
@@ -188,13 +208,13 @@ export const MobileUserSchema = Schema.Struct({
 });
 
 export const MobileDataV1V2Schema = Schema.Struct({
-  schoolYear: SchoolyearSchema,
+  schoolYear: Schema.NullOr(SchoolyearSchema),
   tenant: MobileTenantV1V2Schema,
   user: MobileUserSchema,
 });
 
 export const MobileDataSchema = Schema.Struct({
-  schoolYear: SchoolyearSchema,
+  schoolYear: Schema.NullOr(SchoolyearSchema),
   tenant: MobileTenantSchema,
   user: MobileUserSchema,
 });

@@ -2,84 +2,7 @@
 
 exports[`live WebUntis smoke > with live layer > bootstraps auth and reads app metadata 1`] = `
 {
-  "currentSchoolYear": {
-    "dateRange": {
-      "end": "<redacted-date>",
-      "start": "<redacted-date>",
-    },
-    "id": 7,
-    "name": "2025/2026",
-    "timeGrid": {
-      "schoolyearId": 7,
-      "units": [
-        {
-          "endTime": 800,
-          "startTime": 740,
-          "unitOfDay": 1,
-        },
-        {
-          "endTime": 840,
-          "startTime": 800,
-          "unitOfDay": 2,
-        },
-        {
-          "endTime": 920,
-          "startTime": 840,
-          "unitOfDay": 3,
-        },
-        {
-          "endTime": 1025,
-          "startTime": 945,
-          "unitOfDay": 4,
-        },
-        {
-          "endTime": 1105,
-          "startTime": 1025,
-          "unitOfDay": 5,
-        },
-        {
-          "endTime": 1210,
-          "startTime": 1130,
-          "unitOfDay": 6,
-        },
-        {
-          "endTime": 1250,
-          "startTime": 1210,
-          "unitOfDay": 7,
-        },
-        {
-          "endTime": 1320,
-          "startTime": 1250,
-          "unitOfDay": 8,
-        },
-        {
-          "endTime": 1350,
-          "startTime": 1320,
-          "unitOfDay": 9,
-        },
-        {
-          "endTime": 1430,
-          "startTime": 1350,
-          "unitOfDay": 10,
-        },
-        {
-          "endTime": 1510,
-          "startTime": 1430,
-          "unitOfDay": 11,
-        },
-        {
-          "endTime": 1555,
-          "startTime": 1515,
-          "unitOfDay": 12,
-        },
-        {
-          "endTime": 1630,
-          "startTime": 1555,
-          "unitOfDay": 13,
-        },
-      ],
-    },
-  },
+  "currentSchoolYear": null,
   "departments": [],
   "holidays": [
     {
@@ -432,7 +355,6 @@ exports[`live WebUntis smoke > with live layer > bootstraps auth and reads app m
       "views": [
         "<redacted-label>",
         "<redacted-label>_<redacted-label>",
-        "<redacted-label>_<redacted-label>_<redacted-label>",
         "<redacted-label>_<redacted-label>",
         "<redacted-label>_<redacted-label>_<redacted-label>",
         "<redacted-label>_<redacted-label>",
@@ -509,10 +431,6 @@ exports[`live WebUntis smoke > with live layer > reads bootstrap and home endpoi
           "badge": null,
           "type": "<redacted-label>_<redacted-label>_<redacted-label>",
         },
-        {
-          "badge": null,
-          "type": "<redacted-label>_<redacted-label>",
-        },
       ],
     },
   ],
@@ -521,14 +439,7 @@ exports[`live WebUntis smoke > with live layer > reads bootstrap and home endpoi
 
 exports[`live WebUntis smoke > with live layer > reads bootstrap and home endpoints 2`] = `
 {
-  "schoolYear": {
-    "dateRange": {
-      "end": "<redacted-datetime>",
-      "start": "<redacted-datetime>",
-    },
-    "id": 7,
-    "name": "2025/2026",
-  },
+  "schoolYear": null,
   "tenant": {
     "displayName": "<redacted-label> Lilienthal",
     "id": "6603700",
