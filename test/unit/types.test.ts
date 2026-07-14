@@ -1,5 +1,11 @@
-import { describe, expect, it } from "@effect/vitest";
+import { describe, expect, expectTypeOf, it } from "@effect/vitest";
+import { Context, type Effect } from "effect";
+import { withSchoolYear } from "../../src/index.ts";
 import { type ResolvedSchool, resolveBaseUrl } from "../../src/internal/types.ts";
+
+class TestDependency extends Context.Service<TestDependency, { readonly value: number }>()(
+  "test/TestDependency",
+) {}
 
 const makeSchool = (serverUrl: string): ResolvedSchool => ({
   displayName: "IGS Lilienthal",
@@ -21,5 +27,14 @@ describe("internal URL normalization", () => {
         "igs-lilienthal.webuntis.com",
       ].map((serverUrl) => resolveBaseUrl(makeSchool(serverUrl))),
     ).toEqual(Array.from({ length: 6 }, () => "https://igs-lilienthal.webuntis.com/WebUntis"));
+  });
+});
+
+describe("school-year scope types", () => {
+  it("preserves an effect's success, error, and requirement channels", () => {
+    const original = undefined as unknown as Effect.Effect<number, "failure", TestDependency>;
+    const scoped = withSchoolYear(7)(original);
+
+    expectTypeOf(scoped).toEqualTypeOf<typeof original>();
   });
 });

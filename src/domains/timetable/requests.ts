@@ -82,6 +82,7 @@ export const TimetableRequests = {
       timetableType: request.timetableType ?? "STANDARD",
     }),
     policy: RequestPolicy.Metadata,
+    supportsSchoolYearScope: true,
     schema: TimetableGridSchema,
   }),
   getFilter: schemaRequest<TimetableFilterRequest, typeof TimetableFilterSchema>({
@@ -94,6 +95,7 @@ export const TimetableRequests = {
       end: request.end,
     }),
     policy: RequestPolicy.Metadata,
+    supportsSchoolYearScope: true,
     schema: TimetableFilterSchema,
   }),
   getEntriesSettings: schemaRequest<
@@ -107,6 +109,7 @@ export const TimetableRequests = {
       resourceType: request.resourceType,
     }),
     policy: RequestPolicy.Metadata,
+    supportsSchoolYearScope: true,
     schema: TimetableEntriesSettingsSchema,
   }),
   getMenu: schemaRequest<void, typeof TimetableMenuSchema>({
@@ -145,6 +148,7 @@ export const TimetableRequests = {
       schoolyear: request.schoolyear,
     }),
     policy: RequestPolicy.AuthOnly,
+    supportsSchoolYearScope: true,
     schema: TimetableSearchSchema,
   }),
   getAvailableRooms: schemaRequest<
@@ -158,6 +162,7 @@ export const TimetableRequests = {
       endDateTime: request.endDateTime,
     }),
     policy: RequestPolicy.AuthOnly,
+    supportsSchoolYearScope: true,
     schema: TimetableAvailableRoomsSchema,
   }),
   getEntries: schemaRequest<TimetableEntriesRequest, typeof TimetableEntriesSchema>({
@@ -174,6 +179,7 @@ export const TimetableRequests = {
       layout: request.layout ?? "START_TIME",
     }),
     policy: RequestPolicy.Metadata,
+    supportsSchoolYearScope: true,
     schema: TimetableEntriesSchema,
   }),
   getEntriesWeekOverview: schemaRequest<
@@ -190,6 +196,7 @@ export const TimetableRequests = {
       timetableType: request.timetableType,
     }),
     policy: RequestPolicy.Metadata,
+    supportsSchoolYearScope: true,
     schema: TimetableEntriesWeekOverviewSchema,
   }),
 } as const;

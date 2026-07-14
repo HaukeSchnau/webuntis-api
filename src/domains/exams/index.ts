@@ -7,7 +7,7 @@ import {
   type ExamsListRequest,
   ExamsRequests,
 } from "./requests.ts";
-import type { ExamDetail, ExamFilter, ExamStatistics, Exams } from "./schema.ts";
+import type { ExamDetail, ExamFilter, ExamsForClass, ExamStatistics, Exams } from "./schema.ts";
 
 export interface ExamsClientShape {
   readonly list: (request?: ExamsListRequest) => Effect.Effect<Exams, RequestFailure>;
@@ -16,6 +16,7 @@ export interface ExamsClientShape {
     request?: ExamDateRangeRequest,
   ) => Effect.Effect<ExamStatistics, RequestFailure>;
   readonly getExam: (request: ExamDetailRequest) => Effect.Effect<ExamDetail, RequestFailure>;
+  readonly getForClass: () => Effect.Effect<ExamsForClass, RequestFailure>;
 }
 
 export class ExamsClient extends Context.Service<ExamsClient, ExamsClientShape>()(
@@ -40,6 +41,9 @@ export class ExamsClient extends Context.Service<ExamsClient, ExamsClientShape>(
         }),
         getExam: Effect.fn("ExamsClient.getExam")(function* (request: ExamDetailRequest) {
           return yield* http.requestSchema(ExamsRequests.getExam, request);
+        }),
+        getForClass: Effect.fn("ExamsClient.getForClass")(function* () {
+          return yield* http.requestSchema(ExamsRequests.getForClass, undefined);
         }),
       });
     }),

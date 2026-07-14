@@ -1,4 +1,5 @@
 import { Schema } from "effect";
+import { JsonObjectSchema } from "../shared/schema.ts";
 
 export const ExamDisplayResourceSchema = Schema.Struct({
   id: Schema.Number,
@@ -86,6 +87,14 @@ export const ExamsSchema = Schema.Struct({
 });
 
 export type Exams = Schema.Schema.Type<typeof ExamsSchema>;
+
+export const ExamsForClassSchema = Schema.Struct({
+  examsDone: Schema.Array(JsonObjectSchema),
+  examsUpcoming: Schema.Array(JsonObjectSchema),
+  examsFuture: Schema.Array(JsonObjectSchema),
+});
+
+export type ExamsForClass = Schema.Schema.Type<typeof ExamsForClassSchema>;
 
 export const ExamFilterSchema = Schema.Struct({
   examTypes: Schema.Array(ExamFilterTypeSchema),

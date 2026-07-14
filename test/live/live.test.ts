@@ -298,6 +298,135 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
     );
 
     it.effect(
+      "reads representative data for every advertised school year",
+      () =>
+        Effect.gen(function* () {
+          const client = yield* WebUntisClient;
+          const schoolyears = yield* client.schoolyears.list();
+
+          expect(schoolyears.length).toBeGreaterThan(0);
+
+          const results = yield* Effect.forEach(
+            schoolyears,
+            (schoolyear) =>
+              Effect.gen(function* () {
+                const dateRange = schoolyear.dateRange;
+                const exams = yield* client.exams.list({
+                  start: dateRange.start,
+                  end: dateRange.end,
+                });
+                const statistics = yield* client.exams.getStatistics({
+                  start: dateRange.start,
+                  end: dateRange.end,
+                });
+                const forClass = yield* client.exams.getForClass();
+                const filter = yield* client.timetable.getFilter({
+                  start: dateRange.start,
+                  end: dateRange.end,
+                  resourceType: "CLASS",
+                });
+                const grid = yield* client.timetable.getGrid();
+                const search = yield* client.timetable.search({
+                  query: "10",
+                  schoolyear: schoolyear.id,
+                });
+                const absencesMeta = yield* client.classreg.getAbsencesMeta();
+                const homeworkMeta = yield* client.classreg.getHomeworkMeta();
+                const lessonTopicsMeta = yield* client.classreg.getLessonTopicsMeta();
+
+                return {
+                  schoolYearId: schoolyear.id,
+                  classCount: filter.classes.length,
+                  searchResultCount: search.results.length,
+                  examCount: exams.exams.length,
+                  statisticCount: statistics.exams.length,
+                  forClass,
+                  gridFormatCount: grid.formatDefinitions.length,
+                  absenceClassCount: absencesMeta.classes.length,
+                  homeworkClassCount: homeworkMeta.classes.length,
+                  lessonTopicsMeta,
+                };
+              }).pipe(client.withSchoolYear(schoolyear.id)),
+            { concurrency: 1 },
+          );
+
+          for (const result of results) {
+            expect(result.schoolYearId).toBeGreaterThan(0);
+            expect(result.statisticCount).toBe(result.examCount);
+            expect(Array.isArray(result.lessonTopicsMeta.teachingMethods)).toBe(true);
+            expect(Array.isArray(result.forClass.examsDone)).toBe(true);
+            expect(Array.isArray(result.forClass.examsUpcoming)).toBe(true);
+            expect(Array.isArray(result.forClass.examsFuture)).toBe(true);
+          }
+
+          expect(results.some((result) => result.classCount > 0)).toBe(true);
+          expect(results.some((result) => result.searchResultCount > 0)).toBe(true);
+          expect(results.some((result) => result.gridFormatCount > 0)).toBe(true);
+          expect(results.some((result) => result.absenceClassCount > 0)).toBe(true);
+          expect(results.some((result) => result.homeworkClassCount > 0)).toBe(true);
+        }),
+      60_000,
+    );
+
+    it.effect(
+      "decodes non-empty timetable entries from a historical school year",
+      () =>
+        Effect.gen(function* () {
+          const client = yield* WebUntisClient;
+          const schoolyears = yield* client.schoolyears.list();
+          const historicalSchoolyear = schoolyears.find((schoolyear) => schoolyear.id === 7);
+
+          if (historicalSchoolyear === undefined) {
+            return;
+          }
+
+          const entryResponses = yield* Effect.gen(function* () {
+            const filter = yield* client.timetable.getFilter({
+              start: "2025-09-15",
+              end: "2025-09-19",
+              resourceType: "CLASS",
+            });
+            const classIds = filter.classes.slice(0, 12).map((item) => item.class.id);
+            if (classIds.length === 0) {
+              throw new Error("Expected at least one historical class");
+            }
+
+            return yield* Effect.forEach(
+              [
+                ["2025-09-15", "2025-09-19"],
+                ["2026-01-19", "2026-01-23"],
+                ["2026-03-16", "2026-03-20"],
+              ] as const,
+              ([start, end]) =>
+                client.timetable.getEntries({
+                  start,
+                  end,
+                  resourceType: "CLASS",
+                  resources: classIds,
+                }),
+              { concurrency: 3 },
+            );
+          }).pipe(client.withSchoolYear(historicalSchoolyear.id));
+
+          const entryCount = entryResponses.reduce(
+            (responseCount, response) =>
+              responseCount +
+              response.days.reduce(
+                (dayCount, day) =>
+                  dayCount +
+                  day.dayEntries.length +
+                  day.gridEntries.length +
+                  day.backEntries.length,
+                0,
+              ),
+            0,
+          );
+          expect(entryCount).toBeGreaterThan(0);
+        }),
+      60_000,
+    );
+
+    it.effect(
       "reads user contact endpoints",
       () =>
         Effect.gen(function* () {

@@ -20,6 +20,7 @@ import {
   type SchemaRequestDescriptor,
 } from "./request.ts";
 import { strictJsonParseOptions } from "./schema.ts";
+import { CurrentSchoolYearId } from "./school-year-context.ts";
 import { SessionState } from "./session-state.ts";
 import type { AuthenticatedState, MetadataSnapshot } from "./types.ts";
 import { resolveBaseUrl } from "./types.ts";
@@ -33,6 +34,7 @@ export interface RequestOptions {
   readonly headers?: Readonly<Record<string, string | undefined>>;
   readonly policy?: RequestPolicyType | undefined;
   readonly body?: unknown;
+  readonly supportsSchoolYearScope?: boolean | undefined;
 }
 
 const mergeHeaders = (
@@ -125,6 +127,7 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
         options: RequestOptions,
       ) =>
         Effect.gen(function* () {
+          const currentSchoolYearId = yield* CurrentSchoolYearId;
           const baseHeaders: Record<string, string> = {
             accept: defaultAcceptHeader,
           };
@@ -143,15 +146,20 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
             request = HttpClientRequest.setHeader(request, "Tenant-Id", state.tenantId);
           }
 
-          if (
+          const metadataSchoolYearId =
             (options.policy ?? RequestPolicy.Metadata) === RequestPolicy.Metadata &&
-            "schoolYearId" in state &&
-            state.schoolYearId !== undefined
-          ) {
+            "schoolYearId" in state
+              ? state.schoolYearId
+              : undefined;
+          const schoolYearId = options.supportsSchoolYearScope
+            ? (currentSchoolYearId ?? metadataSchoolYearId)
+            : metadataSchoolYearId;
+
+          if (schoolYearId !== undefined) {
             request = HttpClientRequest.setHeader(
               request,
               "X-Webuntis-Api-School-Year-Id",
-              String(state.schoolYearId),
+              String(schoolYearId),
             );
           }
           if (method !== "GET" && options.body !== undefined) {
@@ -290,6 +298,7 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
           headers: resolved.headers,
           policy: resolved.policy,
           query: resolved.query,
+          supportsSchoolYearScope: resolved.supportsSchoolYearScope,
         });
 
       const request: WebUntisHttpShape["request"] = (descriptor, input) => {

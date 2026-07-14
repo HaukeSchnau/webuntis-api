@@ -1,5 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Effect } from "effect";
+import { WebUntisClient } from "../../src/client.ts";
 import { AppClient } from "../../src/domains/app/index.ts";
 import { ClassregClient } from "../../src/domains/classreg/index.ts";
 import { ExamsClient } from "../../src/domains/exams/index.ts";
@@ -48,8 +49,14 @@ const expectedComposeRecipientsBody = JSON.stringify({
   searchText: "sei",
 });
 
-const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
-  makeCoreTestLayer((request) => {
+const makeRecorderLayer = (
+  observed: Array<ObservedRequest>,
+  currentSchoolYear: { readonly id: number } | null = { id: 7 },
+  failFirstExamRequest = false,
+) => {
+  let examAttempts = 0;
+
+  return makeCoreTestLayer((request) => {
     const url = new URL(request.url);
 
     if (url.pathname.endsWith("/index.do")) {
@@ -69,7 +76,7 @@ const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
     }
     if (url.pathname.endsWith("/api/rest/view/v1/app/data")) {
       return jsonResponse({
-        currentSchoolYear: { id: 7 },
+        currentSchoolYear,
         tenant: { id: "tenant-42" },
       });
     }
@@ -83,6 +90,17 @@ const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
       headers: request.headers,
       body: decodeBody(request.body),
     });
+
+    if (
+      failFirstExamRequest &&
+      url.pathname === "/WebUntis/api/rest/view/v1/exams" &&
+      examAttempts++ === 0
+    ) {
+      return new Response(JSON.stringify({ errorCode: "UNAUTHORIZED" }), {
+        status: 401,
+        headers: { "content-type": "application/json" },
+      });
+    }
 
     switch (url.pathname) {
       case "/WebUntis/api/rest/view/v1/app/platform-application/exam-integrations":
@@ -165,6 +183,12 @@ const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
       case "/WebUntis/api/rest/view/v1/exams/statistics":
         return jsonResponse({
           exams: [],
+        });
+      case "/WebUntis/api/rest/view/v1/exams/for-class":
+        return jsonResponse({
+          examsDone: [],
+          examsUpcoming: [],
+          examsFuture: [],
         });
       case "/WebUntis/api/rest/view/v1/exams/42":
         return jsonResponse({
@@ -394,6 +418,7 @@ const makeRecorderLayer = (observed: Array<ObservedRequest>) =>
         return jsonResponse([]);
     }
   });
+};
 
 const getLast = (observed: Array<ObservedRequest>) => {
   const request = observed[observed.length - 1];
@@ -405,6 +430,114 @@ const getLast = (observed: Array<ObservedRequest>) => {
 };
 
 describe("request descriptors", () => {
+  it.effect("scopes supported requests to a historical school year", () => {
+    const observed: Array<ObservedRequest> = [];
+
+    return Effect.gen(function* () {
+      const client = yield* WebUntisClient;
+
+      yield* Effect.all([
+        client.exams.list(),
+        client.timetable.getGrid(),
+        client.classreg.getHomeworkMeta(),
+      ]).pipe(client.withSchoolYear(6));
+
+      expect(observed).toHaveLength(3);
+      expect(observed.map((request) => request.headers["x-webuntis-api-school-year-id"])).toEqual([
+        "6",
+        "6",
+        "6",
+      ]);
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
+
+  it.effect("does not add a historical header to school-year-independent requests", () => {
+    const observed: Array<ObservedRequest> = [];
+
+    return Effect.gen(function* () {
+      const client = yield* WebUntisClient;
+
+      yield* client.schoolyears.list().pipe(client.withSchoolYear(6));
+
+      expect(getLast(observed).headers["x-webuntis-api-school-year-id"]).toBeUndefined();
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
+
+  it.effect("restores nested school-year scopes", () => {
+    const observed: Array<ObservedRequest> = [];
+
+    return Effect.gen(function* () {
+      const client = yield* WebUntisClient;
+
+      yield* Effect.gen(function* () {
+        yield* client.exams.list({ start: "outer-before" });
+        yield* client.exams.list({ start: "inner" }).pipe(client.withSchoolYear(4));
+        yield* client.exams.list({ start: "outer-after" });
+      }).pipe(client.withSchoolYear(6));
+
+      expect(observed.map((request) => request.headers["x-webuntis-api-school-year-id"])).toEqual([
+        "6",
+        "4",
+        "6",
+      ]);
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
+
+  it.effect("isolates concurrent school-year scopes", () => {
+    const observed: Array<ObservedRequest> = [];
+
+    return Effect.gen(function* () {
+      const client = yield* WebUntisClient;
+
+      yield* Effect.all(
+        [
+          client.exams.list({ start: "year-6" }).pipe(client.withSchoolYear(6)),
+          client.exams.list({ start: "year-4" }).pipe(client.withSchoolYear(4)),
+        ],
+        { concurrency: 2 },
+      );
+
+      expect(
+        Object.fromEntries(
+          observed.map((request) => [
+            request.query["start"],
+            request.headers["x-webuntis-api-school-year-id"],
+          ]),
+        ),
+      ).toEqual({ "year-6": "6", "year-4": "4" });
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
+
+  it.effect("adds an explicit school year when no year is active", () => {
+    const observed: Array<ObservedRequest> = [];
+
+    return Effect.gen(function* () {
+      const client = yield* WebUntisClient;
+
+      yield* client.timetable.getGrid().pipe(client.withSchoolYear(6));
+
+      expect(getLast(observed).headers["x-webuntis-api-school-year-id"]).toBe("6");
+    }).pipe(Effect.provide(makeRecorderLayer(observed, null)));
+  });
+
+  it.effect("retains the school-year scope when authentication is retried", () => {
+    const observed: Array<ObservedRequest> = [];
+
+    return Effect.gen(function* () {
+      const client = yield* WebUntisClient;
+
+      yield* client.exams.list().pipe(client.withSchoolYear(6));
+
+      const examRequests = observed.filter(
+        (request) => request.url.pathname === "/WebUntis/api/rest/view/v1/exams",
+      );
+      expect(examRequests).toHaveLength(2);
+      expect(
+        examRequests.map((request) => request.headers["x-webuntis-api-school-year-id"]),
+      ).toEqual(["6", "6"]);
+    }).pipe(Effect.provide(makeRecorderLayer(observed, { id: 7 }, true)));
+  });
+
   it.effect("app routes use auth-only policy for onboarding", () => {
     const observed: Array<ObservedRequest> = [];
 
@@ -542,6 +675,25 @@ describe("request descriptors", () => {
       expect(statisticsRequest.url.pathname).toBe("/WebUntis/api/rest/view/v1/exams/statistics");
       expect(statisticsRequest.query["start"]).toBe("2026-05-04");
       expect(statisticsRequest.query["end"]).toBe("2026-05-10");
+    }).pipe(Effect.provide(makeRecorderLayer(observed)));
+  });
+
+  it.effect("exposes class exam buckets as a read-only route", () => {
+    const observed: Array<ObservedRequest> = [];
+
+    return Effect.gen(function* () {
+      const client = yield* WebUntisClient;
+      const result = yield* client.exams.getForClass().pipe(client.withSchoolYear(6));
+
+      expect(result).toEqual({
+        examsDone: [],
+        examsUpcoming: [],
+        examsFuture: [],
+      });
+      const request = getLast(observed);
+      expect(request.method).toBe("GET");
+      expect(request.url.pathname).toBe("/WebUntis/api/rest/view/v1/exams/for-class");
+      expect(request.headers["x-webuntis-api-school-year-id"]).toBe("6");
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
 

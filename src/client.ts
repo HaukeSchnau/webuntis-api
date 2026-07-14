@@ -11,8 +11,10 @@ import { SessionClient } from "./domains/session/index.ts";
 import { TimetableClient } from "./domains/timetable/index.ts";
 import type { ClientConfig } from "./internal/config.ts";
 import { makeWebUntisCoreLayer } from "./internal/runtime.ts";
+import { type SchoolYearScope, withSchoolYear } from "./internal/school-year-context.ts";
 
 export interface WebUntisClientShape {
+  readonly withSchoolYear: (schoolYearId: number) => SchoolYearScope;
   readonly auth: AuthClient["Service"];
   readonly app: AppClient["Service"];
   readonly classreg: ClassregClient["Service"];
@@ -41,6 +43,7 @@ export class WebUntisClient extends Context.Service<WebUntisClient, WebUntisClie
       const timetable = yield* TimetableClient;
 
       return WebUntisClient.of({
+        withSchoolYear,
         auth,
         app,
         classreg,
