@@ -2,7 +2,7 @@ default:
     @just --list
 
 build:
-    pnpm exec tsdown
+    pnpm exec vp pack
 
 pack-check: build
     pnpm exec publint --strict

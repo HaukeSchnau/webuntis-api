@@ -39,7 +39,6 @@
     "@effect/vitest": "^4.0.0-beta.98",
     "@types/node": "^26.1.1",
     "publint": "^0.3.21",
-    "tsdown": "^0.22.7",
     "typescript": "^7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:",

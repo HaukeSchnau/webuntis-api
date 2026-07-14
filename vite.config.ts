@@ -1,9 +1,24 @@
 import { defineConfig } from "vite-plus";
 
-import { packConfig } from "./pack.config.ts";
-
 export default defineConfig({
-  pack: packConfig,
+  pack: {
+    entry: {
+      index: "./src/index.ts",
+      schemas: "./src/domains/schemas.ts",
+    },
+    format: "esm",
+    platform: "node",
+    target: "node20",
+    dts: {
+      tsgo: true,
+    },
+    sourcemap: true,
+    clean: true,
+    fixedExtension: false,
+    deps: {
+      skipNodeModulesBundle: true,
+    },
+  },
   test: {
     environment: "node",
     include: ["test/**/*.test.ts"],
