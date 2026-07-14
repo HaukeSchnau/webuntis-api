@@ -27,4 +27,7 @@ source <(SOPS_AGE_KEY_FILE="$key_file" sops decrypt "$encrypted_env_file")
 set +a
 
 cd "$repo_root"
-bunx vitest run test/live "$@"
+# The live files authenticate the same tenant account. WebUntis can invalidate a
+# previous session when another worker logs in, so these tests must not run in
+# parallel across files.
+bunx vitest run test/live --no-file-parallelism "$@"

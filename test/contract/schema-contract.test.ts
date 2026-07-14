@@ -237,10 +237,26 @@ describe("strict schema decoding", () => {
     ).toThrow();
   });
 
-  it("rejects non-object dashboard card payloads", () => {
+  it("rejects incomplete and excess dashboard card payloads", () => {
     const decode = Schema.decodeUnknownSync(DashboardCardSchema);
 
     expect(() => decode("not-an-object", strictJsonParseOptions)).toThrow();
+    expect(() =>
+      decode(
+        {
+          hasAttachments: false,
+          headerColor: "ffa94d",
+          icon: "megaphone",
+          id: 1777,
+          orderNo: 0,
+          status: "UNREAD",
+          subtitle: "Notice",
+          title: "",
+          extra: true,
+        },
+        strictJsonParseOptions,
+      ),
+    ).toThrow();
   });
 
   it("rejects non-object message attachment payloads", () => {

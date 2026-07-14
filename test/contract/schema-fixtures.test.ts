@@ -255,12 +255,40 @@ const fixtures = [
   {
     name: "DashboardCards",
     schema: DashboardCardsSchema,
-    value: { dashboardCards: [] },
+    value: {
+      dashboardCards: [
+        {
+          hasAttachments: false,
+          headerColor: "ffa94d",
+          icon: "megaphone",
+          id: 1777,
+          orderNo: 0,
+          status: "UNREAD",
+          subtitle: "Notice",
+          title: "",
+        },
+      ],
+    },
   },
   {
     name: "DashboardCardsDetail",
     schema: DashboardCardsDetailSchema,
-    value: { dashboardCardsDetails: [] },
+    value: {
+      dashboardCardsDetails: [
+        {
+          attachments: [],
+          canDelete: false,
+          canEdit: false,
+          color: "ffa94d",
+          content: "Notice",
+          icon: "megaphone",
+          id: 1777,
+          status: "UNREAD",
+          subtitle: "",
+          title: "",
+        },
+      ],
+    },
   },
   {
     name: "DashboardCardsStatus",

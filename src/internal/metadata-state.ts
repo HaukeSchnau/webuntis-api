@@ -21,12 +21,14 @@ import {
 
 const BootstrapAppDataSchema = Schema.Struct({
   departments: Schema.optional(Schema.Unknown),
-  currentSchoolYear: Schema.Struct({
-    id: Schema.Number,
-    dateRange: Schema.optional(Schema.Unknown),
-    name: Schema.optional(Schema.String),
-    timeGrid: Schema.optional(Schema.Unknown),
-  }),
+  currentSchoolYear: Schema.NullOr(
+    Schema.Struct({
+      id: Schema.Number,
+      dateRange: Schema.optional(Schema.Unknown),
+      name: Schema.optional(Schema.String),
+      timeGrid: Schema.optional(Schema.Unknown),
+    }),
+  ),
   tenant: Schema.Struct({
     id: Schema.String,
     displayName: Schema.optional(Schema.String),
@@ -96,7 +98,7 @@ export class MetadataState extends Context.Service<MetadataState, MetadataStateS
 
           const metadata = {
             tenantId: appData.tenant.id,
-            schoolYearId: appData.currentSchoolYear.id,
+            schoolYearId: appData.currentSchoolYear?.id,
             sessionGeneration: session.generation,
           } satisfies MetadataCache;
 
