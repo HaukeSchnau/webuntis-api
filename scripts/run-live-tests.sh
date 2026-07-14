@@ -30,4 +30,4 @@ cd "$repo_root"
 # The live files authenticate the same tenant account. WebUntis can invalidate a
 # previous session when another worker logs in, so these tests must not run in
 # parallel across files.
-bunx vitest run test/live --no-file-parallelism "$@"
+pnpm exec vp test run test/live --no-file-parallelism "$@"

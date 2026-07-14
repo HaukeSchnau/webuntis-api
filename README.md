@@ -39,11 +39,16 @@ The service graph is split into a few distinct layers:
 - `WebUntisHttp` executes typed request descriptors.
 - Domain services expose stable read-only business APIs.
 
-## Install
+## Development
+
+Enter the reproducible development shell and install the pinned pnpm dependencies:
 
 ```bash
-bun install
+nix develop
+pnpm install
 ```
+
+The shell provides Node.js, pnpm, Just, SOPS, and age. Vite+ is installed with the project dependencies and exposes the `vp` command inside the shell.
 
 ## Quick Start
 
