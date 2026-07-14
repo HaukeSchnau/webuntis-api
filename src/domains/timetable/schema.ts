@@ -179,7 +179,61 @@ export const DayDataStatusSchema = Schema.Literals([
 
 export type DayDataStatus = Schema.Schema.Type<typeof DayDataStatusSchema>;
 
-export const TimetableEntrySchema = JsonObjectSchema;
+const TimetableEntryRestSchema = Schema.Record(Schema.String, Schema.Json);
+
+export const TimetableEntryPositionResourceSchema = Schema.StructWithRest(
+  Schema.Struct({
+    type: Schema.String,
+    status: Schema.String,
+    shortName: Schema.String,
+    longName: Schema.String,
+    displayName: Schema.String,
+    displayNameLabel: Schema.NullOr(Schema.String),
+  }),
+  [TimetableEntryRestSchema],
+);
+
+export const TimetableEntryPositionSchema = Schema.StructWithRest(
+  Schema.Struct({
+    current: Schema.NullOr(TimetableEntryPositionResourceSchema),
+    removed: Schema.NullOr(TimetableEntryPositionResourceSchema),
+  }),
+  [TimetableEntryRestSchema],
+);
+
+export const TimetableEntryTextSchema = Schema.StructWithRest(
+  Schema.Struct({
+    type: Schema.String,
+    text: Schema.String,
+  }),
+  [TimetableEntryRestSchema],
+);
+
+const TimetableEntryPositionsSchema = Schema.NullOr(Schema.Array(TimetableEntryPositionSchema));
+
+export const TimetableEntrySchema = Schema.StructWithRest(
+  Schema.Struct({
+    ids: Schema.Array(Schema.Number),
+    duration: TimeRangeSchema,
+    type: Schema.String,
+    status: Schema.String,
+    layoutStartPosition: Schema.Number,
+    layoutWidth: Schema.Number,
+    layoutGroup: Schema.Number,
+    color: Schema.String,
+    notesAll: Schema.String,
+    icons: Schema.Array(Schema.String),
+    position1: Schema.Array(TimetableEntryPositionSchema),
+    position2: TimetableEntryPositionsSchema,
+    position3: TimetableEntryPositionsSchema,
+    position4: TimetableEntryPositionsSchema,
+    texts: Schema.Array(TimetableEntryTextSchema),
+    lessonText: Schema.String,
+    lessonInfo: Schema.NullOr(Schema.String),
+    substitutionText: Schema.String,
+  }),
+  [TimetableEntryRestSchema],
+);
 export const TimetableEntriesErrorSchema = JsonObjectSchema;
 export const TimetableEntryDaySchema = Schema.Struct({
   date: Schema.String,

@@ -1,5 +1,11 @@
 import { RequestPolicy, schemaRequest } from "../../internal/request.ts";
-import { ExamDetailSchema, ExamFilterSchema, ExamStatisticsSchema, ExamsSchema } from "./schema.ts";
+import {
+  ExamDetailSchema,
+  ExamFilterSchema,
+  ExamsForClassSchema,
+  ExamStatisticsSchema,
+  ExamsSchema,
+} from "./schema.ts";
 
 export interface ExamDetailRequest {
   readonly id: number;
@@ -24,6 +30,7 @@ export const ExamsRequests = {
       withDeleted: request?.withDeleted,
     }),
     policy: RequestPolicy.AuthOnly,
+    supportsSchoolYearScope: true,
     schema: ExamsSchema,
   }),
   getFilter: schemaRequest<ExamDateRangeRequest | undefined, typeof ExamFilterSchema>({
@@ -31,6 +38,7 @@ export const ExamsRequests = {
     path: "api/rest/view/v1/exams/filter",
     query: (request) => ({ start: request?.start, end: request?.end }),
     policy: RequestPolicy.AuthOnly,
+    supportsSchoolYearScope: true,
     schema: ExamFilterSchema,
   }),
   getStatistics: schemaRequest<ExamDateRangeRequest | undefined, typeof ExamStatisticsSchema>({
@@ -38,12 +46,21 @@ export const ExamsRequests = {
     path: "api/rest/view/v1/exams/statistics",
     query: (request) => ({ start: request?.start, end: request?.end }),
     policy: RequestPolicy.AuthOnly,
+    supportsSchoolYearScope: true,
     schema: ExamStatisticsSchema,
   }),
   getExam: schemaRequest<ExamDetailRequest, typeof ExamDetailSchema>({
     method: "GET",
     path: (request) => `api/rest/view/v1/exams/${request.id}`,
     policy: RequestPolicy.AuthOnly,
+    supportsSchoolYearScope: true,
     schema: ExamDetailSchema,
+  }),
+  getForClass: schemaRequest<void, typeof ExamsForClassSchema>({
+    method: "GET",
+    path: "api/rest/view/v1/exams/for-class",
+    policy: RequestPolicy.AuthOnly,
+    supportsSchoolYearScope: true,
+    schema: ExamsForClassSchema,
   }),
 } as const;

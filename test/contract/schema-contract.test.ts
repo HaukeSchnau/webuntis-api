@@ -277,10 +277,11 @@ describe("strict schema decoding", () => {
     expect(() => decode("CLASS", strictJsonParseOptions)).toThrow();
   });
 
-  it("rejects non-object timetable entry payloads", () => {
+  it("rejects incomplete timetable entry payloads", () => {
     const decode = Schema.decodeUnknownSync(TimetableEntrySchema);
 
     expect(() => decode(false, strictJsonParseOptions)).toThrow();
+    expect(() => decode({ ids: [1] }, strictJsonParseOptions)).toThrow();
   });
 
   it("rejects non-object timetable external calendar payloads", () => {

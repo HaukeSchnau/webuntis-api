@@ -12,6 +12,7 @@ For breaking API changes and upgrade notes, see [MIGRATION.md](./MIGRATION.md).
 - A small aggregate facade through `WebUntisClient` for convenience.
 - First-class domain services for `app`, `classreg`, `exams`, `messages`, `profile`, `schoolyears`, `session`, and `timetable`.
 - Descriptor-driven request construction, with explicit auth vs metadata header policy.
+- Fiber-local school-year scoping for historical data and advertised future years.
 - Strict schema decoding with excess-property rejection.
 - Internal-only reverse-engineering helpers for unstable or raw routes.
 
@@ -115,6 +116,38 @@ const layer = Layer.unwrap(clientConfigFromEnv().pipe(Effect.map(makeWebUntisLay
 await Effect.runPromise(program.pipe(Effect.provide(layer)));
 ```
 
+## School-Year Scoping
+
+`withSchoolYear` applies an explicit school-year context to supported timetable, exam, and
+class-register reads. The scope is fiber-local, so nested and concurrent historical reads cannot
+leak their selected year into one another.
+
+```ts
+import { Effect } from "effect";
+import { ExamsClient, SchoolyearsClient, withSchoolYear } from "webuntis-api";
+
+const historicalExams = Effect.gen(function* () {
+  const exams = yield* ExamsClient;
+  const schoolyears = yield* SchoolyearsClient;
+  const previous = (yield* schoolyears.list())[1];
+
+  if (previous === undefined) {
+    return [];
+  }
+
+  return yield* exams
+    .list({
+      start: previous.dateRange.start,
+      end: previous.dateRange.end,
+    })
+    .pipe(withSchoolYear(previous.id));
+});
+```
+
+The aggregate client exposes the same operator as `client.withSchoolYear(id)`. Only IDs returned by
+`schoolyears.list()` should be selected. `timetable.search` still requires its endpoint-specific
+`schoolyear` query in addition to the scoped request header.
+
 ## Public API Shape
 
 The root package exports:
@@ -132,6 +165,7 @@ The root package exports:
 - `ClientConfig`
 - `clientConfigFromEnv`
 - `makeWebUntisLayer`
+- `withSchoolYear`
 - `DiscoveryError`, `AuthError`, `TransportError`, `DecodeError`, and `ConfigurationError`
 
 Schemas are exported from the dedicated subpath instead of the root barrel:

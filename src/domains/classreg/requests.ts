@@ -23,12 +23,14 @@ export const ClassregRequests = {
     method: "GET",
     path: "api/rest/view/v1/classreg/absences/meta",
     policy: RequestPolicy.AuthOnly,
+    supportsSchoolYearScope: true,
     schema: ClassregAbsencesMetaSchema,
   }),
   getHomeworkMeta: schemaRequest<void, typeof ClassregHomeworkMetaSchema>({
     method: "GET",
     path: "api/rest/view/v1/classreg/homework/meta",
     policy: RequestPolicy.AuthOnly,
+    supportsSchoolYearScope: true,
     schema: ClassregHomeworkMetaSchema,
   }),
   getHomeworkList: schemaRequest<ClassregHomeworkListRequest, typeof ClassregHomeworkListSchema>({
@@ -36,12 +38,14 @@ export const ClassregRequests = {
     path: "api/rest/view/v1/classreg/homework/list",
     body: (request) => request,
     policy: RequestPolicy.AuthOnly,
+    supportsSchoolYearScope: true,
     schema: ClassregHomeworkListSchema,
   }),
   getLessonTopicsMeta: schemaRequest<void, typeof ClassregLessonTopicsMetaSchema>({
     method: "GET",
     path: "api/rest/view/v1/classreg/lesson-topics/meta",
     policy: RequestPolicy.AuthOnly,
+    supportsSchoolYearScope: true,
     schema: ClassregLessonTopicsMetaSchema,
   }),
 } as const;

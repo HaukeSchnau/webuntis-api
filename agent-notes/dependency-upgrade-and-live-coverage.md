@@ -39,10 +39,15 @@ Upgrade every package to its latest appropriate published version, repair all re
 - Live update run passes all 17 executable tests and refreshed the inactive-year snapshots; one inverse credential-documentation test is intentionally skipped when credentials exist.
 - Final non-update verification passed: format check, Oxc lint/type diagnostics, 104 local tests (15 live skips without injected credentials), build, publint, are-the-types-wrong, and 17 live tests (one inverse environment test skipped).
 - `bun outdated` reports no outdated direct dependencies.
+- Historical-year expansion verification passed: formatting, Oxc lint/type diagnostics, 113 local tests, build, publint, are-the-types-wrong, and 19 live tests across every advertised school year (one inverse environment test skipped).
+- The non-empty historical timetable regression exposed and now covers nullable position-resource `displayNameLabel` values.
 
 ## Follow-up opportunities
 
 - Effect and `@effect/vitest` must stay aligned at beta.98; `@effect/tsgo` 0.21 patches stable TypeScript 7.0.2.
-- Does the available live user expose any new read surfaces or non-empty payloads that can tighten currently loose schemas?
+- [x] Add fiber-local historical school-year selection for verified year-aware routes.
+- [x] Expose the confirmed read-only `exams/for-class` buckets.
+- [x] Tighten the stable timetable-entry core from 1,755 historical entries.
+- `countPerGrade` remains loose because all 352 historical statistics rows exposed an empty array.
 - Repeat timetable/date-dependent browser exploration after a new school year becomes active.
-- Capture non-empty payloads for the loose fields listed in the 2026-07-14 blind-spot report before tightening them.
+- Capture non-empty class-exam buckets and exam `countPerGrade` values before tightening them.

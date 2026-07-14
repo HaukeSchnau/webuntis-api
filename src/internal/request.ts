@@ -17,6 +17,7 @@ export interface RequestDescriptor<Input> {
   readonly query?: ((input: Input) => QueryParams) | undefined;
   readonly headers?: ((input: Input) => HeaderParams) | undefined;
   readonly body?: ((input: Input) => unknown) | undefined;
+  readonly supportsSchoolYearScope?: boolean | undefined;
 }
 
 export interface SchemaRequestDescriptor<
@@ -33,6 +34,7 @@ export interface ResolvedRequestDescriptor {
   readonly query?: QueryParams | undefined;
   readonly headers?: HeaderParams | undefined;
   readonly body?: unknown;
+  readonly supportsSchoolYearScope?: boolean | undefined;
 }
 
 export const request = <Input>(descriptor: RequestDescriptor<Input>): RequestDescriptor<Input> =>
@@ -55,4 +57,5 @@ export const resolveRequest = <Input>(
   query: descriptor.query?.(input),
   headers: descriptor.headers?.(input),
   body: descriptor.body?.(input),
+  supportsSchoolYearScope: descriptor.supportsSchoolYearScope,
 });

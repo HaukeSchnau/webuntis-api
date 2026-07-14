@@ -33,6 +33,8 @@ export type {
 } from "./domains/timetable/index.ts";
 export { TimetableClient } from "./domains/timetable/index.ts";
 export { ClientConfig } from "./internal/config.ts";
+export { withSchoolYear } from "./internal/school-year-context.ts";
+export type { SchoolYearScope } from "./internal/school-year-context.ts";
 export {
   AuthError,
   ConfigurationError,

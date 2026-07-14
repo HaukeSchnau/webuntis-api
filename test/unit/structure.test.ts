@@ -12,6 +12,7 @@ describe("public structure", () => {
   it("keeps the main root exports intact", () => {
     expect(api).toHaveProperty("WebUntisClient");
     expect(api).toHaveProperty("makeWebUntisLayer");
+    expect(api).toHaveProperty("withSchoolYear");
     expect(api).toHaveProperty("clientConfigFromEnv");
     expect(api).toHaveProperty("AppClient");
     expect(api).toHaveProperty("MessagesClient");
@@ -36,8 +37,10 @@ describe("public structure", () => {
       expect(client.messages).toBe(messages);
       expect(client.timetable).toBe(timetable);
       expect(typeof client.app.getHome).toBe("function");
+      expect(typeof client.withSchoolYear).toBe("function");
       expect(typeof client.app.getExamIntegrations).toBe("function");
       expect(typeof client.classreg.getHomeworkList).toBe("function");
+      expect(typeof client.exams.getForClass).toBe("function");
       expect(typeof client.messages.getStatus).toBe("function");
       expect(typeof client.messages.filterComposeRecipients).toBe("function");
       expect(typeof client.timetable.getEntries).toBe("function");

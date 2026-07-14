@@ -63,8 +63,7 @@ The remaining loose fields still lack non-empty evidence in this tenant state:
 - class-register `assignmentGroups` and `teachingMethods`
 - exam statistics `countPerGrade`
 - message recipient `tags`, attachments, reply history, and confirmations
-- several timetable entry, filter-selection, integration, and external-calendar
-  objects
+- several timetable filter-selection, integration, and external-calendar objects
 
 These should remain structured JSON boundaries until a live non-empty payload or
 another authoritative source establishes their field contracts.
@@ -76,3 +75,26 @@ another authoritative source establishes their field contracts.
 - Several master-data routes remain permission-gated for this staff account.
 - The legacy iframe surfaces require a separate, carefully scoped read-only pass
   if their classic form/query contracts are to become public client APIs.
+
+## Historical-Year Follow-up
+
+A subsequent read-only pass explicitly selected every school year advertised by
+`GET v1/schoolyears` through `X-Webuntis-Api-School-Year-Id`:
+
+- 2025/2026 (ID 7): 44 classes and 352 exams
+- 2024/2025 (ID 6): 45 classes and 37 exams
+- 2023/2024 (ID 4): 37 classes and no exams
+
+Timetable grid/filter/search, exam list/statistics, and class-register metadata decoded
+successfully for every advertised year. The client now exposes a fiber-local `withSchoolYear`
+operator for these routes. A guessed, unadvertised 2026/2027 ID was rejected; callers should only
+use IDs returned by the school-years endpoint.
+
+`GET v1/exams/for-class` was also confirmed as a read-only route returning `examsDone`,
+`examsUpcoming`, and `examsFuture` buckets. The live buckets were empty, so their elements remain
+structured JSON objects until a non-empty contract is observed.
+
+Historical timetable probing captured 1,755 entries across multiple classes and weeks. Stable
+entry fields are now typed, while a JSON rest boundary preserves resource- and role-specific
+extensions. All 352 available exam-statistics rows still had empty `countPerGrade` arrays, so that
+field remains intentionally untyped.
