@@ -7,6 +7,10 @@ build:
 pack-check: build
     pnpm exec publint --strict
     pnpm exec attw --pack . --profile esm-only
+    ./scripts/check-packed-consumer.sh
+
+packed-live: build
+    ./scripts/check-packed-consumer.sh --live
 
 test:
     pnpm exec vp test run

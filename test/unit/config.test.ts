@@ -43,4 +43,21 @@ describe("config loading", () => {
       expect(error).toBeInstanceOf(ConfigurationError);
     }),
   );
+
+  it.effect("rejects non-HTTP URL schemes", () =>
+    Effect.gen(function* () {
+      const error = yield* Effect.flip(
+        ClientConfig.fromEnv({
+          schoolName: "IGS Lilienthal",
+          schoolLoginName: "igs-lilienthal",
+          serverUrl: "file:///tmp/webuntis",
+          username: "tester",
+          password: "secret",
+        }),
+      );
+
+      expect(error).toBeInstanceOf(ConfigurationError);
+      expect(error.message).toContain("HTTP(S)");
+    }),
+  );
 });

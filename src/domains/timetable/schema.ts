@@ -6,7 +6,7 @@ export const TimeGridTypeSchema = Schema.Literals(["CLOCK_HOURS", "LESSON_GRID"]
 export type TimeGridType = Schema.Schema.Type<typeof TimeGridTypeSchema>;
 
 export const TimetableFormatDefinitionSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   name: Schema.String,
   longname: Schema.String,
   showStartEndTimeOfSlots: Schema.Boolean,
@@ -14,14 +14,14 @@ export const TimetableFormatDefinitionSchema = Schema.Struct({
   showCancellations: Schema.Boolean,
   showExternalCalendars: Schema.Boolean,
   hideDetails: Schema.Boolean,
-  minRows: Schema.Number,
+  minRows: Schema.Finite,
   duration: TimeRangeSchema,
   timeGridType: TimeGridTypeSchema,
   timeGridDays: Schema.Array(Schema.String),
   timeGridSlots: Schema.Array(
     Schema.Struct({
       name: Schema.NullOr(Schema.String),
-      number: Schema.NullOr(Schema.Number),
+      number: Schema.NullOr(Schema.Finite),
       duration: TimeRangeSchema,
     }),
   ),
@@ -29,12 +29,12 @@ export const TimetableFormatDefinitionSchema = Schema.Struct({
 
 export const TimetableGridSchema = Schema.Struct({
   firstDayOfWeek: Schema.String,
-  studentFormat: Schema.Number,
-  classFormat: Schema.Number,
-  subjectFormat: Schema.Number,
-  teacherFormat: Schema.Number,
-  roomFormat: Schema.Number,
-  resourceFormat: Schema.Number,
+  studentFormat: Schema.Finite,
+  classFormat: Schema.Finite,
+  subjectFormat: Schema.Finite,
+  teacherFormat: Schema.Finite,
+  roomFormat: Schema.Finite,
+  resourceFormat: Schema.Finite,
   formatDefinitions: Schema.Array(TimetableFormatDefinitionSchema),
 });
 
@@ -54,7 +54,7 @@ export type TimetableResourceType = Schema.Schema.Type<typeof TimetableResourceT
 export const TimetableSearchResultSchema = Schema.Struct({
   type: TimetableResourceTypeSchema,
   resource: Schema.Struct({
-    id: Schema.Number,
+    id: Schema.Finite,
     shortName: Schema.String,
     longName: Schema.String,
     displayName: Schema.String,
@@ -73,7 +73,7 @@ export const TimetableMenuSchema = Schema.Struct({
 export type TimetableMenu = Schema.Schema.Type<typeof TimetableMenuSchema>;
 
 export const TimetableSearchSchema = Schema.Struct({
-  numPartialMatches: Schema.Number,
+  numPartialMatches: Schema.Finite,
   results: Schema.Array(TimetableSearchResultSchema),
 });
 
@@ -81,7 +81,7 @@ export type TimetableSearch = Schema.Schema.Type<typeof TimetableSearchSchema>;
 export type TimetableSearchResults = TimetableSearch;
 
 export const TimetableAvailableRoomSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   name: Schema.String,
   longName: Schema.String,
   displayName: Schema.String,
@@ -93,14 +93,14 @@ export type TimetableAvailableRoom = Schema.Schema.Type<typeof TimetableAvailabl
 export type TimetableAvailableRooms = Schema.Schema.Type<typeof TimetableAvailableRoomsSchema>;
 
 export const DisplayResourceSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   shortName: Schema.String,
   longName: Schema.String,
   displayName: Schema.String,
 });
 
 export const TimetableDepartmentSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   shortName: Schema.String,
   longName: Schema.String,
   displayName: Schema.String,
@@ -126,7 +126,7 @@ export const TimetableSubjectFilterItemSchema = Schema.Struct({
 
 export const TimetableRoomFilterItemSchema = Schema.Struct({
   room: DisplayResourceSchema,
-  capacity: Schema.Number,
+  capacity: Schema.Finite,
   roomGroups: Schema.Array(JsonObjectSchema),
   building: Schema.NullOr(DisplayResourceSchema),
   department: Schema.NullOr(TimetableDepartmentSchema),
@@ -213,13 +213,13 @@ const TimetableEntryPositionsSchema = Schema.NullOr(Schema.Array(TimetableEntryP
 
 export const TimetableEntrySchema = Schema.StructWithRest(
   Schema.Struct({
-    ids: Schema.Array(Schema.Number),
+    ids: Schema.Array(Schema.Finite),
     duration: TimeRangeSchema,
     type: Schema.String,
     status: Schema.String,
-    layoutStartPosition: Schema.Number,
-    layoutWidth: Schema.Number,
-    layoutGroup: Schema.Number,
+    layoutStartPosition: Schema.Finite,
+    layoutWidth: Schema.Finite,
+    layoutGroup: Schema.Finite,
     color: Schema.String,
     notesAll: Schema.String,
     icons: Schema.Array(Schema.String),
@@ -239,7 +239,7 @@ export const TimetableEntryDaySchema = Schema.Struct({
   date: Schema.String,
   resourceType: TimetableResourceTypeSchema,
   resource: Schema.Struct({
-    id: Schema.Number,
+    id: Schema.Finite,
     shortName: Schema.String,
     longName: Schema.String,
     displayName: Schema.String,
@@ -251,7 +251,7 @@ export const TimetableEntryDaySchema = Schema.Struct({
 });
 
 export const TimetableEntriesSchema = Schema.Struct({
-  format: Schema.Number,
+  format: Schema.Finite,
   days: Schema.Array(TimetableEntryDaySchema),
   errors: Schema.Array(TimetableEntriesErrorSchema),
 });
@@ -282,7 +282,7 @@ export const TimetableWeekOverviewDaySchema = Schema.Struct({
 
 export const TimetableWeekOverviewSlotSchema = Schema.Struct({
   name: Schema.String,
-  number: Schema.Number,
+  number: Schema.Finite,
   duration: TimeRangeSchema,
 });
 

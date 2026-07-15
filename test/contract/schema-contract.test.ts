@@ -2,26 +2,32 @@ import { describe, expect, it } from "@effect/vitest";
 import { Schema } from "effect";
 import {
   AppPlatformApplicationMenuSchema,
-  ClassregAbsencesMetaSchema,
-  ClassregHomeworkMetaSchema,
   DashboardCardSchema,
-  ExamFilterSchema,
   HomeCellSchema,
-  MessageAttachmentSchema,
-  MessageRecipientSchema,
-  MessageSummarySchema,
-  MessagesPermissionsSchema,
   MobileDataSchema,
   MobileTenantSchema,
   OnboardingSchema,
   StartupActionsSchema,
-  TimeGridSchema,
+} from "../../src/domains/app/schema.ts";
+import {
+  ClassregAbsencesMetaSchema,
+  ClassregHomeworkMetaSchema,
+} from "../../src/domains/classreg/schema.ts";
+import { ExamFilterSchema } from "../../src/domains/exams/schema.ts";
+import {
+  MessageAttachmentSchema,
+  MessageRecipientSchema,
+  MessageSummarySchema,
+  MessagesPermissionsSchema,
+} from "../../src/domains/messages/schema.ts";
+import { TimeGridSchema } from "../../src/domains/shared/schema.ts";
+import {
   TimetableEntriesWeekOverviewSchema,
   TimetableEntrySchema,
   TimetableExternalCalendarItemSchema,
   TimetableFilterSelectionSchema,
   TimetableFormatDefinitionSchema,
-} from "../../src/domains/schemas.ts";
+} from "../../src/domains/timetable/schema.ts";
 import { strictJsonParseOptions } from "../../src/internal/schema.ts";
 
 describe("strict schema decoding", () => {

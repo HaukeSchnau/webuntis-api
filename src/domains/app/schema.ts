@@ -34,7 +34,7 @@ export type AppData = Schema.Schema.Type<typeof AppDataSchema>;
 
 export const AppPlatformApplicationMenuSchema = Schema.Struct({
   icon: Schema.String,
-  id: Schema.Number,
+  id: Schema.Finite,
   logoutUrl: Schema.NullOr(Schema.String),
   name: Schema.String,
   openInNewTab: Schema.Boolean,
@@ -78,7 +78,7 @@ export type AppExamIntegrationViewType = Schema.Schema.Type<
 
 export const AppExamIntegrationSchema = Schema.Struct({
   active: Schema.optional(Schema.Boolean),
-  id: Schema.Number,
+  id: Schema.Finite,
   menuName: Schema.String,
   mobileAppLink: Schema.optional(Schema.Boolean),
   mobileView: Schema.optional(Schema.Boolean),
@@ -97,8 +97,8 @@ export const DashboardCardSchema = Schema.Struct({
   hasAttachments: Schema.Boolean,
   headerColor: Schema.String,
   icon: Schema.String,
-  id: Schema.Number,
-  orderNo: Schema.Number,
+  id: Schema.Finite,
+  orderNo: Schema.Finite,
   status: Schema.String,
   subtitle: Schema.String,
   title: Schema.String,
@@ -116,7 +116,7 @@ export const DashboardCardsDetailItemSchema = Schema.Struct({
   color: Schema.String,
   content: Schema.String,
   icon: Schema.String,
-  id: Schema.Number,
+  id: Schema.Finite,
   status: Schema.String,
   subtitle: Schema.String,
   title: Schema.String,
@@ -128,7 +128,7 @@ export const DashboardCardsDetailSchema = Schema.Struct({
 export type DashboardCardsDetail = Schema.Schema.Type<typeof DashboardCardsDetailSchema>;
 
 export const DashboardCardsStatusSchema = Schema.Struct({
-  unreadCardsCount: Schema.Number,
+  unreadCardsCount: Schema.Finite,
 });
 
 export type DashboardCardsStatus = Schema.Schema.Type<typeof DashboardCardsStatusSchema>;
@@ -197,12 +197,12 @@ export const MobilePermissionSchema = Schema.Literals([
 export type MobilePermission = Schema.Schema.Type<typeof MobilePermissionSchema>;
 
 export const MobileUserSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   username: Schema.String,
   person: Schema.NullOr(JsonObjectSchema),
   referencedStudents: Schema.Array(JsonObjectSchema),
   locale: Schema.String,
-  departmentId: Schema.Number,
+  departmentId: Schema.Finite,
   role: Schema.String,
   permissions: Schema.Array(MobilePermissionSchema),
 });
@@ -230,8 +230,10 @@ export const StartupActionsSchema = Schema.Struct({
 
 export type StartupActions = Schema.Schema.Type<typeof StartupActionsSchema>;
 
+export const OnboardingTypeSchema = Schema.Literals(["TIMETABLE"]);
+
 export const OnboardingSchema = Schema.Struct({
-  type: Schema.Literals(["TIMETABLE"]),
+  type: OnboardingTypeSchema,
   time: Schema.String,
   step: Schema.String,
 });

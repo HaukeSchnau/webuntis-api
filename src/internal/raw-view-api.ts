@@ -1,50 +1,48 @@
 import { Context, Effect, Layer } from "effect";
-import { type RequestOptions, WebUntisHttp } from "./http.ts";
+import { type RequestFailure, WebUntisHttp } from "./http.ts";
+import {
+  type HeaderParams,
+  type QueryParams,
+  request,
+  RequestPolicy,
+  type RequestPolicy as RequestPolicyType,
+} from "./request.ts";
 
-export type RawViewApiRequest = RequestOptions;
+export interface RawViewApiRequest {
+  readonly query?: QueryParams | undefined;
+  readonly headers?: HeaderParams | undefined;
+  readonly policy?: RequestPolicyType | undefined;
+  readonly supportsSchoolYearScope?: boolean | undefined;
+}
 
 export interface RawViewApiClientShape {
   readonly getJson: (
     path: string,
     options?: RawViewApiRequest,
-  ) => ReturnType<WebUntisHttp["Service"]["getJson"]>;
-  readonly get: (
-    path: string,
-    options?: RawViewApiRequest,
-  ) => ReturnType<WebUntisHttp["Service"]["get"]>;
-  readonly postJson: (
-    path: string,
-    options?: RawViewApiRequest,
-  ) => ReturnType<WebUntisHttp["Service"]["postJson"]>;
-  readonly post: (
-    path: string,
-    options?: RawViewApiRequest,
-  ) => ReturnType<WebUntisHttp["Service"]["post"]>;
-  readonly putJson: (
-    path: string,
-    options?: RawViewApiRequest,
-  ) => ReturnType<WebUntisHttp["Service"]["putJson"]>;
-  readonly put: (
-    path: string,
-    options?: RawViewApiRequest,
-  ) => ReturnType<WebUntisHttp["Service"]["put"]>;
+  ) => Effect.Effect<unknown, RequestFailure>;
 }
 
 export class RawViewApiClient extends Context.Service<RawViewApiClient, RawViewApiClientShape>()(
   "webuntis/internal/RawViewApiClient",
 ) {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const http = yield* WebUntisHttp;
 
       return RawViewApiClient.of({
-        getJson: (path, options) => http.getJson(path, options),
-        get: (path, options) => http.get(path, options),
-        postJson: (path, options) => http.postJson(path, options),
-        post: (path, options) => http.post(path, options),
-        putJson: (path, options) => http.putJson(path, options),
-        put: (path, options) => http.put(path, options),
+        getJson: (path, options = {}) =>
+          http.requestJson(
+            request<void>({
+              method: "GET",
+              path,
+              policy: options.policy ?? RequestPolicy.Metadata,
+              query: () => options.query ?? {},
+              headers: () => options.headers ?? {},
+              supportsSchoolYearScope: options.supportsSchoolYearScope,
+            }),
+            undefined,
+          ),
       });
     }),
   );

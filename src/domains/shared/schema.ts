@@ -13,20 +13,20 @@ export const TimeRangeSchema = Schema.Struct({
 });
 
 export const TimeGridUnitSchema = Schema.Struct({
-  unitOfDay: Schema.Number,
-  startTime: Schema.Number,
-  endTime: Schema.Number,
+  unitOfDay: Schema.Finite,
+  startTime: Schema.Finite,
+  endTime: Schema.Finite,
 });
 
 export const TimeGridSchema = Schema.Struct({
-  schoolyearId: Schema.Number,
+  schoolyearId: Schema.Finite,
   units: Schema.Array(TimeGridUnitSchema),
 });
 
 export type TimeGrid = Schema.Schema.Type<typeof TimeGridSchema>;
 
 export const SchoolyearSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   name: Schema.String,
   dateRange: DateRangeSchema,
 });
@@ -34,7 +34,7 @@ export const SchoolyearSchema = Schema.Struct({
 export type Schoolyear = Schema.Schema.Type<typeof SchoolyearSchema>;
 
 export const SchoolyearWithTimeGridSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   name: Schema.String,
   dateRange: DateRangeSchema,
   timeGrid: TimeGridSchema,
@@ -49,12 +49,12 @@ export const TenantSchema = Schema.Struct({
 
 export const UserPersonSchema = Schema.Struct({
   displayName: Schema.String,
-  id: Schema.Number,
+  id: Schema.Finite,
   imageUrl: Schema.NullOr(Schema.String),
 });
 
 export const UserSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   locale: Schema.String,
   name: Schema.String,
   email: Schema.NullOr(Schema.String),
@@ -68,7 +68,7 @@ export const UserSchema = Schema.Struct({
 });
 
 export const HolidaySchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   name: Schema.String,
   start: Schema.String,
   end: Schema.String,

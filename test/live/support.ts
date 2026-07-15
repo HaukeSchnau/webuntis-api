@@ -27,7 +27,6 @@ import type {
   MessagesPermissions,
   MessagesStatus,
   MobileData,
-  MobileDataV1V2,
   Onboarding,
   SessionStatus,
   StartupActions,
@@ -46,10 +45,8 @@ import type {
   UserContactData,
   UserEmail,
 } from "../../src/domains/schemas.ts";
-import { ClientConfig } from "../../src/internal/config.ts";
+import type { MobileDataV1V2 } from "../../src/domains/app/schema.ts";
 import type { UnexpectedResponseError } from "../../src/internal/errors.ts";
-
-export const readLiveConfig = () => ClientConfig.fromEnv();
 
 export const liveEnvMissing = [
   process.env["WEBUNTIS_SCHOOL_NAME"] ? undefined : "WEBUNTIS_SCHOOL_NAME",

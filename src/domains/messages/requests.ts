@@ -1,9 +1,16 @@
-import { RequestPolicy, schemaRequest } from "../../internal/request.ts";
+import { Schema } from "effect";
+import {
+  NonBlankString,
+  PositiveInteger,
+  RequestPolicy,
+  schemaRequest,
+} from "../../internal/request.ts";
 import {
   MessageComposeRecipientsSchema,
   MessageDetailSchema,
   MessageDraftsSchema,
   MessageRecipientFilterSchema,
+  MessageRecipientOptionSchema,
   type MessageRecipientOption,
   MessageRecipientQuickfiltersSchema,
   MessageRecipientSearchSchema,
@@ -37,6 +44,8 @@ export interface MessageDetailRequest {
   readonly id: number;
 }
 
+const RecipientOptionInput = Schema.Struct({ recipientOption: MessageRecipientOptionSchema });
+
 export const MessagesRequests = {
   getInbox: schemaRequest<void, typeof MessagesInboxSchema>({
     method: "GET",
@@ -67,9 +76,11 @@ export const MessagesRequests = {
     typeof MessageRecipientFilterSchema
   >({
     method: "GET",
+    operation: "api/rest/view/v1/messages/recipients/{recipientOption}/filter",
     path: (request) =>
       `api/rest/view/v1/messages/recipients/${encodeURIComponent(request.recipientOption)}/filter`,
     policy: RequestPolicy.AuthOnly,
+    inputSchema: RecipientOptionInput,
     schema: MessageRecipientFilterSchema,
   }),
   filterComposeRecipients: schemaRequest<
@@ -77,6 +88,7 @@ export const MessagesRequests = {
     typeof MessageComposeRecipientsSchema
   >({
     method: "POST",
+    operation: "api/rest/view/v2/messages/recipients/{recipientOption}/filter",
     path: (request) =>
       `api/rest/view/v2/messages/recipients/${encodeURIComponent(request.recipientOption)}/filter`,
     body: (request) => ({
@@ -84,6 +96,11 @@ export const MessagesRequests = {
       searchText: request.searchText ?? "",
     }),
     policy: RequestPolicy.AuthOnly,
+    inputSchema: Schema.Struct({
+      recipientOption: MessageRecipientOptionSchema,
+      filters: Schema.optional(Schema.Array(Schema.Unknown)),
+      searchText: Schema.optional(Schema.String),
+    }),
     schema: MessageComposeRecipientsSchema,
   }),
   searchRecipients: schemaRequest<
@@ -91,10 +108,15 @@ export const MessagesRequests = {
     typeof MessageRecipientSearchSchema
   >({
     method: "GET",
+    operation: "api/rest/view/v1/messages/recipients/{recipientOption}/search",
     path: (request) =>
       `api/rest/view/v1/messages/recipients/${encodeURIComponent(request.recipientOption)}/search`,
     query: (request) => ({ searchText: request.searchText }),
     policy: RequestPolicy.AuthOnly,
+    inputSchema: Schema.Struct({
+      recipientOption: MessageRecipientOptionSchema,
+      searchText: NonBlankString,
+    }),
     schema: MessageRecipientSearchSchema,
   }),
   getSent: schemaRequest<void, typeof MessageSentSchema>({
@@ -111,14 +133,18 @@ export const MessagesRequests = {
   }),
   getReplyForm: schemaRequest<MessageReplyFormRequest, typeof MessageReplyFormSchema>({
     method: "GET",
+    operation: "api/rest/view/v1/messages/{id}/reply-form",
     path: (request) => `api/rest/view/v1/messages/${request.id}/reply-form`,
     policy: RequestPolicy.AuthOnly,
+    inputSchema: Schema.Struct({ id: PositiveInteger }),
     schema: MessageReplyFormSchema,
   }),
   getMessage: schemaRequest<MessageDetailRequest, typeof MessageDetailSchema>({
     method: "GET",
+    operation: "api/rest/view/v1/messages/{id}",
     path: (request) => `api/rest/view/v1/messages/${request.id}`,
     policy: RequestPolicy.AuthOnly,
+    inputSchema: Schema.Struct({ id: PositiveInteger }),
     schema: MessageDetailSchema,
   }),
 } as const;

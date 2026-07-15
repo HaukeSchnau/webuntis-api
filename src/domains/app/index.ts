@@ -18,65 +18,60 @@ import type {
 } from "./schema.ts";
 
 export interface AppClientShape {
-  readonly getData: () => Effect.Effect<AppData, RequestFailure>;
-  readonly getHome: () => Effect.Effect<Home, RequestFailure>;
-  readonly getMobileData: () => Effect.Effect<MobileData, RequestFailure>;
-  readonly getStartupActions: () => Effect.Effect<StartupActions, RequestFailure>;
-  readonly getPlatformApplicationMenus: () => Effect.Effect<
-    AppPlatformApplicationMenus,
-    RequestFailure
-  >;
-  readonly getThirdPartyData: () => Effect.Effect<AppThirdPartyData, RequestFailure>;
-  readonly getExamIntegrations: () => Effect.Effect<AppExamIntegrations, RequestFailure>;
-  readonly getTodayMeta: () => Effect.Effect<TodayMeta, RequestFailure>;
-  readonly getDashboardCards: () => Effect.Effect<DashboardCards, RequestFailure>;
-  readonly getDashboardCardsDetail: () => Effect.Effect<DashboardCardsDetail, RequestFailure>;
-  readonly getDashboardCardsStatus: () => Effect.Effect<DashboardCardsStatus, RequestFailure>;
+  readonly getData: Effect.Effect<AppData, RequestFailure>;
+  readonly getHome: Effect.Effect<Home, RequestFailure>;
+  readonly getMobileData: Effect.Effect<MobileData, RequestFailure>;
+  readonly getStartupActions: Effect.Effect<StartupActions, RequestFailure>;
+  readonly getPlatformApplicationMenus: Effect.Effect<AppPlatformApplicationMenus, RequestFailure>;
+  readonly getThirdPartyData: Effect.Effect<AppThirdPartyData, RequestFailure>;
+  readonly getExamIntegrations: Effect.Effect<AppExamIntegrations, RequestFailure>;
+  readonly getTodayMeta: Effect.Effect<TodayMeta, RequestFailure>;
+  readonly getDashboardCards: Effect.Effect<DashboardCards, RequestFailure>;
+  readonly getDashboardCardsDetail: Effect.Effect<DashboardCardsDetail, RequestFailure>;
+  readonly getDashboardCardsStatus: Effect.Effect<DashboardCardsStatus, RequestFailure>;
   readonly getOnboarding: (request: OnboardingRequest) => Effect.Effect<Onboarding, RequestFailure>;
 }
 
 export class AppClient extends Context.Service<AppClient, AppClientShape>()("webuntis/AppClient") {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const http = yield* WebUntisHttp;
 
       return AppClient.of({
-        getData: Effect.fn("AppClient.getData")(function* () {
-          return yield* http.requestSchema(AppRequests.getData, undefined);
-        }),
-        getHome: Effect.fn("AppClient.getHome")(function* () {
-          return yield* http.requestSchema(AppRequests.getHome, undefined);
-        }),
-        getMobileData: Effect.fn("AppClient.getMobileData")(function* () {
-          return yield* http.requestSchema(AppRequests.getMobileData, undefined);
-        }),
-        getStartupActions: Effect.fn("AppClient.getStartupActions")(function* () {
-          return yield* http.requestSchema(AppRequests.getStartupActions, undefined);
-        }),
-        getPlatformApplicationMenus: Effect.fn("AppClient.getPlatformApplicationMenus")(
-          function* () {
-            return yield* http.requestSchema(AppRequests.getPlatformApplicationMenus, undefined);
-          },
-        ),
-        getThirdPartyData: Effect.fn("AppClient.getThirdPartyData")(function* () {
-          return yield* http.requestSchema(AppRequests.getThirdPartyData, undefined);
-        }),
-        getExamIntegrations: Effect.fn("AppClient.getExamIntegrations")(function* () {
-          return yield* http.requestSchema(AppRequests.getExamIntegrations, undefined);
-        }),
-        getTodayMeta: Effect.fn("AppClient.getTodayMeta")(function* () {
-          return yield* http.requestSchema(AppRequests.getTodayMeta, undefined);
-        }),
-        getDashboardCards: Effect.fn("AppClient.getDashboardCards")(function* () {
-          return yield* http.requestSchema(AppRequests.getDashboardCards, undefined);
-        }),
-        getDashboardCardsDetail: Effect.fn("AppClient.getDashboardCardsDetail")(function* () {
-          return yield* http.requestSchema(AppRequests.getDashboardCardsDetail, undefined);
-        }),
-        getDashboardCardsStatus: Effect.fn("AppClient.getDashboardCardsStatus")(function* () {
-          return yield* http.requestSchema(AppRequests.getDashboardCardsStatus, undefined);
-        }),
+        getData: http
+          .requestSchema(AppRequests.getData, undefined)
+          .pipe(Effect.withSpan("AppClient.getData")),
+        getHome: http
+          .requestSchema(AppRequests.getHome, undefined)
+          .pipe(Effect.withSpan("AppClient.getHome")),
+        getMobileData: http
+          .requestSchema(AppRequests.getMobileData, undefined)
+          .pipe(Effect.withSpan("AppClient.getMobileData")),
+        getStartupActions: http
+          .requestSchema(AppRequests.getStartupActions, undefined)
+          .pipe(Effect.withSpan("AppClient.getStartupActions")),
+        getPlatformApplicationMenus: http
+          .requestSchema(AppRequests.getPlatformApplicationMenus, undefined)
+          .pipe(Effect.withSpan("AppClient.getPlatformApplicationMenus")),
+        getThirdPartyData: http
+          .requestSchema(AppRequests.getThirdPartyData, undefined)
+          .pipe(Effect.withSpan("AppClient.getThirdPartyData")),
+        getExamIntegrations: http
+          .requestSchema(AppRequests.getExamIntegrations, undefined)
+          .pipe(Effect.withSpan("AppClient.getExamIntegrations")),
+        getTodayMeta: http
+          .requestSchema(AppRequests.getTodayMeta, undefined)
+          .pipe(Effect.withSpan("AppClient.getTodayMeta")),
+        getDashboardCards: http
+          .requestSchema(AppRequests.getDashboardCards, undefined)
+          .pipe(Effect.withSpan("AppClient.getDashboardCards")),
+        getDashboardCardsDetail: http
+          .requestSchema(AppRequests.getDashboardCardsDetail, undefined)
+          .pipe(Effect.withSpan("AppClient.getDashboardCardsDetail")),
+        getDashboardCardsStatus: http
+          .requestSchema(AppRequests.getDashboardCardsStatus, undefined)
+          .pipe(Effect.withSpan("AppClient.getDashboardCardsStatus")),
         getOnboarding: Effect.fn("AppClient.getOnboarding")(function* (request: OnboardingRequest) {
           return yield* http.requestSchema(AppRequests.getOnboarding, request);
         }),

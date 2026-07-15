@@ -9,9 +9,13 @@ import {
   httpClientErrorToTransportError,
   type TransportError,
 } from "./errors.ts";
-import { strictJsonParseOptions } from "./schema.ts";
+import { runtimeJsonParseOptions } from "./schema.ts";
 import { SessionState } from "./session-state.ts";
-import type { MetadataState as MetadataCache, MetadataSnapshot } from "./types.ts";
+import type {
+  AuthenticatedState,
+  MetadataState as MetadataCache,
+  MetadataSnapshot,
+} from "./types.ts";
 import {
   emptyMetadataState,
   hasMetadataForSession,
@@ -23,7 +27,7 @@ const BootstrapAppDataSchema = Schema.Struct({
   departments: Schema.optional(Schema.Unknown),
   currentSchoolYear: Schema.NullOr(
     Schema.Struct({
-      id: Schema.Number,
+      id: Schema.Finite,
       dateRange: Schema.optional(Schema.Unknown),
       name: Schema.optional(Schema.String),
       timeGrid: Schema.optional(Schema.Unknown),
@@ -48,25 +52,30 @@ const BootstrapAppDataSchema = Schema.Struct({
 });
 
 export interface MetadataStateShape {
-  readonly ensureMetadata: () => Effect.Effect<
+  readonly ensureMetadata: Effect.Effect<
     MetadataSnapshot,
     DiscoveryError | AuthError | TransportError | DecodeError
   >;
-  readonly clear: () => Effect.Effect<void>;
+  readonly clear: Effect.Effect<void>;
 }
 
 export class MetadataState extends Context.Service<MetadataState, MetadataStateShape>()(
   "webuntis/internal/MetadataState",
 ) {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const sessionState = yield* SessionState;
       const stateRef = yield* SynchronizedRef.make<MetadataCache>(emptyMetadataState());
 
-      const fetchMetadata = () =>
+      const fetchMetadata = (
+        session: AuthenticatedState,
+        mayRetry = true,
+      ): Effect.Effect<
+        readonly [MetadataSnapshot, MetadataCache],
+        DiscoveryError | AuthError | TransportError | DecodeError
+      > =>
         Effect.gen(function* () {
-          const session = yield* sessionState.ensureAuthenticated();
           const response = yield* sessionState.client
             .execute(
               HttpClientRequest.get(
@@ -80,7 +89,13 @@ export class MetadataState extends Context.Service<MetadataState, MetadataStateS
             );
 
           if (response.status < 200 || response.status >= 300) {
-            const body = yield* response.text.pipe(Effect.catch(() => Effect.succeed("")));
+            const body = yield* response.text.pipe(Effect.orElseSucceed(() => ""));
+
+            if (mayRetry && (response.status === 401 || response.status === 403)) {
+              yield* sessionState.invalidate(session.generation);
+              const refreshedSession = yield* sessionState.ensureAuthenticated;
+              return yield* fetchMetadata(refreshedSession, false);
+            }
 
             return yield* new AuthError({
               stage: "metadata",
@@ -91,7 +106,7 @@ export class MetadataState extends Context.Service<MetadataState, MetadataStateS
 
           const appData = yield* HttpClientResponse.schemaBodyJson(
             BootstrapAppDataSchema,
-            strictJsonParseOptions,
+            runtimeJsonParseOptions,
           )(response).pipe(
             Effect.mapError((error) => decodeError("api/rest/view/v1/app/data", error)),
           );
@@ -105,20 +120,19 @@ export class MetadataState extends Context.Service<MetadataState, MetadataStateS
           return [toMetadataSnapshot(session, metadata), metadata] as const;
         });
 
-      const ensureMetadata = () =>
-        Effect.gen(function* () {
-          const session = yield* sessionState.ensureAuthenticated();
+      const ensureMetadata = Effect.gen(function* () {
+        const session = yield* sessionState.ensureAuthenticated;
 
-          return yield* SynchronizedRef.modifyEffect(stateRef, (metadata) =>
-            hasMetadataForSession(metadata, session)
-              ? Effect.succeed([toMetadataSnapshot(session, metadata), metadata] as const)
-              : fetchMetadata(),
-          );
-        });
+        return yield* SynchronizedRef.modifyEffect(stateRef, (metadata) =>
+          hasMetadataForSession(metadata, session)
+            ? Effect.succeed([toMetadataSnapshot(session, metadata), metadata] as const)
+            : fetchMetadata(session),
+        );
+      });
 
       return MetadataState.of({
         ensureMetadata,
-        clear: () => SynchronizedRef.set(stateRef, emptyMetadataState()),
+        clear: SynchronizedRef.set(stateRef, emptyMetadataState()),
       });
     }),
   );

@@ -11,6 +11,7 @@ export default defineConfig({
     target: "node20",
     dts: {
       tsgo: true,
+      sourcemap: true,
     },
     sourcemap: true,
     clean: true,
@@ -24,11 +25,11 @@ export default defineConfig({
     include: ["test/**/*.test.ts"],
   },
   fmt: {
-    ignorePatterns: ["dist", "node_modules"],
+    ignorePatterns: ["dist", "node_modules", "test/consumer"],
     tabWidth: 2,
   },
   lint: {
-    ignorePatterns: ["dist", "node_modules"],
+    ignorePatterns: ["dist", "node_modules", "test/consumer"],
     plugins: ["oxc", "typescript"],
     categories: {
       correctness: "error",

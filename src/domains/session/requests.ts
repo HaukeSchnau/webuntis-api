@@ -1,4 +1,5 @@
-import { RequestPolicy, schemaRequest } from "../../internal/request.ts";
+import { Schema } from "effect";
+import { NonBlankString, RequestPolicy, schemaRequest } from "../../internal/request.ts";
 import { SessionStatusSchema } from "./schema.ts";
 
 export interface SessionStatusRequest {
@@ -11,6 +12,7 @@ export const SessionRequests = {
     path: "api/rest/view/v1/session/status",
     body: (request) => request,
     policy: RequestPolicy.AuthOnly,
+    inputSchema: Schema.Struct({ clientTimeZone: Schema.optional(NonBlankString) }),
     schema: SessionStatusSchema,
   }),
 } as const;

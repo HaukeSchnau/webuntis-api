@@ -10,37 +10,37 @@ import type {
 } from "./schema.ts";
 
 export interface ClassregClientShape {
-  readonly getAbsencesMeta: () => Effect.Effect<ClassregAbsencesMeta, RequestFailure>;
-  readonly getHomeworkMeta: () => Effect.Effect<ClassregHomeworkMeta, RequestFailure>;
+  readonly getAbsencesMeta: Effect.Effect<ClassregAbsencesMeta, RequestFailure>;
+  readonly getHomeworkMeta: Effect.Effect<ClassregHomeworkMeta, RequestFailure>;
   readonly getHomeworkList: (
     request: ClassregHomeworkListRequest,
   ) => Effect.Effect<ClassregHomeworkList, RequestFailure>;
-  readonly getLessonTopicsMeta: () => Effect.Effect<ClassregLessonTopicsMeta, RequestFailure>;
+  readonly getLessonTopicsMeta: Effect.Effect<ClassregLessonTopicsMeta, RequestFailure>;
 }
 
 export class ClassregClient extends Context.Service<ClassregClient, ClassregClientShape>()(
   "webuntis/ClassregClient",
 ) {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const http = yield* WebUntisHttp;
 
       return ClassregClient.of({
-        getAbsencesMeta: Effect.fn("ClassregClient.getAbsencesMeta")(function* () {
-          return yield* http.requestSchema(ClassregRequests.getAbsencesMeta, undefined);
-        }),
-        getHomeworkMeta: Effect.fn("ClassregClient.getHomeworkMeta")(function* () {
-          return yield* http.requestSchema(ClassregRequests.getHomeworkMeta, undefined);
-        }),
+        getAbsencesMeta: http
+          .requestSchema(ClassregRequests.getAbsencesMeta, undefined)
+          .pipe(Effect.withSpan("ClassregClient.getAbsencesMeta")),
+        getHomeworkMeta: http
+          .requestSchema(ClassregRequests.getHomeworkMeta, undefined)
+          .pipe(Effect.withSpan("ClassregClient.getHomeworkMeta")),
         getHomeworkList: Effect.fn("ClassregClient.getHomeworkList")(function* (
           request: ClassregHomeworkListRequest,
         ) {
           return yield* http.requestSchema(ClassregRequests.getHomeworkList, request);
         }),
-        getLessonTopicsMeta: Effect.fn("ClassregClient.getLessonTopicsMeta")(function* () {
-          return yield* http.requestSchema(ClassregRequests.getLessonTopicsMeta, undefined);
-        }),
+        getLessonTopicsMeta: http
+          .requestSchema(ClassregRequests.getLessonTopicsMeta, undefined)
+          .pipe(Effect.withSpan("ClassregClient.getLessonTopicsMeta")),
       });
     }),
   );

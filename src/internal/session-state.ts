@@ -1,4 +1,4 @@
-import { Context, Effect, Layer, Redacted, Ref, SynchronizedRef } from "effect";
+import { Clock, Context, Effect, Layer, Redacted, Ref, SynchronizedRef } from "effect";
 import * as Cookies from "effect/unstable/http/Cookies";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
 import * as HttpClient from "effect/unstable/http/HttpClient";
@@ -46,25 +46,22 @@ const loginResponseLooksLikeHtml = (body: string): boolean => {
 
 export interface SessionStateShape {
   readonly client: HttpClient.HttpClient;
-  readonly ensureAuthenticated: () => Effect.Effect<
+  readonly ensureAuthenticated: Effect.Effect<
     AuthenticatedState,
     DiscoveryError | AuthError | TransportError | DecodeError
   >;
-  readonly refreshSession: () => Effect.Effect<
+  readonly refreshSession: Effect.Effect<
     AuthenticatedState,
     DiscoveryError | AuthError | TransportError | DecodeError
   >;
-  readonly refreshToken: () => Effect.Effect<
-    string,
-    DiscoveryError | AuthError | TransportError | DecodeError
-  >;
-  readonly clear: () => Effect.Effect<void>;
+  readonly invalidate: (expectedGeneration: number) => Effect.Effect<boolean>;
+  readonly clear: Effect.Effect<void>;
 }
 
 export class SessionState extends Context.Service<SessionState, SessionStateShape>()(
   "webuntis/internal/SessionState",
 ) {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const baseClient = yield* HttpClient.HttpClient;
@@ -76,7 +73,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
 
       const refreshSessionState = (previous: SessionCache) =>
         Effect.gen(function* () {
-          const school = yield* schoolResolver.resolve();
+          const school = yield* schoolResolver.resolve;
           const baseUrl = resolveBaseUrl(school);
 
           const seedResponse = yield* client
@@ -180,44 +177,55 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
             });
           }
 
+          const now = yield* Clock.currentTimeMillis;
+
           return {
             resolvedSchool: school,
             tenantId: clientConfig.tenantId ?? school.tenantId,
             token: Redacted.make(tokenString),
-            tokenExpiresAt: parseJwtExpiration(tokenString) ?? Date.now() + tokenFallbackValidityMs,
+            tokenExpiresAt: parseJwtExpiration(tokenString) ?? now + tokenFallbackValidityMs,
             generation: previous.generation + 1,
           } satisfies AuthenticatedState;
         });
 
-      const ensureAuthenticated = () =>
-        SynchronizedRef.modifyEffect(stateRef, (state) =>
-          hasFreshToken(state)
-            ? Effect.succeed([state, state] as const)
-            : refreshSessionState(state).pipe(
-                Effect.map((nextState) => [nextState, nextState] as const),
-              ),
-        );
-
-      const refreshSession = () =>
-        SynchronizedRef.modifyEffect(stateRef, (state) =>
-          refreshSessionState(state).pipe(
-            Effect.map((nextState) => [nextState, nextState] as const),
+      const ensureAuthenticated = SynchronizedRef.modifyEffect(stateRef, (state) =>
+        Clock.currentTimeMillis.pipe(
+          Effect.flatMap((now) =>
+            hasFreshToken(state, now)
+              ? Effect.succeed([state, state] as const)
+              : refreshSessionState(state).pipe(
+                  Effect.map((nextState) => [nextState, nextState] as const),
+                ),
           ),
-        );
+        ),
+      );
 
-      const refreshToken = () =>
-        refreshSession().pipe(Effect.map((state) => Redacted.value(state.token)));
+      const refreshSession = SynchronizedRef.modifyEffect(stateRef, (state) =>
+        refreshSessionState(state).pipe(Effect.map((nextState) => [nextState, nextState] as const)),
+      );
 
-      const clear = () =>
+      const invalidate = (expectedGeneration: number) =>
+        SynchronizedRef.modifyEffect(stateRef, (state) => {
+          if (state.generation !== expectedGeneration) {
+            return Effect.succeed([false, state] as const);
+          }
+
+          return Ref.set(cookiesRef, Cookies.empty).pipe(
+            Effect.as([true, emptySessionState(state.generation)] as const),
+          );
+        });
+
+      const clear = SynchronizedRef.modifyEffect(stateRef, (state) =>
         Ref.set(cookiesRef, Cookies.empty).pipe(
-          Effect.andThen(SynchronizedRef.set(stateRef, emptySessionState())),
-        );
+          Effect.as([undefined, emptySessionState(state.generation)] as const),
+        ),
+      );
 
       return SessionState.of({
         client,
         ensureAuthenticated,
         refreshSession,
-        refreshToken,
+        invalidate,
         clear,
       });
     }),

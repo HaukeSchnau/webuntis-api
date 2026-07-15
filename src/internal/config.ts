@@ -74,13 +74,18 @@ export class ClientConfig extends Context.Service<ClientConfig, WebUntisClientCo
     config: WebUntisClientConfig,
   ): Effect.Effect<WebUntisClientConfig, ConfigurationError> => {
     const validateField = (value: string | undefined, field: string) => {
-      if (value === undefined || URL.canParse(value)) {
+      if (value === undefined) {
+        return Effect.void;
+      }
+
+      const url = URL.canParse(value) ? new URL(value) : undefined;
+      if (url !== undefined && (url.protocol === "https:" || url.protocol === "http:")) {
         return Effect.void;
       }
 
       return Effect.fail(
         new ConfigurationError({
-          message: `${field} must be a valid URL`,
+          message: `${field} must be a valid HTTP(S) URL`,
         }),
       );
     };

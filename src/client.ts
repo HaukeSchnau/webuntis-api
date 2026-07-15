@@ -10,6 +10,7 @@ import { SchoolyearsClient } from "./domains/schoolyears/index.ts";
 import { SessionClient } from "./domains/session/index.ts";
 import { TimetableClient } from "./domains/timetable/index.ts";
 import type { ClientConfig } from "./internal/config.ts";
+import { RawViewApiClient } from "./internal/raw-view-api.ts";
 import { makeWebUntisCoreLayer } from "./internal/runtime.ts";
 import { type SchoolYearScope, withSchoolYear } from "./internal/school-year-context.ts";
 
@@ -29,7 +30,7 @@ export interface WebUntisClientShape {
 export class WebUntisClient extends Context.Service<WebUntisClient, WebUntisClientShape>()(
   "webuntis/WebUntisClient",
 ) {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const auth = yield* AuthClient;
@@ -56,31 +57,44 @@ export class WebUntisClient extends Context.Service<WebUntisClient, WebUntisClie
       });
     }),
   );
-
-  static readonly layer = this.layerNoDeps;
 }
 
-export const makeWebUntisLayer = (
+const makeLayers = (
   config: ClientConfig["Service"],
   transportLayer?: Layer.Layer<HttpClient.HttpClient>,
 ) => {
   const coreLayer = makeWebUntisCoreLayer({ config, transportLayer });
 
   const domainServicesLayer = Layer.mergeAll(
-    AuthClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
-    AppClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
-    ClassregClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
-    ExamsClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
-    MessagesClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
-    ProfileClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
-    SchoolyearsClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
-    SessionClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
-    TimetableClient.layerNoDeps.pipe(Layer.provide(coreLayer)),
+    AuthClient.layer.pipe(Layer.provide(coreLayer)),
+    AppClient.layer.pipe(Layer.provide(coreLayer)),
+    ClassregClient.layer.pipe(Layer.provide(coreLayer)),
+    ExamsClient.layer.pipe(Layer.provide(coreLayer)),
+    MessagesClient.layer.pipe(Layer.provide(coreLayer)),
+    ProfileClient.layer.pipe(Layer.provide(coreLayer)),
+    SchoolyearsClient.layer.pipe(Layer.provide(coreLayer)),
+    SessionClient.layer.pipe(Layer.provide(coreLayer)),
+    TimetableClient.layer.pipe(Layer.provide(coreLayer)),
   );
 
-  const aggregateLayer = WebUntisClient.layerNoDeps.pipe(Layer.provide(domainServicesLayer));
+  const aggregateLayer = WebUntisClient.layer.pipe(Layer.provide(domainServicesLayer));
 
-  return Layer.mergeAll(domainServicesLayer, aggregateLayer);
+  return {
+    coreLayer,
+    publicLayer: Layer.mergeAll(domainServicesLayer, aggregateLayer),
+  } as const;
 };
 
-export const layer = makeWebUntisLayer;
+export const makeWebUntisLayer = (
+  config: ClientConfig["Service"],
+  transportLayer?: Layer.Layer<HttpClient.HttpClient>,
+) => makeLayers(config, transportLayer).publicLayer;
+
+export const makeWebUntisResearchLayer = (
+  config: ClientConfig["Service"],
+  transportLayer?: Layer.Layer<HttpClient.HttpClient>,
+) => {
+  const layers = makeLayers(config, transportLayer);
+  const researchLayer = RawViewApiClient.layer.pipe(Layer.provide(layers.coreLayer));
+  return Layer.mergeAll(layers.publicLayer, researchLayer, layers.coreLayer);
+};

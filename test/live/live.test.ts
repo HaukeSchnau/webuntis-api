@@ -1,17 +1,12 @@
 import { describe, expect, it, layer } from "@effect/vitest";
 import { Effect, Layer, Schema } from "effect";
-import { layer as makeWebUntisLayer, WebUntisClient } from "../../src/client.ts";
-import {
-  HomeSchema,
-  MobileDataSchema,
-  MobileDataV1V2Schema,
-  StartupActionsSchema,
-} from "../../src/domains/schemas.ts";
+import { makeWebUntisResearchLayer, WebUntisClient } from "../../src/client.ts";
+import { HomeSchema, MobileDataSchema, StartupActionsSchema } from "../../src/domains/schemas.ts";
+import { MobileDataV1V2Schema } from "../../src/domains/app/schema.ts";
 import { ClientConfig } from "../../src/internal/config.ts";
 import { UnexpectedResponseError } from "../../src/internal/errors.ts";
 import { RawViewApiClient } from "../../src/internal/raw-view-api.ts";
 import { RequestPolicy } from "../../src/internal/request.ts";
-import { makeWebUntisRuntimeLayer } from "../../src/internal/runtime.ts";
 import { strictJsonParseOptions } from "../../src/internal/schema.ts";
 import {
   liveEnvMissing,
@@ -65,11 +60,7 @@ import {
 const hasLiveEnv = liveEnvMissing.length === 0;
 
 const liveLayer = Layer.unwrap(
-  ClientConfig.fromEnv().pipe(
-    Effect.map((config) =>
-      Layer.mergeAll(makeWebUntisLayer(config), makeWebUntisRuntimeLayer({ config })),
-    ),
-  ),
+  ClientConfig.fromEnv().pipe(Effect.map((config) => makeWebUntisResearchLayer(config))),
 );
 
 describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
@@ -86,7 +77,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             }),
             strictJsonParseOptions,
           );
-          const startupActionsV2 = yield* client.app.getStartupActions();
+          const startupActionsV2 = yield* client.app.getStartupActions;
 
           expect(startupActionsV1).toEqual(startupActionsV2);
           expect(normalizeStartupActions(startupActionsV1)).toMatchSnapshot();
@@ -107,7 +98,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             }),
             strictJsonParseOptions,
           );
-          const homeV2 = yield* client.app.getHome();
+          const homeV2 = yield* client.app.getHome;
           const mobileDataV1 = yield* Schema.decodeUnknownEffect(MobileDataV1V2Schema)(
             yield* rawViewApi.getJson("api/rest/view/v1/mobile/data", {
               policy: RequestPolicy.AuthOnly,
@@ -126,7 +117,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             }),
             strictJsonParseOptions,
           );
-          const clientMobileData = yield* client.app.getMobileData();
+          const clientMobileData = yield* client.app.getMobileData;
           const { schoolLoginName: _schoolLoginName, ...mobileDataV3TenantWithoutSchoolLoginName } =
             mobileDataV3.tenant;
 
@@ -154,13 +145,13 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const todayMeta = yield* client.app.getTodayMeta();
-          const dashboardCards = yield* client.app.getDashboardCards();
-          const dashboardCardsDetail = yield* client.app.getDashboardCardsDetail();
-          const dashboardCardsStatus = yield* client.app.getDashboardCardsStatus();
-          const menus = yield* client.app.getPlatformApplicationMenus();
-          const examIntegrations = yield* client.app.getExamIntegrations();
-          const thirdPartyData = yield* client.app.getThirdPartyData();
+          const todayMeta = yield* client.app.getTodayMeta;
+          const dashboardCards = yield* client.app.getDashboardCards;
+          const dashboardCardsDetail = yield* client.app.getDashboardCardsDetail;
+          const dashboardCardsStatus = yield* client.app.getDashboardCardsStatus;
+          const menus = yield* client.app.getPlatformApplicationMenus;
+          const examIntegrations = yield* client.app.getExamIntegrations;
+          const thirdPartyData = yield* client.app.getThirdPartyData;
           const onboarding = yield* client.app.getOnboarding({
             type: "TIMETABLE",
           });
@@ -190,11 +181,11 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const schoolyears = yield* client.schoolyears.list();
-          const inbox = yield* client.messages.getInbox();
-          const drafts = yield* client.messages.getDrafts();
-          const messagePermissions = yield* client.messages.getPermissions();
-          const quickfilters = yield* client.messages.getRecipientQuickfilters();
+          const schoolyears = yield* client.schoolyears.list;
+          const inbox = yield* client.messages.getInbox;
+          const drafts = yield* client.messages.getDrafts;
+          const messagePermissions = yield* client.messages.getPermissions;
+          const quickfilters = yield* client.messages.getRecipientQuickfilters;
           const staffFilter = yield* client.messages.getRecipientFilter({
             recipientOption: "STAFF",
           });
@@ -206,8 +197,8 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             recipientOption: "STAFF",
             searchText: "a",
           });
-          const sent = yield* client.messages.getSent();
-          const messageStatus = yield* client.messages.getStatus();
+          const sent = yield* client.messages.getSent;
+          const messageStatus = yield* client.messages.getStatus;
           const messageId = inbox.incomingMessages[0]?.id;
 
           expect(schoolyears.length).toBeGreaterThan(0);
@@ -242,15 +233,15 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const appData = yield* client.app.getData();
-          const schoolyears = yield* client.schoolyears.list();
+          const appData = yield* client.app.getData;
+          const schoolyears = yield* client.schoolyears.list;
           const effectiveSchoolyear = appData.currentSchoolYear ?? schoolyears[0];
           if (effectiveSchoolyear === undefined) {
             throw new Error("Expected at least one school year");
           }
-          const absencesMeta = yield* client.classreg.getAbsencesMeta();
-          const homeworkMeta = yield* client.classreg.getHomeworkMeta();
-          const lessonTopicsMeta = yield* client.classreg.getLessonTopicsMeta();
+          const absencesMeta = yield* client.classreg.getAbsencesMeta;
+          const homeworkMeta = yield* client.classreg.getHomeworkMeta;
+          const lessonTopicsMeta = yield* client.classreg.getLessonTopicsMeta;
           const homeworkList = yield* client.classreg.getHomeworkList({
             classId: null,
             teacherId: null,
@@ -302,7 +293,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const schoolyears = yield* client.schoolyears.list();
+          const schoolyears = yield* client.schoolyears.list;
 
           expect(schoolyears.length).toBeGreaterThan(0);
 
@@ -319,7 +310,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
                   start: dateRange.start,
                   end: dateRange.end,
                 });
-                const forClass = yield* client.exams.getForClass();
+                const forClass = yield* client.exams.getForClass;
                 const filter = yield* client.timetable.getFilter({
                   start: dateRange.start,
                   end: dateRange.end,
@@ -330,9 +321,9 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
                   query: "10",
                   schoolyear: schoolyear.id,
                 });
-                const absencesMeta = yield* client.classreg.getAbsencesMeta();
-                const homeworkMeta = yield* client.classreg.getHomeworkMeta();
-                const lessonTopicsMeta = yield* client.classreg.getLessonTopicsMeta();
+                const absencesMeta = yield* client.classreg.getAbsencesMeta;
+                const homeworkMeta = yield* client.classreg.getHomeworkMeta;
+                const lessonTopicsMeta = yield* client.classreg.getLessonTopicsMeta;
 
                 return {
                   schoolYearId: schoolyear.id,
@@ -373,7 +364,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const schoolyears = yield* client.schoolyears.list();
+          const schoolyears = yield* client.schoolyears.list;
           const historicalSchoolyear = schoolyears.find((schoolyear) => schoolyear.id === 7);
 
           if (historicalSchoolyear === undefined) {
@@ -386,10 +377,13 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
               end: "2025-09-19",
               resourceType: "CLASS",
             });
-            const classIds = filter.classes.slice(0, 12).map((item) => item.class.id);
-            if (classIds.length === 0) {
+            const [firstClassId, ...remainingClassIds] = filter.classes
+              .slice(0, 12)
+              .map((item) => item.class.id);
+            if (firstClassId === undefined) {
               throw new Error("Expected at least one historical class");
             }
+            const classIds: [number, ...Array<number>] = [firstClassId, ...remainingClassIds];
 
             return yield* Effect.forEach(
               [
@@ -431,8 +425,8 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const contactData = yield* client.profile.getUserContactData();
-          const email = yield* client.profile.getUserEmail();
+          const contactData = yield* client.profile.getUserContactData;
+          const email = yield* client.profile.getUserEmail;
 
           expect(contactData).toHaveProperty("email");
           expect(email.email).toContain("@");
@@ -475,14 +469,14 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const appData = yield* client.app.getData();
-          const schoolyears = yield* client.schoolyears.list();
+          const appData = yield* client.app.getData;
+          const schoolyears = yield* client.schoolyears.list;
           const effectiveSchoolyear = appData.currentSchoolYear ?? schoolyears[0];
           if (effectiveSchoolyear === undefined) {
             throw new Error("Expected at least one school year");
           }
           const status = yield* client.session.getStatus();
-          const menu = yield* client.timetable.getMenu();
+          const menu = yield* client.timetable.getMenu;
           const calendar = yield* client.timetable.getCalendar();
           const search = yield* client.timetable.search({
             query: "10",
@@ -522,7 +516,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           if (roomId === undefined) {
             throw new Error("Expected at least one room");
           }
-          const timegrid = yield* client.timetable.getTimeGrid();
+          const timegrid = yield* client.timetable.getTimeGrid;
           const weekOverview = yield* client.timetable.getEntriesWeekOverview({
             start: "2026-03-16",
             end: "2026-03-20",
@@ -678,7 +672,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const appData = yield* client.app.getData();
+          const appData = yield* client.app.getData;
           const start = new Date().toISOString().slice(0, 10);
           const end = start;
           const filter = yield* client.timetable.getFilter({

@@ -439,7 +439,7 @@ describe("request descriptors", () => {
       yield* Effect.all([
         client.exams.list(),
         client.timetable.getGrid(),
-        client.classreg.getHomeworkMeta(),
+        client.classreg.getHomeworkMeta,
       ]).pipe(client.withSchoolYear(6));
 
       expect(observed).toHaveLength(3);
@@ -457,7 +457,7 @@ describe("request descriptors", () => {
     return Effect.gen(function* () {
       const client = yield* WebUntisClient;
 
-      yield* client.schoolyears.list().pipe(client.withSchoolYear(6));
+      yield* client.schoolyears.list.pipe(client.withSchoolYear(6));
 
       expect(getLast(observed).headers["x-webuntis-api-school-year-id"]).toBeUndefined();
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
@@ -470,9 +470,11 @@ describe("request descriptors", () => {
       const client = yield* WebUntisClient;
 
       yield* Effect.gen(function* () {
-        yield* client.exams.list({ start: "outer-before" });
-        yield* client.exams.list({ start: "inner" }).pipe(client.withSchoolYear(4));
-        yield* client.exams.list({ start: "outer-after" });
+        yield* client.exams.list({ start: "2026-01-01", end: "2026-01-01" });
+        yield* client.exams
+          .list({ start: "2026-02-01", end: "2026-02-01" })
+          .pipe(client.withSchoolYear(4));
+        yield* client.exams.list({ start: "2026-03-01", end: "2026-03-01" });
       }).pipe(client.withSchoolYear(6));
 
       expect(observed.map((request) => request.headers["x-webuntis-api-school-year-id"])).toEqual([
@@ -491,8 +493,12 @@ describe("request descriptors", () => {
 
       yield* Effect.all(
         [
-          client.exams.list({ start: "year-6" }).pipe(client.withSchoolYear(6)),
-          client.exams.list({ start: "year-4" }).pipe(client.withSchoolYear(4)),
+          client.exams
+            .list({ start: "2026-06-01", end: "2026-06-01" })
+            .pipe(client.withSchoolYear(6)),
+          client.exams
+            .list({ start: "2026-04-01", end: "2026-04-01" })
+            .pipe(client.withSchoolYear(4)),
         ],
         { concurrency: 2 },
       );
@@ -504,7 +510,7 @@ describe("request descriptors", () => {
             request.headers["x-webuntis-api-school-year-id"],
           ]),
         ),
-      ).toEqual({ "year-6": "6", "year-4": "4" });
+      ).toEqual({ "2026-06-01": "6", "2026-04-01": "4" });
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
 
@@ -558,7 +564,7 @@ describe("request descriptors", () => {
 
     return Effect.gen(function* () {
       const app = yield* AppClient;
-      const integrations = yield* app.getExamIntegrations();
+      const integrations = yield* app.getExamIntegrations;
 
       expect(integrations).toEqual([
         {
@@ -588,7 +594,7 @@ describe("request descriptors", () => {
 
     return Effect.gen(function* () {
       const classreg = yield* ClassregClient;
-      yield* classreg.getHomeworkMeta();
+      yield* classreg.getHomeworkMeta;
 
       const homeworkMetaRequest = getLast(observed);
       expect(homeworkMetaRequest.url.pathname).toBe(
@@ -596,7 +602,7 @@ describe("request descriptors", () => {
       );
       expect(homeworkMetaRequest.headers["x-webuntis-api-school-year-id"]).toBeUndefined();
 
-      yield* classreg.getLessonTopicsMeta();
+      yield* classreg.getLessonTopicsMeta;
 
       const lessonTopicsMetaRequest = getLast(observed);
       expect(lessonTopicsMetaRequest.method).toBe("GET");
@@ -683,7 +689,7 @@ describe("request descriptors", () => {
 
     return Effect.gen(function* () {
       const client = yield* WebUntisClient;
-      const result = yield* client.exams.getForClass().pipe(client.withSchoolYear(6));
+      const result = yield* client.exams.getForClass.pipe(client.withSchoolYear(6));
 
       expect(result).toEqual({
         examsDone: [],
@@ -702,7 +708,7 @@ describe("request descriptors", () => {
 
     return Effect.gen(function* () {
       const messages = yield* MessagesClient;
-      yield* messages.getPermissions();
+      yield* messages.getPermissions;
 
       const request = getLast(observed);
       expect(request.url.pathname).toBe("/WebUntis/api/rest/view/v1/messages/permissions");
@@ -771,7 +777,7 @@ describe("request descriptors", () => {
 
     return Effect.gen(function* () {
       const profile = yield* ProfileClient;
-      yield* profile.getUserEmail();
+      yield* profile.getUserEmail;
 
       const request = getLast(observed);
       expect(request.url.pathname).toBe("/WebUntis/api/rest/view/v1/profile/user-email");
@@ -784,7 +790,7 @@ describe("request descriptors", () => {
 
     return Effect.gen(function* () {
       const schoolyears = yield* SchoolyearsClient;
-      yield* schoolyears.list();
+      yield* schoolyears.list;
 
       const request = getLast(observed);
       expect(request.url.pathname).toBe("/WebUntis/api/rest/view/v1/schoolyears");
@@ -853,7 +859,7 @@ describe("request descriptors", () => {
         start: "2026-05-04",
         end: "2026-05-08",
         resourceType: "ROOM",
-        resources: [],
+        resources: [1],
       });
 
       const request = getLast(observed);
@@ -861,7 +867,7 @@ describe("request descriptors", () => {
       expect(request.query["start"]).toBe("2026-05-04");
       expect(request.query["end"]).toBe("2026-05-08");
       expect(request.query["resourceType"]).toBe("ROOM");
-      expect(request.query["resources"]).toBe("");
+      expect(request.query["resources"]).toBe("1");
       expect(request.query["timetableType"]).toBeUndefined();
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });

@@ -31,26 +31,26 @@ export const CalendarEntryTodayParticipantStatusSchema = Schema.Literals([
 export const CalendarEntryTodayResourceSchema = Schema.Struct({
   displayName: Schema.String,
   hasTimetable: Schema.Boolean,
-  id: Schema.Number,
+  id: Schema.Finite,
   longName: Schema.String,
   shortName: Schema.String,
 });
 
 export const CalendarEntryTodayLessonSchema = Schema.Struct({
-  lessonId: Schema.Number,
-  lessonNumber: Schema.Number,
+  lessonId: Schema.Finite,
+  lessonNumber: Schema.Finite,
 });
 
 export const CalendarEntryTodaySubTypeSchema = Schema.Struct({
   displayInPeriodDetails: Schema.Boolean,
   displayName: Schema.String,
-  id: Schema.Number,
+  id: Schema.Finite,
 });
 
 export const CalendarEntryTodayRoomSchema = Schema.Struct({
   displayName: Schema.String,
   hasTimetable: Schema.Boolean,
-  id: Schema.Number,
+  id: Schema.Finite,
   longName: Schema.String,
   shortName: Schema.String,
   status: CalendarEntryTodayParticipantStatusSchema,
@@ -59,7 +59,7 @@ export const CalendarEntryTodayRoomSchema = Schema.Struct({
 export const CalendarEntryTodayTeacherSchema = Schema.Struct({
   displayName: Schema.String,
   hasTimetable: Schema.Boolean,
-  id: Schema.Number,
+  id: Schema.Finite,
   imageUrl: Schema.NullOr(Schema.String),
   longName: Schema.String,
   shortName: Schema.String,
@@ -67,11 +67,11 @@ export const CalendarEntryTodayTeacherSchema = Schema.Struct({
 });
 
 export const CalendarEntryTodayEntrySchema = Schema.Struct({
-  absenceReasonId: Schema.NullOr(Schema.Number),
+  absenceReasonId: Schema.NullOr(Schema.Finite),
   color: Schema.NullOr(Schema.String),
   endDateTime: Schema.String,
   exam: Schema.NullOr(Schema.Unknown),
-  id: Schema.Number,
+  id: Schema.Finite,
   klasses: Schema.Array(CalendarEntryTodayResourceSchema),
   lesson: CalendarEntryTodayLessonSchema,
   originalCalendarEntry: Schema.NullOr(Schema.Unknown),

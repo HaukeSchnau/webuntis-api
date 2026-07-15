@@ -2,18 +2,18 @@
 
 Headless WebUntis client built on the Effect v4 beta ecosystem.
 
-This package models the modern WebUntis REST surface as explicit `ServiceMap.Service` services. You can consume the aggregate `WebUntisClient`, or you can depend on focused domain services such as `AppClient`, `MessagesClient`, `SchoolyearsClient`, or `TimetableClient`.
+This package models the modern WebUntis REST surface as explicit `Context.Service` services. You can consume the aggregate `WebUntisClient`, or depend on focused domain services such as `AppClient`, `MessagesClient`, `SchoolyearsClient`, or `TimetableClient`.
 
 For breaking API changes and upgrade notes, see [MIGRATION.md](./MIGRATION.md).
 
 ## What You Get
 
-- Explicit Effect v4 services with focused `layerNoDeps` definitions and a single public `makeWebUntisLayer` entry point.
+- Explicit Effect v4 services and a single public `makeWebUntisLayer` composition root.
 - A small aggregate facade through `WebUntisClient` for convenience.
 - First-class domain services for `app`, `classreg`, `exams`, `messages`, `profile`, `schoolyears`, `session`, and `timetable`.
 - Descriptor-driven request construction, with explicit auth vs metadata header policy.
 - Fiber-local school-year scoping for historical data and advertised future years.
-- Strict schema decoding with excess-property rejection.
+- Forward-compatible runtime decoding plus strict contract tests and targeted live probes that expose upstream drift.
 - Internal-only reverse-engineering helpers for unstable or raw routes.
 
 ## Runtime Model
@@ -60,8 +60,8 @@ import { WebUntisClient, clientConfigFromEnv, makeWebUntisLayer } from "webuntis
 
 const program = Effect.gen(function* () {
   const client = yield* WebUntisClient;
-  const appData = yield* client.app.getData();
-  const schoolyears = yield* client.schoolyears.list();
+  const appData = yield* client.app.getData;
+  const schoolyears = yield* client.schoolyears.list;
 
   return {
     school: appData.tenant.displayName,
@@ -86,7 +86,7 @@ const program = Effect.gen(function* () {
   const app = yield* AppClient;
   const messages = yield* MessagesClient;
 
-  const [home, inbox] = yield* Effect.all([app.getHome(), messages.getInbox()]);
+  const [home, inbox] = yield* Effect.all([app.getHome, messages.getInbox]);
 
   return {
     schoolName: home.schoolName,
@@ -134,7 +134,7 @@ import { ExamsClient, SchoolyearsClient, withSchoolYear } from "webuntis-api";
 const historicalExams = Effect.gen(function* () {
   const exams = yield* ExamsClient;
   const schoolyears = yield* SchoolyearsClient;
-  const previous = (yield* schoolyears.list())[1];
+  const previous = (yield* schoolyears.list)[1];
 
   if (previous === undefined) {
     return [];
@@ -150,7 +150,7 @@ const historicalExams = Effect.gen(function* () {
 ```
 
 The aggregate client exposes the same operator as `client.withSchoolYear(id)`. Only IDs returned by
-`schoolyears.list()` should be selected. `timetable.search` still requires its endpoint-specific
+`schoolyears.list` should be selected. `timetable.search` still requires its endpoint-specific
 `schoolyear` query in addition to the scoped request header.
 
 ## Public API Shape
@@ -171,7 +171,7 @@ The root package exports:
 - `clientConfigFromEnv`
 - `makeWebUntisLayer`
 - `withSchoolYear`
-- `DiscoveryError`, `AuthError`, `TransportError`, `DecodeError`, and `ConfigurationError`
+- `DiscoveryError`, `AuthError`, `TransportError`, `DecodeError`, `InvalidRequestError`, and `ConfigurationError`
 
 Schemas are exported from the dedicated subpath instead of the root barrel:
 
@@ -245,7 +245,7 @@ just test
 The test suite is split into:
 
 - `test/unit` for config, session/metadata runtime behavior, discovery, and request-construction behavior
-- `test/contract` for schema strictness and positive payload fixtures
+- `test/contract` for strict drift detection and positive payload fixtures
 - `test/live/smoke.test.ts` for a small credential-gated smoke suite
 - `test/live/live.test.ts` for broader live coverage and snapshot drift detection
 
@@ -294,6 +294,6 @@ sops decrypt secrets/webuntis-live.env
 - Stable business routes belong on public domain services.
 - Reverse-engineering probes stay internal so the exported package surface remains coherent.
 - Snapshot churn in the live suite is treated as evidence of upstream change, not as noise to suppress.
-- Strict decoding is evidence-driven: we keep schemas narrow where behavior is stable and use structured JSON objects where upstream payloads are still intentionally loose.
+- Runtime decoding accepts additive upstream fields while still rejecting missing or malformed known fields. Contract tests and targeted raw live probes apply strict excess-property decoding so additions remain visible to maintainers without breaking consumers. Public-client live snapshots exercise real endpoint behavior but cannot observe fields intentionally stripped by runtime decoding.
 
 Reverse-engineering artifacts live under [`docs/research/webuntis`](./docs/research/webuntis).

@@ -11,7 +11,7 @@ export class DiscoveryError extends Schema.TaggedErrorClass<DiscoveryError>()("D
 export class AuthError extends Schema.TaggedErrorClass<AuthError>()("AuthError", {
   stage: Schema.Literals(["discovery", "bootstrap", "login", "token", "metadata"]),
   message: Schema.String,
-  status: Schema.optional(Schema.Number),
+  status: Schema.optional(Schema.Finite),
   cause: Schema.optional(Schema.Unknown),
 }) {}
 
@@ -19,7 +19,7 @@ export class TransportError extends Schema.TaggedErrorClass<TransportError>()("T
   method: Schema.String,
   path: Schema.String,
   message: Schema.String,
-  status: Schema.optional(Schema.Number),
+  status: Schema.optional(Schema.Finite),
   body: Schema.optional(Schema.String),
   cause: Schema.optional(Schema.Unknown),
 }) {}
@@ -30,6 +30,15 @@ export class DecodeError extends Schema.TaggedErrorClass<DecodeError>()("DecodeE
   cause: Schema.optional(Schema.Unknown),
 }) {}
 
+export class InvalidRequestError extends Schema.TaggedErrorClass<InvalidRequestError>()(
+  "InvalidRequestError",
+  {
+    path: Schema.String,
+    message: Schema.String,
+    cause: Schema.optional(Schema.Unknown),
+  },
+) {}
+
 export class ConfigurationError extends Schema.TaggedErrorClass<ConfigurationError>()(
   "ConfigurationError",
   {
@@ -38,7 +47,12 @@ export class ConfigurationError extends Schema.TaggedErrorClass<ConfigurationErr
   },
 ) {}
 
-export type WebUntisError = DiscoveryError | AuthError | TransportError | DecodeError;
+export type WebUntisError =
+  | DiscoveryError
+  | AuthError
+  | TransportError
+  | DecodeError
+  | InvalidRequestError;
 
 export const errorMessage = (error: unknown): string => {
   if (error instanceof Error) {

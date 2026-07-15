@@ -1,4 +1,4 @@
-import { Context, Effect, Layer, Schema } from "effect";
+import { Clock, Context, Effect, Layer, Schema } from "effect";
 import * as HttpClient from "effect/unstable/http/HttpClient";
 import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
 import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
@@ -10,7 +10,7 @@ import {
   httpClientErrorToTransportError,
   type TransportError,
 } from "./errors.ts";
-import { strictJsonParseOptions } from "./schema.ts";
+import { runtimeJsonParseOptions } from "./schema.ts";
 import type { ResolvedSchool } from "./types.ts";
 
 const SchoolSearchResultSchema = Schema.Struct({
@@ -19,7 +19,7 @@ const SchoolSearchResultSchema = Schema.Struct({
   address: Schema.String,
   displayName: Schema.String,
   loginName: Schema.String,
-  schoolId: Schema.Number,
+  schoolId: Schema.Finite,
   useMobileServiceUrlIos: Schema.optional(Schema.Boolean),
   serverUrl: Schema.String,
   tenantId: Schema.String,
@@ -28,15 +28,15 @@ const SchoolSearchResultSchema = Schema.Struct({
 
 const SearchSchoolRpcResponseSchema = Schema.Struct({
   result: Schema.Struct({
-    size: Schema.optional(Schema.Number),
+    size: Schema.optional(Schema.Finite),
     schools: Schema.Array(SchoolSearchResultSchema),
   }),
   id: Schema.String,
   jsonrpc: Schema.Literal("2.0"),
 });
 
-const searchPayload = (query: string) => ({
-  id: `wu_schulsuche-${Date.now()}`,
+const searchPayload = (query: string, now: number) => ({
+  id: `wu_schulsuche-${now}`,
   method: "searchSchool",
   params: [{ search: query.toLowerCase() }],
   jsonrpc: "2.0" as const,
@@ -54,18 +54,22 @@ export interface SchoolDiscoveryShape {
 export class SchoolDiscovery extends Context.Service<SchoolDiscovery, SchoolDiscoveryShape>()(
   "webuntis/internal/SchoolDiscovery",
 ) {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
       const config = yield* ClientConfig;
 
       const search: SchoolDiscoveryShape["search"] = (query) =>
-        HttpClientRequest.post(
-          config.discoveryEndpoint ?? "https://schoolsearch.webuntis.com/schoolquery2",
-        ).pipe(
-          HttpClientRequest.acceptJson,
-          HttpClientRequest.bodyJson(searchPayload(query)),
+        Clock.currentTimeMillis.pipe(
+          Effect.flatMap((now) =>
+            HttpClientRequest.post(
+              config.discoveryEndpoint ?? "https://schoolsearch.webuntis.com/schoolquery2",
+            ).pipe(
+              HttpClientRequest.acceptJson,
+              HttpClientRequest.bodyJson(searchPayload(query, now)),
+            ),
+          ),
           Effect.flatMap(client.execute),
           Effect.mapError((error) =>
             httpClientErrorToTransportError("POST", "/schoolquery2", error),
@@ -85,7 +89,7 @@ export class SchoolDiscovery extends Context.Service<SchoolDiscovery, SchoolDisc
           Effect.flatMap(
             HttpClientResponse.schemaBodyJson(
               SearchSchoolRpcResponseSchema,
-              strictJsonParseOptions,
+              runtimeJsonParseOptions,
             ),
           ),
           Effect.mapError((error) =>
@@ -173,6 +177,4 @@ export class SchoolDiscovery extends Context.Service<SchoolDiscovery, SchoolDisc
       });
     }),
   );
-
-  static readonly layer = this.layerNoDeps;
 }

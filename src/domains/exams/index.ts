@@ -16,13 +16,13 @@ export interface ExamsClientShape {
     request?: ExamDateRangeRequest,
   ) => Effect.Effect<ExamStatistics, RequestFailure>;
   readonly getExam: (request: ExamDetailRequest) => Effect.Effect<ExamDetail, RequestFailure>;
-  readonly getForClass: () => Effect.Effect<ExamsForClass, RequestFailure>;
+  readonly getForClass: Effect.Effect<ExamsForClass, RequestFailure>;
 }
 
 export class ExamsClient extends Context.Service<ExamsClient, ExamsClientShape>()(
   "webuntis/ExamsClient",
 ) {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const http = yield* WebUntisHttp;
@@ -42,9 +42,9 @@ export class ExamsClient extends Context.Service<ExamsClient, ExamsClientShape>(
         getExam: Effect.fn("ExamsClient.getExam")(function* (request: ExamDetailRequest) {
           return yield* http.requestSchema(ExamsRequests.getExam, request);
         }),
-        getForClass: Effect.fn("ExamsClient.getForClass")(function* () {
-          return yield* http.requestSchema(ExamsRequests.getForClass, undefined);
-        }),
+        getForClass: http
+          .requestSchema(ExamsRequests.getForClass, undefined)
+          .pipe(Effect.withSpan("ExamsClient.getForClass")),
       });
     }),
   );
