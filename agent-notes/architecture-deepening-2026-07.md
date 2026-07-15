@@ -124,3 +124,10 @@ Implement all actionable findings from the 2026-07-15 architecture/public-interf
 ## Known live constraint
 
 Live files must run sequentially because WebUntis can invalidate an earlier login for the same account. Never update snapshots merely to make verification pass; inspect any drift first.
+
+## Historical live-data follow-up
+
+- The tenant currently advertises no active school year, so unscoped exam and class-register reads returned structurally valid empty collections.
+- A credential-backed probe confirmed school year 2025/2026 contains 352 exams, 1,358 homework items, and 44 classes.
+- School-year-sensitive live tests now locate the advertised year containing 2026-03-16, apply fiber-local school-year scope, and assert non-empty exams, homework, metadata, filters, and timetable entries.
+- Large live collections are asserted by count and represented by bounded snapshots; the generated live snapshot file was reduced from roughly 31,000 to 5,200 lines.

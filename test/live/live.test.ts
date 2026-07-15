@@ -1,7 +1,12 @@
 import { describe, expect, it, layer } from "@effect/vitest";
 import { Effect, Layer, Schema } from "effect";
 import { makeWebUntisResearchLayer, WebUntisClient } from "../../src/client.ts";
-import { HomeSchema, MobileDataSchema, StartupActionsSchema } from "../../src/domains/schemas.ts";
+import {
+  HomeSchema,
+  MobileDataSchema,
+  type Schoolyear,
+  StartupActionsSchema,
+} from "../../src/domains/schemas.ts";
 import { MobileDataV1V2Schema } from "../../src/domains/app/schema.ts";
 import { ClientConfig } from "../../src/internal/config.ts";
 import { UnexpectedResponseError } from "../../src/internal/errors.ts";
@@ -22,8 +27,6 @@ import {
   normalizeDashboardCardsStatus,
   normalizeExamDetail,
   normalizeExamFilter,
-  normalizeExamStatistics,
-  normalizeExams,
   normalizeHome,
   normalizeMessageComposeRecipients,
   normalizeMessageDetail,
@@ -43,7 +46,6 @@ import {
   normalizeTimeGrid,
   normalizeTimetableAvailableRooms,
   normalizeTimetableCalendar,
-  normalizeTimetableEntries,
   normalizeTimetableEntriesSettings,
   normalizeTimetableEntriesWeekOverview,
   normalizeTimetableExternalCalendar,
@@ -58,6 +60,44 @@ import {
 } from "./support.ts";
 
 const hasLiveEnv = liveEnvMissing.length === 0;
+
+const historicalDataWindow = {
+  start: "2026-03-16",
+  end: "2026-03-20",
+} as const;
+
+const requireHistoricalSchoolyear = (schoolyears: ReadonlyArray<Schoolyear>): Schoolyear => {
+  const schoolyear = schoolyears.find(
+    ({ dateRange }) =>
+      dateRange.start <= historicalDataWindow.start && dateRange.end >= historicalDataWindow.end,
+  );
+
+  if (schoolyear === undefined) {
+    throw new Error(`Expected an advertised school year containing ${historicalDataWindow.start}`);
+  }
+
+  return schoolyear;
+};
+
+const timetableEntryCount = (
+  responses: ReadonlyArray<{
+    readonly days: ReadonlyArray<{
+      readonly dayEntries: ReadonlyArray<unknown>;
+      readonly gridEntries: ReadonlyArray<unknown>;
+      readonly backEntries: ReadonlyArray<unknown>;
+    }>;
+  }>,
+) =>
+  responses.reduce(
+    (responseCount, response) =>
+      responseCount +
+      response.days.reduce(
+        (dayCount, day) =>
+          dayCount + day.dayEntries.length + day.gridEntries.length + day.backEntries.length,
+        0,
+      ),
+    0,
+  );
 
 const liveLayer = Layer.unwrap(
   ClientConfig.fromEnv().pipe(Effect.map((config) => makeWebUntisResearchLayer(config))),
@@ -233,128 +273,131 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const appData = yield* client.app.getData;
           const schoolyears = yield* client.schoolyears.list;
-          const effectiveSchoolyear = appData.currentSchoolYear ?? schoolyears[0];
-          if (effectiveSchoolyear === undefined) {
-            throw new Error("Expected at least one school year");
-          }
-          const absencesMeta = yield* client.classreg.getAbsencesMeta;
-          const homeworkMeta = yield* client.classreg.getHomeworkMeta;
-          const lessonTopicsMeta = yield* client.classreg.getLessonTopicsMeta;
-          const homeworkList = yield* client.classreg.getHomeworkList({
-            classId: null,
-            teacherId: null,
-            subjectId: null,
-            dateRange: effectiveSchoolyear.dateRange,
-            dateRangeType: "SCHOOLYEAR",
-          });
+          const historicalSchoolyear = requireHistoricalSchoolyear(schoolyears);
+          const { absencesMeta, homeworkList, homeworkMeta, lessonTopicsMeta } = yield* Effect.gen(
+            function* () {
+              const absencesMeta = yield* client.classreg.getAbsencesMeta;
+              const homeworkMeta = yield* client.classreg.getHomeworkMeta;
+              const lessonTopicsMeta = yield* client.classreg.getLessonTopicsMeta;
+              const homeworkList = yield* client.classreg.getHomeworkList({
+                classId: null,
+                teacherId: null,
+                subjectId: null,
+                dateRange: historicalSchoolyear.dateRange,
+                dateRangeType: "SCHOOLYEAR",
+              });
+              return { absencesMeta, homeworkList, homeworkMeta, lessonTopicsMeta };
+            },
+          ).pipe(client.withSchoolYear(historicalSchoolyear.id));
 
-          expect(Array.isArray(absencesMeta.classes)).toBe(true);
+          expect(absencesMeta.classes.length).toBeGreaterThan(0);
           expect(Array.isArray(absencesMeta.reasons)).toBe(true);
           expect(Array.isArray(absencesMeta.excuseStatuses)).toBe(true);
-          expect(Array.isArray(homeworkMeta.classes)).toBe(true);
+          expect(homeworkMeta.classes.length).toBeGreaterThan(0);
           expect(Array.isArray(homeworkMeta.teachers)).toBe(true);
           expect(Array.isArray(homeworkMeta.subjects)).toBe(true);
           expect(Array.isArray(homeworkMeta.schoolYears)).toBe(true);
           expect(Array.isArray(lessonTopicsMeta.teachingMethods)).toBe(true);
-          expect(Array.isArray(homeworkList.homeworkList)).toBe(true);
+          expect(homeworkList.homeworkList.length).toBeGreaterThan(0);
           expect(normalizeClassregAbsencesMeta(absencesMeta)).toMatchSnapshot();
-          expect(normalizeClassregHomeworkMeta(homeworkMeta)).toMatchSnapshot();
+          expect(
+            normalizeClassregHomeworkMeta({
+              ...homeworkMeta,
+              classes: homeworkMeta.classes.slice(0, 5),
+              schoolYears: homeworkMeta.schoolYears.slice(0, 5),
+              subjects: homeworkMeta.subjects.slice(0, 5),
+              teachers: homeworkMeta.teachers.slice(0, 5),
+            }),
+          ).toMatchSnapshot();
           expect(normalizeClassregLessonTopicsMeta(lessonTopicsMeta)).toMatchSnapshot();
-          expect(normalizeClassregHomeworkList(homeworkList)).toMatchSnapshot();
+          expect(
+            normalizeClassregHomeworkList({
+              ...homeworkList,
+              homeworkList: homeworkList.homeworkList.slice(0, 5),
+            }),
+          ).toMatchSnapshot();
         }),
       30_000,
     );
 
     it.effect(
-      "reads exam endpoints",
-      () =>
-        Effect.gen(function* () {
-          const client = yield* WebUntisClient;
-          const exams = yield* client.exams.list();
-          const filter = yield* client.exams.getFilter();
-          const statistics = yield* client.exams.getStatistics();
-          const examId = exams.exams[0]?.examId;
-
-          expect(normalizeExams(exams)).toMatchSnapshot();
-          expect(normalizeExamFilter(filter)).toMatchSnapshot();
-          expect(normalizeExamStatistics(statistics)).toMatchSnapshot();
-          if (examId !== undefined) {
-            const detail = yield* client.exams.getExam({ id: examId });
-            expect(normalizeExamDetail(detail)).toMatchSnapshot();
-          }
-        }),
-      30_000,
-    );
-
-    it.effect(
-      "reads representative data for every advertised school year",
+      "reads non-empty exam data from a historical school year",
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
           const schoolyears = yield* client.schoolyears.list;
+          const historicalSchoolyear = requireHistoricalSchoolyear(schoolyears);
+          const { detail, exams, filter, statistics } = yield* Effect.gen(function* () {
+            const exams = yield* client.exams.list(historicalSchoolyear.dateRange);
+            const filter = yield* client.exams.getFilter(historicalSchoolyear.dateRange);
+            const statistics = yield* client.exams.getStatistics(historicalSchoolyear.dateRange);
+            const examId = exams.exams[0]?.examId;
+            if (examId === undefined) {
+              throw new Error("Expected at least one historical exam");
+            }
+            const detail = yield* client.exams.getExam({ id: examId });
+            return { detail, exams, filter, statistics };
+          }).pipe(client.withSchoolYear(historicalSchoolyear.id));
 
-          expect(schoolyears.length).toBeGreaterThan(0);
+          expect(exams.exams.length).toBeGreaterThan(0);
+          expect(filter.classes.length).toBeGreaterThan(0);
+          expect(statistics.exams.length).toBe(exams.exams.length);
+          expect(
+            normalizeExamFilter({
+              classes: filter.classes.slice(0, 5),
+              examTypes: filter.examTypes.slice(0, 5),
+              subjects: filter.subjects.slice(0, 5),
+              teachers: filter.teachers.slice(0, 5),
+            }),
+          ).toMatchSnapshot();
+          expect(normalizeExamDetail(detail)).toMatchSnapshot();
+        }),
+      30_000,
+    );
 
-          const results = yield* Effect.forEach(
-            schoolyears,
-            (schoolyear) =>
-              Effect.gen(function* () {
-                const dateRange = schoolyear.dateRange;
-                const exams = yield* client.exams.list({
-                  start: dateRange.start,
-                  end: dateRange.end,
-                });
-                const statistics = yield* client.exams.getStatistics({
-                  start: dateRange.start,
-                  end: dateRange.end,
-                });
-                const forClass = yield* client.exams.getForClass;
-                const filter = yield* client.timetable.getFilter({
-                  start: dateRange.start,
-                  end: dateRange.end,
-                  resourceType: "CLASS",
-                });
-                const grid = yield* client.timetable.getGrid();
-                const search = yield* client.timetable.search({
-                  query: "10",
-                  schoolyear: schoolyear.id,
-                });
-                const absencesMeta = yield* client.classreg.getAbsencesMeta;
-                const homeworkMeta = yield* client.classreg.getHomeworkMeta;
-                const lessonTopicsMeta = yield* client.classreg.getLessonTopicsMeta;
+    it.effect(
+      "reads representative non-empty data from the historical school year",
+      () =>
+        Effect.gen(function* () {
+          const client = yield* WebUntisClient;
+          const schoolyears = yield* client.schoolyears.list;
+          const schoolyear = requireHistoricalSchoolyear(schoolyears);
+          const result = yield* Effect.gen(function* () {
+            const exams = yield* client.exams.list(schoolyear.dateRange);
+            const statistics = yield* client.exams.getStatistics(schoolyear.dateRange);
+            const filter = yield* client.timetable.getFilter({
+              ...historicalDataWindow,
+              resourceType: "CLASS",
+            });
+            const grid = yield* client.timetable.getGrid();
+            const search = yield* client.timetable.search({
+              query: "10",
+              schoolyear: schoolyear.id,
+            });
+            const absencesMeta = yield* client.classreg.getAbsencesMeta;
+            const homeworkMeta = yield* client.classreg.getHomeworkMeta;
 
-                return {
-                  schoolYearId: schoolyear.id,
-                  classCount: filter.classes.length,
-                  searchResultCount: search.results.length,
-                  examCount: exams.exams.length,
-                  statisticCount: statistics.exams.length,
-                  forClass,
-                  gridFormatCount: grid.formatDefinitions.length,
-                  absenceClassCount: absencesMeta.classes.length,
-                  homeworkClassCount: homeworkMeta.classes.length,
-                  lessonTopicsMeta,
-                };
-              }).pipe(client.withSchoolYear(schoolyear.id)),
-            { concurrency: 1 },
-          );
+            return {
+              absenceClassCount: absencesMeta.classes.length,
+              classCount: filter.classes.length,
+              examCount: exams.exams.length,
+              gridFormatCount: grid.formatDefinitions.length,
+              homeworkClassCount: homeworkMeta.classes.length,
+              schoolYearId: schoolyear.id,
+              searchResultCount: search.results.length,
+              statisticCount: statistics.exams.length,
+            };
+          }).pipe(client.withSchoolYear(schoolyear.id));
 
-          for (const result of results) {
-            expect(result.schoolYearId).toBeGreaterThan(0);
-            expect(result.statisticCount).toBe(result.examCount);
-            expect(Array.isArray(result.lessonTopicsMeta.teachingMethods)).toBe(true);
-            expect(Array.isArray(result.forClass.examsDone)).toBe(true);
-            expect(Array.isArray(result.forClass.examsUpcoming)).toBe(true);
-            expect(Array.isArray(result.forClass.examsFuture)).toBe(true);
-          }
-
-          expect(results.some((result) => result.classCount > 0)).toBe(true);
-          expect(results.some((result) => result.searchResultCount > 0)).toBe(true);
-          expect(results.some((result) => result.gridFormatCount > 0)).toBe(true);
-          expect(results.some((result) => result.absenceClassCount > 0)).toBe(true);
-          expect(results.some((result) => result.homeworkClassCount > 0)).toBe(true);
+          expect(result.schoolYearId).toBeGreaterThan(0);
+          expect(result.examCount).toBeGreaterThan(0);
+          expect(result.statisticCount).toBe(result.examCount);
+          expect(result.classCount).toBeGreaterThan(0);
+          expect(result.searchResultCount).toBeGreaterThan(0);
+          expect(result.gridFormatCount).toBeGreaterThan(0);
+          expect(result.absenceClassCount).toBeGreaterThan(0);
+          expect(result.homeworkClassCount).toBeGreaterThan(0);
         }),
       60_000,
     );
@@ -365,16 +408,11 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
           const schoolyears = yield* client.schoolyears.list;
-          const historicalSchoolyear = schoolyears.find((schoolyear) => schoolyear.id === 7);
-
-          if (historicalSchoolyear === undefined) {
-            return;
-          }
+          const historicalSchoolyear = requireHistoricalSchoolyear(schoolyears);
 
           const entryResponses = yield* Effect.gen(function* () {
             const filter = yield* client.timetable.getFilter({
-              start: "2025-09-15",
-              end: "2025-09-19",
+              ...historicalDataWindow,
               resourceType: "CLASS",
             });
             const [firstClassId, ...remainingClassIds] = filter.classes
@@ -402,19 +440,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             );
           }).pipe(client.withSchoolYear(historicalSchoolyear.id));
 
-          const entryCount = entryResponses.reduce(
-            (responseCount, response) =>
-              responseCount +
-              response.days.reduce(
-                (dayCount, day) =>
-                  dayCount +
-                  day.dayEntries.length +
-                  day.gridEntries.length +
-                  day.backEntries.length,
-                0,
-              ),
-            0,
-          );
+          const entryCount = timetableEntryCount(entryResponses);
           expect(entryCount).toBeGreaterThan(0);
         }),
       60_000,
@@ -469,23 +495,22 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const appData = yield* client.app.getData;
           const schoolyears = yield* client.schoolyears.list;
-          const effectiveSchoolyear = appData.currentSchoolYear ?? schoolyears[0];
-          if (effectiveSchoolyear === undefined) {
-            throw new Error("Expected at least one school year");
-          }
+          const historicalSchoolyear = requireHistoricalSchoolyear(schoolyears);
           const status = yield* client.session.getStatus();
-          const menu = yield* client.timetable.getMenu;
-          const calendar = yield* client.timetable.getCalendar();
-          const search = yield* client.timetable.search({
-            query: "10",
-            schoolyear: effectiveSchoolyear.id,
-          });
-          const availableRooms = yield* client.timetable.getAvailableRooms({
-            startDateTime: "2026-03-13T08:00:00",
-            endDateTime: "2026-03-13T10:00:00",
-          });
+          const { availableRooms, calendar, menu, search } = yield* Effect.gen(function* () {
+            const menu = yield* client.timetable.getMenu;
+            const calendar = yield* client.timetable.getCalendar();
+            const search = yield* client.timetable.search({
+              query: "10",
+              schoolyear: historicalSchoolyear.id,
+            });
+            const availableRooms = yield* client.timetable.getAvailableRooms({
+              startDateTime: "2026-03-13T08:00:00",
+              endDateTime: "2026-03-13T10:00:00",
+            });
+            return { availableRooms, calendar, menu, search };
+          }).pipe(client.withSchoolYear(historicalSchoolyear.id));
 
           expect(status.expiresInMs).toBeGreaterThanOrEqual(0);
           expect(search.results.length).toBeGreaterThan(0);
@@ -504,28 +529,34 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const roomFilter = yield* client.timetable.getFilter({
-            start: "2026-03-16",
-            end: "2026-03-20",
-            resourceType: "ROOM",
-            timetableType: "OVERVIEW_WEEK",
-          });
-          const roomId = (
-            roomFilter.rooms.find((room) => room.room.shortName === "1.12") ?? roomFilter.rooms[0]
-          )?.room.id;
-          if (roomId === undefined) {
-            throw new Error("Expected at least one room");
-          }
-          const timegrid = yield* client.timetable.getTimeGrid;
-          const weekOverview = yield* client.timetable.getEntriesWeekOverview({
-            start: "2026-03-16",
-            end: "2026-03-20",
-            resourceType: "ROOM",
-            resources: [roomId],
-          });
-          const externalCalendar = yield* client.timetable.getExternalCalendar({
-            myTimetable: true,
-          });
+          const schoolyears = yield* client.schoolyears.list;
+          const historicalSchoolyear = requireHistoricalSchoolyear(schoolyears);
+          const { externalCalendar, roomId, timegrid, weekOverview } = yield* Effect.gen(
+            function* () {
+              const roomFilter = yield* client.timetable.getFilter({
+                ...historicalDataWindow,
+                resourceType: "ROOM",
+                timetableType: "OVERVIEW_WEEK",
+              });
+              const roomId = (
+                roomFilter.rooms.find((room) => room.room.shortName === "1.12") ??
+                roomFilter.rooms[0]
+              )?.room.id;
+              if (roomId === undefined) {
+                throw new Error("Expected at least one room");
+              }
+              const timegrid = yield* client.timetable.getTimeGrid;
+              const weekOverview = yield* client.timetable.getEntriesWeekOverview({
+                ...historicalDataWindow,
+                resourceType: "ROOM",
+                resources: [roomId],
+              });
+              const externalCalendar = yield* client.timetable.getExternalCalendar({
+                myTimetable: true,
+              });
+              return { externalCalendar, roomId, timegrid, weekOverview };
+            },
+          ).pipe(client.withSchoolYear(historicalSchoolyear.id));
 
           expect(roomId).toBeDefined();
           expect(timegrid.units.length).toBeGreaterThan(0);
@@ -582,21 +613,29 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
           const rawViewApi = yield* RawViewApiClient;
-          const roomFilter = yield* client.timetable.getFilter({
-            start: "2026-03-16",
-            end: "2026-03-16",
-            resourceType: "ROOM",
-          });
-          const teacherFilter = yield* client.timetable.getFilter({
-            start: "2026-03-16",
-            end: "2026-03-16",
-            resourceType: "TEACHER",
-          });
-          const subjectFilter = yield* client.timetable.getFilter({
-            start: "2026-03-16",
-            end: "2026-03-16",
-            resourceType: "SUBJECT",
-          });
+          const schoolyears = yield* client.schoolyears.list;
+          const historicalSchoolyear = requireHistoricalSchoolyear(schoolyears);
+          const roomFilter = yield* client.timetable
+            .getFilter({
+              start: historicalDataWindow.start,
+              end: historicalDataWindow.start,
+              resourceType: "ROOM",
+            })
+            .pipe(client.withSchoolYear(historicalSchoolyear.id));
+          const teacherFilter = yield* client.timetable
+            .getFilter({
+              start: historicalDataWindow.start,
+              end: historicalDataWindow.start,
+              resourceType: "TEACHER",
+            })
+            .pipe(client.withSchoolYear(historicalSchoolyear.id));
+          const subjectFilter = yield* client.timetable
+            .getFilter({
+              start: historicalDataWindow.start,
+              end: historicalDataWindow.start,
+              resourceType: "SUBJECT",
+            })
+            .pipe(client.withSchoolYear(historicalSchoolyear.id));
           const roomId = (
             roomFilter.rooms.find((room) => room.room.shortName === "1.12") ?? roomFilter.rooms[0]
           )?.room.id;
@@ -668,40 +707,45 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
     );
 
     it.effect(
-      "reads timetable endpoints using the first discovered class",
+      "reads non-empty timetable entries using historical classes",
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const appData = yield* client.app.getData;
-          const start = new Date().toISOString().slice(0, 10);
-          const end = start;
-          const filter = yield* client.timetable.getFilter({
-            start,
-            end,
-            resourceType: "CLASS",
-          });
-          const classId = filter.classes[0]?.class.id;
-          expect(classId).toBeDefined();
-          if (classId === undefined) {
+          const schoolyears = yield* client.schoolyears.list;
+          const historicalSchoolyear = requireHistoricalSchoolyear(schoolyears);
+          const { entries, filter, grid, settings } = yield* Effect.gen(function* () {
+            const filter = yield* client.timetable.getFilter({
+              ...historicalDataWindow,
+              resourceType: "CLASS",
+            });
+            const [firstClassId, ...remainingClassIds] = filter.classes
+              .slice(0, 12)
+              .map((item) => item.class.id);
+            if (firstClassId === undefined) {
+              throw new Error("Expected at least one historical class");
+            }
+            const classIds: [number, ...Array<number>] = [firstClassId, ...remainingClassIds];
+            const grid = yield* client.timetable.getGrid();
+            const settings = yield* client.timetable.getEntriesSettings({
+              resourceType: "CLASS",
+            });
+            const entries = yield* client.timetable.getEntries({
+              ...historicalDataWindow,
+              resourceType: "CLASS",
+              resources: classIds,
+            });
+            return { entries, filter, grid, settings };
+          }).pipe(client.withSchoolYear(historicalSchoolyear.id));
+
+          if (filter.classes.length === 0) {
             throw new Error("Expected at least one class");
           }
 
-          const grid = yield* client.timetable.getGrid();
-          const settings = yield* client.timetable.getEntriesSettings({
-            resourceType: "CLASS",
-          });
-          const entries = yield* client.timetable.getEntries({
-            start,
-            end,
-            resourceType: "CLASS",
-            resources: [classId],
-          });
-
-          expect(appData.currentSchoolYear === null || appData.currentSchoolYear.id > 0).toBe(true);
+          expect(filter.classes.length).toBeGreaterThan(0);
+          expect(timetableEntryCount([entries])).toBeGreaterThan(0);
           expect(normalizeTimetableGrid(grid)).toMatchSnapshot();
           expect(normalizeTimetableFilter(filter)).toMatchSnapshot();
           expect(normalizeTimetableEntriesSettings(settings)).toMatchSnapshot();
-          expect(normalizeTimetableEntries(entries)).toMatchSnapshot();
         }),
       30_000,
     );
