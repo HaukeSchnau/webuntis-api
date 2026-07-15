@@ -5,21 +5,21 @@ import type { Schoolyear } from "../shared/schema.ts";
 import { SchoolyearsRequests } from "./requests.ts";
 
 export interface SchoolyearsClientShape {
-  readonly list: () => Effect.Effect<ReadonlyArray<Schoolyear>, RequestFailure>;
+  readonly list: Effect.Effect<ReadonlyArray<Schoolyear>, RequestFailure>;
 }
 
 export class SchoolyearsClient extends Context.Service<SchoolyearsClient, SchoolyearsClientShape>()(
   "webuntis/SchoolyearsClient",
 ) {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const http = yield* WebUntisHttp;
 
       return SchoolyearsClient.of({
-        list: Effect.fn("SchoolyearsClient.list")(function* () {
-          return yield* http.requestSchema(SchoolyearsRequests.list, undefined);
-        }),
+        list: http
+          .requestSchema(SchoolyearsRequests.list, undefined)
+          .pipe(Effect.withSpan("SchoolyearsClient.list")),
       });
     }),
   );

@@ -24,13 +24,10 @@ import type {
 } from "./schema.ts";
 
 export interface MessagesClientShape {
-  readonly getInbox: () => Effect.Effect<MessagesInbox, RequestFailure>;
-  readonly getDrafts: () => Effect.Effect<MessageDrafts, RequestFailure>;
-  readonly getPermissions: () => Effect.Effect<MessagesPermissions, RequestFailure>;
-  readonly getRecipientQuickfilters: () => Effect.Effect<
-    MessageRecipientQuickfilters,
-    RequestFailure
-  >;
+  readonly getInbox: Effect.Effect<MessagesInbox, RequestFailure>;
+  readonly getDrafts: Effect.Effect<MessageDrafts, RequestFailure>;
+  readonly getPermissions: Effect.Effect<MessagesPermissions, RequestFailure>;
+  readonly getRecipientQuickfilters: Effect.Effect<MessageRecipientQuickfilters, RequestFailure>;
   readonly getRecipientFilter: (
     request: MessageRecipientFilterRequest,
   ) => Effect.Effect<MessageRecipientFilter, RequestFailure>;
@@ -40,8 +37,8 @@ export interface MessagesClientShape {
   readonly searchRecipients: (
     request: MessageRecipientSearchRequest,
   ) => Effect.Effect<MessageRecipientSearch, RequestFailure>;
-  readonly getSent: () => Effect.Effect<MessageSent, RequestFailure>;
-  readonly getStatus: () => Effect.Effect<MessagesStatus, RequestFailure>;
+  readonly getSent: Effect.Effect<MessageSent, RequestFailure>;
+  readonly getStatus: Effect.Effect<MessagesStatus, RequestFailure>;
   readonly getReplyForm: (
     request: MessageReplyFormRequest,
   ) => Effect.Effect<MessageReplyForm, RequestFailure>;
@@ -53,26 +50,24 @@ export interface MessagesClientShape {
 export class MessagesClient extends Context.Service<MessagesClient, MessagesClientShape>()(
   "webuntis/MessagesClient",
 ) {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const http = yield* WebUntisHttp;
 
       return MessagesClient.of({
-        getInbox: Effect.fn("MessagesClient.getInbox")(function* () {
-          return yield* http.requestSchema(MessagesRequests.getInbox, undefined);
-        }),
-        getDrafts: Effect.fn("MessagesClient.getDrafts")(function* () {
-          return yield* http.requestSchema(MessagesRequests.getDrafts, undefined);
-        }),
-        getPermissions: Effect.fn("MessagesClient.getPermissions")(function* () {
-          return yield* http.requestSchema(MessagesRequests.getPermissions, undefined);
-        }),
-        getRecipientQuickfilters: Effect.fn("MessagesClient.getRecipientQuickfilters")(
-          function* () {
-            return yield* http.requestSchema(MessagesRequests.getRecipientQuickfilters, undefined);
-          },
-        ),
+        getInbox: http
+          .requestSchema(MessagesRequests.getInbox, undefined)
+          .pipe(Effect.withSpan("MessagesClient.getInbox")),
+        getDrafts: http
+          .requestSchema(MessagesRequests.getDrafts, undefined)
+          .pipe(Effect.withSpan("MessagesClient.getDrafts")),
+        getPermissions: http
+          .requestSchema(MessagesRequests.getPermissions, undefined)
+          .pipe(Effect.withSpan("MessagesClient.getPermissions")),
+        getRecipientQuickfilters: http
+          .requestSchema(MessagesRequests.getRecipientQuickfilters, undefined)
+          .pipe(Effect.withSpan("MessagesClient.getRecipientQuickfilters")),
         getRecipientFilter: Effect.fn("MessagesClient.getRecipientFilter")(function* (
           request: MessageRecipientFilterRequest,
         ) {
@@ -88,12 +83,12 @@ export class MessagesClient extends Context.Service<MessagesClient, MessagesClie
         ) {
           return yield* http.requestSchema(MessagesRequests.searchRecipients, request);
         }),
-        getSent: Effect.fn("MessagesClient.getSent")(function* () {
-          return yield* http.requestSchema(MessagesRequests.getSent, undefined);
-        }),
-        getStatus: Effect.fn("MessagesClient.getStatus")(function* () {
-          return yield* http.requestSchema(MessagesRequests.getStatus, undefined);
-        }),
+        getSent: http
+          .requestSchema(MessagesRequests.getSent, undefined)
+          .pipe(Effect.withSpan("MessagesClient.getSent")),
+        getStatus: http
+          .requestSchema(MessagesRequests.getStatus, undefined)
+          .pipe(Effect.withSpan("MessagesClient.getStatus")),
         getReplyForm: Effect.fn("MessagesClient.getReplyForm")(function* (
           request: MessageReplyFormRequest,
         ) {

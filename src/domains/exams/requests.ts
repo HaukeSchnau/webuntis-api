@@ -1,4 +1,5 @@
-import { RequestPolicy, schemaRequest } from "../../internal/request.ts";
+import { Schema } from "effect";
+import { IsoDate, PositiveInteger, RequestPolicy, schemaRequest } from "../../internal/request.ts";
 import {
   ExamDetailSchema,
   ExamFilterSchema,
@@ -11,14 +12,40 @@ export interface ExamDetailRequest {
   readonly id: number;
 }
 
-export interface ExamDateRangeRequest {
+export type ExamDateRangeRequest =
+  | { readonly start: string; readonly end: string }
+  | { readonly start?: never; readonly end?: never };
+
+export type ExamsListRequest = ExamDateRangeRequest & {
+  readonly withDeleted?: boolean | undefined;
+};
+
+const coherentOptionalDateRange = Schema.makeFilter<{
   readonly start?: string | undefined;
   readonly end?: string | undefined;
-}
+}>((range) => {
+  return range.start === undefined || range.end === undefined || range.start <= range.end
+    ? undefined
+    : { path: ["end"], issue: "must not be before start" };
+});
 
-export interface ExamsListRequest extends ExamDateRangeRequest {
-  readonly withDeleted?: boolean | undefined;
-}
+const ExamDateRangeInput = Schema.Union([
+  Schema.Struct({ start: IsoDate, end: IsoDate }),
+  Schema.Struct({ start: Schema.optional(Schema.Never), end: Schema.optional(Schema.Never) }),
+]).check(coherentOptionalDateRange);
+
+const ExamsListInput = Schema.Union([
+  Schema.Struct({
+    start: IsoDate,
+    end: IsoDate,
+    withDeleted: Schema.optional(Schema.Boolean),
+  }),
+  Schema.Struct({
+    start: Schema.optional(Schema.Never),
+    end: Schema.optional(Schema.Never),
+    withDeleted: Schema.optional(Schema.Boolean),
+  }),
+]).check(coherentOptionalDateRange);
 
 export const ExamsRequests = {
   list: schemaRequest<ExamsListRequest | undefined, typeof ExamsSchema>({
@@ -31,6 +58,7 @@ export const ExamsRequests = {
     }),
     policy: RequestPolicy.AuthOnly,
     supportsSchoolYearScope: true,
+    inputSchema: Schema.UndefinedOr(ExamsListInput),
     schema: ExamsSchema,
   }),
   getFilter: schemaRequest<ExamDateRangeRequest | undefined, typeof ExamFilterSchema>({
@@ -39,6 +67,7 @@ export const ExamsRequests = {
     query: (request) => ({ start: request?.start, end: request?.end }),
     policy: RequestPolicy.AuthOnly,
     supportsSchoolYearScope: true,
+    inputSchema: Schema.UndefinedOr(ExamDateRangeInput),
     schema: ExamFilterSchema,
   }),
   getStatistics: schemaRequest<ExamDateRangeRequest | undefined, typeof ExamStatisticsSchema>({
@@ -47,12 +76,15 @@ export const ExamsRequests = {
     query: (request) => ({ start: request?.start, end: request?.end }),
     policy: RequestPolicy.AuthOnly,
     supportsSchoolYearScope: true,
+    inputSchema: Schema.UndefinedOr(ExamDateRangeInput),
     schema: ExamStatisticsSchema,
   }),
   getExam: schemaRequest<ExamDetailRequest, typeof ExamDetailSchema>({
     method: "GET",
+    operation: "api/rest/view/v1/exams/{id}",
     path: (request) => `api/rest/view/v1/exams/${request.id}`,
     policy: RequestPolicy.AuthOnly,
+    inputSchema: Schema.Struct({ id: PositiveInteger }),
     supportsSchoolYearScope: true,
     schema: ExamDetailSchema,
   }),

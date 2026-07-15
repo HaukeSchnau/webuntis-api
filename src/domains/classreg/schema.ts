@@ -2,12 +2,12 @@ import { Schema } from "effect";
 import { DateRangeSchema, JsonObjectSchema } from "../shared/schema.ts";
 
 export const ClassregIdNameSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   name: Schema.String,
 });
 
 export const ClassregIdNameShortSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   name: Schema.String,
   nameShort: Schema.String,
 });
@@ -15,13 +15,13 @@ export const ClassregIdNameShortSchema = Schema.Struct({
 export const ClassregExcuseStatusTypeSchema = Schema.Literals(["OPEN", "EXCUSED", "NOT_EXCUSED"]);
 
 export const ClassregAbsenceReasonSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   name: Schema.String,
   automaticNotificationEnabled: Schema.Boolean,
 });
 
 export const ClassregExcuseStatusSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   name: Schema.String,
   type: ClassregExcuseStatusTypeSchema,
 });
@@ -29,8 +29,8 @@ export const ClassregExcuseStatusSchema = Schema.Struct({
 export const ClassregAbsencesMetaSchema = Schema.Struct({
   canEditReason: Schema.Boolean,
   classes: Schema.Array(ClassregIdNameSchema),
-  defaultReasonId: Schema.NullOr(Schema.Number),
-  defaultExcuseStatusId: Schema.NullOr(Schema.Number),
+  defaultReasonId: Schema.NullOr(Schema.Finite),
+  defaultExcuseStatusId: Schema.NullOr(Schema.Finite),
   reasons: Schema.Array(ClassregAbsenceReasonSchema),
   excuseStatuses: Schema.Array(ClassregExcuseStatusSchema),
   assignmentGroups: Schema.Array(Schema.Unknown),
@@ -40,10 +40,10 @@ export const ClassregAbsencesMetaSchema = Schema.Struct({
 export type ClassregAbsencesMeta = Schema.Schema.Type<typeof ClassregAbsencesMetaSchema>;
 
 export const ClassregHomeworkMetaSchoolyearSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   name: Schema.String,
   dateRange: DateRangeSchema,
-  parentId: Schema.Number,
+  parentId: Schema.Finite,
 });
 
 export const ClassregHomeworkMetaSchema = Schema.Struct({
@@ -63,9 +63,9 @@ export type ClassregHomeworkDateRangeType = Schema.Schema.Type<
 
 export const ClassregHomeworkItemSchema = Schema.Struct({
   attachments: Schema.Array(JsonObjectSchema),
-  id: Schema.Number,
+  id: Schema.Finite,
   createdByUser: Schema.String,
-  lessonId: Schema.Number,
+  lessonId: Schema.Finite,
   completed: Schema.Boolean,
   date: Schema.String,
   dueDate: Schema.String,

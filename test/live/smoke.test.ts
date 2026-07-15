@@ -1,7 +1,7 @@
 import { describe, expect, layer } from "@effect/vitest";
 import { Effect, Layer } from "effect";
 import { AuthClient } from "../../src/auth.ts";
-import { layer as makeWebUntisLayer, WebUntisClient } from "../../src/client.ts";
+import { makeWebUntisLayer, WebUntisClient } from "../../src/client.ts";
 import { ClientConfig } from "../../src/internal/config.ts";
 import {
   liveEnvMissing,
@@ -23,11 +23,10 @@ describe.skipIf(!hasLiveEnv)("live WebUntis smoke", () => {
         Effect.gen(function* () {
           const auth = yield* AuthClient;
           const client = yield* WebUntisClient;
-          const state = yield* auth.ensureAuthenticated();
-          expect(state.resolvedSchool?.server).toContain(".webuntis.com");
-          expect(state.token).toBeDefined();
+          yield* auth.ensureAuthenticated;
 
-          const appData = yield* client.app.getData();
+          const appData = yield* client.app.getData;
+          expect(appData.tenant.id.length).toBeGreaterThan(0);
           expect(appData.currentSchoolYear === null || appData.currentSchoolYear.id > 0).toBe(true);
           expect(normalizeAppData(appData)).toMatchSnapshot();
         }),
@@ -39,9 +38,9 @@ describe.skipIf(!hasLiveEnv)("live WebUntis smoke", () => {
       () =>
         Effect.gen(function* () {
           const client = yield* WebUntisClient;
-          const home = yield* client.app.getHome();
-          const mobileData = yield* client.app.getMobileData();
-          const startupActions = yield* client.app.getStartupActions();
+          const home = yield* client.app.getHome;
+          const mobileData = yield* client.app.getMobileData;
+          const startupActions = yield* client.app.getStartupActions;
 
           expect(home.schoolName).toContain("IGS");
           expect(mobileData.schoolYear === null || mobileData.schoolYear.id > 0).toBe(true);

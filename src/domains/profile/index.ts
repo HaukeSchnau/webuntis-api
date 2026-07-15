@@ -5,25 +5,25 @@ import { ProfileRequests } from "./requests.ts";
 import type { UserContactData, UserEmail } from "./schema.ts";
 
 export interface ProfileClientShape {
-  readonly getUserContactData: () => Effect.Effect<UserContactData, RequestFailure>;
-  readonly getUserEmail: () => Effect.Effect<UserEmail, RequestFailure>;
+  readonly getUserContactData: Effect.Effect<UserContactData, RequestFailure>;
+  readonly getUserEmail: Effect.Effect<UserEmail, RequestFailure>;
 }
 
 export class ProfileClient extends Context.Service<ProfileClient, ProfileClientShape>()(
   "webuntis/ProfileClient",
 ) {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const http = yield* WebUntisHttp;
 
       return ProfileClient.of({
-        getUserContactData: Effect.fn("ProfileClient.getUserContactData")(function* () {
-          return yield* http.requestSchema(ProfileRequests.getUserContactData, undefined);
-        }),
-        getUserEmail: Effect.fn("ProfileClient.getUserEmail")(function* () {
-          return yield* http.requestSchema(ProfileRequests.getUserEmail, undefined);
-        }),
+        getUserContactData: http
+          .requestSchema(ProfileRequests.getUserContactData, undefined)
+          .pipe(Effect.withSpan("ProfileClient.getUserContactData")),
+        getUserEmail: http
+          .requestSchema(ProfileRequests.getUserEmail, undefined)
+          .pipe(Effect.withSpan("ProfileClient.getUserEmail")),
       });
     }),
   );

@@ -6,17 +6,13 @@ import type { ResolvedSchool } from "./types.ts";
 import { resolveTenantHost } from "./types.ts";
 
 export interface SchoolResolverShape {
-  readonly resolve: () => Effect.Effect<
-    ResolvedSchool,
-    DiscoveryError | TransportError | DecodeError
-  >;
-  readonly clear: () => Effect.Effect<void>;
+  readonly resolve: Effect.Effect<ResolvedSchool, DiscoveryError | TransportError | DecodeError>;
 }
 
 export class SchoolResolver extends Context.Service<SchoolResolver, SchoolResolverShape>()(
   "webuntis/internal/SchoolResolver",
 ) {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const clientConfig = yield* ClientConfig;
@@ -41,25 +37,23 @@ export class SchoolResolver extends Context.Service<SchoolResolver, SchoolResolv
         };
       };
 
-      const resolve = () =>
-        SynchronizedRef.modifyEffect(cacheRef, (cached) => {
-          if (cached !== undefined) {
-            return Effect.succeed([cached, cached] as const);
-          }
+      const resolve = SynchronizedRef.modifyEffect(cacheRef, (cached) => {
+        if (cached !== undefined) {
+          return Effect.succeed([cached, cached] as const);
+        }
 
-          const configured = resolveConfiguredSchool();
-          if (configured !== undefined) {
-            return Effect.succeed([configured, configured] as const);
-          }
+        const configured = resolveConfiguredSchool();
+        if (configured !== undefined) {
+          return Effect.succeed([configured, configured] as const);
+        }
 
-          return discovery
-            .resolve(clientConfig.schoolName)
-            .pipe(Effect.map((resolved) => [resolved, resolved] as const));
-        });
+        return discovery
+          .resolve(clientConfig.schoolName)
+          .pipe(Effect.map((resolved) => [resolved, resolved] as const));
+      });
 
       return SchoolResolver.of({
         resolve,
-        clear: () => SynchronizedRef.set(cacheRef, undefined),
       });
     }),
   );

@@ -7,6 +7,7 @@ import {
   type DiscoveryError,
   decodeError,
   errorMessage,
+  type InvalidRequestError,
   TransportError,
   type TransportError as TransportErrorType,
 } from "./errors.ts";
@@ -16,10 +17,10 @@ import {
   RequestPolicy,
   type RequestPolicy as RequestPolicyType,
   type ResolvedRequestDescriptor,
-  resolveRequest,
   type SchemaRequestDescriptor,
+  validateAndResolveRequest,
 } from "./request.ts";
-import { strictJsonParseOptions } from "./schema.ts";
+import { runtimeJsonParseOptions } from "./schema.ts";
 import { CurrentSchoolYearId } from "./school-year-context.ts";
 import { SessionState } from "./session-state.ts";
 import type { AuthenticatedState, MetadataSnapshot } from "./types.ts";
@@ -27,9 +28,14 @@ import { resolveBaseUrl } from "./types.ts";
 
 const defaultAcceptHeader = "application/json, text/plain, */*";
 
-export type RequestFailure = DiscoveryError | AuthError | TransportErrorType | DecodeError;
+export type RequestFailure =
+  | DiscoveryError
+  | AuthError
+  | TransportErrorType
+  | DecodeError
+  | InvalidRequestError;
 
-export interface RequestOptions {
+interface RequestOptions {
   readonly query?: Readonly<Record<string, string | number | boolean | undefined>>;
   readonly headers?: Readonly<Record<string, string | undefined>>;
   readonly policy?: RequestPolicyType | undefined;
@@ -48,50 +54,6 @@ const mergeHeaders = (
   );
 
 export interface WebUntisHttpShape {
-  readonly execute: (
-    method: "GET" | "POST" | "PUT",
-    path: string,
-    options?: RequestOptions,
-  ) => Effect.Effect<HttpClientResponse.HttpClientResponse, RequestFailure>;
-  readonly get: (
-    path: string,
-    options?: RequestOptions,
-  ) => Effect.Effect<HttpClientResponse.HttpClientResponse, RequestFailure>;
-  readonly getJson: (
-    path: string,
-    options?: RequestOptions,
-  ) => Effect.Effect<unknown, RequestFailure>;
-  readonly getSchema: <S extends Schema.Top>(
-    path: string,
-    schema: S,
-    options?: RequestOptions,
-  ) => Effect.Effect<Schema.Schema.Type<S>, RequestFailure, S["DecodingServices"]>;
-  readonly post: (
-    path: string,
-    options?: RequestOptions,
-  ) => Effect.Effect<HttpClientResponse.HttpClientResponse, RequestFailure>;
-  readonly postJson: (
-    path: string,
-    options?: RequestOptions,
-  ) => Effect.Effect<unknown, RequestFailure>;
-  readonly postSchema: <S extends Schema.Top>(
-    path: string,
-    schema: S,
-    options?: RequestOptions,
-  ) => Effect.Effect<Schema.Schema.Type<S>, RequestFailure, S["DecodingServices"]>;
-  readonly put: (
-    path: string,
-    options?: RequestOptions,
-  ) => Effect.Effect<HttpClientResponse.HttpClientResponse, RequestFailure>;
-  readonly putJson: (
-    path: string,
-    options?: RequestOptions,
-  ) => Effect.Effect<unknown, RequestFailure>;
-  readonly putSchema: <S extends Schema.Top>(
-    path: string,
-    schema: S,
-    options?: RequestOptions,
-  ) => Effect.Effect<Schema.Schema.Type<S>, RequestFailure, S["DecodingServices"]>;
   readonly request: <Input>(
     descriptor: RequestDescriptor<Input>,
     input: Input,
@@ -109,7 +71,7 @@ export interface WebUntisHttpShape {
 export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShape>()(
   "webuntis/internal/WebUntisHttp",
 ) {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const metadataState = yield* MetadataState;
@@ -117,8 +79,14 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
 
       const resolveState = (policy: RequestPolicyType) =>
         policy === RequestPolicy.AuthOnly
-          ? sessionState.ensureAuthenticated()
-          : metadataState.ensureMetadata();
+          ? sessionState.ensureAuthenticated.pipe(
+              Effect.flatMap((session) =>
+                session.tenantId !== undefined
+                  ? Effect.succeed(session)
+                  : metadataState.ensureMetadata,
+              ),
+            )
+          : metadataState.ensureMetadata;
 
       const buildRequest = (
         state: AuthenticatedState | MetadataSnapshot,
@@ -211,7 +179,7 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
         }
 
         return response.text.pipe(
-          Effect.catch(() => Effect.succeed("")),
+          Effect.orElseSucceed(() => ""),
           Effect.flatMap((body) =>
             Effect.fail(
               new TransportError({
@@ -226,21 +194,14 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
         );
       };
 
-      const execute: WebUntisHttpShape["execute"] = (method, path, options = {}) =>
+      const execute = (
+        method: "GET" | "POST" | "PUT",
+        path: string,
+        options: RequestOptions = {},
+      ) =>
         Effect.gen(function* () {
           const policy = options.policy ?? RequestPolicy.Metadata;
-          const state =
-            policy === RequestPolicy.AuthOnly
-              ? yield* sessionState
-                  .ensureAuthenticated()
-                  .pipe(
-                    Effect.flatMap((session) =>
-                      session.tenantId !== undefined
-                        ? Effect.succeed(session)
-                        : metadataState.ensureMetadata(),
-                    ),
-                  )
-              : yield* metadataState.ensureMetadata();
+          const state = yield* resolveState(policy);
           const initialResponse = yield* executeRequest(state, method, path, {
             ...options,
             policy,
@@ -250,8 +211,8 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
             return yield* failIfNonSuccess(method, path, initialResponse);
           }
 
-          yield* metadataState.clear();
-          yield* sessionState.clear();
+          yield* initialResponse.text.pipe(Effect.orElseSucceed(() => ""));
+          yield* sessionState.invalidate(state.generation);
 
           const refreshedState = yield* resolveState(policy);
           const retriedResponse = yield* executeRequest(refreshedState, method, path, {
@@ -271,7 +232,7 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
           Effect.flatMap((response) =>
             HttpClientResponse.schemaBodyJson(
               schema as S,
-              strictJsonParseOptions,
+              runtimeJsonParseOptions,
             )(response).pipe(
               Effect.mapError((error) =>
                 error instanceof TransportError ? error : decodeError(path, error),
@@ -301,36 +262,22 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
           supportsSchoolYearScope: resolved.supportsSchoolYearScope,
         });
 
-      const request: WebUntisHttpShape["request"] = (descriptor, input) => {
-        const resolved = resolveRequest(descriptor, input);
-        return executeResolved(resolved);
-      };
+      const request: WebUntisHttpShape["request"] = (descriptor, input) =>
+        validateAndResolveRequest(descriptor, input).pipe(Effect.flatMap(executeResolved));
 
-      const requestJson: WebUntisHttpShape["requestJson"] = (descriptor, input) => {
-        const resolved = resolveRequest(descriptor, input);
-        return decodeJson(resolved.path, executeResolved(resolved));
-      };
+      const requestJson: WebUntisHttpShape["requestJson"] = (descriptor, input) =>
+        validateAndResolveRequest(descriptor, input).pipe(
+          Effect.flatMap((resolved) => decodeJson(resolved.path, executeResolved(resolved))),
+        );
 
-      const requestSchema: WebUntisHttpShape["requestSchema"] = (descriptor, input) => {
-        const resolved = resolveRequest(descriptor, input);
-
-        return decodeSchema(resolved.path, descriptor.schema, executeResolved(resolved));
-      };
+      const requestSchema: WebUntisHttpShape["requestSchema"] = (descriptor, input) =>
+        validateAndResolveRequest(descriptor, input).pipe(
+          Effect.flatMap((resolved) =>
+            decodeSchema(resolved.path, descriptor.schema, executeResolved(resolved)),
+          ),
+        );
 
       return WebUntisHttp.of({
-        execute,
-        get: (path, options) => execute("GET", path, options),
-        getJson: (path, options) => decodeJson(path, execute("GET", path, options)),
-        getSchema: (path, schema, options) =>
-          decodeSchema(path, schema, execute("GET", path, options)),
-        post: (path, options) => execute("POST", path, options),
-        postJson: (path, options) => decodeJson(path, execute("POST", path, options)),
-        postSchema: (path, schema, options) =>
-          decodeSchema(path, schema, execute("POST", path, options)),
-        put: (path, options) => execute("PUT", path, options),
-        putJson: (path, options) => decodeJson(path, execute("PUT", path, options)),
-        putSchema: (path, schema, options) =>
-          decodeSchema(path, schema, execute("PUT", path, options)),
         request,
         requestJson,
         requestSchema,

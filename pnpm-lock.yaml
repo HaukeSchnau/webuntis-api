@@ -17,10 +17,6 @@ overrides:
 importers:
 
   .:
-    dependencies:
-      effect:
-        specifier: ^4.0.0-beta.98
-        version: 4.0.0-beta.98
     devDependencies:
       '@arethetypeswrong/cli':
         specifier: ^0.18.5
@@ -34,6 +30,9 @@ importers:
       '@types/node':
         specifier: ^26.1.1
         version: 26.1.1
+      effect:
+        specifier: ^4.0.0-beta.98
+        version: 4.0.0-beta.98
       publint:
         specifier: ^0.3.21
         version: 0.3.21

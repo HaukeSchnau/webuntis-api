@@ -18,6 +18,8 @@ describe("public structure", () => {
     expect(api).toHaveProperty("MessagesClient");
     expect(api).toHaveProperty("TimetableClient");
     expect(api).toHaveProperty("TransportError");
+    expect(api).toHaveProperty("InvalidRequestError");
+    expect(api).not.toHaveProperty("layer");
     expect(api).not.toHaveProperty("HomeSchema");
     expect(api).not.toHaveProperty("WebUntisHttp");
     expect(api).not.toHaveProperty("SchoolDiscovery");
@@ -36,12 +38,12 @@ describe("public structure", () => {
       expect(client.classreg).toBe(classreg);
       expect(client.messages).toBe(messages);
       expect(client.timetable).toBe(timetable);
-      expect(typeof client.app.getHome).toBe("function");
+      expect(Effect.isEffect(client.app.getHome)).toBe(true);
       expect(typeof client.withSchoolYear).toBe("function");
-      expect(typeof client.app.getExamIntegrations).toBe("function");
+      expect(Effect.isEffect(client.app.getExamIntegrations)).toBe(true);
       expect(typeof client.classreg.getHomeworkList).toBe("function");
-      expect(typeof client.exams.getForClass).toBe("function");
-      expect(typeof client.messages.getStatus).toBe("function");
+      expect(Effect.isEffect(client.exams.getForClass)).toBe(true);
+      expect(Effect.isEffect(client.messages.getStatus)).toBe(true);
       expect(typeof client.messages.filterComposeRecipients).toBe("function");
       expect(typeof client.timetable.getEntries).toBe("function");
     }).pipe(

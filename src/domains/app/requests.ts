@@ -1,3 +1,4 @@
+import { Schema } from "effect";
 import { RequestPolicy, schemaRequest } from "../../internal/request.ts";
 import {
   AppDataSchema,
@@ -10,6 +11,7 @@ import {
   HomeSchema,
   MobileDataSchema,
   OnboardingSchema,
+  OnboardingTypeSchema,
   type OnboardingType,
   StartupActionsSchema,
   TodayMetaSchema,
@@ -91,6 +93,7 @@ export const AppRequests = {
     path: "api/rest/view/v1/onboarding",
     policy: RequestPolicy.AuthOnly,
     query: (request) => ({ type: request.type }),
+    inputSchema: Schema.Struct({ type: OnboardingTypeSchema }),
     schema: OnboardingSchema,
   }),
 } as const;

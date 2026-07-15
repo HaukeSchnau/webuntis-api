@@ -5,7 +5,6 @@ import { ClientConfig } from "./config.ts";
 import { SchoolDiscovery } from "./discovery.ts";
 import { WebUntisHttp } from "./http.ts";
 import { MetadataState } from "./metadata-state.ts";
-import { RawViewApiClient } from "./raw-view-api.ts";
 import { SchoolResolver } from "./school-resolver.ts";
 import { SessionState } from "./session-state.ts";
 
@@ -19,12 +18,9 @@ export const makeWebUntisCoreLayer = ({
   transportLayer = FetchHttpClient.layer,
 }: WebUntisRuntimeOptions) => {
   const baseLayer = Layer.mergeAll(ClientConfig.layer(config), transportLayer);
-  const discoveryLayer = SchoolDiscovery.layerNoDeps.pipe(Layer.provideMerge(baseLayer));
-  const schoolResolverLayer = SchoolResolver.layerNoDeps.pipe(Layer.provideMerge(discoveryLayer));
-  const sessionLayer = SessionState.layerNoDeps.pipe(Layer.provideMerge(schoolResolverLayer));
-  const metadataLayer = MetadataState.layerNoDeps.pipe(Layer.provideMerge(sessionLayer));
-  const httpLayer = WebUntisHttp.layerNoDeps.pipe(Layer.provideMerge(metadataLayer));
-  return RawViewApiClient.layerNoDeps.pipe(Layer.provideMerge(httpLayer));
+  const discoveryLayer = SchoolDiscovery.layer.pipe(Layer.provideMerge(baseLayer));
+  const schoolResolverLayer = SchoolResolver.layer.pipe(Layer.provideMerge(discoveryLayer));
+  const sessionLayer = SessionState.layer.pipe(Layer.provideMerge(schoolResolverLayer));
+  const metadataLayer = MetadataState.layer.pipe(Layer.provideMerge(sessionLayer));
+  return WebUntisHttp.layer.pipe(Layer.provideMerge(metadataLayer));
 };
-
-export const makeWebUntisRuntimeLayer = makeWebUntisCoreLayer;

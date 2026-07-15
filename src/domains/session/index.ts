@@ -13,7 +13,7 @@ export interface SessionClientShape {
 export class SessionClient extends Context.Service<SessionClient, SessionClientShape>()(
   "webuntis/SessionClient",
 ) {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const http = yield* WebUntisHttp;

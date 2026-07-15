@@ -28,7 +28,7 @@ import type {
 } from "./schema.ts";
 
 export interface TimetableClientShape {
-  readonly getTimeGrid: () => Effect.Effect<TimeGrid, RequestFailure>;
+  readonly getTimeGrid: Effect.Effect<TimeGrid, RequestFailure>;
   readonly getGrid: (
     request?: TimetableGridRequest,
   ) => Effect.Effect<TimetableGrid, RequestFailure>;
@@ -38,7 +38,7 @@ export interface TimetableClientShape {
   readonly getEntriesSettings: (
     request: TimetableEntriesSettingsRequest,
   ) => Effect.Effect<TimetableEntriesSettings, RequestFailure>;
-  readonly getMenu: () => Effect.Effect<TimetableMenu, RequestFailure>;
+  readonly getMenu: Effect.Effect<TimetableMenu, RequestFailure>;
   readonly getCalendar: (
     request?: TimetableCalendarRequest,
   ) => Effect.Effect<TimetableCalendar, RequestFailure>;
@@ -62,15 +62,15 @@ export interface TimetableClientShape {
 export class TimetableClient extends Context.Service<TimetableClient, TimetableClientShape>()(
   "webuntis/TimetableClient",
 ) {
-  static readonly layerNoDeps = Layer.effect(
+  static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
       const http = yield* WebUntisHttp;
 
       return TimetableClient.of({
-        getTimeGrid: Effect.fn("TimetableClient.getTimeGrid")(function* () {
-          return yield* http.requestSchema(TimetableRequests.getTimeGrid, undefined);
-        }),
+        getTimeGrid: http
+          .requestSchema(TimetableRequests.getTimeGrid, undefined)
+          .pipe(Effect.withSpan("TimetableClient.getTimeGrid")),
         getGrid: Effect.fn("TimetableClient.getGrid")(function* (
           request: TimetableGridRequest = {},
         ) {
@@ -86,9 +86,9 @@ export class TimetableClient extends Context.Service<TimetableClient, TimetableC
         ) {
           return yield* http.requestSchema(TimetableRequests.getEntriesSettings, request);
         }),
-        getMenu: Effect.fn("TimetableClient.getMenu")(function* () {
-          return yield* http.requestSchema(TimetableRequests.getMenu, undefined);
-        }),
+        getMenu: http
+          .requestSchema(TimetableRequests.getMenu, undefined)
+          .pipe(Effect.withSpan("TimetableClient.getMenu")),
         getCalendar: Effect.fn("TimetableClient.getCalendar")(function* (
           request: TimetableCalendarRequest = {},
         ) {

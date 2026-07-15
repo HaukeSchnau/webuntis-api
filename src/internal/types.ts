@@ -49,15 +49,15 @@ export interface MetadataSnapshot extends AuthenticatedState {
   readonly schoolYearId?: number | undefined;
 }
 
-export const emptySessionState = (): SessionState => ({
-  generation: 0,
+export const emptySessionState = (generation = 0): SessionState => ({
+  generation,
 });
 
 export const emptyMetadataState = (): MetadataState => ({
   sessionGeneration: -1,
 });
 
-export const hasFreshToken = (state: SessionState, now = Date.now()): state is AuthenticatedState =>
+export const hasFreshToken = (state: SessionState, now: number): state is AuthenticatedState =>
   state.resolvedSchool !== undefined &&
   state.token !== undefined &&
   state.tokenExpiresAt !== undefined &&

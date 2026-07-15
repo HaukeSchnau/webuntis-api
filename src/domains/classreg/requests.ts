@@ -1,6 +1,14 @@
-import { RequestPolicy, schemaRequest } from "../../internal/request.ts";
+import { Schema } from "effect";
+import {
+  IsoDate,
+  orderedRange,
+  PositiveInteger,
+  RequestPolicy,
+  schemaRequest,
+} from "../../internal/request.ts";
 import {
   ClassregAbsencesMetaSchema,
+  ClassregHomeworkDateRangeTypeSchema,
   type ClassregHomeworkDateRangeType,
   ClassregHomeworkListSchema,
   ClassregHomeworkMetaSchema,
@@ -17,6 +25,15 @@ export interface ClassregHomeworkListRequest {
   };
   readonly dateRangeType: ClassregHomeworkDateRangeType;
 }
+
+const HomeworkDateRangeInput = orderedRange(
+  Schema.Struct({
+    start: IsoDate,
+    end: IsoDate,
+  }),
+);
+
+const NullablePositiveInteger = Schema.NullOr(PositiveInteger);
 
 export const ClassregRequests = {
   getAbsencesMeta: schemaRequest<void, typeof ClassregAbsencesMetaSchema>({
@@ -38,6 +55,13 @@ export const ClassregRequests = {
     path: "api/rest/view/v1/classreg/homework/list",
     body: (request) => request,
     policy: RequestPolicy.AuthOnly,
+    inputSchema: Schema.Struct({
+      classId: NullablePositiveInteger,
+      teacherId: NullablePositiveInteger,
+      subjectId: NullablePositiveInteger,
+      dateRange: HomeworkDateRangeInput,
+      dateRangeType: ClassregHomeworkDateRangeTypeSchema,
+    }),
     supportsSchoolYearScope: true,
     schema: ClassregHomeworkListSchema,
   }),

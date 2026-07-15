@@ -2,7 +2,7 @@ import { Schema } from "effect";
 import { JsonObjectSchema } from "../shared/schema.ts";
 
 export const MessagesStatusSchema = Schema.Struct({
-  unreadMessagesCount: Schema.Number,
+  unreadMessagesCount: Schema.Finite,
 });
 
 export type MessagesStatus = Schema.Schema.Type<typeof MessagesStatusSchema>;
@@ -11,11 +11,11 @@ export const MessageSenderSchema = Schema.Struct({
   className: Schema.NullOr(Schema.String),
   displayName: Schema.String,
   imageUrl: Schema.NullOr(Schema.String),
-  userId: Schema.Number,
+  userId: Schema.Finite,
 });
 
 export const MessageSummarySchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   subject: Schema.String,
   contentPreview: Schema.NullOr(Schema.String),
   sender: MessageSenderSchema,
@@ -49,20 +49,20 @@ export type MessageRecipientOption = Schema.Schema.Type<typeof MessageRecipientO
 export const MessagesPermissionsSchema = Schema.Struct({
   recipientOptions: Schema.Array(MessageRecipientOptionSchema),
   allowRequestReadConfirmation: Schema.Boolean,
-  recipientSearchMaxResult: Schema.Number,
+  recipientSearchMaxResult: Schema.Finite,
   showDraftsTab: Schema.Boolean,
   showSentTab: Schema.Boolean,
   canForbidReplies: Schema.Boolean,
-  maxFileSize: Schema.Number,
-  maxFileCount: Schema.Number,
+  maxFileSize: Schema.Finite,
+  maxFileCount: Schema.Finite,
 });
 
 export type MessagesPermissions = Schema.Schema.Type<typeof MessagesPermissionsSchema>;
 
 export const MessageQuickfilterItemSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   name: Schema.String,
-  personCount: Schema.Number,
+  personCount: Schema.Finite,
   deletable: Schema.Boolean,
   editable: Schema.Boolean,
   publicAccess: Schema.Boolean,
@@ -90,7 +90,7 @@ export const MessageRecipientFilterSchema = Schema.Struct({
 export type MessageRecipientFilter = Schema.Schema.Type<typeof MessageRecipientFilterSchema>;
 
 export const MessageRecipientSearchResultSchema = Schema.Struct({
-  personId: Schema.Number,
+  personId: Schema.Finite,
   className: Schema.NullOr(Schema.String),
   displayName: Schema.String,
   imageUrl: Schema.NullOr(Schema.String),
@@ -102,7 +102,7 @@ export const MessageRecipientSearchSchema = Schema.Array(MessageRecipientSearchR
 export type MessageRecipientSearch = Schema.Schema.Type<typeof MessageRecipientSearchSchema>;
 
 export const MessageComposeRecipientUserSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   displayName: Schema.String,
   imageUrl: Schema.NullOr(Schema.String),
   role: Schema.String,
@@ -122,7 +122,7 @@ export const MessageReplyHistoryEntrySchema = JsonObjectSchema;
 export const MessageRequestConfirmationSchema = JsonObjectSchema;
 
 export const MessageDetailSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   subject: Schema.String,
   content: Schema.NullOr(Schema.String),
   sender: MessageSenderSchema,
@@ -142,7 +142,7 @@ export const MessageDetailSchema = Schema.Struct({
 export type MessageDetail = Schema.Schema.Type<typeof MessageDetailSchema>;
 
 export const MessageReplyHistoryItemSchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   subject: Schema.String,
   content: Schema.NullOr(Schema.String),
   sender: MessageSenderSchema,
@@ -157,7 +157,7 @@ export const MessageReplyHistoryItemSchema = Schema.Struct({
 export const MessageReplyFormSchema = Schema.Struct({
   subject: Schema.String,
   recipient: Schema.Struct({
-    id: Schema.Number,
+    id: Schema.Finite,
     className: Schema.NullOr(Schema.String),
     displayName: Schema.String,
   }),
@@ -167,7 +167,7 @@ export const MessageReplyFormSchema = Schema.Struct({
 export type MessageReplyForm = Schema.Schema.Type<typeof MessageReplyFormSchema>;
 
 export const MessageDraftSummarySchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   subject: Schema.String,
   contentPreview: Schema.NullOr(Schema.String),
   hasAttachments: Schema.Boolean,
@@ -180,7 +180,7 @@ export const MessageDraftsSchema = Schema.Struct({
 export type MessageDrafts = Schema.Schema.Type<typeof MessageDraftsSchema>;
 
 export const MessageSentSummarySchema = Schema.Struct({
-  id: Schema.Number,
+  id: Schema.Finite,
   subject: Schema.String,
   contentPreview: Schema.NullOr(Schema.String),
   sentDateTime: Schema.String,
