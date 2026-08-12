@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
-  <title id="title">Orbital W</title>
-  <desc id="desc">A bold white W monogram encircled by a mint data orbit on a violet field.</desc>
-  <rect width="256" height="256" rx="48" fill="#5B36D6"/>
-  <path d="M41 77 78 191l50-86 50 86 37-114" fill="none" stroke="#FFFFFF" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M29 127c0-58 44-99 99-99 49 0 88 31 97 76M227 133c0 56-44 95-99 95-46 0-84-28-96-70" fill="none" stroke="#6FFFD3" stroke-width="10" stroke-linecap="round"/>
-  <circle cx="225" cy="104" r="15" fill="#FFB6E6"/>
-  <circle cx="32" cy="158" r="15" fill="#FFB6E6"/>
-</svg>
