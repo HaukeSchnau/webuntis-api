@@ -1,21 +1,21 @@
 import { Schema } from "effect";
 import * as HttpClientError from "effect/unstable/http/HttpClientError";
 
-export class DiscoveryError extends Schema.TaggedErrorClass<DiscoveryError>()("DiscoveryError", {
+export class DiscoveryError extends Schema.TaggedError<DiscoveryError>()("DiscoveryError", {
   query: Schema.String,
   message: Schema.String,
   matches: Schema.optional(Schema.Array(Schema.String)),
   cause: Schema.optional(Schema.Unknown),
 }) {}
 
-export class AuthError extends Schema.TaggedErrorClass<AuthError>()("AuthError", {
+export class AuthError extends Schema.TaggedError<AuthError>()("AuthError", {
   stage: Schema.Literals(["discovery", "bootstrap", "login", "token", "metadata"]),
   message: Schema.String,
   status: Schema.optional(Schema.Finite),
   cause: Schema.optional(Schema.Unknown),
 }) {}
 
-export class TransportError extends Schema.TaggedErrorClass<TransportError>()("TransportError", {
+export class TransportError extends Schema.TaggedError<TransportError>()("TransportError", {
   method: Schema.String,
   path: Schema.String,
   message: Schema.String,
@@ -24,13 +24,13 @@ export class TransportError extends Schema.TaggedErrorClass<TransportError>()("T
   cause: Schema.optional(Schema.Unknown),
 }) {}
 
-export class DecodeError extends Schema.TaggedErrorClass<DecodeError>()("DecodeError", {
+export class DecodeError extends Schema.TaggedError<DecodeError>()("DecodeError", {
   path: Schema.String,
   message: Schema.String,
   cause: Schema.optional(Schema.Unknown),
 }) {}
 
-export class InvalidRequestError extends Schema.TaggedErrorClass<InvalidRequestError>()(
+export class InvalidRequestError extends Schema.TaggedError<InvalidRequestError>()(
   "InvalidRequestError",
   {
     path: Schema.String,
@@ -39,7 +39,7 @@ export class InvalidRequestError extends Schema.TaggedErrorClass<InvalidRequestE
   },
 ) {}
 
-export class ConfigurationError extends Schema.TaggedErrorClass<ConfigurationError>()(
+export class ConfigurationError extends Schema.TaggedError<ConfigurationError>()(
   "ConfigurationError",
   {
     message: Schema.String,

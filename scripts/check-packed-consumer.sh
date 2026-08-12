@@ -6,6 +6,10 @@ temp_dir="$(mktemp -d)"
 trap 'rm -rf "$temp_dir"' EXIT
 
 package_path="$(pnpm pack --pack-destination "$temp_dir" | tail -n 1)"
+effect_peer_range="$(
+  node -p 'JSON.parse(require("node:fs").readFileSync(process.argv[1], "utf8")).peerDependencies.effect' \
+    "$repo_root/package.json"
+)"
 
 cp "$repo_root/test/consumer/static.ts" "$temp_dir/static.ts"
 cp "$repo_root/test/consumer/live.ts" "$temp_dir/live.ts"
@@ -15,7 +19,7 @@ cat >"$temp_dir/package.json" <<EOF
   "private": true,
   "type": "module",
   "dependencies": {
-    "effect": "4.0.0-beta.98",
+    "effect": "$effect_peer_range",
     "webuntis-api": "file:$package_path"
   }
 }

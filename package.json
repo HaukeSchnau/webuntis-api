@@ -32,21 +32,21 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
-    "@effect/tsgo": "^0.21.0",
-    "@effect/vitest": "^4.0.0-beta.98",
-    "@types/node": "^26.1.1",
-    "effect": "^4.0.0-beta.98",
-    "publint": "^0.3.21",
+    "@effect/tsgo": "^0.36.4",
+    "@effect/vitest": "^4.0.0-rc.108",
+    "@types/node": "^26.2.0",
+    "effect": "^4.0.0-rc.108",
+    "publint": "^0.3.23",
     "typescript": "^7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "effect": "^4.0.0-beta.98"
+    "effect": "^4.0.0-rc.108"
   },
   "engines": {
     "node": ">=20.19.0"
   },
-  "packageManager": "pnpm@11.9.0"
+  "packageManager": "pnpm@11.21.0"
 }

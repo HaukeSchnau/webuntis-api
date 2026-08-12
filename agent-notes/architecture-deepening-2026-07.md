@@ -65,7 +65,7 @@ Implement all actionable findings from the 2026-07-15 architecture/public-interf
 - Owner: docs/package worker after P3/P5
 - Files: `package.json`, lockfile, README, migration guide, examples/consumer fixtures, Justfile/Vite config as needed
 - Dependencies: P5
-- Invariants: ESM packaging; Effect beta.98 compatibility; examples match actual interface
+- Invariants: ESM packaging; Effect RC 108 compatibility; examples match actual interface
 - Checks: packed fixture typecheck and execution, build, publint, ATTW
 
 ### P7 — Independent review and simplification

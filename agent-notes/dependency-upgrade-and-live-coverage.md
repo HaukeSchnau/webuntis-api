@@ -31,6 +31,7 @@ Upgrade every package to its latest appropriate published version, repair all re
 - Live browser evidence on 2026-07-14 shows no active school year. `app/data.currentSchoolYear` and mobile `schoolYear` are `null`; the SPA omits the school-year header in this state even though auth-only `timegrid` still describes the most recent grid.
 - Live Vitest files must run sequentially because concurrent login sessions for the same account produce intermittent 401 responses.
 - Current bundle comparison found the same 254 literal modern REST routes as the March catalog; the live exploration report is in `docs/research/webuntis/read-only-blind-spots-2026-07-14.md`.
+- 2026-08-12 dependency refresh: all direct packages are current, Effect and `@effect/vitest` are aligned at `4.0.0-rc.108`, and the source now uses the RC rename `Schema.TaggedError`.
 
 ## Verification log
 
@@ -41,10 +42,12 @@ Upgrade every package to its latest appropriate published version, repair all re
 - `bun outdated` reports no outdated direct dependencies.
 - Historical-year expansion verification passed: formatting, Oxc lint/type diagnostics, 113 local tests, build, publint, are-the-types-wrong, and 19 live tests across every advertised school year (one inverse environment test skipped).
 - The non-empty historical timetable regression exposed and now covers nullable position-resource `displayNameLabel` values.
+- The 2026-08-12 refresh passes format, lint/type diagnostics, 122 local tests, build, publint, and packed-consumer checks. The authenticated live suite reached WebUntis but found unrelated snapshot drift: the `Lehrkräfte` recipient count changed from 128 to 134.
 
 ## Follow-up opportunities
 
-- Effect and `@effect/vitest` must stay aligned at beta.98; `@effect/tsgo` 0.21 patches stable TypeScript 7.0.2.
+- Effect and `@effect/vitest` must stay aligned at RC 108; `@effect/tsgo` 0.36.4 patches stable TypeScript 7.0.2.
+- Refresh the live recipient-quickfilter snapshot in a separate data-update change after confirming the staff-count increase is expected.
 - [x] Add fiber-local historical school-year selection for verified year-aware routes.
 - [x] Expose the confirmed read-only `exams/for-class` buckets.
 - [x] Tighten the stable timetable-entry core from 1,755 historical entries.

@@ -1,18 +1,29 @@
 minimumReleaseAgeExclude:
-  # Required by the Vite+ 24-hour supply-chain gate for the intentionally pinned
-  # Effect TypeScript backend release used by this project.
-  - "@effect/tsgo-darwin-arm64@0.21.0"
-  - "@effect/tsgo-darwin-x64@0.21.0"
-  - "@effect/tsgo-linux-arm64@0.21.0"
-  - "@effect/tsgo-linux-arm@0.21.0"
-  - "@effect/tsgo-linux-x64@0.21.0"
-  - "@effect/tsgo-win32-arm64@0.21.0"
-  - "@effect/tsgo-win32-x64@0.21.0"
-  - "@effect/tsgo@0.21.0"
+  # Intentionally pinned fresh releases that are required for this upgrade.
+  - "@effect/tsgo-darwin-arm64@0.36.4"
+  - "@effect/tsgo-darwin-x64@0.36.4"
+  - "@effect/tsgo-linux-arm64@0.36.4"
+  - "@effect/tsgo-linux-arm@0.36.4"
+  - "@effect/tsgo-linux-x64@0.36.4"
+  - "@effect/tsgo-win32-arm64@0.36.4"
+  - "@effect/tsgo-win32-x64@0.36.4"
+  - "@effect/tsgo@0.36.4"
+  - "@effect/vitest@4.0.0-rc.108"
+  - "@voidzero-dev/vite-plus-core@0.2.9"
+  - "@voidzero-dev/vite-plus-darwin-arm64@0.2.9"
+  - "@voidzero-dev/vite-plus-darwin-x64@0.2.9"
+  - "@voidzero-dev/vite-plus-linux-arm64-gnu@0.2.9"
+  - "@voidzero-dev/vite-plus-linux-arm64-musl@0.2.9"
+  - "@voidzero-dev/vite-plus-linux-x64-gnu@0.2.9"
+  - "@voidzero-dev/vite-plus-linux-x64-musl@0.2.9"
+  - "@voidzero-dev/vite-plus-win32-arm64-msvc@0.2.9"
+  - "@voidzero-dev/vite-plus-win32-x64-msvc@0.2.9"
+  - "effect@4.0.0-rc.108"
+  - "vite-plus@0.2.9"
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@0.2.4
+  vite: npm:@voidzero-dev/vite-plus-core@0.2.9
   vitest: 4.1.10
-  vite-plus: 0.2.4
+  vite-plus: 0.2.9
 overrides:
   vite: "catalog:"
   vitest: "catalog:"
@@ -24,3 +35,7 @@ peerDependencyRules:
     vite: "*"
     vitest: "*"
     typescript: "*"
+allowBuilds:
+  # Effect's MessagePack support has a portable fallback; native extraction is
+  # unnecessary for this library's development and verification workflows.
+  msgpackr-extract: false
