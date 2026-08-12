@@ -27,6 +27,7 @@ secrets/*.local.env
 # caches
 .eslintcache
 .cache
+.pnpm-store
 *.tsbuildinfo
 
 # IntelliJ based IDEs
