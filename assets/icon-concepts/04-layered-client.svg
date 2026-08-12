@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Layered Client</title>
+  <desc id="desc">Three isometric schedule layers form a compact typed client stack.</desc>
+  <rect width="256" height="256" rx="52" fill="#0A2440"/>
+  <path d="m128 35 96 48-96 48-96-48Z" fill="#A5F33D"/>
+  <path d="m32 83 96 48 96-48v36l-96 48-96-48Z" fill="#58B9FF"/>
+  <path d="m32 131 96 48 96-48v37l-96 48-96-48Z" fill="#2766F5"/>
+  <path d="m76 82 52-26 52 26-52 26Z" fill="#0A2440"/>
+  <path d="M112 68 91 82l21 14M144 68l21 14-21 14" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M128 131v85" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" opacity=".82"/>
+</svg>
