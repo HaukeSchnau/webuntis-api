@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">WebUntis API</title>
+  <desc id="desc">A warm architectural gateway opening onto five API data lanes.</desc>
+  <rect width="256" height="256" rx="64" fill="#FFF3D6"/>
+  <path d="M48 213V111c0-51 34-83 80-83s80 32 80 83v102h-45V112c0-22-14-38-35-38s-35 16-35 38v101Z" fill="#E24A2A"/>
+  <path d="M103 214v-99c0-15 10-25 25-25s25 10 25 25v99Z" fill="#392D50"/>
+  <path d="M21 171h87M21 201h105M235 141h-87M235 171h-71M235 201h-55" fill="none" stroke="#FF9E2A" stroke-width="11" stroke-linecap="round"/>
+  <circle cx="25" cy="171" r="9" fill="#392D50"/>
+  <circle cx="25" cy="201" r="9" fill="#392D50"/>
+  <circle cx="231" cy="141" r="9" fill="#392D50"/>
+  <circle cx="231" cy="171" r="9" fill="#392D50"/>
+  <circle cx="231" cy="201" r="9" fill="#392D50"/>
+</svg>
