@@ -123,8 +123,10 @@ export const normalizeMessageDetail = (value: MessageDetail) => normalizeUnknown
 export const normalizeMessageDrafts = (value: MessageDrafts) => normalizeUnknown(value);
 export const normalizeMessageRecipientFilter = (value: MessageRecipientFilter) =>
   normalizeUnknown(value);
-export const normalizeMessageRecipientQuickfilters = (value: MessageRecipientQuickfilters) =>
-  normalizeUnknown(value);
+export const normalizeMessageRecipientQuickfilters = (value: MessageRecipientQuickfilters) => ({
+  ...value,
+  items: value.items.map((item) => normalizeUnknown({ ...item, personCount: "<dynamic-count>" })),
+});
 export const normalizeMessageReplyForm = (value: MessageReplyForm) => normalizeUnknown(value);
 export const normalizeMessageRecipientSearch = (value: MessageRecipientSearch) =>
   normalizeUnknown(value);
