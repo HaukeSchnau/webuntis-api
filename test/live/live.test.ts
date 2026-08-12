@@ -301,22 +301,9 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           expect(Array.isArray(lessonTopicsMeta.teachingMethods)).toBe(true);
           expect(homeworkList.homeworkList.length).toBeGreaterThan(0);
           expect(normalizeClassregAbsencesMeta(absencesMeta)).toMatchSnapshot();
-          expect(
-            normalizeClassregHomeworkMeta({
-              ...homeworkMeta,
-              classes: homeworkMeta.classes.slice(0, 5),
-              schoolYears: homeworkMeta.schoolYears.slice(0, 5),
-              subjects: homeworkMeta.subjects.slice(0, 5),
-              teachers: homeworkMeta.teachers.slice(0, 5),
-            }),
-          ).toMatchSnapshot();
+          expect(normalizeClassregHomeworkMeta(homeworkMeta)).toMatchSnapshot();
           expect(normalizeClassregLessonTopicsMeta(lessonTopicsMeta)).toMatchSnapshot();
-          expect(
-            normalizeClassregHomeworkList({
-              ...homeworkList,
-              homeworkList: homeworkList.homeworkList.slice(0, 5),
-            }),
-          ).toMatchSnapshot();
+          expect(normalizeClassregHomeworkList(homeworkList)).toMatchSnapshot();
         }),
       30_000,
     );
@@ -343,14 +330,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           expect(exams.exams.length).toBeGreaterThan(0);
           expect(filter.classes.length).toBeGreaterThan(0);
           expect(statistics.exams.length).toBe(exams.exams.length);
-          expect(
-            normalizeExamFilter({
-              classes: filter.classes.slice(0, 5),
-              examTypes: filter.examTypes.slice(0, 5),
-              subjects: filter.subjects.slice(0, 5),
-              teachers: filter.teachers.slice(0, 5),
-            }),
-          ).toMatchSnapshot();
+          expect(normalizeExamFilter(filter)).toMatchSnapshot();
           expect(normalizeExamDetail(detail)).toMatchSnapshot();
         }),
       30_000,

@@ -43,11 +43,13 @@ Upgrade every package to its latest appropriate published version, repair all re
 - Historical-year expansion verification passed: formatting, Oxc lint/type diagnostics, 113 local tests, build, publint, are-the-types-wrong, and 19 live tests across every advertised school year (one inverse environment test skipped).
 - The non-empty historical timetable regression exposed and now covers nullable position-resource `displayNameLabel` values.
 - The 2026-08-12 refresh passes format, lint/type diagnostics, 123 local tests, build, publint, packed-consumer checks, and the authenticated live suite (19 passed, one inverse environment test skipped). Recipient-quickfilter snapshots normalize volatile `personCount` values to the explicit `<dynamic-count>` sentinel, preserving the response shape plus stable group identity and permission fields.
+- Live snapshot normalization now uses typed sentinels for dynamic and sensitive values, preserves stable contract vocabulary such as roles, views, resource types, recipient options, and error codes, and represents large school-owned collections with a dynamic count plus representative items instead of silently truncating them at call sites.
 
 ## Follow-up opportunities
 
 - Effect and `@effect/vitest` must stay aligned at RC 108; `@effect/tsgo` 0.36.4 patches stable TypeScript 7.0.2.
 - [x] Make live recipient-quickfilter snapshots insensitive to school membership counts.
+- [ ] Provide a deterministic non-empty message fixture if live message-detail and reply-form coverage must be guaranteed; the read-only client cannot create one, and the configured inbox may legitimately be empty.
 - [x] Add fiber-local historical school-year selection for verified year-aware routes.
 - [x] Expose the confirmed read-only `exams/for-class` buckets.
 - [x] Tighten the stable timetable-entry core from 1,755 historical entries.

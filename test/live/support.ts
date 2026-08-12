@@ -54,17 +54,39 @@ export const liveEnvMissing = [
   process.env["WEBUNTIS_PASSWORD"] ? undefined : "WEBUNTIS_PASSWORD",
 ].filter((field): field is string => field !== undefined);
 
-const redactString = (value: string) =>
-  value
-    .replace(/^\d{4}-\d{2}-\d{2}T[^"]*$/g, "<redacted-datetime>")
-    .replace(/^\d{4}-\d{2}-\d{2}$/g, "<redacted-date>")
-    .replace(/^\d{4}\.\d+\.\d+$/g, "<redacted-version>")
-    .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "<redacted-email>")
-    .replace(/[A-Z][A-ZÄÖÜ-]{1,}/g, "<redacted-label>");
+const stableVocabularyKeys = new Set([
+  "errorcode",
+  "recipientoptions",
+  "resourcetype",
+  "resourcetypes",
+  "role",
+  "roles",
+  "type",
+  "views",
+]);
 
-const normalizeUnknown = (value: unknown): unknown => {
+function normalizeString(value: string, parentKey?: string): string {
+  if (/^\d{4}-\d{2}-\d{2}T[^"]*$/.test(value)) {
+    return "<dynamic-datetime>";
+  }
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return "<dynamic-date>";
+  }
+  if (/^\d{4}\.\d+\.\d+$/.test(value)) {
+    return "<dynamic-version>";
+  }
+  if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
+    return "<personal-email>";
+  }
+  if (parentKey !== undefined && stableVocabularyKeys.has(parentKey)) {
+    return value;
+  }
+  return value.replace(/[A-Z][A-ZÄÖÜ-]{1,}/g, "<personal-label>");
+}
+
+export function normalizeSnapshotValue(value: unknown, parentKey?: string): unknown {
   if (typeof value === "string") {
-    return redactString(value);
+    return normalizeString(value, parentKey);
   }
   if (typeof value === "number") {
     return value;
@@ -73,26 +95,46 @@ const normalizeUnknown = (value: unknown): unknown => {
     return value;
   }
   if (Array.isArray(value)) {
-    return value.map(normalizeUnknown);
+    return value.map((entry) => normalizeSnapshotValue(entry, parentKey));
   }
   if (typeof value === "object") {
     return Object.fromEntries(
       Object.entries(value).map(([key, entry]) => {
         const normalizedKey = key.toLowerCase();
-        if (
-          ["requestid", "traceid", "authorization", "username", "greetingname"].includes(
-            normalizedKey,
-          ) ||
-          normalizedKey.includes("token")
-        ) {
-          return [key, "<redacted>"];
+        if (["requestid", "traceid"].includes(normalizedKey)) {
+          return [key, "<dynamic-id>"];
         }
-        return [key, normalizeUnknown(entry)];
+        if (normalizedKey === "username") {
+          return [key, "<personal-username>"];
+        }
+        if (normalizedKey === "greetingname") {
+          return [key, "<personal-name>"];
+        }
+        if (normalizedKey === "authorization" || normalizedKey.includes("token")) {
+          return [key, "<secret>"];
+        }
+        return [key, normalizeSnapshotValue(entry, normalizedKey)];
       }),
     );
   }
   return value;
-};
+}
+
+export function summarizeSnapshotCollection<T>(
+  items: ReadonlyArray<T>,
+  representativeItemLimit = 5,
+) {
+  return {
+    itemCount: "<dynamic-count>",
+    items: items.slice(0, representativeItemLimit),
+    summary: "<representative-items>",
+  } as const;
+}
+
+const normalizeUnknown = normalizeSnapshotValue;
+function normalizeCollection<T>(items: ReadonlyArray<T>): unknown {
+  return normalizeUnknown(summarizeSnapshotCollection(items));
+}
 
 export const normalizeAppData = (value: AppData) => normalizeUnknown(value);
 export const normalizeAppPlatformApplicationMenus = (value: AppPlatformApplicationMenus) =>
@@ -102,9 +144,15 @@ export const normalizeAppThirdPartyData = (value: AppThirdPartyData) => normaliz
 export const normalizeClassregAbsencesMeta = (value: ClassregAbsencesMeta) =>
   normalizeUnknown(value);
 export const normalizeClassregHomeworkList = (value: ClassregHomeworkList) =>
-  normalizeUnknown(value);
+  normalizeUnknown({ ...value, homeworkList: normalizeCollection(value.homeworkList) });
 export const normalizeClassregHomeworkMeta = (value: ClassregHomeworkMeta) =>
-  normalizeUnknown(value);
+  normalizeUnknown({
+    ...value,
+    classes: normalizeCollection(value.classes),
+    schoolYears: normalizeCollection(value.schoolYears),
+    subjects: normalizeCollection(value.subjects),
+    teachers: normalizeCollection(value.teachers),
+  });
 export const normalizeClassregLessonTopicsMeta = (value: ClassregLessonTopicsMeta) =>
   normalizeUnknown(value);
 export const normalizeDashboardCards = (value: DashboardCards) => normalizeUnknown(value);
@@ -113,7 +161,13 @@ export const normalizeDashboardCardsDetail = (value: DashboardCardsDetail) =>
 export const normalizeDashboardCardsStatus = (value: DashboardCardsStatus) =>
   normalizeUnknown(value);
 export const normalizeExamDetail = (value: ExamDetail) => normalizeUnknown(value);
-export const normalizeExamFilter = (value: ExamFilter) => normalizeUnknown(value);
+export const normalizeExamFilter = (value: ExamFilter) =>
+  normalizeUnknown({
+    classes: normalizeCollection(value.classes),
+    examTypes: normalizeCollection(value.examTypes),
+    subjects: normalizeCollection(value.subjects),
+    teachers: normalizeCollection(value.teachers),
+  });
 export const normalizeExams = (value: Exams) => normalizeUnknown(value);
 export const normalizeExamStatistics = (value: ExamStatistics) => normalizeUnknown(value);
 export const normalizeHome = (value: Home) => normalizeUnknown(value);

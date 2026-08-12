@@ -477,10 +477,10 @@ exports[`live WebUntis integration > with live layer > bootstraps auth and reads
 exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 1`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>_<redacted-label>",
+    "errorCode": "INTERNAL_ERROR",
     "errorMessage": "Access denied.",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/messages-of-the-day",
   "status": 403,
@@ -490,10 +490,10 @@ exports[`live WebUntis integration > with live layer > documents current blocked
 exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 2`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>",
+    "errorCode": "FORBIDDEN",
     "errorMessage": "Sie haben nicht die erforderlichen Benutzerrechte um die Funktion auszuführen.",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/messages/recipients/static/teachers",
   "status": 403,
@@ -503,10 +503,10 @@ exports[`live WebUntis integration > with live layer > documents current blocked
 exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 3`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>_<redacted-label>",
+    "errorCode": "INTERNAL_ERROR",
     "errorMessage": "",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/messages/recipients/static/users",
   "status": 500,
@@ -516,10 +516,10 @@ exports[`live WebUntis integration > with live layer > documents current blocked
 exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 4`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>",
+    "errorCode": "FORBIDDEN",
     "errorMessage": "Sie haben nicht die erforderlichen Benutzerrechte um die Funktion auszuführen.",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/messages/recipients/static/persons",
   "status": 403,
@@ -529,10 +529,10 @@ exports[`live WebUntis integration > with live layer > documents current blocked
 exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 5`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>_<redacted-label>",
+    "errorCode": "INTERNAL_ERROR",
     "errorMessage": "Access denied.",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/messages-of-the-day/form",
   "status": 403,
@@ -542,10 +542,10 @@ exports[`live WebUntis integration > with live layer > documents current blocked
 exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 6`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>",
+    "errorCode": "FORBIDDEN",
     "errorMessage": "Access Denied",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/rooms",
   "status": 403,
@@ -555,10 +555,10 @@ exports[`live WebUntis integration > with live layer > documents current blocked
 exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 7`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>",
+    "errorCode": "FORBIDDEN",
     "errorMessage": "Access Denied",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/rooms/{id}",
   "status": 403,
@@ -568,10 +568,10 @@ exports[`live WebUntis integration > with live layer > documents current blocked
 exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 8`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>",
+    "errorCode": "FORBIDDEN",
     "errorMessage": "Access Denied",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/buildings",
   "status": 403,
@@ -581,10 +581,10 @@ exports[`live WebUntis integration > with live layer > documents current blocked
 exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 9`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>",
+    "errorCode": "FORBIDDEN",
     "errorMessage": "Access Denied",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/teachers",
   "status": 403,
@@ -594,10 +594,10 @@ exports[`live WebUntis integration > with live layer > documents current blocked
 exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 10`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>",
+    "errorCode": "FORBIDDEN",
     "errorMessage": "Access Denied",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/teachers/{id}",
   "status": 403,
@@ -607,10 +607,10 @@ exports[`live WebUntis integration > with live layer > documents current blocked
 exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 11`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>",
+    "errorCode": "FORBIDDEN",
     "errorMessage": "Access Denied",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/subjects",
   "status": 403,
@@ -620,10 +620,10 @@ exports[`live WebUntis integration > with live layer > documents current blocked
 exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 12`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>",
+    "errorCode": "FORBIDDEN",
     "errorMessage": "Access Denied",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/subjects/{id}",
   "status": 403,
@@ -634,13 +634,13 @@ exports[`live WebUntis integration > with live layer > documents current home an
 {
   "integrationsSection": [],
   "isEmailUpdateRequired": false,
-  "schoolName": "<redacted-label> Lilienthal",
+  "schoolName": "<personal-label> Lilienthal",
   "sections": [
     {
       "cells": [
         {
           "badge": null,
-          "type": "<redacted-label>_<redacted-label>",
+          "type": "MY_EVENTS",
         },
       ],
     },
@@ -652,17 +652,17 @@ exports[`live WebUntis integration > with live layer > documents current home an
 {
   "integrationsSection": [],
   "isEmailUpdateRequired": false,
-  "schoolName": "<redacted-label> Lilienthal",
+  "schoolName": "<personal-label> Lilienthal",
   "sections": [
     {
       "cells": [
         {
           "badge": null,
-          "type": "<redacted-label>_<redacted-label>",
+          "type": "MY_EVENTS",
         },
         {
           "badge": null,
-          "type": "<redacted-label>_<redacted-label>_<redacted-label>",
+          "type": "STUDENT_ABSENCES_ADMINISTRATION",
         },
       ],
     },
@@ -674,24 +674,24 @@ exports[`live WebUntis integration > with live layer > documents current home an
 {
   "schoolYear": null,
   "tenant": {
-    "displayName": "<redacted-label> Lilienthal",
+    "displayName": "<personal-label> Lilienthal",
     "id": "6603700",
     "language": "",
-    "wuVersion": "<redacted-version>",
+    "wuVersion": "<dynamic-version>",
   },
   "user": {
     "departmentId": 0,
     "id": 3711,
     "locale": "de",
     "permissions": [
-      "<redacted-label>_<redacted-label>",
-      "<redacted-label>_<redacted-label>",
-      "<redacted-label>_<redacted-label>_<redacted-label>",
+      "<personal-label>_<personal-label>",
+      "<personal-label>_<personal-label>",
+      "<personal-label>_<personal-label>_<personal-label>",
     ],
     "person": null,
     "referencedStudents": [],
-    "role": "<redacted-label>",
-    "username": "<redacted>",
+    "role": "STAFF",
+    "username": "<personal-username>",
   },
 }
 `;
@@ -700,24 +700,24 @@ exports[`live WebUntis integration > with live layer > documents current home an
 {
   "schoolYear": null,
   "tenant": {
-    "displayName": "<redacted-label> Lilienthal",
+    "displayName": "<personal-label> Lilienthal",
     "id": "6603700",
     "language": "",
-    "wuVersion": "<redacted-version>",
+    "wuVersion": "<dynamic-version>",
   },
   "user": {
     "departmentId": 0,
     "id": 3711,
     "locale": "de",
     "permissions": [
-      "<redacted-label>_<redacted-label>",
-      "<redacted-label>_<redacted-label>",
-      "<redacted-label>_<redacted-label>_<redacted-label>",
+      "<personal-label>_<personal-label>",
+      "<personal-label>_<personal-label>",
+      "<personal-label>_<personal-label>_<personal-label>",
     ],
     "person": null,
     "referencedStudents": [],
-    "role": "<redacted-label>",
-    "username": "<redacted>",
+    "role": "STAFF",
+    "username": "<personal-username>",
   },
 }
 `;
@@ -726,25 +726,25 @@ exports[`live WebUntis integration > with live layer > documents current home an
 {
   "schoolYear": null,
   "tenant": {
-    "displayName": "<redacted-label> Lilienthal",
+    "displayName": "<personal-label> Lilienthal",
     "id": "6603700",
     "language": "",
     "schoolLoginName": "igs-lilienthal",
-    "wuVersion": "<redacted-version>",
+    "wuVersion": "<dynamic-version>",
   },
   "user": {
     "departmentId": 0,
     "id": 3711,
     "locale": "de",
     "permissions": [
-      "<redacted-label>_<redacted-label>",
-      "<redacted-label>_<redacted-label>",
-      "<redacted-label>_<redacted-label>_<redacted-label>",
+      "<personal-label>_<personal-label>",
+      "<personal-label>_<personal-label>",
+      "<personal-label>_<personal-label>_<personal-label>",
     ],
     "person": null,
     "referencedStudents": [],
-    "role": "<redacted-label>",
-    "username": "<redacted>",
+    "role": "STAFF",
+    "username": "<personal-username>",
   },
 }
 `;
@@ -753,25 +753,25 @@ exports[`live WebUntis integration > with live layer > documents current home an
 {
   "schoolYear": null,
   "tenant": {
-    "displayName": "<redacted-label> Lilienthal",
+    "displayName": "<personal-label> Lilienthal",
     "id": "6603700",
     "language": "",
     "schoolLoginName": "igs-lilienthal",
-    "wuVersion": "<redacted-version>",
+    "wuVersion": "<dynamic-version>",
   },
   "user": {
     "departmentId": 0,
     "id": 3711,
     "locale": "de",
     "permissions": [
-      "<redacted-label>_<redacted-label>",
-      "<redacted-label>_<redacted-label>",
-      "<redacted-label>_<redacted-label>_<redacted-label>",
+      "<personal-label>_<personal-label>",
+      "<personal-label>_<personal-label>",
+      "<personal-label>_<personal-label>_<personal-label>",
     ],
     "person": null,
     "referencedStudents": [],
-    "role": "<redacted-label>",
-    "username": "<redacted>",
+    "role": "STAFF",
+    "username": "<personal-username>",
   },
 }
 `;
@@ -791,10 +791,10 @@ exports[`live WebUntis integration > with live layer > documents current startup
 exports[`live WebUntis integration > with live layer > documents current timetable utility/settings access behavior 1`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>",
+    "errorCode": "FORBIDDEN",
     "errorMessage": "Access Denied",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/timetable/settings/format/list",
   "status": 403,
@@ -804,10 +804,10 @@ exports[`live WebUntis integration > with live layer > documents current timetab
 exports[`live WebUntis integration > with live layer > documents current timetable utility/settings access behavior 2`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>",
+    "errorCode": "FORBIDDEN",
     "errorMessage": "Access Denied",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/timetable/settings/general",
   "status": 403,
@@ -817,10 +817,10 @@ exports[`live WebUntis integration > with live layer > documents current timetab
 exports[`live WebUntis integration > with live layer > documents current timetable utility/settings access behavior 3`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>",
+    "errorCode": "FORBIDDEN",
     "errorMessage": "Access Denied",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/timetable/settings/visibilityRestriction",
   "status": 403,
@@ -830,10 +830,10 @@ exports[`live WebUntis integration > with live layer > documents current timetab
 exports[`live WebUntis integration > with live layer > documents current upstream profile summary/admin failures 1`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>_<redacted-label>",
+    "errorCode": "INTERNAL_ERROR",
     "errorMessage": "Es ist ein Fehler aufgetreten. {0}",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/profile",
   "status": 500,
@@ -843,10 +843,10 @@ exports[`live WebUntis integration > with live layer > documents current upstrea
 exports[`live WebUntis integration > with live layer > documents current upstream profile summary/admin failures 2`] = `
 {
   "body": {
-    "errorCode": "<redacted-label>_<redacted-label>",
+    "errorCode": "INTERNAL_ERROR",
     "errorMessage": "",
-    "requestId": "<redacted>",
-    "traceId": "<redacted>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
   },
   "path": "api/rest/view/v1/profile/admin/details",
   "status": 500,
@@ -856,7 +856,7 @@ exports[`live WebUntis integration > with live layer > documents current upstrea
 exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 1`] = `
 {
   "calendar": null,
-  "greetingName": "<redacted>",
+  "greetingName": "<personal-name>",
 }
 `;
 
@@ -884,7 +884,7 @@ exports[`live WebUntis integration > with live layer > reads additional app boot
     "icon": "pa-iserv-logo.svg",
     "id": 7,
     "logoutUrl": null,
-    "name": "<redacted-label>erv",
+    "name": "<personal-label>erv",
     "openInNewTab": true,
     "redirectUrl": "https://igslilienthal.de/iserv?tenant_id=6603700&school=igs-lilienthal",
   },
@@ -896,15 +896,15 @@ exports[`live WebUntis integration > with live layer > reads additional app boot
 exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 7`] = `
 {
   "playgroundUrl": null,
-  "sleekplanToken": "<redacted>",
+  "sleekplanToken": "<secret>",
 }
 `;
 
 exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 8`] = `
 {
   "step": "timetable--date-picker",
-  "time": "<redacted-datetime>",
-  "type": "<redacted-label>",
+  "time": "<dynamic-datetime>",
+  "type": "TIMETABLE",
 }
 `;
 
@@ -960,7 +960,7 @@ exports[`live WebUntis integration > with live layer > reads additional timetabl
 {
   "days": [
     {
-      "day": "<redacted-date>",
+      "day": "<dynamic-date>",
       "resources": [
         {
           "cells": [
@@ -1023,12 +1023,12 @@ exports[`live WebUntis integration > with live layer > reads additional timetabl
             "longName": "Grasberg",
             "shortName": "1.12",
           },
-          "status": "<redacted-label>_<redacted-label>",
+          "status": "<personal-label>_<personal-label>",
         },
       ],
     },
     {
-      "day": "<redacted-date>",
+      "day": "<dynamic-date>",
       "resources": [
         {
           "cells": [
@@ -1091,12 +1091,12 @@ exports[`live WebUntis integration > with live layer > reads additional timetabl
             "longName": "Grasberg",
             "shortName": "1.12",
           },
-          "status": "<redacted-label>_<redacted-label>",
+          "status": "<personal-label>_<personal-label>",
         },
       ],
     },
     {
-      "day": "<redacted-date>",
+      "day": "<dynamic-date>",
       "resources": [
         {
           "cells": [
@@ -1159,12 +1159,12 @@ exports[`live WebUntis integration > with live layer > reads additional timetabl
             "longName": "Grasberg",
             "shortName": "1.12",
           },
-          "status": "<redacted-label>_<redacted-label>",
+          "status": "<personal-label>_<personal-label>",
         },
       ],
     },
     {
-      "day": "<redacted-date>",
+      "day": "<dynamic-date>",
       "resources": [
         {
           "cells": [
@@ -1227,12 +1227,12 @@ exports[`live WebUntis integration > with live layer > reads additional timetabl
             "longName": "Grasberg",
             "shortName": "1.12",
           },
-          "status": "<redacted-label>_<redacted-label>",
+          "status": "<personal-label>_<personal-label>",
         },
       ],
     },
     {
-      "day": "<redacted-date>",
+      "day": "<dynamic-date>",
       "resources": [
         {
           "cells": [
@@ -1295,7 +1295,7 @@ exports[`live WebUntis integration > with live layer > reads additional timetabl
             "longName": "Grasberg",
             "shortName": "1.12",
           },
-          "status": "<redacted-label>_<redacted-label>",
+          "status": "<personal-label>_<personal-label>",
         },
       ],
     },
@@ -1306,7 +1306,7 @@ exports[`live WebUntis integration > with live layer > reads additional timetabl
         "end": "08:00",
         "start": "07:40",
       },
-      "name": "<redacted-label>",
+      "name": "<personal-label>",
       "number": 1,
     },
     {
@@ -1362,7 +1362,7 @@ exports[`live WebUntis integration > with live layer > reads additional timetabl
         "end": "13:20",
         "start": "12:50",
       },
-      "name": "<redacted-label>1",
+      "name": "<personal-label>1",
       "number": 8,
     },
     {
@@ -1370,7 +1370,7 @@ exports[`live WebUntis integration > with live layer > reads additional timetabl
         "end": "13:50",
         "start": "13:20",
       },
-      "name": "<redacted-label>2",
+      "name": "<personal-label>2",
       "number": 9,
     },
     {
@@ -1665,22 +1665,22 @@ exports[`live WebUntis integration > with live layer > reads classreg meta and h
     {
       "id": 0,
       "name": "",
-      "type": "<redacted-label>",
+      "type": "OPEN",
     },
     {
       "id": 3,
       "name": "Attest eingereicht",
-      "type": "<redacted-label>",
+      "type": "EXCUSED",
     },
     {
       "id": 1,
       "name": "entschuldigt",
-      "type": "<redacted-label>",
+      "type": "EXCUSED",
     },
     {
       "id": 2,
       "name": "nicht entschuldigt",
-      "type": "<redacted-label>_<redacted-label>",
+      "type": "NOT_EXCUSED",
     },
   ],
   "filterIsActiveForMissingAbsenceParentNotification": false,
@@ -1716,116 +1716,132 @@ exports[`live WebUntis integration > with live layer > reads classreg meta and h
 
 exports[`live WebUntis integration > with live layer > reads classreg meta and homework endpoints 2`] = `
 {
-  "classes": [
-    {
-      "id": 374,
-      "name": "5.1",
-      "nameShort": "5.1",
-    },
-    {
-      "id": 377,
-      "name": "5.2",
-      "nameShort": "5.2",
-    },
-    {
-      "id": 380,
-      "name": "5.3",
-      "nameShort": "5.3",
-    },
-    {
-      "id": 383,
-      "name": "5.4",
-      "nameShort": "5.4",
-    },
-    {
-      "id": 386,
-      "name": "5.5",
-      "nameShort": "5.5",
-    },
-  ],
-  "schoolYears": [
-    {
-      "dateRange": {
-        "end": "<redacted-date>",
-        "start": "<redacted-date>",
+  "classes": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "id": 374,
+        "name": "5.1",
+        "nameShort": "5.1",
       },
-      "id": 4,
-      "name": "2023/2024",
-      "parentId": 0,
-    },
-    {
-      "dateRange": {
-        "end": "<redacted-date>",
-        "start": "<redacted-date>",
+      {
+        "id": 377,
+        "name": "5.2",
+        "nameShort": "5.2",
       },
-      "id": 6,
-      "name": "2024/2025",
-      "parentId": 0,
-    },
-    {
-      "dateRange": {
-        "end": "<redacted-date>",
-        "start": "<redacted-date>",
+      {
+        "id": 380,
+        "name": "5.3",
+        "nameShort": "5.3",
       },
-      "id": 7,
-      "name": "2025/2026",
-      "parentId": 0,
-    },
-  ],
-  "subjects": [
-    {
-      "id": 14,
-      "name": "<redacted-label> Zeitung",
-      "nameShort": "<redacted-label> Zeitung",
-    },
-    {
-      "id": 18,
-      "name": "<redacted-label> Werken",
-      "nameShort": "<redacted-label> Werken",
-    },
-    {
-      "id": 42,
-      "name": "<redacted-label> Sport",
-      "nameShort": "<redacted-label> Sport",
-    },
-    {
-      "id": 50,
-      "name": "<redacted-label> Singen",
-      "nameShort": "<redacted-label> Singen",
-    },
-    {
-      "id": 58,
-      "name": "<redacted-label> Schulgarten",
-      "nameShort": "<redacted-label> Schulgarten",
-    },
-  ],
-  "teachers": [
-    {
-      "id": 2,
-      "name": "<redacted-label>",
-      "nameShort": "<redacted-label>",
-    },
-    {
-      "id": 14,
-      "name": "<redacted-label>",
-      "nameShort": "<redacted-label>",
-    },
-    {
-      "id": 18,
-      "name": "<redacted-label>",
-      "nameShort": "<redacted-label>",
-    },
-    {
-      "id": 22,
-      "name": "<redacted-label>",
-      "nameShort": "<redacted-label>",
-    },
-    {
-      "id": 26,
-      "name": "<redacted-label>",
-      "nameShort": "<redacted-label>",
-    },
-  ],
+      {
+        "id": 383,
+        "name": "5.4",
+        "nameShort": "5.4",
+      },
+      {
+        "id": 386,
+        "name": "5.5",
+        "nameShort": "5.5",
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+  "schoolYears": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "dateRange": {
+          "end": "<dynamic-date>",
+          "start": "<dynamic-date>",
+        },
+        "id": 4,
+        "name": "2023/2024",
+        "parentId": 0,
+      },
+      {
+        "dateRange": {
+          "end": "<dynamic-date>",
+          "start": "<dynamic-date>",
+        },
+        "id": 6,
+        "name": "2024/2025",
+        "parentId": 0,
+      },
+      {
+        "dateRange": {
+          "end": "<dynamic-date>",
+          "start": "<dynamic-date>",
+        },
+        "id": 7,
+        "name": "2025/2026",
+        "parentId": 0,
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+  "subjects": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "id": 14,
+        "name": "<personal-label> Zeitung",
+        "nameShort": "<personal-label> Zeitung",
+      },
+      {
+        "id": 18,
+        "name": "<personal-label> Werken",
+        "nameShort": "<personal-label> Werken",
+      },
+      {
+        "id": 42,
+        "name": "<personal-label> Sport",
+        "nameShort": "<personal-label> Sport",
+      },
+      {
+        "id": 50,
+        "name": "<personal-label> Singen",
+        "nameShort": "<personal-label> Singen",
+      },
+      {
+        "id": 58,
+        "name": "<personal-label> Schulgarten",
+        "nameShort": "<personal-label> Schulgarten",
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+  "teachers": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "id": 2,
+        "name": "<personal-label>",
+        "nameShort": "<personal-label>",
+      },
+      {
+        "id": 14,
+        "name": "<personal-label>",
+        "nameShort": "<personal-label>",
+      },
+      {
+        "id": 18,
+        "name": "<personal-label>",
+        "nameShort": "<personal-label>",
+      },
+      {
+        "id": 22,
+        "name": "<personal-label>",
+        "nameShort": "<personal-label>",
+      },
+      {
+        "id": 26,
+        "name": "<personal-label>",
+        "nameShort": "<personal-label>",
+      },
+    ],
+    "summary": "<representative-items>",
+  },
 }
 `;
 
@@ -1840,204 +1856,224 @@ exports[`live WebUntis integration > with live layer > reads classreg meta and h
 
 exports[`live WebUntis integration > with live layer > reads classreg meta and homework endpoints 4`] = `
 {
-  "homeworkList": [
-    {
-      "attachments": [],
-      "completed": false,
-      "createdByUser": "<redacted-label>",
-      "date": "<redacted-date>",
-      "dueDate": "<redacted-date>",
-      "homework": "Ideen für ein Video einsammeln.",
-      "id": 222,
-      "lessonId": 14894,
-      "remark": "",
-      "subject": {
-        "id": 318,
-        "name": "sn1",
-        "nameShort": "sn1",
+  "homeworkList": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "attachments": [],
+        "completed": false,
+        "createdByUser": "<personal-label>",
+        "date": "<dynamic-date>",
+        "dueDate": "<dynamic-date>",
+        "homework": "Ideen für ein Video einsammeln.",
+        "id": 222,
+        "lessonId": 14894,
+        "remark": "",
+        "subject": {
+          "id": 318,
+          "name": "sn1",
+          "nameShort": "sn1",
+        },
       },
-    },
-    {
-      "attachments": [],
-      "completed": false,
-      "createdByUser": "<redacted-label>",
-      "date": "<redacted-date>",
-      "dueDate": "<redacted-date>",
-      "homework": "<redacted-label> fertig",
-      "id": 229,
-      "lessonId": 16191,
-      "remark": "",
-      "subject": {
-        "id": 818,
-        "name": "<redacted-label>",
-        "nameShort": "<redacted-label>",
+      {
+        "attachments": [],
+        "completed": false,
+        "createdByUser": "<personal-label>",
+        "date": "<dynamic-date>",
+        "dueDate": "<dynamic-date>",
+        "homework": "<personal-label> fertig",
+        "id": 229,
+        "lessonId": 16191,
+        "remark": "",
+        "subject": {
+          "id": 818,
+          "name": "<personal-label>",
+          "nameShort": "<personal-label>",
+        },
       },
-    },
-    {
-      "attachments": [],
-      "completed": false,
-      "createdByUser": "<redacted-label>",
-      "date": "<redacted-date>",
-      "dueDate": "<redacted-date>",
-      "homework": "Fertigstellen der Aufgabe 2 von B. S. 10 zu Dienstag, 19.08.25",
-      "id": 245,
-      "lessonId": 15260,
-      "remark": "",
-      "subject": {
-        "id": 526,
-        "name": "ma2",
-        "nameShort": "ma2",
+      {
+        "attachments": [],
+        "completed": false,
+        "createdByUser": "<personal-label>",
+        "date": "<dynamic-date>",
+        "dueDate": "<dynamic-date>",
+        "homework": "Fertigstellen der Aufgabe 2 von B. S. 10 zu Dienstag, 19.08.25",
+        "id": 245,
+        "lessonId": 15260,
+        "remark": "",
+        "subject": {
+          "id": 526,
+          "name": "ma2",
+          "nameShort": "ma2",
+        },
       },
-    },
-    {
-      "attachments": [],
-      "completed": true,
-      "createdByUser": "<redacted-label>",
-      "date": "<redacted-date>",
-      "dueDate": "<redacted-date>",
-      "homework": "Buch S. 10 Aufgabe 2b-d
-(Folie 9, <redacted-label>01)",
-      "id": 274,
-      "lessonId": 15268,
-      "remark": "",
-      "subject": {
-        "id": 534,
-        "name": "ma1",
-        "nameShort": "ma1",
+      {
+        "attachments": [],
+        "completed": true,
+        "createdByUser": "<personal-label>",
+        "date": "<dynamic-date>",
+        "dueDate": "<dynamic-date>",
+        "homework": "Buch S. 10 Aufgabe 2b-d
+(Folie 9, <personal-label>01)",
+        "id": 274,
+        "lessonId": 15268,
+        "remark": "",
+        "subject": {
+          "id": 534,
+          "name": "ma1",
+          "nameShort": "ma1",
+        },
       },
-    },
-    {
-      "attachments": [],
-      "completed": false,
-      "createdByUser": "<redacted-label>",
-      "date": "<redacted-date>",
-      "dueDate": "<redacted-date>",
-      "homework": "Die Epoche der Aufklärung",
-      "id": 275,
-      "lessonId": 16137,
-      "remark": "",
-      "subject": {
-        "id": 798,
-        "name": "<redacted-label>2",
-        "nameShort": "<redacted-label>2",
+      {
+        "attachments": [],
+        "completed": false,
+        "createdByUser": "<personal-label>",
+        "date": "<dynamic-date>",
+        "dueDate": "<dynamic-date>",
+        "homework": "Die Epoche der Aufklärung",
+        "id": 275,
+        "lessonId": 16137,
+        "remark": "",
+        "subject": {
+          "id": 798,
+          "name": "<personal-label>2",
+          "nameShort": "<personal-label>2",
+        },
       },
-    },
-  ],
+    ],
+    "summary": "<representative-items>",
+  },
 }
 `;
 
 exports[`live WebUntis integration > with live layer > reads non-empty exam data from a historical school year 1`] = `
 {
-  "classes": [
-    {
-      "displayName": "10",
-      "id": 470,
-      "longName": "Willkommen 10",
-      "shortName": "10",
-    },
-    {
-      "displayName": "10.1",
-      "id": 473,
-      "longName": "<redacted-label>/<redacted-label>",
-      "shortName": "10.1",
-    },
-    {
-      "displayName": "10.2",
-      "id": 476,
-      "longName": "<redacted-label>/<redacted-label>",
-      "shortName": "10.2",
-    },
-    {
-      "displayName": "10.3",
-      "id": 479,
-      "longName": "<redacted-label>/<redacted-label>",
-      "shortName": "10.3",
-    },
-    {
-      "displayName": "10.4",
-      "id": 482,
-      "longName": "<redacted-label>/<redacted-label>",
-      "shortName": "10.4",
-    },
-  ],
-  "examTypes": [
-    {
-      "displayName": "Klausur Sek2",
-      "id": 4,
-      "longName": "Klausur Sek2",
-      "shortName": "Klausur",
-    },
-    {
-      "displayName": "Lernkontrolle ",
-      "id": 1,
-      "longName": "Lernkontrolle ",
-      "shortName": "<redacted-label>",
-    },
-  ],
-  "subjects": [
-    {
-      "displayName": "Aktive Pause",
-      "id": 950,
-      "longName": "Aktive Pause",
-      "shortName": "Aktive Pause",
-    },
-    {
-      "displayName": "Aktive Pause_<redacted-label>",
-      "id": 946,
-      "longName": "Aktive Pause_<redacted-label>",
-      "shortName": "Aktive Pause_<redacted-label>",
-    },
-    {
-      "displayName": "Aktive Pause_Lil",
-      "id": 942,
-      "longName": "Aktive Pause_Lil",
-      "shortName": "Aktive Pause_Lil",
-    },
-    {
-      "displayName": "Ausgleich 13",
-      "id": 1153,
-      "longName": "<redacted-label>13",
-      "shortName": "Ausgleich 13",
-    },
-    {
-      "displayName": "Auszeit",
-      "id": 1048,
-      "longName": "Auszeit",
-      "shortName": "Auszeit",
-    },
-  ],
-  "teachers": [
-    {
-      "displayName": "<redacted-label>",
-      "id": 2,
-      "longName": "Ahlrichs",
-      "shortName": "<redacted-label>",
-    },
-    {
-      "displayName": "<redacted-label>",
-      "id": 403,
-      "longName": "Aufderheide",
-      "shortName": "<redacted-label>",
-    },
-    {
-      "displayName": "<redacted-label>",
-      "id": 14,
-      "longName": "Bauer",
-      "shortName": "<redacted-label>",
-    },
-    {
-      "displayName": "<redacted-label>",
-      "id": 18,
-      "longName": "Below",
-      "shortName": "<redacted-label>",
-    },
-    {
-      "displayName": "<redacted-label>",
-      "id": 22,
-      "longName": "Bembenek",
-      "shortName": "<redacted-label>",
-    },
-  ],
+  "classes": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "displayName": "10",
+        "id": 470,
+        "longName": "Willkommen 10",
+        "shortName": "10",
+      },
+      {
+        "displayName": "10.1",
+        "id": 473,
+        "longName": "<personal-label>/<personal-label>",
+        "shortName": "10.1",
+      },
+      {
+        "displayName": "10.2",
+        "id": 476,
+        "longName": "<personal-label>/<personal-label>",
+        "shortName": "10.2",
+      },
+      {
+        "displayName": "10.3",
+        "id": 479,
+        "longName": "<personal-label>/<personal-label>",
+        "shortName": "10.3",
+      },
+      {
+        "displayName": "10.4",
+        "id": 482,
+        "longName": "<personal-label>/<personal-label>",
+        "shortName": "10.4",
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+  "examTypes": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "displayName": "Klausur Sek2",
+        "id": 4,
+        "longName": "Klausur Sek2",
+        "shortName": "Klausur",
+      },
+      {
+        "displayName": "Lernkontrolle ",
+        "id": 1,
+        "longName": "Lernkontrolle ",
+        "shortName": "<personal-label>",
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+  "subjects": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "displayName": "Aktive Pause",
+        "id": 950,
+        "longName": "Aktive Pause",
+        "shortName": "Aktive Pause",
+      },
+      {
+        "displayName": "Aktive Pause_<personal-label>",
+        "id": 946,
+        "longName": "Aktive Pause_<personal-label>",
+        "shortName": "Aktive Pause_<personal-label>",
+      },
+      {
+        "displayName": "Aktive Pause_Lil",
+        "id": 942,
+        "longName": "Aktive Pause_Lil",
+        "shortName": "Aktive Pause_Lil",
+      },
+      {
+        "displayName": "Ausgleich 13",
+        "id": 1153,
+        "longName": "<personal-label>13",
+        "shortName": "Ausgleich 13",
+      },
+      {
+        "displayName": "Auszeit",
+        "id": 1048,
+        "longName": "Auszeit",
+        "shortName": "Auszeit",
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+  "teachers": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "displayName": "<personal-label>",
+        "id": 2,
+        "longName": "Ahlrichs",
+        "shortName": "<personal-label>",
+      },
+      {
+        "displayName": "<personal-label>",
+        "id": 403,
+        "longName": "Aufderheide",
+        "shortName": "<personal-label>",
+      },
+      {
+        "displayName": "<personal-label>",
+        "id": 14,
+        "longName": "Bauer",
+        "shortName": "<personal-label>",
+      },
+      {
+        "displayName": "<personal-label>",
+        "id": 18,
+        "longName": "Below",
+        "shortName": "<personal-label>",
+      },
+      {
+        "displayName": "<personal-label>",
+        "id": 22,
+        "longName": "Bembenek",
+        "shortName": "<personal-label>",
+      },
+    ],
+    "summary": "<representative-items>",
+  },
 }
 `;
 
@@ -2051,57 +2087,57 @@ exports[`live WebUntis integration > with live layer > reads non-empty exam data
     {
       "displayName": "9.2",
       "id": 452,
-      "longName": "<redacted-label>/<redacted-label>",
+      "longName": "<personal-label>/<personal-label>",
       "shortName": "9.2",
     },
   ],
   "deleted": false,
-  "examBooked": "<redacted-datetime>",
+  "examBooked": "<dynamic-datetime>",
   "examBookedUser": {
-    "displayName": "<redacted-label>",
+    "displayName": "<personal-label>",
     "id": 260,
     "longName": "",
-    "shortName": "<redacted-label>",
+    "shortName": "<personal-label>",
   },
   "examDuration": 80,
-  "examEnd": "<redacted-datetime>",
+  "examEnd": "<dynamic-datetime>",
   "examId": 191,
-  "examModified": "<redacted-datetime>",
+  "examModified": "<dynamic-datetime>",
   "examModifiedUser": {
-    "displayName": "<redacted-label>",
+    "displayName": "<personal-label>",
     "id": 260,
     "longName": "",
-    "shortName": "<redacted-label>",
+    "shortName": "<personal-label>",
   },
-  "examName": "<redacted-label>",
+  "examName": "<personal-label>",
   "examReturned": null,
   "examReturnedUser": null,
-  "examStart": "<redacted-datetime>",
+  "examStart": "<dynamic-datetime>",
   "examText": "Test Rechtschreibung",
   "examType": {
     "displayName": "Lernkontrolle ",
     "gradingScaleId": 2,
     "id": 1,
     "longName": "Lernkontrolle ",
-    "shortName": "<redacted-label>",
+    "shortName": "<personal-label>",
   },
   "exported": false,
   "gradingScale": {
-    "displayName": "Note <redacted-label>8-10",
+    "displayName": "Note <personal-label>8-10",
     "id": 2,
     "longName": "",
-    "shortName": "Note <redacted-label>8-10",
+    "shortName": "Note <personal-label>8-10",
   },
   "invigilators": [
     {
-      "end": "<redacted-datetime>",
-      "start": "<redacted-datetime>",
+      "end": "<dynamic-datetime>",
+      "start": "<dynamic-datetime>",
       "teachers": [
         {
-          "displayName": "<redacted-label>",
+          "displayName": "<personal-label>",
           "id": 218,
           "longName": "Dorn-Kraatz",
-          "shortName": "<redacted-label>",
+          "shortName": "<personal-label>",
         },
       ],
     },
@@ -2118,10 +2154,10 @@ exports[`live WebUntis integration > with live layer > reads non-empty exam data
     },
   ],
   "studentgroup": {
-    "displayName": "<redacted-label>",
+    "displayName": "<personal-label>",
     "id": 4319,
-    "longName": "<redacted-label>",
-    "shortName": "<redacted-label>",
+    "longName": "<personal-label>",
+    "shortName": "<personal-label>",
   },
   "students": [
     {
@@ -2401,17 +2437,17 @@ exports[`live WebUntis integration > with live layer > reads non-empty exam data
     },
   ],
   "subject": {
-    "displayName": "<redacted-label>",
+    "displayName": "<personal-label>",
     "id": 818,
     "longName": "Deutsch",
-    "shortName": "<redacted-label>",
+    "shortName": "<personal-label>",
   },
   "teachers": [
     {
-      "displayName": "<redacted-label>",
+      "displayName": "<personal-label>",
       "id": 218,
       "longName": "Dorn-Kraatz",
-      "shortName": "<redacted-label>",
+      "shortName": "<personal-label>",
     },
   ],
 }
@@ -2420,7 +2456,7 @@ exports[`live WebUntis integration > with live layer > reads non-empty exam data
 exports[`live WebUntis integration > with live layer > reads non-empty timetable entries using historical classes 1`] = `
 {
   "classFormat": 2,
-  "firstDayOfWeek": "<redacted-label>",
+  "firstDayOfWeek": "<personal-label>",
   "formatDefinitions": [
     {
       "duration": {
@@ -2437,11 +2473,11 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "showStartEndTime": false,
       "showStartEndTimeOfSlots": true,
       "timeGridDays": [
-        "<redacted-label>",
-        "<redacted-label>",
-        "<redacted-label>",
-        "<redacted-label>",
-        "<redacted-label>",
+        "<personal-label>",
+        "<personal-label>",
+        "<personal-label>",
+        "<personal-label>",
+        "<personal-label>",
       ],
       "timeGridSlots": [
         {
@@ -2449,7 +2485,7 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
             "end": "08:00",
             "start": "07:40",
           },
-          "name": "<redacted-label>",
+          "name": "<personal-label>",
           "number": 1,
         },
         {
@@ -2505,7 +2541,7 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
             "end": "13:20",
             "start": "12:50",
           },
-          "name": "<redacted-label>1",
+          "name": "<personal-label>1",
           "number": 8,
         },
         {
@@ -2513,7 +2549,7 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
             "end": "13:50",
             "start": "13:20",
           },
-          "name": "<redacted-label>2",
+          "name": "<personal-label>2",
           "number": 9,
         },
         {
@@ -2549,7 +2585,7 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
           "number": 13,
         },
       ],
-      "timeGridType": "<redacted-label>_<redacted-label>",
+      "timeGridType": "<personal-label>_<personal-label>",
     },
     {
       "duration": {
@@ -2558,19 +2594,19 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       },
       "hideDetails": false,
       "id": 2,
-      "longname": "Standard_<redacted-label>",
+      "longname": "Standard_<personal-label>",
       "minRows": 4,
-      "name": "Standard_<redacted-label>",
+      "name": "Standard_<personal-label>",
       "showCancellations": true,
       "showExternalCalendars": true,
       "showStartEndTime": false,
       "showStartEndTimeOfSlots": true,
       "timeGridDays": [
-        "<redacted-label>",
-        "<redacted-label>",
-        "<redacted-label>",
-        "<redacted-label>",
-        "<redacted-label>",
+        "<personal-label>",
+        "<personal-label>",
+        "<personal-label>",
+        "<personal-label>",
+        "<personal-label>",
       ],
       "timeGridSlots": [
         {
@@ -2678,7 +2714,7 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
           "number": null,
         },
       ],
-      "timeGridType": "<redacted-label>_<redacted-label>",
+      "timeGridType": "<personal-label>_<personal-label>",
     },
     {
       "duration": {
@@ -2687,19 +2723,19 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       },
       "hideDetails": false,
       "id": -1,
-      "longname": "<redacted-label>_<redacted-label>_<redacted-label>",
+      "longname": "<personal-label>_<personal-label>_<personal-label>",
       "minRows": 1,
-      "name": "<redacted-label>_<redacted-label>_<redacted-label>",
+      "name": "<personal-label>_<personal-label>_<personal-label>",
       "showCancellations": true,
       "showExternalCalendars": true,
       "showStartEndTime": false,
       "showStartEndTimeOfSlots": true,
       "timeGridDays": [
-        "<redacted-label>",
-        "<redacted-label>",
-        "<redacted-label>",
-        "<redacted-label>",
-        "<redacted-label>",
+        "<personal-label>",
+        "<personal-label>",
+        "<personal-label>",
+        "<personal-label>",
+        "<personal-label>",
       ],
       "timeGridSlots": [
         {
@@ -2707,7 +2743,7 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
             "end": "08:00",
             "start": "07:40",
           },
-          "name": "<redacted-label>",
+          "name": "<personal-label>",
           "number": 1,
         },
         {
@@ -2763,7 +2799,7 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
             "end": "13:20",
             "start": "12:50",
           },
-          "name": "<redacted-label>1",
+          "name": "<personal-label>1",
           "number": 8,
         },
         {
@@ -2771,7 +2807,7 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
             "end": "13:50",
             "start": "13:20",
           },
-          "name": "<redacted-label>2",
+          "name": "<personal-label>2",
           "number": 9,
         },
         {
@@ -2807,7 +2843,7 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
           "number": 13,
         },
       ],
-      "timeGridType": "<redacted-label>_<redacted-label>",
+      "timeGridType": "<personal-label>_<personal-label>",
     },
   ],
   "resourceFormat": -1,
@@ -2843,20 +2879,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "10.1",
         "id": 473,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "10.1",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 106,
         "longName": "Frank",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 126,
         "longName": "Grütjen",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -2869,20 +2905,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "10.2",
         "id": 476,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "10.2",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 154,
         "longName": "Hilken",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 198,
         "longName": "Klähr",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -2895,20 +2931,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "10.3",
         "id": 479,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "10.3",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 98,
         "longName": "Erichsen",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 186,
         "longName": "Kämpf",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -2921,20 +2957,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "10.4",
         "id": 482,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "10.4",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 486,
         "longName": "Mittwollen",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 445,
         "longName": "Schnepel",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -2947,20 +2983,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "10.5",
         "id": 485,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "10.5",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 346,
         "longName": "Tamcke",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 477,
         "longName": "Langhorst",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -2973,20 +3009,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "10.6",
         "id": 488,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "10.6",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 338,
         "longName": "Schröder",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 342,
         "longName": "Schulenberg",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -2999,68 +3035,68 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "11.1",
         "id": 491,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "11.1",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 406,
         "longName": "Bi",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 258,
         "longName": "Müller",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
-        "displayName": "Lilienthal Sek <redacted-label>",
+        "displayName": "Lilienthal Sek <personal-label>",
         "id": 10,
-        "longName": "Lilienthal Sek <redacted-label>",
-        "shortName": "Lil-Sek<redacted-label>",
+        "longName": "Lilienthal Sek <personal-label>",
+        "shortName": "Lil-Sek<personal-label>",
       },
     },
     {
       "class": {
         "displayName": "11.2",
         "id": 494,
-        "longName": "<redacted-label>",
+        "longName": "<personal-label>",
         "shortName": "11.2",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 370,
         "longName": "Timm",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": null,
       "department": {
-        "displayName": "Lilienthal Sek <redacted-label>",
+        "displayName": "Lilienthal Sek <personal-label>",
         "id": 10,
-        "longName": "Lilienthal Sek <redacted-label>",
-        "shortName": "Lil-Sek<redacted-label>",
+        "longName": "Lilienthal Sek <personal-label>",
+        "shortName": "Lil-Sek<personal-label>",
       },
     },
     {
       "class": {
         "displayName": "11.3",
         "id": 497,
-        "longName": "<redacted-label>",
+        "longName": "<personal-label>",
         "shortName": "11.3",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 358,
         "longName": "Thiel",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": null,
       "department": {
-        "displayName": "Lilienthal Sek <redacted-label>",
+        "displayName": "Lilienthal Sek <personal-label>",
         "id": 10,
-        "longName": "Lilienthal Sek <redacted-label>",
-        "shortName": "Lil-Sek<redacted-label>",
+        "longName": "Lilienthal Sek <personal-label>",
+        "shortName": "Lil-Sek<personal-label>",
       },
     },
     {
@@ -3073,10 +3109,10 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "classTeacher1": null,
       "classTeacher2": null,
       "department": {
-        "displayName": "Lilienthal Sek <redacted-label>",
+        "displayName": "Lilienthal Sek <personal-label>",
         "id": 10,
-        "longName": "Lilienthal Sek <redacted-label>",
-        "shortName": "Lil-Sek<redacted-label>",
+        "longName": "Lilienthal Sek <personal-label>",
+        "shortName": "Lil-Sek<personal-label>",
       },
     },
     {
@@ -3089,30 +3125,30 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "classTeacher1": null,
       "classTeacher2": null,
       "department": {
-        "displayName": "Lilienthal Sek <redacted-label>",
+        "displayName": "Lilienthal Sek <personal-label>",
         "id": 10,
-        "longName": "Lilienthal Sek <redacted-label>",
-        "shortName": "Lil-Sek<redacted-label>",
+        "longName": "Lilienthal Sek <personal-label>",
+        "shortName": "Lil-Sek<personal-label>",
       },
     },
     {
       "class": {
         "displayName": "5.1",
         "id": 374,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "5.1",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 30,
         "longName": "Bouwer",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 226,
         "longName": "Büsing",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3125,20 +3161,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "5.2",
         "id": 377,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "5.2",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 22,
         "longName": "Bembenek",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 448,
         "longName": "Schröer",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3151,20 +3187,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "5.3",
         "id": 380,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "5.3",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 206,
         "longName": "Klotzek",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 58,
         "longName": "Dantz",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3177,20 +3213,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "5.4",
         "id": 383,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "5.4",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 462,
         "longName": "Martens",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 483,
         "longName": "Lorenz",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3203,20 +3239,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "5.5",
         "id": 386,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "5.5",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 500,
         "longName": "Kahrs",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 194,
         "longName": "Kellermann",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3229,20 +3265,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "5.6",
         "id": 389,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "5.6",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 421,
         "longName": "Hagedorn",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 250,
         "longName": "Meißner",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3255,20 +3291,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "6.1",
         "id": 392,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "6.1",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 34,
         "longName": "Buse",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 318,
         "longName": "Schilling",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3281,20 +3317,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "6.2",
         "id": 395,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "6.2",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 90,
         "longName": "Engelbertz",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 409,
         "longName": "Bünte",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3307,20 +3343,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "6.3",
         "id": 398,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "6.3",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 459,
         "longName": "Köstermann",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 480,
         "longName": "Lichtwer",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3333,20 +3369,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "6.4",
         "id": 401,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "6.4",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 402,
         "longName": "Zoll",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 42,
         "longName": "Claus",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3359,20 +3395,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "6.5",
         "id": 404,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "6.5",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 474,
         "longName": "Krein",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 503,
         "longName": "Streil",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3385,20 +3421,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "6.6",
         "id": 407,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "6.6",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 492,
         "longName": "Schiwek",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 214,
         "longName": "Köpke",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3411,20 +3447,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "7.1",
         "id": 410,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "7.1",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 162,
         "longName": "Höppe",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 266,
         "longName": "Nielsen",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3437,20 +3473,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "7.2",
         "id": 413,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "7.2",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 74,
         "longName": "Drachenberg",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 468,
         "longName": "Fedder",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3463,20 +3499,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "7.3",
         "id": 416,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "7.3",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 362,
         "longName": "Thoms",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 322,
         "longName": "Schwabe",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3489,20 +3525,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "7.4",
         "id": 419,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "7.4",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 50,
         "longName": "Cordes",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 146,
         "longName": "Heubner",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3515,20 +3551,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "7.5",
         "id": 422,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "7.5",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 122,
         "longName": "Graue-Marks",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 70,
         "longName": "Ditschke",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3541,20 +3577,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "7.6",
         "id": 425,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "7.6",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 102,
         "longName": "Fidan",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 238,
         "longName": "Mann",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Grasberg",
@@ -3583,20 +3619,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "8.1",
         "id": 431,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "8.1",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 62,
         "longName": "Daus-Kohlhas",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 18,
         "longName": "Below",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -3609,20 +3645,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "8.2",
         "id": 434,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "8.2",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 94,
         "longName": "Enneking",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 246,
         "longName": "Maschke",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -3635,20 +3671,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "8.3",
         "id": 437,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "8.3",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 66,
         "longName": "Direnga",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 274,
         "longName": "Olbertz",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -3661,20 +3697,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "8.4",
         "id": 440,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "8.4",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 314,
         "longName": "Schaper",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 54,
         "longName": "Dahl",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -3687,20 +3723,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "8.5",
         "id": 443,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "8.5",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 86,
         "longName": "Endemann",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 182,
         "longName": "Jenderny",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -3729,20 +3765,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "9.1",
         "id": 449,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "9.1",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 222,
         "longName": "Krause",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 166,
         "longName": "Hornung",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -3755,20 +3791,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "9.2",
         "id": 452,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "9.2",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 218,
         "longName": "Dorn-Kraatz",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 158,
         "longName": "Hirsch",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -3781,20 +3817,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "9.3",
         "id": 455,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "9.3",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 202,
         "longName": "Klee",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 242,
         "longName": "Markowsky",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -3807,20 +3843,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "9.4",
         "id": 458,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "9.4",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 282,
         "longName": "Rasche",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 354,
         "longName": "Thiele",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -3833,20 +3869,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "9.5",
         "id": 461,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "9.5",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 78,
         "longName": "Düdükcü",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 134,
         "longName": "Hanisch",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -3859,20 +3895,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "9.6",
         "id": 464,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "9.6",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 310,
         "longName": "Sap",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 334,
         "longName": "Spangenberg",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -3885,20 +3921,20 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "class": {
         "displayName": "9.7",
         "id": 467,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "9.7",
       },
       "classTeacher1": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 298,
         "longName": "Rudolph",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "classTeacher2": {
-        "displayName": "<redacted-label>",
+        "displayName": "<personal-label>",
         "id": 382,
         "longName": "Walczak",
-        "shortName": "<redacted-label>",
+        "shortName": "<personal-label>",
       },
       "department": {
         "displayName": "Lilienthal Sek I",
@@ -3919,7 +3955,7 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "displayName": "Lilienthal",
       "id": 2,
       "longName": "Lilienthal",
-      "shortName": "<redacted-label>",
+      "shortName": "<personal-label>",
     },
     {
       "displayName": "Lilienthal Sek I",
@@ -3928,14 +3964,14 @@ exports[`live WebUntis integration > with live layer > reads non-empty timetable
       "shortName": "Lil-Sek I",
     },
     {
-      "displayName": "Lilienthal Sek <redacted-label>",
+      "displayName": "Lilienthal Sek <personal-label>",
       "id": 10,
-      "longName": "Lilienthal Sek <redacted-label>",
-      "shortName": "Lil-Sek<redacted-label>",
+      "longName": "Lilienthal Sek <personal-label>",
+      "shortName": "Lil-Sek<personal-label>",
     },
   ],
   "preSelected": null,
-  "resourceType": "<redacted-label>",
+  "resourceType": "CLASS",
   "resourceTypes": [],
   "resources": [],
   "roomGroups": [],
@@ -3984,8 +4020,8 @@ exports[`live WebUntis integration > with live layer > reads schoolyears and mes
   "maxFileCount": 5,
   "maxFileSize": 7000000,
   "recipientOptions": [
-    "<redacted-label>",
-    "<redacted-label>",
+    "STAFF",
+    "CUSTOM",
   ],
   "recipientSearchMaxResult": 100,
   "showDraftsTab": true,
@@ -4033,16 +4069,16 @@ exports[`live WebUntis integration > with live layer > reads schoolyears and mes
   "filters": [
     {
       "items": [],
-      "type": "<redacted-label>",
+      "type": "CLASS",
     },
     {
       "items": [
         "Grasberg",
         "Lilienthal",
         "Lilienthal Sek I",
-        "Lilienthal Sek <redacted-label>",
+        "Lilienthal Sek <personal-label>",
       ],
-      "type": "<redacted-label>",
+      "type": "DEPARTMENT",
     },
     {
       "items": [
@@ -4051,7 +4087,7 @@ exports[`live WebUntis integration > with live layer > reads schoolyears and mes
         "Schulleitung",
         "Verwaltung",
       ],
-      "type": "<redacted-label>",
+      "type": "ROLE",
     },
     {
       "items": [
@@ -4060,7 +4096,7 @@ exports[`live WebUntis integration > with live layer > reads schoolyears and mes
         "Staff",
         "Teacher",
       ],
-      "type": "<redacted-label>_<redacted-label>",
+      "type": "USER_GROUP",
     },
   ],
 }
@@ -4071,10 +4107,10 @@ exports[`live WebUntis integration > with live layer > reads schoolyears and mes
   "users": [
     {
       "className": null,
-      "displayName": "<redacted-label>",
+      "displayName": "<personal-label>",
       "id": 7,
       "imageUrl": null,
-      "role": "<redacted-label>",
+      "role": "TEACHER",
       "tags": [],
     },
   ],
@@ -4212,11 +4248,11 @@ exports[`live WebUntis integration > with live layer > reads session status and 
 exports[`live WebUntis integration > with live layer > reads session status and timetable discovery endpoints 2`] = `
 {
   "availableTimetables": [
-    "<redacted-label>",
-    "<redacted-label>",
-    "<redacted-label>",
-    "<redacted-label>",
-    "<redacted-label>",
+    "<personal-label>",
+    "<personal-label>",
+    "<personal-label>",
+    "<personal-label>",
+    "<personal-label>",
   ],
   "dependents": [],
   "myTimetable": null,
@@ -4235,67 +4271,67 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Willkommen 10",
         "shortName": "10",
       },
-      "type": "<redacted-label>",
+      "type": "CLASS",
     },
     {
       "imageUrl": null,
       "resource": {
         "displayName": "10.1",
         "id": 473,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "10.1",
       },
-      "type": "<redacted-label>",
+      "type": "CLASS",
     },
     {
       "imageUrl": null,
       "resource": {
         "displayName": "10.2",
         "id": 476,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "10.2",
       },
-      "type": "<redacted-label>",
+      "type": "CLASS",
     },
     {
       "imageUrl": null,
       "resource": {
         "displayName": "10.3",
         "id": 479,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "10.3",
       },
-      "type": "<redacted-label>",
+      "type": "CLASS",
     },
     {
       "imageUrl": null,
       "resource": {
         "displayName": "10.4",
         "id": 482,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "10.4",
       },
-      "type": "<redacted-label>",
+      "type": "CLASS",
     },
     {
       "imageUrl": null,
       "resource": {
         "displayName": "10.5",
         "id": 485,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "10.5",
       },
-      "type": "<redacted-label>",
+      "type": "CLASS",
     },
     {
       "imageUrl": null,
       "resource": {
         "displayName": "10.6",
         "id": 488,
-        "longName": "<redacted-label>/<redacted-label>",
+        "longName": "<personal-label>/<personal-label>",
         "shortName": "10.6",
       },
-      "type": "<redacted-label>",
+      "type": "CLASS",
     },
     {
       "imageUrl": null,
@@ -4305,7 +4341,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Grasberg",
         "shortName": "1-10",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4315,7 +4351,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Grasberg Informatik",
         "shortName": "2-10",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4325,7 +4361,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "B105",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4335,7 +4371,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lehrküche",
         "shortName": "B109",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4345,7 +4381,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "C103",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4355,7 +4391,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal-Diff",
         "shortName": "C104",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4365,7 +4401,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "C105",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4375,7 +4411,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "C106",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4385,7 +4421,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "C107",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4395,7 +4431,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal-Diff",
         "shortName": "C108",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4405,7 +4441,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal-Diff",
         "shortName": "C109",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4415,7 +4451,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal-Diff",
         "shortName": "C110",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4425,7 +4461,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "D101",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4435,7 +4471,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "D104",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4445,7 +4481,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "D105",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4455,7 +4491,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "D106",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4465,7 +4501,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal-diff",
         "shortName": "D107",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4475,7 +4511,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "E103",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4485,7 +4521,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "E104",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4495,7 +4531,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "E106",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4505,7 +4541,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "E107",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4515,7 +4551,7 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "E108",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
@@ -4525,37 +4561,37 @@ exports[`live WebUntis integration > with live layer > reads session status and 
         "longName": "Lilienthal",
         "shortName": "E109",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
       "resource": {
-        "displayName": "<redacted-label>10",
+        "displayName": "<personal-label>10",
         "id": 386,
-        "longName": "Lilienthal <redacted-label> Lernbereich",
-        "shortName": "<redacted-label>10",
+        "longName": "Lilienthal <personal-label> Lernbereich",
+        "shortName": "<personal-label>10",
       },
-      "type": "<redacted-label>",
+      "type": "ROOM",
     },
     {
       "imageUrl": null,
       "resource": {
-        "displayName": "<redacted-label> 10",
+        "displayName": "<personal-label> 10",
         "id": 450,
-        "longName": "<redacted-label> 10",
-        "shortName": "<redacted-label> 10",
+        "longName": "<personal-label> 10",
+        "shortName": "<personal-label> 10",
       },
-      "type": "<redacted-label>",
+      "type": "SUBJECT",
     },
     {
       "imageUrl": null,
       "resource": {
         "displayName": "Will-An-Lili 10",
         "id": 1149,
-        "longName": "<redacted-label>n-Lili 10",
+        "longName": "<personal-label>n-Lili 10",
         "shortName": "Will-An-Lili 10",
       },
-      "type": "<redacted-label>",
+      "type": "SUBJECT",
     },
   ],
 }
@@ -4738,10 +4774,10 @@ exports[`live WebUntis integration > with live layer > reads session status and 
     "name": "B113",
   },
   {
-    "displayName": "<redacted-label>",
+    "displayName": "<personal-label>",
     "id": 130,
     "longName": "Ballsporthalle",
-    "name": "<redacted-label>",
+    "name": "<personal-label>",
   },
   {
     "displayName": "C104",
@@ -4788,19 +4824,19 @@ exports[`live WebUntis integration > with live layer > reads session status and 
   {
     "displayName": "E004",
     "id": 202,
-    "longName": "<redacted-label>4 (<redacted-label>)",
+    "longName": "<personal-label>4 (<personal-label>)",
     "name": "E004",
   },
   {
     "displayName": "E006",
     "id": 206,
-    "longName": "<redacted-label>3 (<redacted-label>)",
+    "longName": "<personal-label>3 (<personal-label>)",
     "name": "E006",
   },
   {
     "displayName": "E008",
     "id": 214,
-    "longName": "<redacted-label>1",
+    "longName": "<personal-label>1",
     "name": "E008",
   },
   {
@@ -4912,34 +4948,34 @@ exports[`live WebUntis integration > with live layer > reads session status and 
     "name": "E17",
   },
   {
-    "displayName": "<redacted-label>",
+    "displayName": "<personal-label>",
     "id": 330,
     "longName": "Lilienthal",
-    "name": "<redacted-label>",
+    "name": "<personal-label>",
   },
   {
-    "displayName": "<redacted-label>cho1",
+    "displayName": "<personal-label>cho1",
     "id": 334,
     "longName": "Halle Schoofmoor 1",
-    "name": "<redacted-label>cho1",
+    "name": "<personal-label>cho1",
   },
   {
-    "displayName": "<redacted-label>cho2",
+    "displayName": "<personal-label>cho2",
     "id": 338,
     "longName": "Halle Schoofmoor 2",
-    "name": "<redacted-label>cho2",
+    "name": "<personal-label>cho2",
   },
   {
-    "displayName": "<redacted-label>cho3",
+    "displayName": "<personal-label>cho3",
     "id": 342,
     "longName": "Halle Schoofmoor 3",
-    "name": "<redacted-label>cho3",
+    "name": "<personal-label>cho3",
   },
   {
-    "displayName": "<redacted-label>1",
+    "displayName": "<personal-label>1",
     "id": 346,
     "longName": "Halle Falkenberg 1",
-    "name": "<redacted-label>1",
+    "name": "<personal-label>1",
   },
   {
     "displayName": "I04",
@@ -4954,88 +4990,88 @@ exports[`live WebUntis integration > with live layer > reads session status and 
     "name": "I14",
   },
   {
-    "displayName": "<redacted-label>03",
+    "displayName": "<personal-label>03",
     "id": 362,
     "longName": "Grasberg",
-    "name": "<redacted-label>03",
+    "name": "<personal-label>03",
   },
   {
-    "displayName": "<redacted-label>00",
+    "displayName": "<personal-label>00",
     "id": 366,
-    "longName": "Lilienthal <redacted-label> Lernbereich",
-    "name": "<redacted-label>00",
+    "longName": "Lilienthal <personal-label> Lernbereich",
+    "name": "<personal-label>00",
   },
   {
-    "displayName": "<redacted-label>04",
+    "displayName": "<personal-label>04",
     "id": 382,
-    "longName": "Lilienthal <redacted-label> Kursraum",
-    "name": "<redacted-label>04",
+    "longName": "Lilienthal <personal-label> Kursraum",
+    "name": "<personal-label>04",
   },
   {
-    "displayName": "<redacted-label>10",
+    "displayName": "<personal-label>10",
     "id": 386,
-    "longName": "Lilienthal <redacted-label> Lernbereich",
-    "name": "<redacted-label>10",
+    "longName": "Lilienthal <personal-label> Lernbereich",
+    "name": "<personal-label>10",
   },
   {
-    "displayName": "<redacted-label>15",
+    "displayName": "<personal-label>15",
     "id": 406,
-    "longName": "Lilienthal <redacted-label> <redacted-label>aum",
-    "name": "<redacted-label>15",
+    "longName": "Lilienthal <personal-label> <personal-label>aum",
+    "name": "<personal-label>15",
   },
   {
-    "displayName": "<redacted-label>",
+    "displayName": "<personal-label>",
     "id": 410,
     "longName": "Grasberg Little Tokio",
-    "name": "<redacted-label>",
+    "name": "<personal-label>",
   },
   {
-    "displayName": "<redacted-label>1",
+    "displayName": "<personal-label>1",
     "id": 414,
-    "longName": "Lilienthal <redacted-label> Leiter",
-    "name": "<redacted-label>1",
+    "longName": "Lilienthal <personal-label> Leiter",
+    "name": "<personal-label>1",
   },
   {
-    "displayName": "<redacted-label>2",
+    "displayName": "<personal-label>2",
     "id": 418,
-    "longName": "Lilienthal <redacted-label> Sekretariat",
-    "name": "<redacted-label>2",
+    "longName": "Lilienthal <personal-label> Sekretariat",
+    "name": "<personal-label>2",
   },
   {
-    "displayName": "<redacted-label>3",
+    "displayName": "<personal-label>3",
     "id": 422,
-    "longName": "Lilienthal <redacted-label> Klassenraum",
-    "name": "<redacted-label>3",
+    "longName": "Lilienthal <personal-label> Klassenraum",
+    "name": "<personal-label>3",
   },
   {
-    "displayName": "<redacted-label>4",
+    "displayName": "<personal-label>4",
     "id": 426,
-    "longName": "Lilienthal <redacted-label> Klassenraum",
-    "name": "<redacted-label>4",
+    "longName": "Lilienthal <personal-label> Klassenraum",
+    "name": "<personal-label>4",
   },
   {
-    "displayName": "<redacted-label>5",
+    "displayName": "<personal-label>5",
     "id": 430,
-    "longName": "Lilienthal <redacted-label> Klassenraum",
-    "name": "<redacted-label>5",
+    "longName": "Lilienthal <personal-label> Klassenraum",
+    "name": "<personal-label>5",
   },
   {
-    "displayName": "<redacted-label>6",
+    "displayName": "<personal-label>6",
     "id": 434,
-    "longName": "Lilienthal <redacted-label> Klassenraum",
-    "name": "<redacted-label>6",
+    "longName": "Lilienthal <personal-label> Klassenraum",
+    "name": "<personal-label>6",
   },
   {
-    "displayName": "<redacted-label>7",
+    "displayName": "<personal-label>7",
     "id": 438,
-    "longName": "Lilienthal <redacted-label> <redacted-label>aum",
-    "name": "<redacted-label>7",
+    "longName": "Lilienthal <personal-label> <personal-label>aum",
+    "name": "<personal-label>7",
   },
   {
-    "displayName": "<redacted-label>3",
+    "displayName": "<personal-label>3",
     "id": 442,
-    "longName": "<redacted-label>3",
-    "name": "<redacted-label>3",
+    "longName": "<personal-label>3",
+    "name": "<personal-label>3",
   },
   {
     "displayName": "Tec-L",
@@ -5044,22 +5080,22 @@ exports[`live WebUntis integration > with live layer > reads session status and 
     "name": "Tec-L",
   },
   {
-    "displayName": "<redacted-label>1",
+    "displayName": "<personal-label>1",
     "id": 450,
     "longName": "Grasberg Halle",
-    "name": "<redacted-label>1",
+    "name": "<personal-label>1",
   },
   {
-    "displayName": "<redacted-label>2",
+    "displayName": "<personal-label>2",
     "id": 454,
     "longName": "Grasberg Halle",
-    "name": "<redacted-label>2",
+    "name": "<personal-label>2",
   },
   {
-    "displayName": "<redacted-label>015",
+    "displayName": "<personal-label>015",
     "id": 458,
     "longName": "Lilienthal Werken",
-    "name": "<redacted-label>015",
+    "name": "<personal-label>015",
   },
   {
     "displayName": "B011",
@@ -5068,10 +5104,10 @@ exports[`live WebUntis integration > with live layer > reads session status and 
     "name": "B011",
   },
   {
-    "displayName": "<redacted-label>",
+    "displayName": "<personal-label>",
     "id": 470,
     "longName": "Grasberg Forum",
-    "name": "<redacted-label>",
+    "name": "<personal-label>",
   },
   {
     "displayName": "G Bus",
@@ -5104,28 +5140,28 @@ exports[`live WebUntis integration > with live layer > reads session status and 
     "name": "L1-Früh-A",
   },
   {
-    "displayName": "L Hof <redacted-label>",
+    "displayName": "L Hof <personal-label>",
     "id": 506,
     "longName": "Hof Forum und Schultor",
-    "name": "L Hof <redacted-label>",
+    "name": "L Hof <personal-label>",
   },
   {
-    "displayName": "L Hof <redacted-label>",
+    "displayName": "L Hof <personal-label>",
     "id": 510,
     "longName": "Hof Tischtennisplatten",
-    "name": "L Hof <redacted-label>",
+    "name": "L Hof <personal-label>",
   },
   {
-    "displayName": "L Hof <redacted-label>",
+    "displayName": "L Hof <personal-label>",
     "id": 514,
     "longName": "Hof Kleinspielfeld und Sporthalle",
-    "name": "L Hof <redacted-label>",
+    "name": "L Hof <personal-label>",
   },
   {
-    "displayName": "L Hof <redacted-label>",
+    "displayName": "L Hof <personal-label>",
     "id": 518,
     "longName": "Hof Oberstufenhaus und Parkplatz",
-    "name": "L Hof <redacted-label>",
+    "name": "L Hof <personal-label>",
   },
   {
     "displayName": "L Treppenhäuser",
@@ -5164,10 +5200,10 @@ exports[`live WebUntis integration > with live layer > reads session status and 
     "name": "C012",
   },
   {
-    "displayName": "L Hof <redacted-label> <redacted-label>",
+    "displayName": "L Hof <personal-label> <personal-label>",
     "id": 556,
     "longName": "Hof Forum,Schultor und Tischtennis",
-    "name": "L Hof <redacted-label> <redacted-label>",
+    "name": "L Hof <personal-label> <personal-label>",
   },
   {
     "displayName": "1.12",
@@ -5182,16 +5218,16 @@ exports[`live WebUntis integration > with live layer > reads session status and 
     "name": "2-01",
   },
   {
-    "displayName": "<redacted-label>rüh-A",
+    "displayName": "<personal-label>rüh-A",
     "id": 567,
     "longName": "Frühaufsicht 1- Lilienthal",
-    "name": "<redacted-label>rüh-A",
+    "name": "<personal-label>rüh-A",
   },
   {
-    "displayName": "<redacted-label>rüh-E",
+    "displayName": "<personal-label>rüh-E",
     "id": 570,
     "longName": "Frühaufsicht 1-Lilienthal",
-    "name": "<redacted-label>rüh-E",
+    "name": "<personal-label>rüh-E",
   },
   {
     "displayName": "B105",
@@ -5206,7 +5242,7 @@ exports[`live WebUntis integration > with live layer > reads user contact endpoi
 {
   "areContactDetailsWriteable": false,
   "city": null,
-  "email": "<redacted-email>",
+  "email": "<personal-email>",
   "mobileNumber": null,
   "postCode": null,
   "street": null,
@@ -5217,6 +5253,6 @@ exports[`live WebUntis integration > with live layer > reads user contact endpoi
 
 exports[`live WebUntis integration > with live layer > reads user contact endpoints 2`] = `
 {
-  "email": "<redacted-email>",
+  "email": "<personal-email>",
 }
 `;
