@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Sentinel Owl</title>
+  <desc id="desc">A friendly geometric owl watches over an open timetable, symbolizing safe read-only access.</desc>
+  <rect width="256" height="256" rx="72" fill="#0D5C63"/>
+  <path d="M42 59 88 77c12-10 25-15 40-15s28 5 40 15l46-18-19 53c3 9 5 19 5 29 0 47-32 78-72 78s-72-31-72-78c0-10 2-20 5-29Z" fill="#F7C948"/>
+  <circle cx="93" cy="126" r="33" fill="#FFF8E7"/>
+  <circle cx="163" cy="126" r="33" fill="#FFF8E7"/>
+  <circle cx="98" cy="128" r="13" fill="#102A43"/>
+  <circle cx="158" cy="128" r="13" fill="#102A43"/>
+  <path d="m128 140-17 18h34Z" fill="#E75235"/>
+  <path d="M128 188c-21-15-42-20-65-17v44c23-3 44 2 65 17 21-15 42-20 65-17v-44c-23-3-44 2-65 17Z" fill="#FFF8E7" stroke="#102A43" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M128 188v44" stroke="#102A43" stroke-width="8"/>
+</svg>
