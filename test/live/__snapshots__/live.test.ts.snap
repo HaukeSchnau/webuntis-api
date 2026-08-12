@@ -4003,7 +4003,7 @@ exports[`live WebUntis integration > with live layer > reads schoolyears and mes
       "editable": false,
       "id": 7,
       "name": "Klassenlehrkraft",
-      "personCount": 76,
+      "personCount": "<dynamic-count>",
       "publicAccess": true,
     },
     {
@@ -4012,7 +4012,7 @@ exports[`live WebUntis integration > with live layer > reads schoolyears and mes
       "editable": false,
       "id": 3,
       "name": "Lehrkräfte",
-      "personCount": 128,
+      "personCount": "<dynamic-count>",
       "publicAccess": true,
     },
     {
@@ -4021,7 +4021,7 @@ exports[`live WebUntis integration > with live layer > reads schoolyears and mes
       "editable": false,
       "id": 11,
       "name": "Schüler",
-      "personCount": 1052,
+      "personCount": "<dynamic-count>",
       "publicAccess": true,
     },
   ],
