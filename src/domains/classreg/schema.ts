@@ -1,36 +1,47 @@
 import { Schema } from "effect";
+import { EntityId } from "../../internal/schema.ts";
 import { DateRangeSchema, JsonObjectSchema } from "../shared/schema.ts";
 
 export const ClassregIdNameSchema = Schema.Struct({
-  id: Schema.Finite,
+  id: EntityId,
   name: Schema.String,
 });
 
+export type ClassregIdName = Schema.Schema.Type<typeof ClassregIdNameSchema>;
+
 export const ClassregIdNameShortSchema = Schema.Struct({
-  id: Schema.Finite,
+  id: EntityId,
   name: Schema.String,
   nameShort: Schema.String,
 });
 
+export type ClassregIdNameShort = Schema.Schema.Type<typeof ClassregIdNameShortSchema>;
+
 export const ClassregExcuseStatusTypeSchema = Schema.Literals(["OPEN", "EXCUSED", "NOT_EXCUSED"]);
 
+export type ClassregExcuseStatusType = Schema.Schema.Type<typeof ClassregExcuseStatusTypeSchema>;
+
 export const ClassregAbsenceReasonSchema = Schema.Struct({
-  id: Schema.Finite,
+  id: EntityId,
   name: Schema.String,
   automaticNotificationEnabled: Schema.Boolean,
 });
 
+export type ClassregAbsenceReason = Schema.Schema.Type<typeof ClassregAbsenceReasonSchema>;
+
 export const ClassregExcuseStatusSchema = Schema.Struct({
-  id: Schema.Finite,
+  id: EntityId,
   name: Schema.String,
   type: ClassregExcuseStatusTypeSchema,
 });
 
+export type ClassregExcuseStatus = Schema.Schema.Type<typeof ClassregExcuseStatusSchema>;
+
 export const ClassregAbsencesMetaSchema = Schema.Struct({
   canEditReason: Schema.Boolean,
   classes: Schema.Array(ClassregIdNameSchema),
-  defaultReasonId: Schema.NullOr(Schema.Finite),
-  defaultExcuseStatusId: Schema.NullOr(Schema.Finite),
+  defaultReasonId: Schema.NullOr(EntityId),
+  defaultExcuseStatusId: Schema.NullOr(EntityId),
   reasons: Schema.Array(ClassregAbsenceReasonSchema),
   excuseStatuses: Schema.Array(ClassregExcuseStatusSchema),
   assignmentGroups: Schema.Array(Schema.Unknown),
@@ -40,11 +51,15 @@ export const ClassregAbsencesMetaSchema = Schema.Struct({
 export type ClassregAbsencesMeta = Schema.Schema.Type<typeof ClassregAbsencesMetaSchema>;
 
 export const ClassregHomeworkMetaSchoolyearSchema = Schema.Struct({
-  id: Schema.Finite,
+  id: EntityId,
   name: Schema.String,
   dateRange: DateRangeSchema,
-  parentId: Schema.Finite,
+  parentId: EntityId,
 });
+
+export type ClassregHomeworkMetaSchoolyear = Schema.Schema.Type<
+  typeof ClassregHomeworkMetaSchoolyearSchema
+>;
 
 export const ClassregHomeworkMetaSchema = Schema.Struct({
   classes: Schema.Array(ClassregIdNameShortSchema),
@@ -63,9 +78,9 @@ export type ClassregHomeworkDateRangeType = Schema.Schema.Type<
 
 export const ClassregHomeworkItemSchema = Schema.Struct({
   attachments: Schema.Array(JsonObjectSchema),
-  id: Schema.Finite,
+  id: EntityId,
   createdByUser: Schema.String,
-  lessonId: Schema.Finite,
+  lessonId: EntityId,
   completed: Schema.Boolean,
   date: Schema.String,
   dueDate: Schema.String,
@@ -73,6 +88,8 @@ export const ClassregHomeworkItemSchema = Schema.Struct({
   subject: Schema.NullOr(ClassregIdNameShortSchema),
   homework: Schema.String,
 });
+
+export type ClassregHomeworkItem = Schema.Schema.Type<typeof ClassregHomeworkItemSchema>;
 
 export const ClassregHomeworkListSchema = Schema.Struct({
   homeworkList: Schema.Array(ClassregHomeworkItemSchema),

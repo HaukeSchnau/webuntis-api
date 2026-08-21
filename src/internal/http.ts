@@ -1,21 +1,13 @@
 import { Context, Effect, Layer, type Schema } from "effect";
 import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
 import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
-import {
-  type AuthError,
-  type DecodeError,
-  type DiscoveryError,
-  decodeError,
-  errorMessage,
-  type InvalidRequestError,
-  TransportError,
-  type TransportError as TransportErrorType,
-} from "./errors.ts";
+import { decodeError, errorMessage, TransportError, type WebUntisError } from "./errors.ts";
 import { MetadataState } from "./metadata-state.ts";
 import {
+  type HeaderParams,
+  type QueryParams,
   type RequestDescriptor,
   RequestPolicy,
-  type RequestPolicy as RequestPolicyType,
   type ResolvedRequestDescriptor,
   type SchemaRequestDescriptor,
   validateAndResolveRequest,
@@ -23,49 +15,147 @@ import {
 import { runtimeJsonParseOptions } from "./schema.ts";
 import { CurrentSchoolYearId } from "./school-year-context.ts";
 import { SessionState } from "./session-state.ts";
-import type { AuthenticatedState, MetadataSnapshot } from "./types.ts";
-import { resolveBaseUrl } from "./types.ts";
+import type { AuthenticatedState, MetadataSnapshot } from "./state.ts";
+import { resolveBaseUrl } from "./url.ts";
 
 const defaultAcceptHeader = "application/json, text/plain, */*";
+const absoluteUrlPattern = /^https?:\/\//u;
+const leadingSlashes = /^\/+/u;
 
-export type RequestFailure =
-  | DiscoveryError
-  | AuthError
-  | TransportErrorType
-  | DecodeError
-  | InvalidRequestError;
+type HttpMethod = "GET" | "POST" | "PUT";
+type RequestState = AuthenticatedState | MetadataSnapshot;
 
 interface RequestOptions {
-  readonly query?: Readonly<Record<string, string | number | boolean | undefined>>;
-  readonly headers?: Readonly<Record<string, string | undefined>>;
-  readonly policy?: RequestPolicyType | undefined;
+  readonly query?: QueryParams | undefined;
+  readonly headers?: HeaderParams | undefined;
+  readonly policy?: RequestPolicy | undefined;
   readonly body?: unknown;
   readonly supportsSchoolYearScope?: boolean | undefined;
 }
 
 const mergeHeaders = (
   current: Readonly<Record<string, string>>,
-  extra: Readonly<Record<string, string | undefined>> = {},
-) =>
+  extra: HeaderParams = {},
+): Record<string, string> =>
   Object.fromEntries(
     Object.entries({ ...current, ...extra }).filter(
       (entry): entry is [string, string] => entry[1] !== undefined,
     ),
   );
 
+const transportError = (method: HttpMethod, path: string, error: unknown) =>
+  new TransportError({
+    method,
+    path,
+    message: errorMessage(error),
+    cause: error,
+  });
+
+const requestUrl = (state: RequestState, path: string): string =>
+  absoluteUrlPattern.test(path)
+    ? path
+    : `${resolveBaseUrl(state.resolvedSchool)}/${path.replace(leadingSlashes, "")}`;
+
+/**
+ * School year to scope the request to.
+ *
+ * A metadata-policy request always carries the tenant's current year. Requests
+ * that opt into school-year scoping let an active {@link CurrentSchoolYearId}
+ * override it, which is how historical reads reach past years.
+ */
+const resolveSchoolYearId = (
+  state: RequestState,
+  options: RequestOptions,
+  currentSchoolYearId: number | undefined,
+): number | undefined => {
+  const metadataSchoolYearId =
+    (options.policy ?? RequestPolicy.Metadata) === RequestPolicy.Metadata && "schoolYearId" in state
+      ? state.schoolYearId
+      : undefined;
+
+  return options.supportsSchoolYearScope === true
+    ? (currentSchoolYearId ?? metadataSchoolYearId)
+    : metadataSchoolYearId;
+};
+
+const buildRequest = (
+  state: RequestState,
+  method: HttpMethod,
+  path: string,
+  options: RequestOptions,
+) =>
+  Effect.gen(function* () {
+    const currentSchoolYearId = yield* CurrentSchoolYearId;
+
+    let request = HttpClientRequest.make(method)(requestUrl(state, path)).pipe(
+      HttpClientRequest.setUrlParams(options.query ?? {}),
+      HttpClientRequest.setHeaders(mergeHeaders({ accept: defaultAcceptHeader }, options.headers)),
+      HttpClientRequest.bearerToken(state.token),
+    );
+
+    if (state.tenantId !== undefined) {
+      request = HttpClientRequest.setHeader(request, "Tenant-Id", state.tenantId);
+    }
+
+    const schoolYearId = resolveSchoolYearId(state, options, currentSchoolYearId);
+    if (schoolYearId !== undefined) {
+      request = HttpClientRequest.setHeader(
+        request,
+        "X-Webuntis-Api-School-Year-Id",
+        String(schoolYearId),
+      );
+    }
+
+    if (method !== "GET" && options.body !== undefined) {
+      request = yield* HttpClientRequest.bodyJson(request, options.body).pipe(
+        Effect.mapError((error) => transportError(method, path, error)),
+      );
+    }
+
+    return request;
+  });
+
+/** Reads the body so the connection is released, ignoring whatever it holds. */
+const drainBody = (response: HttpClientResponse.HttpClientResponse) =>
+  response.text.pipe(Effect.orElseSucceed(() => ""));
+
+const failIfNonSuccess = (
+  method: HttpMethod,
+  path: string,
+  response: HttpClientResponse.HttpClientResponse,
+) => {
+  if (response.status >= 200 && response.status < 300) {
+    return Effect.succeed(response);
+  }
+
+  return drainBody(response).pipe(
+    Effect.flatMap((body) =>
+      Effect.fail(
+        new TransportError({
+          method,
+          path,
+          status: response.status,
+          body,
+          message: `HTTP ${response.status} for ${method} ${path}`,
+        }),
+      ),
+    ),
+  );
+};
+
 export interface WebUntisHttpShape {
   readonly request: <Input>(
     descriptor: RequestDescriptor<Input>,
     input: Input,
-  ) => Effect.Effect<HttpClientResponse.HttpClientResponse, RequestFailure>;
+  ) => Effect.Effect<HttpClientResponse.HttpClientResponse, WebUntisError>;
   readonly requestJson: <Input>(
     descriptor: RequestDescriptor<Input>,
     input: Input,
-  ) => Effect.Effect<unknown, RequestFailure>;
+  ) => Effect.Effect<unknown, WebUntisError>;
   readonly requestSchema: <Input, S extends Schema.Top>(
     descriptor: SchemaRequestDescriptor<Input, S>,
     input: Input,
-  ) => Effect.Effect<Schema.Schema.Type<S>, RequestFailure, S["DecodingServices"]>;
+  ) => Effect.Effect<S["Type"], WebUntisError, S["DecodingServices"]>;
 }
 
 export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShape>()(
@@ -77,183 +167,66 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
       const metadataState = yield* MetadataState;
       const sessionState = yield* SessionState;
 
-      const resolveState = (policy: RequestPolicyType) =>
+      /**
+       * Auth-only requests still need a tenant id. When the session did not
+       * carry one, fall back to the metadata bootstrap so both the initial
+       * attempt and its retry resolve the same headers (ADR 0001).
+       */
+      const resolveState = (policy: RequestPolicy) =>
         policy === RequestPolicy.AuthOnly
           ? sessionState.ensureAuthenticated.pipe(
               Effect.flatMap((session) =>
-                session.tenantId !== undefined
-                  ? Effect.succeed(session)
-                  : metadataState.ensureMetadata,
+                session.tenantId === undefined
+                  ? metadataState.ensureMetadata
+                  : Effect.succeed<RequestState>(session),
               ),
             )
           : metadataState.ensureMetadata;
 
-      const buildRequest = (
-        state: AuthenticatedState | MetadataSnapshot,
-        method: "GET" | "POST" | "PUT",
-        path: string,
-        options: RequestOptions,
-      ) =>
-        Effect.gen(function* () {
-          const currentSchoolYearId = yield* CurrentSchoolYearId;
-          const baseHeaders: Record<string, string> = {
-            accept: defaultAcceptHeader,
-          };
-          const isAbsolute = /^https?:\/\//.test(path);
-          const url = isAbsolute
-            ? path
-            : `${resolveBaseUrl(state.resolvedSchool)}/${path.replace(/^\/+/, "")}`;
-
-          let request = HttpClientRequest.make(method)(url).pipe(
-            HttpClientRequest.setUrlParams(options.query ?? {}),
-            HttpClientRequest.setHeaders(mergeHeaders(baseHeaders, options.headers)),
-            HttpClientRequest.bearerToken(state.token),
-          );
-
-          if (state.tenantId !== undefined) {
-            request = HttpClientRequest.setHeader(request, "Tenant-Id", state.tenantId);
-          }
-
-          const metadataSchoolYearId =
-            (options.policy ?? RequestPolicy.Metadata) === RequestPolicy.Metadata &&
-            "schoolYearId" in state
-              ? state.schoolYearId
-              : undefined;
-          const schoolYearId = options.supportsSchoolYearScope
-            ? (currentSchoolYearId ?? metadataSchoolYearId)
-            : metadataSchoolYearId;
-
-          if (schoolYearId !== undefined) {
-            request = HttpClientRequest.setHeader(
-              request,
-              "X-Webuntis-Api-School-Year-Id",
-              String(schoolYearId),
-            );
-          }
-          if (method !== "GET" && options.body !== undefined) {
-            request = yield* HttpClientRequest.bodyJson(request, options.body).pipe(
-              Effect.mapError(
-                (error) =>
-                  new TransportError({
-                    method,
-                    path,
-                    message: errorMessage(error),
-                    cause: error,
-                  }),
-              ),
-            );
-          }
-
-          return request;
-        });
-
       const executeRequest = (
-        state: AuthenticatedState | MetadataSnapshot,
-        method: "GET" | "POST" | "PUT",
+        state: RequestState,
+        method: HttpMethod,
         path: string,
         options: RequestOptions,
       ) =>
         buildRequest(state, method, path, options).pipe(
           Effect.flatMap((request) =>
-            sessionState.client.execute(request).pipe(
-              Effect.mapError(
-                (error) =>
-                  new TransportError({
-                    method,
-                    path,
-                    message: errorMessage(error),
-                    cause: error,
-                  }),
-              ),
-            ),
+            sessionState.client
+              .execute(request)
+              .pipe(Effect.mapError((error) => transportError(method, path, error))),
           ),
         );
 
-      const failIfNonSuccess = (
-        method: "GET" | "POST" | "PUT",
-        path: string,
-        response: HttpClientResponse.HttpClientResponse,
-      ) => {
-        if (response.status >= 200 && response.status < 300) {
-          return Effect.succeed(response);
-        }
-
-        return response.text.pipe(
-          Effect.orElseSucceed(() => ""),
-          Effect.flatMap((body) =>
-            Effect.fail(
-              new TransportError({
-                method,
-                path,
-                status: response.status,
-                body,
-                message: `HTTP ${response.status} for ${method} ${path}`,
-              }),
-            ),
-          ),
-        );
-      };
-
-      const execute = (
-        method: "GET" | "POST" | "PUT",
-        path: string,
-        options: RequestOptions = {},
-      ) =>
+      /** Runs a request, retrying exactly once if the session was rejected. */
+      const execute = (method: HttpMethod, path: string, options: RequestOptions = {}) =>
         Effect.gen(function* () {
           const policy = options.policy ?? RequestPolicy.Metadata;
+          const attemptOptions = { ...options, policy };
+
           const state = yield* resolveState(policy);
-          const initialResponse = yield* executeRequest(state, method, path, {
-            ...options,
-            policy,
-          });
+          const initialResponse = yield* executeRequest(state, method, path, attemptOptions);
 
           if (initialResponse.status !== 401 && initialResponse.status !== 403) {
             return yield* failIfNonSuccess(method, path, initialResponse);
           }
 
-          yield* initialResponse.text.pipe(Effect.orElseSucceed(() => ""));
+          yield* drainBody(initialResponse);
           yield* sessionState.invalidate(state.generation);
 
           const refreshedState = yield* resolveState(policy);
-          const retriedResponse = yield* executeRequest(refreshedState, method, path, {
-            ...options,
-            policy,
-          });
+          const retriedResponse = yield* executeRequest(
+            refreshedState,
+            method,
+            path,
+            attemptOptions,
+          );
 
           return yield* failIfNonSuccess(method, path, retriedResponse);
         });
 
-      const decodeSchema = <S extends Schema.Top>(
-        path: string,
-        schema: S,
-        effect: Effect.Effect<HttpClientResponse.HttpClientResponse, RequestFailure>,
-      ) =>
-        effect.pipe(
-          Effect.flatMap((response) =>
-            HttpClientResponse.schemaBodyJson(
-              schema as S,
-              runtimeJsonParseOptions,
-            )(response).pipe(
-              Effect.mapError((error) =>
-                error instanceof TransportError ? error : decodeError(path, error),
-              ),
-            ),
-          ),
-        ) as Effect.Effect<Schema.Schema.Type<S>, RequestFailure, S["DecodingServices"]>;
-
-      const decodeJson = (
-        path: string,
-        effect: Effect.Effect<HttpClientResponse.HttpClientResponse, RequestFailure>,
-      ) =>
-        effect.pipe(
-          Effect.flatMap((response) =>
-            response.json.pipe(Effect.mapError((error) => decodeError(path, error))),
-          ),
-        );
-
       const executeResolved = (
         resolved: ResolvedRequestDescriptor,
-      ): Effect.Effect<HttpClientResponse.HttpClientResponse, RequestFailure> =>
+      ): Effect.Effect<HttpClientResponse.HttpClientResponse, WebUntisError> =>
         execute(resolved.method, resolved.path, {
           body: resolved.body,
           headers: resolved.headers,
@@ -267,13 +240,26 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
 
       const requestJson: WebUntisHttpShape["requestJson"] = (descriptor, input) =>
         validateAndResolveRequest(descriptor, input).pipe(
-          Effect.flatMap((resolved) => decodeJson(resolved.path, executeResolved(resolved))),
+          Effect.flatMap((resolved) =>
+            executeResolved(resolved).pipe(
+              Effect.flatMap((response) =>
+                response.json.pipe(Effect.mapError((error) => decodeError(resolved.path, error))),
+              ),
+            ),
+          ),
         );
 
       const requestSchema: WebUntisHttpShape["requestSchema"] = (descriptor, input) =>
         validateAndResolveRequest(descriptor, input).pipe(
           Effect.flatMap((resolved) =>
-            decodeSchema(resolved.path, descriptor.schema, executeResolved(resolved)),
+            executeResolved(resolved).pipe(
+              Effect.flatMap(
+                HttpClientResponse.schemaBodyJson(descriptor.schema, runtimeJsonParseOptions),
+              ),
+              Effect.mapError((error) =>
+                error instanceof TransportError ? error : decodeError(resolved.path, error),
+              ),
+            ),
           ),
         );
 

@@ -5,13 +5,13 @@ import type * as HttpClientRequest from "effect/unstable/http/HttpClientRequest"
 import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
 import { makeWebUntisResearchLayer } from "../../src/client.ts";
 import type { ClientConfig } from "../../src/internal/config.ts";
-import type { RequestFailure, WebUntisHttp } from "../../src/internal/http.ts";
+import type { WebUntisError } from "../../src/internal/errors.ts";
+import type { WebUntisHttp } from "../../src/internal/http.ts";
 import {
   type HeaderParams,
   type QueryParams,
   request,
   RequestPolicy,
-  type RequestPolicy as RequestPolicyType,
   schemaRequest,
 } from "../../src/internal/request.ts";
 
@@ -23,22 +23,22 @@ export const testConfig: ClientConfig["Service"] = {
   password: Redacted.make("secret"),
 };
 
-export const makeJwt = (...args: [] | [expSecondsFromNow: number | undefined]) => {
-  const expSecondsFromNow = args.length === 0 ? 3_600 : args[0];
+const encodeJwt = (payloadValue: object) => {
   const header = "eyJhbGciOiJub25lIn0";
-  const payloadValue =
-    expSecondsFromNow === undefined
-      ? {}
-      : {
-          exp: Math.floor(Date.now() / 1_000) + expSecondsFromNow,
-        };
   const payload = btoa(JSON.stringify(payloadValue))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/g, "");
+    .replace(/\+/gu, "-")
+    .replace(/\//gu, "_")
+    .replace(/=+$/gu, "");
 
   return `${header}.${payload}.signature`;
 };
+
+/** Unsigned JWT that expires `expSecondsFromNow` seconds from now. */
+export const makeJwt = (expSecondsFromNow = 3_600) =>
+  encodeJwt({ exp: Math.floor(Date.now() / 1_000) + expSecondsFromNow });
+
+/** Unsigned JWT with no `exp` claim, so the caller must fall back to a default. */
+export const makeJwtWithoutExpiry = () => encodeJwt({});
 
 export const jsonResponse = (body: unknown, init: ResponseInit = {}) => {
   const headers = new Headers(init.headers);
@@ -80,7 +80,7 @@ export const makeCoreTestLayer = (
 interface TestGetOptions {
   readonly query?: QueryParams | undefined;
   readonly headers?: HeaderParams | undefined;
-  readonly policy?: RequestPolicyType | undefined;
+  readonly policy?: RequestPolicy | undefined;
   readonly supportsSchoolYearScope?: boolean | undefined;
 }
 
@@ -106,7 +106,7 @@ export const testGetSchema = <S extends Schema.Top>(
   path: string,
   schema: S,
   options: TestGetOptions = {},
-): Effect.Effect<Schema.Schema.Type<S>, RequestFailure, S["DecodingServices"]> =>
+): Effect.Effect<S["Type"], WebUntisError, S["DecodingServices"]> =>
   http.requestSchema(
     schemaRequest<void, S>({
       method: "GET",

@@ -1,21 +1,24 @@
 import { readFileSync } from "node:fs";
+import { Schema } from "effect";
 import { describe, expect, it } from "vite-plus/test";
 
-interface EndpointCatalog {
-  readonly observedAt: string;
-  readonly tenantHost: string;
-  readonly sourceBundle: string;
-  readonly endpointCount: number;
-  readonly versionCounts: Readonly<Record<string, number>>;
-  readonly endpoints: ReadonlyArray<string>;
-}
+const EndpointCatalogSchema = Schema.Struct({
+  observedAt: Schema.String,
+  tenantHost: Schema.String,
+  sourceBundle: Schema.String,
+  endpointCount: Schema.Int,
+  versionCounts: Schema.Record(Schema.String, Schema.Int),
+  endpoints: Schema.Array(Schema.String),
+});
 
-const endpointCatalog = JSON.parse(
-  readFileSync(
-    new URL("../../docs/research/webuntis/modern-rest-endpoints.json", import.meta.url),
-    "utf8",
+const endpointCatalog = Schema.decodeUnknownSync(EndpointCatalogSchema)(
+  JSON.parse(
+    readFileSync(
+      new URL("../../docs/research/webuntis/modern-rest-endpoints.json", import.meta.url),
+      "utf8",
+    ),
   ),
-) as EndpointCatalog;
+);
 
 const runtimeRouteMap = readFileSync(
   new URL("../../docs/research/webuntis/runtime-route-map.md", import.meta.url),

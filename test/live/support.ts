@@ -46,13 +46,15 @@ import type {
   UserEmail,
 } from "../../src/domains/schemas.ts";
 import type { MobileDataV1V2 } from "../../src/domains/app/schema.ts";
-import type { UnexpectedResponseError } from "../../src/internal/errors.ts";
+import { TransportError } from "../../src/internal/errors.ts";
+
+const isBlank = (value: string | undefined) => value === undefined || value === "";
 
 export const liveEnvMissing = [
-  process.env["WEBUNTIS_SCHOOL_NAME"] ? undefined : "WEBUNTIS_SCHOOL_NAME",
-  process.env["WEBUNTIS_USERNAME"] ? undefined : "WEBUNTIS_USERNAME",
-  process.env["WEBUNTIS_PASSWORD"] ? undefined : "WEBUNTIS_PASSWORD",
-].filter((field): field is string => field !== undefined);
+  "WEBUNTIS_SCHOOL_NAME",
+  "WEBUNTIS_USERNAME",
+  "WEBUNTIS_PASSWORD",
+].filter((name) => isBlank(process.env[name]));
 
 const stableVocabularyKeys = new Set([
   "errorcode",
@@ -66,22 +68,22 @@ const stableVocabularyKeys = new Set([
 ]);
 
 function normalizeString(value: string, parentKey?: string): string {
-  if (/^\d{4}-\d{2}-\d{2}T[^"]*$/.test(value)) {
+  if (/^\d{4}-\d{2}-\d{2}T[^"]*$/u.test(value)) {
     return "<dynamic-datetime>";
   }
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+  if (/^\d{4}-\d{2}-\d{2}$/u.test(value)) {
     return "<dynamic-date>";
   }
-  if (/^\d{4}\.\d+\.\d+$/.test(value)) {
+  if (/^\d{4}\.\d+\.\d+$/u.test(value)) {
     return "<dynamic-version>";
   }
-  if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
+  if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/iu.test(value)) {
     return "<personal-email>";
   }
   if (parentKey !== undefined && stableVocabularyKeys.has(parentKey)) {
     return value;
   }
-  return value.replace(/[A-Z][A-ZÄÖÜ-]{1,}/g, "<personal-label>");
+  return value.replace(/[A-Z][A-ZÄÖÜ-]{1,}/gu, "<personal-label>");
 }
 
 export function normalizeSnapshotValue(value: unknown, parentKey?: string): unknown {
@@ -211,7 +213,11 @@ export const normalizeTimetableMenu = (value: TimetableMenu) => normalizeUnknown
 export const normalizeTimetableSearch = (value: TimetableSearch) => normalizeUnknown(value);
 export const normalizeTodayMeta = (value: TodayMeta) => normalizeUnknown(value);
 
-export const normalizeUnexpectedResponse = (error: UnexpectedResponseError) => {
+export const normalizeTransportError = (error: unknown) => {
+  if (!(error instanceof TransportError)) {
+    throw new TypeError(`expected a TransportError, got ${String(error)}`);
+  }
+
   const rawBody = error.body ?? "";
   let body: unknown = rawBody;
   try {
@@ -221,7 +227,7 @@ export const normalizeUnexpectedResponse = (error: UnexpectedResponseError) => {
   }
 
   return {
-    path: error.path.replace(/\/\d+(?=\/|$)/g, "/{id}"),
+    path: error.path.replace(/\/\d+(?=\/|$)/gu, "/{id}"),
     status: error.status,
     body: normalizeUnknown(body),
   };

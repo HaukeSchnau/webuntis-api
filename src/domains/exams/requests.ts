@@ -8,26 +8,20 @@ import {
   ExamsSchema,
 } from "./schema.ts";
 
-export interface ExamDetailRequest {
-  readonly id: number;
-}
+const ExamDetailInput = Schema.Struct({ id: PositiveInteger });
 
-export type ExamDateRangeRequest =
-  | { readonly start: string; readonly end: string }
-  | { readonly start?: never; readonly end?: never };
-
-export type ExamsListRequest = ExamDateRangeRequest & {
-  readonly withDeleted?: boolean | undefined;
-};
-
+/**
+ * Either both range boundaries or neither. The `Schema.Never` branch keeps the
+ * "absent" case explicit so a caller cannot pass just one boundary.
+ */
 const coherentOptionalDateRange = Schema.makeFilter<{
   readonly start?: string | undefined;
   readonly end?: string | undefined;
-}>((range) => {
-  return range.start === undefined || range.end === undefined || range.start <= range.end
+}>((range) =>
+  range.start === undefined || range.end === undefined || range.start <= range.end
     ? undefined
-    : { path: ["end"], issue: "must not be before start" };
-});
+    : { path: ["end"], issue: "must not be before start" },
+);
 
 const ExamDateRangeInput = Schema.Union([
   Schema.Struct({ start: IsoDate, end: IsoDate }),
@@ -46,6 +40,10 @@ const ExamsListInput = Schema.Union([
     withDeleted: Schema.optional(Schema.Boolean),
   }),
 ]).check(coherentOptionalDateRange);
+
+export type ExamDetailRequest = typeof ExamDetailInput.Type;
+export type ExamDateRangeRequest = typeof ExamDateRangeInput.Type;
+export type ExamsListRequest = typeof ExamsListInput.Type;
 
 export const ExamsRequests = {
   list: schemaRequest<ExamsListRequest | undefined, typeof ExamsSchema>({
@@ -84,7 +82,7 @@ export const ExamsRequests = {
     operation: "api/rest/view/v1/exams/{id}",
     path: (request) => `api/rest/view/v1/exams/${request.id}`,
     policy: RequestPolicy.AuthOnly,
-    inputSchema: Schema.Struct({ id: PositiveInteger }),
+    inputSchema: ExamDetailInput,
     supportsSchoolYearScope: true,
     schema: ExamDetailSchema,
   }),

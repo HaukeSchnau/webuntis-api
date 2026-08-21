@@ -1,5 +1,6 @@
 import { Context, Effect, Layer } from "effect";
-import type { RequestFailure } from "../../internal/http.ts";
+import { makeOperations } from "../../internal/domain.ts";
+import type { WebUntisError } from "../../internal/errors.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
 import { SessionRequests, type SessionStatusRequest } from "./requests.ts";
 import type { SessionStatus } from "./schema.ts";
@@ -7,7 +8,7 @@ import type { SessionStatus } from "./schema.ts";
 export interface SessionClientShape {
   readonly getStatus: (
     request?: SessionStatusRequest,
-  ) => Effect.Effect<SessionStatus, RequestFailure>;
+  ) => Effect.Effect<SessionStatus, WebUntisError>;
 }
 
 export class SessionClient extends Context.Service<SessionClient, SessionClientShape>()(
@@ -16,17 +17,13 @@ export class SessionClient extends Context.Service<SessionClient, SessionClientS
   static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
-      const http = yield* WebUntisHttp;
+      const { callOptional } = makeOperations(yield* WebUntisHttp, "SessionClient");
 
       return SessionClient.of({
-        getStatus: Effect.fn("SessionClient.getStatus")(function* (
-          request: SessionStatusRequest = {},
-        ) {
-          return yield* http.requestSchema(SessionRequests.getStatus, request);
-        }),
+        getStatus: callOptional("getStatus", SessionRequests.getStatus, {}),
       });
     }),
   );
 }
 
-export type { SessionStatusRequest } from "./requests.ts";
+export type { SessionStatusRequest };

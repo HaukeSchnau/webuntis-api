@@ -1,7 +1,8 @@
 import { describe, expect, expectTypeOf, it } from "@effect/vitest";
 import { Context, type Effect } from "effect";
 import { withSchoolYear } from "../../src/index.ts";
-import { type ResolvedSchool, resolveBaseUrl } from "../../src/internal/types.ts";
+import type { ResolvedSchool } from "../../src/internal/state.ts";
+import { resolveBaseUrl } from "../../src/internal/url.ts";
 
 class TestDependency extends Context.Service<TestDependency, { readonly value: number }>()(
   "test/TestDependency",
@@ -32,6 +33,8 @@ describe("internal URL normalization", () => {
 
 describe("school-year scope types", () => {
   it("preserves an effect's success, error, and requirement channels", () => {
+    // Type-level assertion only; the value is never run.
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     const original = undefined as unknown as Effect.Effect<number, "failure", TestDependency>;
     const scoped = withSchoolYear(7)(original);
 

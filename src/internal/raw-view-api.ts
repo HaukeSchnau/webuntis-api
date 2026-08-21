@@ -1,17 +1,12 @@
 import { Context, Effect, Layer } from "effect";
-import { type RequestFailure, WebUntisHttp } from "./http.ts";
-import {
-  type HeaderParams,
-  type QueryParams,
-  request,
-  RequestPolicy,
-  type RequestPolicy as RequestPolicyType,
-} from "./request.ts";
+import type { WebUntisError } from "./errors.ts";
+import { WebUntisHttp } from "./http.ts";
+import { type HeaderParams, type QueryParams, request, RequestPolicy } from "./request.ts";
 
 export interface RawViewApiRequest {
   readonly query?: QueryParams | undefined;
   readonly headers?: HeaderParams | undefined;
-  readonly policy?: RequestPolicyType | undefined;
+  readonly policy?: RequestPolicy | undefined;
   readonly supportsSchoolYearScope?: boolean | undefined;
 }
 
@@ -19,7 +14,7 @@ export interface RawViewApiClientShape {
   readonly getJson: (
     path: string,
     options?: RawViewApiRequest,
-  ) => Effect.Effect<unknown, RequestFailure>;
+  ) => Effect.Effect<unknown, WebUntisError>;
 }
 
 export class RawViewApiClient extends Context.Service<RawViewApiClient, RawViewApiClientShape>()(

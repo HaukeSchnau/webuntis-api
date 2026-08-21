@@ -12,14 +12,13 @@ import {
   MobileDataSchema,
   OnboardingSchema,
   OnboardingTypeSchema,
-  type OnboardingType,
   StartupActionsSchema,
   TodayMetaSchema,
 } from "./schema.ts";
 
-export interface OnboardingRequest {
-  readonly type: OnboardingType;
-}
+const OnboardingInput = Schema.Struct({ type: OnboardingTypeSchema });
+
+export type OnboardingRequest = typeof OnboardingInput.Type;
 
 export const AppRequests = {
   getData: schemaRequest<void, typeof AppDataSchema>({
@@ -93,7 +92,7 @@ export const AppRequests = {
     path: "api/rest/view/v1/onboarding",
     policy: RequestPolicy.AuthOnly,
     query: (request) => ({ type: request.type }),
-    inputSchema: Schema.Struct({ type: OnboardingTypeSchema }),
+    inputSchema: OnboardingInput,
     schema: OnboardingSchema,
   }),
 } as const;

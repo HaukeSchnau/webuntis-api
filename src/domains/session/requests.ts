@@ -2,9 +2,9 @@ import { Schema } from "effect";
 import { NonBlankString, RequestPolicy, schemaRequest } from "../../internal/request.ts";
 import { SessionStatusSchema } from "./schema.ts";
 
-export interface SessionStatusRequest {
-  readonly clientTimeZone?: string | undefined;
-}
+const SessionStatusInput = Schema.Struct({ clientTimeZone: Schema.optional(NonBlankString) });
+
+export type SessionStatusRequest = typeof SessionStatusInput.Type;
 
 export const SessionRequests = {
   getStatus: schemaRequest<SessionStatusRequest, typeof SessionStatusSchema>({
@@ -12,7 +12,7 @@ export const SessionRequests = {
     path: "api/rest/view/v1/session/status",
     body: (request) => request,
     policy: RequestPolicy.AuthOnly,
-    inputSchema: Schema.Struct({ clientTimeZone: Schema.optional(NonBlankString) }),
+    inputSchema: SessionStatusInput,
     schema: SessionStatusSchema,
   }),
 } as const;

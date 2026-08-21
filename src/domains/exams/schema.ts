@@ -1,33 +1,16 @@
 import { Schema } from "effect";
-import { JsonObjectSchema } from "../shared/schema.ts";
-
-export const ExamDisplayResourceSchema = Schema.Struct({
-  id: Schema.Finite,
-  shortName: Schema.String,
-  longName: Schema.String,
-  displayName: Schema.String,
-});
+import { EntityId } from "../../internal/schema.ts";
+import { DisplayResourceSchema, JsonObjectSchema } from "../shared/schema.ts";
 
 export const ExamTypeSchema = Schema.Struct({
-  id: Schema.Finite,
-  shortName: Schema.String,
-  longName: Schema.String,
-  displayName: Schema.String,
-  gradingScaleId: Schema.Finite,
+  ...DisplayResourceSchema.fields,
+  gradingScaleId: EntityId,
 });
 
-export const ExamFilterTypeSchema = Schema.Struct({
-  id: Schema.Finite,
-  shortName: Schema.String,
-  longName: Schema.String,
-  displayName: Schema.String,
-});
+export type ExamType = Schema.Schema.Type<typeof ExamTypeSchema>;
 
 export const ExamStudentSchema = Schema.Struct({
-  id: Schema.Finite,
-  displayName: Schema.String,
-  shortName: Schema.String,
-  longName: Schema.String,
+  ...DisplayResourceSchema.fields,
   gender: Schema.NullOr(Schema.String),
   klasse: Schema.NullOr(Schema.String),
   imageUrl: Schema.String,
@@ -35,43 +18,40 @@ export const ExamStudentSchema = Schema.Struct({
   disadvantageCompensation: Schema.Boolean,
 });
 
+export type ExamStudent = Schema.Schema.Type<typeof ExamStudentSchema>;
+
 export const ExamInvigilatorSchema = Schema.Struct({
   start: Schema.String,
   end: Schema.String,
-  teachers: Schema.Array(ExamDisplayResourceSchema),
+  teachers: Schema.Array(DisplayResourceSchema),
 });
 
-export const ExamGradingScaleSchema = Schema.Struct({
-  id: Schema.Finite,
-  shortName: Schema.String,
-  longName: Schema.String,
-  displayName: Schema.String,
-});
+export type ExamInvigilator = Schema.Schema.Type<typeof ExamInvigilatorSchema>;
 
 export const ExamSchema = Schema.Struct({
-  examId: Schema.Finite,
+  examId: EntityId,
   examType: ExamTypeSchema,
-  gradingScale: ExamGradingScaleSchema,
+  gradingScale: DisplayResourceSchema,
   examName: Schema.String,
   examText: Schema.String,
   examStart: Schema.String,
   examEnd: Schema.String,
-  examDuration: Schema.Finite,
+  examDuration: Schema.Int,
   examBooked: Schema.String,
-  examBookedUser: ExamDisplayResourceSchema,
+  examBookedUser: DisplayResourceSchema,
   examReturned: Schema.NullOr(Schema.String),
-  examReturnedUser: Schema.NullOr(ExamDisplayResourceSchema),
+  examReturnedUser: Schema.NullOr(DisplayResourceSchema),
   examModified: Schema.String,
-  examModifiedUser: ExamDisplayResourceSchema,
-  numStudents: Schema.Finite,
-  subject: ExamDisplayResourceSchema,
-  classes: Schema.Array(ExamDisplayResourceSchema),
-  teachers: Schema.Array(ExamDisplayResourceSchema),
-  studentgroup: ExamDisplayResourceSchema,
+  examModifiedUser: DisplayResourceSchema,
+  numStudents: Schema.Int,
+  subject: DisplayResourceSchema,
+  classes: Schema.Array(DisplayResourceSchema),
+  teachers: Schema.Array(DisplayResourceSchema),
+  studentgroup: DisplayResourceSchema,
   students: Schema.Array(ExamStudentSchema),
   invigilators: Schema.Array(ExamInvigilatorSchema),
-  rooms: Schema.Array(ExamDisplayResourceSchema),
-  lessonId: Schema.Finite,
+  rooms: Schema.Array(DisplayResourceSchema),
+  lessonId: EntityId,
   exported: Schema.Boolean,
   deleted: Schema.Boolean,
   isUntisExam: Schema.Boolean,
@@ -80,6 +60,8 @@ export const ExamSchema = Schema.Struct({
   canReadGrades: Schema.Boolean,
   canWriteGrades: Schema.Boolean,
 });
+
+export type Exam = Schema.Schema.Type<typeof ExamSchema>;
 
 export const ExamsSchema = Schema.Struct({
   exams: Schema.Array(ExamSchema),
@@ -97,10 +79,10 @@ export const ExamsForClassSchema = Schema.Struct({
 export type ExamsForClass = Schema.Schema.Type<typeof ExamsForClassSchema>;
 
 export const ExamFilterSchema = Schema.Struct({
-  examTypes: Schema.Array(ExamFilterTypeSchema),
-  subjects: Schema.Array(ExamDisplayResourceSchema),
-  classes: Schema.Array(ExamDisplayResourceSchema),
-  teachers: Schema.Array(ExamDisplayResourceSchema),
+  examTypes: Schema.Array(DisplayResourceSchema),
+  subjects: Schema.Array(DisplayResourceSchema),
+  classes: Schema.Array(DisplayResourceSchema),
+  teachers: Schema.Array(DisplayResourceSchema),
 });
 
 export type ExamFilter = Schema.Schema.Type<typeof ExamFilterSchema>;
@@ -110,30 +92,35 @@ export const ExamGradingScaleMarkSchema = Schema.Struct({
   value: Schema.Finite,
 });
 
+export type ExamGradingScaleMark = Schema.Schema.Type<typeof ExamGradingScaleMarkSchema>;
+
 export const ExamGradingScaleWithMarksSchema = Schema.Struct({
-  id: Schema.Finite,
-  shortName: Schema.String,
-  longName: Schema.String,
-  displayName: Schema.String,
+  ...DisplayResourceSchema.fields,
   marks: Schema.Array(ExamGradingScaleMarkSchema),
 });
 
+export type ExamGradingScaleWithMarks = Schema.Schema.Type<typeof ExamGradingScaleWithMarksSchema>;
+
 export const ExamGradeSchema = Schema.Struct({
-  id: Schema.Finite,
+  id: EntityId,
   displayName: Schema.String,
   weight: Schema.Finite,
 });
+
+export type ExamGrade = Schema.Schema.Type<typeof ExamGradeSchema>;
 
 export const ExamStatisticsEntrySchema = Schema.Struct({
   exam: ExamSchema,
   gradingScale: ExamGradingScaleWithMarksSchema,
   grades: Schema.Array(ExamGradeSchema),
-  numParticipants: Schema.Finite,
-  numParticipantsWithGrade: Schema.Finite,
+  numParticipants: Schema.Int,
+  numParticipantsWithGrade: Schema.Int,
   resultSource: Schema.String,
   averageGrade: Schema.Finite,
   countPerGrade: Schema.Array(Schema.Unknown),
 });
+
+export type ExamStatisticsEntry = Schema.Schema.Type<typeof ExamStatisticsEntrySchema>;
 
 export const ExamStatisticsSchema = Schema.Struct({
   exams: Schema.Array(ExamStatisticsEntrySchema),

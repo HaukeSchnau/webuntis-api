@@ -19,7 +19,7 @@ export interface RequestDescriptor<Input> {
   readonly query?: ((input: Input) => QueryParams) | undefined;
   readonly headers?: ((input: Input) => HeaderParams) | undefined;
   readonly body?: ((input: Input) => unknown) | undefined;
-  readonly inputSchema?: Schema.Codec<Input, unknown, never, never> | undefined;
+  readonly inputSchema?: Schema.Codec<Input, unknown> | undefined;
   readonly supportsSchoolYearScope?: boolean | undefined;
 }
 
@@ -100,7 +100,7 @@ export const PositiveInteger = Schema.Int.check(
   Schema.isGreaterThan(0, { expected: "a positive integer" }),
 );
 
-const isoDatePattern = /^(\d{4})-(\d{2})-(\d{2})$/;
+const isoDatePattern = /^(\d{4})-(\d{2})-(\d{2})$/u;
 
 const isValidCalendarDate = (value: string): boolean => {
   const match = isoDatePattern.exec(value);
@@ -128,7 +128,7 @@ export const IsoDate = Schema.String.check(
 );
 
 const isoDateTimePattern =
-  /^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.\d{1,9})?)?(?:Z|[+-]\d{2}:\d{2})?$/;
+  /^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.\d{1,9})?)?(?:Z|[+-]\d{2}:\d{2})?$/u;
 
 export const DateTimeString = Schema.String.check(
   Schema.makeFilter((value) => {
@@ -155,22 +155,30 @@ export const NonBlankString = Schema.String.check(
   Schema.makeFilter((value) => value.trim().length > 0 || "must not be blank"),
 );
 
-export const orderedRange = <T extends { readonly start: string; readonly end: string }>(
-  schema: Schema.Codec<T, unknown, never, never>,
-): Schema.Codec<T, unknown, never, never> =>
+/**
+ * Both range helpers return the schema they were given, so callers keep the
+ * concrete struct type and can derive their request type from it.
+ */
+export const orderedRange = <
+  S extends Schema.Top & { readonly Type: { readonly start: string; readonly end: string } },
+>(
+  schema: S,
+): S["Rebuild"] =>
   schema.check(
-    Schema.makeFilter((range) =>
+    Schema.makeFilter((range: S["Type"]) =>
       range.start <= range.end ? undefined : { path: ["end"], issue: "must not be before start" },
     ),
   );
 
 export const orderedDateTimeRange = <
-  T extends { readonly startDateTime: string; readonly endDateTime: string },
+  S extends Schema.Top & {
+    readonly Type: { readonly startDateTime: string; readonly endDateTime: string };
+  },
 >(
-  schema: Schema.Codec<T, unknown, never, never>,
-): Schema.Codec<T, unknown, never, never> =>
+  schema: S,
+): S["Rebuild"] =>
   schema.check(
-    Schema.makeFilter((range) =>
+    Schema.makeFilter((range: S["Type"]) =>
       Date.parse(range.startDateTime) <= Date.parse(range.endDateTime)
         ? undefined
         : { path: ["endDateTime"], issue: "must not be before startDateTime" },

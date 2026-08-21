@@ -1,22 +1,23 @@
 import { Context, Effect, Layer } from "effect";
-import type { RequestFailure } from "../../internal/http.ts";
+import { makeOperations } from "../../internal/domain.ts";
+import type { WebUntisError } from "../../internal/errors.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
 import {
   type ExamDateRangeRequest,
   type ExamDetailRequest,
-  type ExamsListRequest,
   ExamsRequests,
+  type ExamsListRequest,
 } from "./requests.ts";
-import type { ExamDetail, ExamFilter, ExamsForClass, ExamStatistics, Exams } from "./schema.ts";
+import type { ExamDetail, ExamFilter, Exams, ExamsForClass, ExamStatistics } from "./schema.ts";
 
 export interface ExamsClientShape {
-  readonly list: (request?: ExamsListRequest) => Effect.Effect<Exams, RequestFailure>;
-  readonly getFilter: (request?: ExamDateRangeRequest) => Effect.Effect<ExamFilter, RequestFailure>;
+  readonly list: (request?: ExamsListRequest) => Effect.Effect<Exams, WebUntisError>;
+  readonly getFilter: (request?: ExamDateRangeRequest) => Effect.Effect<ExamFilter, WebUntisError>;
   readonly getStatistics: (
     request?: ExamDateRangeRequest,
-  ) => Effect.Effect<ExamStatistics, RequestFailure>;
-  readonly getExam: (request: ExamDetailRequest) => Effect.Effect<ExamDetail, RequestFailure>;
-  readonly getForClass: Effect.Effect<ExamsForClass, RequestFailure>;
+  ) => Effect.Effect<ExamStatistics, WebUntisError>;
+  readonly getExam: (request: ExamDetailRequest) => Effect.Effect<ExamDetail, WebUntisError>;
+  readonly getForClass: Effect.Effect<ExamsForClass, WebUntisError>;
 }
 
 export class ExamsClient extends Context.Service<ExamsClient, ExamsClientShape>()(
@@ -25,29 +26,17 @@ export class ExamsClient extends Context.Service<ExamsClient, ExamsClientShape>(
   static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
-      const http = yield* WebUntisHttp;
+      const { read, callOptional, call } = makeOperations(yield* WebUntisHttp, "ExamsClient");
 
       return ExamsClient.of({
-        list: Effect.fn("ExamsClient.list")(function* (request?: ExamsListRequest) {
-          return yield* http.requestSchema(ExamsRequests.list, request);
-        }),
-        getFilter: Effect.fn("ExamsClient.getFilter")(function* (request?: ExamDateRangeRequest) {
-          return yield* http.requestSchema(ExamsRequests.getFilter, request);
-        }),
-        getStatistics: Effect.fn("ExamsClient.getStatistics")(function* (
-          request?: ExamDateRangeRequest,
-        ) {
-          return yield* http.requestSchema(ExamsRequests.getStatistics, request);
-        }),
-        getExam: Effect.fn("ExamsClient.getExam")(function* (request: ExamDetailRequest) {
-          return yield* http.requestSchema(ExamsRequests.getExam, request);
-        }),
-        getForClass: http
-          .requestSchema(ExamsRequests.getForClass, undefined)
-          .pipe(Effect.withSpan("ExamsClient.getForClass")),
+        list: callOptional("list", ExamsRequests.list, undefined),
+        getFilter: callOptional("getFilter", ExamsRequests.getFilter, undefined),
+        getStatistics: callOptional("getStatistics", ExamsRequests.getStatistics, undefined),
+        getExam: call("getExam", ExamsRequests.getExam),
+        getForClass: read("getForClass", ExamsRequests.getForClass),
       });
     }),
   );
 }
 
-export type { ExamDateRangeRequest, ExamDetailRequest, ExamsListRequest } from "./requests.ts";
+export type { ExamDateRangeRequest, ExamDetailRequest, ExamsListRequest };

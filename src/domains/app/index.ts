@@ -1,5 +1,6 @@
 import { Context, Effect, Layer } from "effect";
-import type { RequestFailure } from "../../internal/http.ts";
+import { makeOperations } from "../../internal/domain.ts";
+import type { WebUntisError } from "../../internal/errors.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
 import { AppRequests, type OnboardingRequest } from "./requests.ts";
 import type {
@@ -18,66 +19,51 @@ import type {
 } from "./schema.ts";
 
 export interface AppClientShape {
-  readonly getData: Effect.Effect<AppData, RequestFailure>;
-  readonly getHome: Effect.Effect<Home, RequestFailure>;
-  readonly getMobileData: Effect.Effect<MobileData, RequestFailure>;
-  readonly getStartupActions: Effect.Effect<StartupActions, RequestFailure>;
-  readonly getPlatformApplicationMenus: Effect.Effect<AppPlatformApplicationMenus, RequestFailure>;
-  readonly getThirdPartyData: Effect.Effect<AppThirdPartyData, RequestFailure>;
-  readonly getExamIntegrations: Effect.Effect<AppExamIntegrations, RequestFailure>;
-  readonly getTodayMeta: Effect.Effect<TodayMeta, RequestFailure>;
-  readonly getDashboardCards: Effect.Effect<DashboardCards, RequestFailure>;
-  readonly getDashboardCardsDetail: Effect.Effect<DashboardCardsDetail, RequestFailure>;
-  readonly getDashboardCardsStatus: Effect.Effect<DashboardCardsStatus, RequestFailure>;
-  readonly getOnboarding: (request: OnboardingRequest) => Effect.Effect<Onboarding, RequestFailure>;
+  readonly getData: Effect.Effect<AppData, WebUntisError>;
+  readonly getHome: Effect.Effect<Home, WebUntisError>;
+  readonly getMobileData: Effect.Effect<MobileData, WebUntisError>;
+  readonly getStartupActions: Effect.Effect<StartupActions, WebUntisError>;
+  readonly getPlatformApplicationMenus: Effect.Effect<AppPlatformApplicationMenus, WebUntisError>;
+  readonly getThirdPartyData: Effect.Effect<AppThirdPartyData, WebUntisError>;
+  readonly getExamIntegrations: Effect.Effect<AppExamIntegrations, WebUntisError>;
+  readonly getTodayMeta: Effect.Effect<TodayMeta, WebUntisError>;
+  readonly getDashboardCards: Effect.Effect<DashboardCards, WebUntisError>;
+  readonly getDashboardCardsDetail: Effect.Effect<DashboardCardsDetail, WebUntisError>;
+  readonly getDashboardCardsStatus: Effect.Effect<DashboardCardsStatus, WebUntisError>;
+  readonly getOnboarding: (request: OnboardingRequest) => Effect.Effect<Onboarding, WebUntisError>;
 }
 
 export class AppClient extends Context.Service<AppClient, AppClientShape>()("webuntis/AppClient") {
   static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
-      const http = yield* WebUntisHttp;
+      const { read, call } = makeOperations(yield* WebUntisHttp, "AppClient");
 
       return AppClient.of({
-        getData: http
-          .requestSchema(AppRequests.getData, undefined)
-          .pipe(Effect.withSpan("AppClient.getData")),
-        getHome: http
-          .requestSchema(AppRequests.getHome, undefined)
-          .pipe(Effect.withSpan("AppClient.getHome")),
-        getMobileData: http
-          .requestSchema(AppRequests.getMobileData, undefined)
-          .pipe(Effect.withSpan("AppClient.getMobileData")),
-        getStartupActions: http
-          .requestSchema(AppRequests.getStartupActions, undefined)
-          .pipe(Effect.withSpan("AppClient.getStartupActions")),
-        getPlatformApplicationMenus: http
-          .requestSchema(AppRequests.getPlatformApplicationMenus, undefined)
-          .pipe(Effect.withSpan("AppClient.getPlatformApplicationMenus")),
-        getThirdPartyData: http
-          .requestSchema(AppRequests.getThirdPartyData, undefined)
-          .pipe(Effect.withSpan("AppClient.getThirdPartyData")),
-        getExamIntegrations: http
-          .requestSchema(AppRequests.getExamIntegrations, undefined)
-          .pipe(Effect.withSpan("AppClient.getExamIntegrations")),
-        getTodayMeta: http
-          .requestSchema(AppRequests.getTodayMeta, undefined)
-          .pipe(Effect.withSpan("AppClient.getTodayMeta")),
-        getDashboardCards: http
-          .requestSchema(AppRequests.getDashboardCards, undefined)
-          .pipe(Effect.withSpan("AppClient.getDashboardCards")),
-        getDashboardCardsDetail: http
-          .requestSchema(AppRequests.getDashboardCardsDetail, undefined)
-          .pipe(Effect.withSpan("AppClient.getDashboardCardsDetail")),
-        getDashboardCardsStatus: http
-          .requestSchema(AppRequests.getDashboardCardsStatus, undefined)
-          .pipe(Effect.withSpan("AppClient.getDashboardCardsStatus")),
-        getOnboarding: Effect.fn("AppClient.getOnboarding")(function* (request: OnboardingRequest) {
-          return yield* http.requestSchema(AppRequests.getOnboarding, request);
-        }),
+        getData: read("getData", AppRequests.getData),
+        getHome: read("getHome", AppRequests.getHome),
+        getMobileData: read("getMobileData", AppRequests.getMobileData),
+        getStartupActions: read("getStartupActions", AppRequests.getStartupActions),
+        getPlatformApplicationMenus: read(
+          "getPlatformApplicationMenus",
+          AppRequests.getPlatformApplicationMenus,
+        ),
+        getThirdPartyData: read("getThirdPartyData", AppRequests.getThirdPartyData),
+        getExamIntegrations: read("getExamIntegrations", AppRequests.getExamIntegrations),
+        getTodayMeta: read("getTodayMeta", AppRequests.getTodayMeta),
+        getDashboardCards: read("getDashboardCards", AppRequests.getDashboardCards),
+        getDashboardCardsDetail: read(
+          "getDashboardCardsDetail",
+          AppRequests.getDashboardCardsDetail,
+        ),
+        getDashboardCardsStatus: read(
+          "getDashboardCardsStatus",
+          AppRequests.getDashboardCardsStatus,
+        ),
+        getOnboarding: call("getOnboarding", AppRequests.getOnboarding),
       });
     }),
   );
 }
 
-export type { OnboardingRequest } from "./requests.ts";
+export type { OnboardingRequest };

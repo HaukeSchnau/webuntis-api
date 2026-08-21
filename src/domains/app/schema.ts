@@ -1,4 +1,5 @@
 import { Schema } from "effect";
+import { EntityId } from "../../internal/schema.ts";
 import {
   HolidaySchema,
   JsonObjectSchema,
@@ -34,7 +35,7 @@ export type AppData = Schema.Schema.Type<typeof AppDataSchema>;
 
 export const AppPlatformApplicationMenuSchema = Schema.Struct({
   icon: Schema.String,
-  id: Schema.Finite,
+  id: EntityId,
   logoutUrl: Schema.NullOr(Schema.String),
   name: Schema.String,
   openInNewTab: Schema.Boolean,
@@ -78,7 +79,7 @@ export type AppExamIntegrationViewType = Schema.Schema.Type<
 
 export const AppExamIntegrationSchema = Schema.Struct({
   active: Schema.optional(Schema.Boolean),
-  id: Schema.Finite,
+  id: EntityId,
   menuName: Schema.String,
   mobileAppLink: Schema.optional(Schema.Boolean),
   mobileView: Schema.optional(Schema.Boolean),
@@ -97,12 +98,14 @@ export const DashboardCardSchema = Schema.Struct({
   hasAttachments: Schema.Boolean,
   headerColor: Schema.String,
   icon: Schema.String,
-  id: Schema.Finite,
-  orderNo: Schema.Finite,
+  id: EntityId,
+  orderNo: Schema.Int,
   status: Schema.String,
   subtitle: Schema.String,
   title: Schema.String,
 });
+
+export type DashboardCard = Schema.Schema.Type<typeof DashboardCardSchema>;
 export const DashboardCardsSchema = Schema.Struct({
   dashboardCards: Schema.Array(DashboardCardSchema),
 });
@@ -116,11 +119,13 @@ export const DashboardCardsDetailItemSchema = Schema.Struct({
   color: Schema.String,
   content: Schema.String,
   icon: Schema.String,
-  id: Schema.Finite,
+  id: EntityId,
   status: Schema.String,
   subtitle: Schema.String,
   title: Schema.String,
 });
+
+export type DashboardCardsDetailItem = Schema.Schema.Type<typeof DashboardCardsDetailItemSchema>;
 export const DashboardCardsDetailSchema = Schema.Struct({
   dashboardCardsDetails: Schema.Array(DashboardCardsDetailItemSchema),
 });
@@ -128,7 +133,7 @@ export const DashboardCardsDetailSchema = Schema.Struct({
 export type DashboardCardsDetail = Schema.Schema.Type<typeof DashboardCardsDetailSchema>;
 
 export const DashboardCardsStatusSchema = Schema.Struct({
-  unreadCardsCount: Schema.Finite,
+  unreadCardsCount: Schema.Int,
 });
 
 export type DashboardCardsStatus = Schema.Schema.Type<typeof DashboardCardsStatusSchema>;
@@ -158,9 +163,13 @@ export const HomeCellSchema = Schema.Struct({
   type: HomeCellTypeSchema,
 });
 
+export type HomeCell = Schema.Schema.Type<typeof HomeCellSchema>;
+
 export const HomeSectionSchema = Schema.Struct({
   cells: Schema.Array(HomeCellSchema),
 });
+
+export type HomeSection = Schema.Schema.Type<typeof HomeSectionSchema>;
 
 export const HomeSchema = Schema.Struct({
   schoolName: Schema.String,
@@ -179,12 +188,16 @@ export const MobileTenantSchema = Schema.Struct({
   schoolLoginName: Schema.String,
 });
 
+export type MobileTenant = Schema.Schema.Type<typeof MobileTenantSchema>;
+
 export const MobileTenantV1V2Schema = Schema.Struct({
   id: Schema.String,
   displayName: Schema.String,
   wuVersion: Schema.String,
   language: Schema.String,
 });
+
+export type MobileTenantV1V2 = Schema.Schema.Type<typeof MobileTenantV1V2Schema>;
 
 export const MobilePermissionSchema = Schema.Literals([
   "READ_MESSAGES",
@@ -197,15 +210,17 @@ export const MobilePermissionSchema = Schema.Literals([
 export type MobilePermission = Schema.Schema.Type<typeof MobilePermissionSchema>;
 
 export const MobileUserSchema = Schema.Struct({
-  id: Schema.Finite,
+  id: EntityId,
   username: Schema.String,
   person: Schema.NullOr(JsonObjectSchema),
   referencedStudents: Schema.Array(JsonObjectSchema),
   locale: Schema.String,
-  departmentId: Schema.Finite,
+  departmentId: EntityId,
   role: Schema.String,
   permissions: Schema.Array(MobilePermissionSchema),
 });
+
+export type MobileUser = Schema.Schema.Type<typeof MobileUserSchema>;
 
 export const MobileDataV1V2Schema = Schema.Struct({
   schoolYear: Schema.NullOr(SchoolyearSchema),

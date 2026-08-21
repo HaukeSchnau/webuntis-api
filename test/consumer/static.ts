@@ -4,7 +4,9 @@ import {
   InvalidRequestError,
   WebUntisClient,
   makeWebUntisLayer,
+  webUntisLayer,
   type ExamDateRangeRequest,
+  type MessageSummary,
   type TimetableEntriesRequest,
   type WebUntisClientConfig,
 } from "webuntis-api";
@@ -16,6 +18,8 @@ const request: ExamDateRangeRequest = {
 };
 
 const resources: TimetableEntriesRequest["resources"] = [1];
+// Element types of collection responses must be nameable from the root entry.
+const summarySubject = (message: MessageSummary) => message.subject;
 // @ts-expect-error A date range must provide both boundaries.
 const invalidRange: ExamDateRangeRequest = { start: "2026-01-01" };
 // @ts-expect-error Timetable entry reads require at least one resource.
@@ -36,6 +40,8 @@ const program = Effect.gen(function* () {
   return yield* client.exams.list(request);
 });
 
+void summarySubject;
+void webUntisLayer;
 void HomeSchema;
 void InvalidRequestError;
 void layer;

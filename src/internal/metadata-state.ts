@@ -9,46 +9,18 @@ import {
   httpClientErrorToTransportError,
   type TransportError,
 } from "./errors.ts";
-import { runtimeJsonParseOptions } from "./schema.ts";
+import { EntityId, runtimeJsonParseOptions } from "./schema.ts";
 import { SessionState } from "./session-state.ts";
-import type {
-  AuthenticatedState,
-  MetadataState as MetadataCache,
-  MetadataSnapshot,
-} from "./types.ts";
-import {
-  emptyMetadataState,
-  hasMetadataForSession,
-  resolveBaseUrl,
-  toMetadataSnapshot,
-} from "./types.ts";
+import type { AuthenticatedState, MetadataCache, MetadataSnapshot } from "./state.ts";
+import { emptyMetadataState, hasMetadataForSession, toMetadataSnapshot } from "./state.ts";
+import { resolveBaseUrl } from "./url.ts";
 
+// Minimal projection of `app/data`. Metadata bootstrap runs before the request
+// policy that `AppDataSchema` decoding depends on, so it deliberately reads only
+// the two fields it needs rather than sharing the full public schema.
 const BootstrapAppDataSchema = Schema.Struct({
-  departments: Schema.optional(Schema.Unknown),
-  currentSchoolYear: Schema.NullOr(
-    Schema.Struct({
-      id: Schema.Finite,
-      dateRange: Schema.optional(Schema.Unknown),
-      name: Schema.optional(Schema.String),
-      timeGrid: Schema.optional(Schema.Unknown),
-    }),
-  ),
-  tenant: Schema.Struct({
-    id: Schema.String,
-    displayName: Schema.optional(Schema.String),
-    name: Schema.optional(Schema.String),
-    wuHostName: Schema.optional(Schema.NullOr(Schema.String)),
-  }),
-  user: Schema.optional(Schema.Unknown),
-  permissions: Schema.optional(Schema.Unknown),
-  settings: Schema.optional(Schema.Unknown),
-  holidays: Schema.optional(Schema.Unknown),
-  isPlayground: Schema.optional(Schema.Boolean),
-  oneDriveData: Schema.optional(Schema.Unknown),
-  ui2020: Schema.optional(Schema.Boolean),
-  pollingJobs: Schema.optional(Schema.Unknown),
-  isSupportAccessOpen: Schema.optional(Schema.Boolean),
-  licenceExpiresAt: Schema.optional(Schema.String),
+  currentSchoolYear: Schema.NullOr(Schema.Struct({ id: EntityId })),
+  tenant: Schema.Struct({ id: Schema.String }),
 });
 
 export interface MetadataStateShape {

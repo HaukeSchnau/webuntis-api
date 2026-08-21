@@ -12,6 +12,11 @@ pack-check: build
 packed-live: build
     ./scripts/check-packed-consumer.sh --live
 
+# Runs the packed consumer against the oldest Node this package claims to support.
+pack-check-engines: build
+    NODE_BIN="$(nix build --no-link --print-out-paths nixpkgs#nodejs_22)/bin/node" \
+        ./scripts/check-packed-consumer.sh
+
 test:
     pnpm exec vp test run
 

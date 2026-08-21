@@ -1,5 +1,6 @@
 import { Context, Effect, Layer } from "effect";
-import type { RequestFailure } from "../../internal/http.ts";
+import { makeOperations } from "../../internal/domain.ts";
+import type { WebUntisError } from "../../internal/errors.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
 import type { TimeGrid } from "../shared/schema.ts";
 import {
@@ -28,35 +29,33 @@ import type {
 } from "./schema.ts";
 
 export interface TimetableClientShape {
-  readonly getTimeGrid: Effect.Effect<TimeGrid, RequestFailure>;
-  readonly getGrid: (
-    request?: TimetableGridRequest,
-  ) => Effect.Effect<TimetableGrid, RequestFailure>;
+  readonly getTimeGrid: Effect.Effect<TimeGrid, WebUntisError>;
+  readonly getGrid: (request?: TimetableGridRequest) => Effect.Effect<TimetableGrid, WebUntisError>;
   readonly getFilter: (
     request: TimetableFilterRequest,
-  ) => Effect.Effect<TimetableFilter, RequestFailure>;
+  ) => Effect.Effect<TimetableFilter, WebUntisError>;
   readonly getEntriesSettings: (
     request: TimetableEntriesSettingsRequest,
-  ) => Effect.Effect<TimetableEntriesSettings, RequestFailure>;
-  readonly getMenu: Effect.Effect<TimetableMenu, RequestFailure>;
+  ) => Effect.Effect<TimetableEntriesSettings, WebUntisError>;
+  readonly getMenu: Effect.Effect<TimetableMenu, WebUntisError>;
   readonly getCalendar: (
     request?: TimetableCalendarRequest,
-  ) => Effect.Effect<TimetableCalendar, RequestFailure>;
+  ) => Effect.Effect<TimetableCalendar, WebUntisError>;
   readonly getExternalCalendar: (
     request?: TimetableExternalCalendarRequest,
-  ) => Effect.Effect<TimetableExternalCalendar, RequestFailure>;
+  ) => Effect.Effect<TimetableExternalCalendar, WebUntisError>;
   readonly search: (
     request: TimetableSearchRequest,
-  ) => Effect.Effect<TimetableSearch, RequestFailure>;
+  ) => Effect.Effect<TimetableSearch, WebUntisError>;
   readonly getAvailableRooms: (
     request: TimetableAvailableRoomsRequest,
-  ) => Effect.Effect<TimetableAvailableRooms, RequestFailure>;
+  ) => Effect.Effect<TimetableAvailableRooms, WebUntisError>;
   readonly getEntries: (
     request: TimetableEntriesRequest,
-  ) => Effect.Effect<TimetableEntries, RequestFailure>;
+  ) => Effect.Effect<TimetableEntries, WebUntisError>;
   readonly getEntriesWeekOverview: (
     request: TimetableEntriesWeekOverviewRequest,
-  ) => Effect.Effect<TimetableEntriesWeekOverview, RequestFailure>;
+  ) => Effect.Effect<TimetableEntriesWeekOverview, WebUntisError>;
 }
 
 export class TimetableClient extends Context.Service<TimetableClient, TimetableClientShape>()(
@@ -65,58 +64,27 @@ export class TimetableClient extends Context.Service<TimetableClient, TimetableC
   static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
-      const http = yield* WebUntisHttp;
+      const { read, call, callOptional } = makeOperations(yield* WebUntisHttp, "TimetableClient");
 
       return TimetableClient.of({
-        getTimeGrid: http
-          .requestSchema(TimetableRequests.getTimeGrid, undefined)
-          .pipe(Effect.withSpan("TimetableClient.getTimeGrid")),
-        getGrid: Effect.fn("TimetableClient.getGrid")(function* (
-          request: TimetableGridRequest = {},
-        ) {
-          return yield* http.requestSchema(TimetableRequests.getGrid, request);
-        }),
-        getFilter: Effect.fn("TimetableClient.getFilter")(function* (
-          request: TimetableFilterRequest,
-        ) {
-          return yield* http.requestSchema(TimetableRequests.getFilter, request);
-        }),
-        getEntriesSettings: Effect.fn("TimetableClient.getEntriesSettings")(function* (
-          request: TimetableEntriesSettingsRequest,
-        ) {
-          return yield* http.requestSchema(TimetableRequests.getEntriesSettings, request);
-        }),
-        getMenu: http
-          .requestSchema(TimetableRequests.getMenu, undefined)
-          .pipe(Effect.withSpan("TimetableClient.getMenu")),
-        getCalendar: Effect.fn("TimetableClient.getCalendar")(function* (
-          request: TimetableCalendarRequest = {},
-        ) {
-          return yield* http.requestSchema(TimetableRequests.getCalendar, request);
-        }),
-        getExternalCalendar: Effect.fn("TimetableClient.getExternalCalendar")(function* (
-          request: TimetableExternalCalendarRequest = {},
-        ) {
-          return yield* http.requestSchema(TimetableRequests.getExternalCalendar, request);
-        }),
-        search: Effect.fn("TimetableClient.search")(function* (request: TimetableSearchRequest) {
-          return yield* http.requestSchema(TimetableRequests.search, request);
-        }),
-        getAvailableRooms: Effect.fn("TimetableClient.getAvailableRooms")(function* (
-          request: TimetableAvailableRoomsRequest,
-        ) {
-          return yield* http.requestSchema(TimetableRequests.getAvailableRooms, request);
-        }),
-        getEntries: Effect.fn("TimetableClient.getEntries")(function* (
-          request: TimetableEntriesRequest,
-        ) {
-          return yield* http.requestSchema(TimetableRequests.getEntries, request);
-        }),
-        getEntriesWeekOverview: Effect.fn("TimetableClient.getEntriesWeekOverview")(function* (
-          request: TimetableEntriesWeekOverviewRequest,
-        ) {
-          return yield* http.requestSchema(TimetableRequests.getEntriesWeekOverview, request);
-        }),
+        getTimeGrid: read("getTimeGrid", TimetableRequests.getTimeGrid),
+        getGrid: callOptional("getGrid", TimetableRequests.getGrid, {}),
+        getFilter: call("getFilter", TimetableRequests.getFilter),
+        getEntriesSettings: call("getEntriesSettings", TimetableRequests.getEntriesSettings),
+        getMenu: read("getMenu", TimetableRequests.getMenu),
+        getCalendar: callOptional("getCalendar", TimetableRequests.getCalendar, {}),
+        getExternalCalendar: callOptional(
+          "getExternalCalendar",
+          TimetableRequests.getExternalCalendar,
+          {},
+        ),
+        search: call("search", TimetableRequests.search),
+        getAvailableRooms: call("getAvailableRooms", TimetableRequests.getAvailableRooms),
+        getEntries: call("getEntries", TimetableRequests.getEntries),
+        getEntriesWeekOverview: call(
+          "getEntriesWeekOverview",
+          TimetableRequests.getEntriesWeekOverview,
+        ),
       });
     }),
   );
@@ -132,4 +100,4 @@ export type {
   TimetableFilterRequest,
   TimetableGridRequest,
   TimetableSearchRequest,
-} from "./requests.ts";
+};

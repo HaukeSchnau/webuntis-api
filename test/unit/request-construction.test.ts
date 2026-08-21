@@ -9,6 +9,7 @@ import { ProfileClient } from "../../src/domains/profile/index.ts";
 import { SchoolyearsClient } from "../../src/domains/schoolyears/index.ts";
 import { SessionClient } from "../../src/domains/session/index.ts";
 import { TimetableClient } from "../../src/domains/timetable/index.ts";
+import { withSchoolYear } from "../../src/internal/school-year-context.ts";
 import { jsonResponse, makeCoreTestLayer, makeJwt } from "./helpers.ts";
 
 interface ObservedRequest {
@@ -440,7 +441,7 @@ describe("request descriptors", () => {
         client.exams.list(),
         client.timetable.getGrid(),
         client.classreg.getHomeworkMeta,
-      ]).pipe(client.withSchoolYear(6));
+      ]).pipe(withSchoolYear(6));
 
       expect(observed).toHaveLength(3);
       expect(observed.map((request) => request.headers["x-webuntis-api-school-year-id"])).toEqual([
@@ -457,7 +458,7 @@ describe("request descriptors", () => {
     return Effect.gen(function* () {
       const client = yield* WebUntisClient;
 
-      yield* client.schoolyears.list.pipe(client.withSchoolYear(6));
+      yield* client.schoolyears.list.pipe(withSchoolYear(6));
 
       expect(getLast(observed).headers["x-webuntis-api-school-year-id"]).toBeUndefined();
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
@@ -473,9 +474,9 @@ describe("request descriptors", () => {
         yield* client.exams.list({ start: "2026-01-01", end: "2026-01-01" });
         yield* client.exams
           .list({ start: "2026-02-01", end: "2026-02-01" })
-          .pipe(client.withSchoolYear(4));
+          .pipe(withSchoolYear(4));
         yield* client.exams.list({ start: "2026-03-01", end: "2026-03-01" });
-      }).pipe(client.withSchoolYear(6));
+      }).pipe(withSchoolYear(6));
 
       expect(observed.map((request) => request.headers["x-webuntis-api-school-year-id"])).toEqual([
         "6",
@@ -493,12 +494,8 @@ describe("request descriptors", () => {
 
       yield* Effect.all(
         [
-          client.exams
-            .list({ start: "2026-06-01", end: "2026-06-01" })
-            .pipe(client.withSchoolYear(6)),
-          client.exams
-            .list({ start: "2026-04-01", end: "2026-04-01" })
-            .pipe(client.withSchoolYear(4)),
+          client.exams.list({ start: "2026-06-01", end: "2026-06-01" }).pipe(withSchoolYear(6)),
+          client.exams.list({ start: "2026-04-01", end: "2026-04-01" }).pipe(withSchoolYear(4)),
         ],
         { concurrency: 2 },
       );
@@ -520,7 +517,7 @@ describe("request descriptors", () => {
     return Effect.gen(function* () {
       const client = yield* WebUntisClient;
 
-      yield* client.timetable.getGrid().pipe(client.withSchoolYear(6));
+      yield* client.timetable.getGrid().pipe(withSchoolYear(6));
 
       expect(getLast(observed).headers["x-webuntis-api-school-year-id"]).toBe("6");
     }).pipe(Effect.provide(makeRecorderLayer(observed, null)));
@@ -532,7 +529,7 @@ describe("request descriptors", () => {
     return Effect.gen(function* () {
       const client = yield* WebUntisClient;
 
-      yield* client.exams.list().pipe(client.withSchoolYear(6));
+      yield* client.exams.list().pipe(withSchoolYear(6));
 
       const examRequests = observed.filter(
         (request) => request.url.pathname === "/WebUntis/api/rest/view/v1/exams",
@@ -689,7 +686,7 @@ describe("request descriptors", () => {
 
     return Effect.gen(function* () {
       const client = yield* WebUntisClient;
-      const result = yield* client.exams.getForClass.pipe(client.withSchoolYear(6));
+      const result = yield* client.exams.getForClass.pipe(withSchoolYear(6));
 
       expect(result).toEqual({
         examsDone: [],

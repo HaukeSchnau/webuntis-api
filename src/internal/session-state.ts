@@ -1,4 +1,4 @@
-import { Clock, Context, Effect, Layer, Redacted, Ref, SynchronizedRef } from "effect";
+import { Clock, Context, Effect, Layer, Redacted, Ref, Schema, SynchronizedRef } from "effect";
 import * as Cookies from "effect/unstable/http/Cookies";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
 import * as HttpClient from "effect/unstable/http/HttpClient";
@@ -12,28 +12,35 @@ import {
   type TransportError,
 } from "./errors.ts";
 import { SchoolResolver } from "./school-resolver.ts";
-import type { AuthenticatedState, SessionState as SessionCache } from "./types.ts";
-import {
-  emptySessionState,
-  hasFreshToken,
-  resolveBaseUrl,
-  tokenFallbackValidityMs,
-} from "./types.ts";
+import type { AuthenticatedState, SessionCache } from "./state.ts";
+import { emptySessionState, hasFreshToken, tokenFallbackValidityMs } from "./state.ts";
+import { resolveBaseUrl } from "./url.ts";
 
+/** Only the claim we need; anything else in the payload is irrelevant here. */
+const JwtPayloadSchema = Schema.Struct({
+  exp: Schema.optional(Schema.Finite),
+});
+
+const decodeJwtPayload = Schema.decodeUnknownSync(JwtPayloadSchema);
+
+/**
+ * Reads the `exp` claim without verifying the signature. The token is minted by
+ * the server we are talking to and is only used to decide when to refresh, so a
+ * malformed or unreadable payload simply falls back to {@link tokenFallbackValidityMs}.
+ */
 const parseJwtExpiration = (token: string): number | undefined => {
-  const parts = token.split(".");
-  const payloadSegment = parts[1];
-  if (parts.length < 2 || payloadSegment === undefined) {
+  const payloadSegment = token.split(".")[1];
+  if (payloadSegment === undefined) {
     return undefined;
   }
 
   try {
     const base64 = payloadSegment
-      .replace(/-/g, "+")
-      .replace(/_/g, "/")
+      .replace(/-/gu, "+")
+      .replace(/_/gu, "/")
       .padEnd(Math.ceil(payloadSegment.length / 4) * 4, "=");
-    const payload = JSON.parse(atob(base64));
-    return typeof payload.exp === "number" ? payload.exp * 1_000 : undefined;
+    const payload = decodeJwtPayload(JSON.parse(atob(base64)));
+    return payload.exp === undefined ? undefined : payload.exp * 1_000;
   } catch {
     return undefined;
   }

@@ -9,9 +9,10 @@ import {
 } from "../../src/domains/schemas.ts";
 import { MobileDataV1V2Schema } from "../../src/domains/app/schema.ts";
 import { ClientConfig } from "../../src/internal/config.ts";
-import { UnexpectedResponseError } from "../../src/internal/errors.ts";
+import { TransportError } from "../../src/internal/errors.ts";
 import { RawViewApiClient } from "../../src/internal/raw-view-api.ts";
 import { RequestPolicy } from "../../src/internal/request.ts";
+import { withSchoolYear } from "../../src/internal/school-year-context.ts";
 import { strictJsonParseOptions } from "../../src/internal/schema.ts";
 import {
   liveEnvMissing,
@@ -54,7 +55,7 @@ import {
   normalizeTimetableMenu,
   normalizeTimetableSearch,
   normalizeTodayMeta,
-  normalizeUnexpectedResponse,
+  normalizeTransportError,
   normalizeUserContactData,
   normalizeUserEmail,
 } from "./support.ts";
@@ -289,7 +290,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
               });
               return { absencesMeta, homeworkList, homeworkMeta, lessonTopicsMeta };
             },
-          ).pipe(client.withSchoolYear(historicalSchoolyear.id));
+          ).pipe(withSchoolYear(historicalSchoolyear.id));
 
           expect(absencesMeta.classes.length).toBeGreaterThan(0);
           expect(Array.isArray(absencesMeta.reasons)).toBe(true);
@@ -325,7 +326,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             }
             const detail = yield* client.exams.getExam({ id: examId });
             return { detail, exams, filter, statistics };
-          }).pipe(client.withSchoolYear(historicalSchoolyear.id));
+          }).pipe(withSchoolYear(historicalSchoolyear.id));
 
           expect(exams.exams.length).toBeGreaterThan(0);
           expect(filter.classes.length).toBeGreaterThan(0);
@@ -368,7 +369,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
               searchResultCount: search.results.length,
               statisticCount: statistics.exams.length,
             };
-          }).pipe(client.withSchoolYear(schoolyear.id));
+          }).pipe(withSchoolYear(schoolyear.id));
 
           expect(result.schoolYearId).toBeGreaterThan(0);
           expect(result.examCount).toBeGreaterThan(0);
@@ -418,7 +419,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
                 }),
               { concurrency: 3 },
             );
-          }).pipe(client.withSchoolYear(historicalSchoolyear.id));
+          }).pipe(withSchoolYear(historicalSchoolyear.id));
 
           const entryCount = timetableEntryCount(entryResponses);
           expect(entryCount).toBeGreaterThan(0);
@@ -458,14 +459,10 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             }),
           );
 
-          expect(profileError).toBeInstanceOf(UnexpectedResponseError);
-          expect(adminDetailsError).toBeInstanceOf(UnexpectedResponseError);
-          expect(
-            normalizeUnexpectedResponse(profileError as UnexpectedResponseError),
-          ).toMatchSnapshot();
-          expect(
-            normalizeUnexpectedResponse(adminDetailsError as UnexpectedResponseError),
-          ).toMatchSnapshot();
+          expect(profileError).toBeInstanceOf(TransportError);
+          expect(adminDetailsError).toBeInstanceOf(TransportError);
+          expect(normalizeTransportError(profileError)).toMatchSnapshot();
+          expect(normalizeTransportError(adminDetailsError)).toMatchSnapshot();
         }),
       30_000,
     );
@@ -490,7 +487,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
               endDateTime: "2026-03-13T10:00:00",
             });
             return { availableRooms, calendar, menu, search };
-          }).pipe(client.withSchoolYear(historicalSchoolyear.id));
+          }).pipe(withSchoolYear(historicalSchoolyear.id));
 
           expect(status.expiresInMs).toBeGreaterThanOrEqual(0);
           expect(search.results.length).toBeGreaterThan(0);
@@ -536,7 +533,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
               });
               return { externalCalendar, roomId, timegrid, weekOverview };
             },
-          ).pipe(client.withSchoolYear(historicalSchoolyear.id));
+          ).pipe(withSchoolYear(historicalSchoolyear.id));
 
           expect(roomId).toBeDefined();
           expect(timegrid.units.length).toBeGreaterThan(0);
@@ -571,18 +568,12 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             }),
           );
 
-          expect(formatListError).toBeInstanceOf(UnexpectedResponseError);
-          expect(generalSettingsError).toBeInstanceOf(UnexpectedResponseError);
-          expect(visibilityRestrictionError).toBeInstanceOf(UnexpectedResponseError);
-          expect(
-            normalizeUnexpectedResponse(formatListError as UnexpectedResponseError),
-          ).toMatchSnapshot();
-          expect(
-            normalizeUnexpectedResponse(generalSettingsError as UnexpectedResponseError),
-          ).toMatchSnapshot();
-          expect(
-            normalizeUnexpectedResponse(visibilityRestrictionError as UnexpectedResponseError),
-          ).toMatchSnapshot();
+          expect(formatListError).toBeInstanceOf(TransportError);
+          expect(generalSettingsError).toBeInstanceOf(TransportError);
+          expect(visibilityRestrictionError).toBeInstanceOf(TransportError);
+          expect(normalizeTransportError(formatListError)).toMatchSnapshot();
+          expect(normalizeTransportError(generalSettingsError)).toMatchSnapshot();
+          expect(normalizeTransportError(visibilityRestrictionError)).toMatchSnapshot();
         }),
       30_000,
     );
@@ -601,21 +592,21 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
               end: historicalDataWindow.start,
               resourceType: "ROOM",
             })
-            .pipe(client.withSchoolYear(historicalSchoolyear.id));
+            .pipe(withSchoolYear(historicalSchoolyear.id));
           const teacherFilter = yield* client.timetable
             .getFilter({
               start: historicalDataWindow.start,
               end: historicalDataWindow.start,
               resourceType: "TEACHER",
             })
-            .pipe(client.withSchoolYear(historicalSchoolyear.id));
+            .pipe(withSchoolYear(historicalSchoolyear.id));
           const subjectFilter = yield* client.timetable
             .getFilter({
               start: historicalDataWindow.start,
               end: historicalDataWindow.start,
               resourceType: "SUBJECT",
             })
-            .pipe(client.withSchoolYear(historicalSchoolyear.id));
+            .pipe(withSchoolYear(historicalSchoolyear.id));
           const roomId = (
             roomFilter.rooms.find((room) => room.room.shortName === "1.12") ?? roomFilter.rooms[0]
           )?.room.id;
@@ -679,8 +670,8 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             subjectsError,
             subjectDetailError,
           ]) {
-            expect(error).toBeInstanceOf(UnexpectedResponseError);
-            expect(normalizeUnexpectedResponse(error as UnexpectedResponseError)).toMatchSnapshot();
+            expect(error).toBeInstanceOf(TransportError);
+            expect(normalizeTransportError(error)).toMatchSnapshot();
           }
         }),
       30_000,
@@ -715,7 +706,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
               resources: classIds,
             });
             return { entries, filter, grid, settings };
-          }).pipe(client.withSchoolYear(historicalSchoolyear.id));
+          }).pipe(withSchoolYear(historicalSchoolyear.id));
 
           if (filter.classes.length === 0) {
             throw new Error("Expected at least one class");
