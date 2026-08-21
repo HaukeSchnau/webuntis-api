@@ -8,11 +8,21 @@ import { TimetableRequests } from "../../src/domains/timetable/requests.ts";
 import { InvalidRequestError } from "../../src/internal/errors.ts";
 import {
   PositiveInteger,
+  type RequestDescriptor,
   RequestPolicy,
   request,
   validateAndResolveRequest,
   validateRequest,
 } from "../../src/internal/request.ts";
+
+/**
+ * Feeds a descriptor input its own type system would reject. The point of these
+ * cases is exactly that the compile-time type and the runtime schema disagree,
+ * so the cast is the subject of the test rather than a shortcut around it.
+ */
+const rejects = <Input>(descriptor: RequestDescriptor<Input>, input: unknown) =>
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+  Effect.flip(validateRequest(descriptor, input as Input));
 
 describe("request descriptor validation", () => {
   it.effect("rejects invalid input before resolving path, query, headers, or body", () => {
@@ -73,14 +83,12 @@ describe("request descriptor validation", () => {
       yield* Effect.flip(
         validateRequest(ExamsRequests.list, { start: "2026-03-20", end: "2026-03-16" }),
       );
-      yield* Effect.flip(
-        validateRequest(TimetableRequests.getEntries, {
-          start: "2026-03-16",
-          end: "2026-03-20",
-          resourceType: "CLASS",
-          resources: [] as never,
-        }),
-      );
+      yield* rejects(TimetableRequests.getEntries, {
+        start: "2026-03-16",
+        end: "2026-03-20",
+        resourceType: "CLASS",
+        resources: [],
+      });
       yield* Effect.flip(
         validateRequest(MessagesRequests.searchRecipients, {
           recipientOption: "STAFF",
@@ -93,13 +101,9 @@ describe("request descriptor validation", () => {
           endDateTime: "2026-03-16T08:00:00",
         }),
       );
-      yield* Effect.flip(validateRequest(AppRequests.getOnboarding, { type: "OTHER" as never }));
+      yield* rejects(AppRequests.getOnboarding, { type: "OTHER" });
       yield* Effect.flip(validateRequest(SessionRequests.getStatus, { clientTimeZone: "   " }));
-      yield* Effect.flip(
-        validateRequest(TimetableRequests.getEntriesSettings, {
-          resourceType: "OTHER" as never,
-        }),
-      );
+      yield* rejects(TimetableRequests.getEntriesSettings, { resourceType: "OTHER" });
 
       const input = {
         start: "2026-03-16",

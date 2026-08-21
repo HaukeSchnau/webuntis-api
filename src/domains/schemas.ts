@@ -1,115 +1,16 @@
-export {
-  AppDataSchema,
-  type AppData,
-  AppExamIntegrationsSchema,
-  type AppExamIntegrations,
-  AppPlatformApplicationMenusSchema,
-  type AppPlatformApplicationMenus,
-  AppThirdPartyDataSchema,
-  type AppThirdPartyData,
-  DashboardCardsDetailSchema,
-  type DashboardCardsDetail,
-  DashboardCardsSchema,
-  type DashboardCards,
-  DashboardCardsStatusSchema,
-  type DashboardCardsStatus,
-  HomeSchema,
-  type Home,
-  MobileDataSchema,
-  type MobileData,
-  OnboardingSchema,
-  type Onboarding,
-  OnboardingTypeSchema,
-  type OnboardingType,
-  StartupActionsSchema,
-  type StartupActions,
-  TodayMetaSchema,
-  type TodayMeta,
-} from "./app/schema.ts";
-export {
-  ClassregAbsencesMetaSchema,
-  type ClassregAbsencesMeta,
-  ClassregHomeworkDateRangeTypeSchema,
-  type ClassregHomeworkDateRangeType,
-  ClassregHomeworkListSchema,
-  type ClassregHomeworkList,
-  ClassregHomeworkMetaSchema,
-  type ClassregHomeworkMeta,
-  ClassregLessonTopicsMetaSchema,
-  type ClassregLessonTopicsMeta,
-} from "./classreg/schema.ts";
-export {
-  ExamDetailSchema,
-  type ExamDetail,
-  ExamFilterSchema,
-  type ExamFilter,
-  ExamsForClassSchema,
-  type ExamsForClass,
-  ExamsSchema,
-  type Exams,
-  ExamStatisticsSchema,
-  type ExamStatistics,
-} from "./exams/schema.ts";
-export {
-  MessageComposeRecipientsSchema,
-  type MessageComposeRecipients,
-  MessageDetailSchema,
-  type MessageDetail,
-  MessageDraftsSchema,
-  type MessageDrafts,
-  MessageRecipientFilterSchema,
-  type MessageRecipientFilter,
-  MessageRecipientOptionSchema,
-  type MessageRecipientOption,
-  MessageRecipientQuickfiltersSchema,
-  type MessageRecipientQuickfilters,
-  MessageRecipientSearchSchema,
-  type MessageRecipientSearch,
-  MessageReplyFormSchema,
-  type MessageReplyForm,
-  MessageSentSchema,
-  type MessageSent,
-  MessagesInboxSchema,
-  type MessagesInbox,
-  MessagesPermissionsSchema,
-  type MessagesPermissions,
-  MessagesStatusSchema,
-  type MessagesStatus,
-} from "./messages/schema.ts";
-export {
-  UserContactDataSchema,
-  type UserContactData,
-  UserEmailSchema,
-  type UserEmail,
-} from "./profile/schema.ts";
-export { SessionStatusSchema, type SessionStatus } from "./session/schema.ts";
-export {
-  SchoolyearSchema,
-  type Schoolyear,
-  TimeGridSchema,
-  type TimeGrid,
-} from "./shared/schema.ts";
-export {
-  TimetableAvailableRoomsSchema,
-  type TimetableAvailableRooms,
-  TimetableCalendarSchema,
-  type TimetableCalendar,
-  TimetableEntriesSchema,
-  type TimetableEntries,
-  TimetableEntriesSettingsSchema,
-  type TimetableEntriesSettings,
-  TimetableEntriesWeekOverviewSchema,
-  type TimetableEntriesWeekOverview,
-  TimetableExternalCalendarSchema,
-  type TimetableExternalCalendar,
-  TimetableFilterSchema,
-  type TimetableFilter,
-  TimetableGridSchema,
-  type TimetableGrid,
-  TimetableMenuSchema,
-  type TimetableMenu,
-  TimetableResourceTypeSchema,
-  type TimetableResourceType,
-  TimetableSearchSchema,
-  type TimetableSearch,
-} from "./timetable/schema.ts";
+/**
+ * Public schema surface, published as `webuntis-api/schemas`.
+ *
+ * Every response schema and its decoded type lives in a `src/domains/<domain>/schema.ts`
+ * module, and all of them are re-exported here. Schemas that are implementation
+ * details of the transport (bootstrap projections, discovery payloads) live under
+ * `src/internal` and are deliberately unreachable from this entry point.
+ */
+export * from "./app/schema.ts";
+export * from "./classreg/schema.ts";
+export * from "./exams/schema.ts";
+export * from "./messages/schema.ts";
+export * from "./profile/schema.ts";
+export * from "./session/schema.ts";
+export * from "./shared/schema.ts";
+export * from "./timetable/schema.ts";

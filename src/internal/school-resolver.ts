@@ -2,8 +2,8 @@ import { Context, Effect, Layer, SynchronizedRef } from "effect";
 import { ClientConfig } from "./config.ts";
 import { SchoolDiscovery } from "./discovery.ts";
 import type { DecodeError, DiscoveryError, TransportError } from "./errors.ts";
-import type { ResolvedSchool } from "./types.ts";
-import { resolveTenantHost } from "./types.ts";
+import type { ResolvedSchool } from "./state.ts";
+import { resolveTenantHost } from "./url.ts";
 
 export interface SchoolResolverShape {
   readonly resolve: Effect.Effect<ResolvedSchool, DiscoveryError | TransportError | DecodeError>;

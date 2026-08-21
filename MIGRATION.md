@@ -90,15 +90,20 @@ If you still need reverse-engineering probes, keep them in repository-internal c
 The recommended wiring pattern is:
 
 ```ts
-import { Effect, Layer } from "effect";
-import { clientConfigFromEnv, makeWebUntisLayer } from "webuntis-api";
+import { Effect } from "effect";
+import { webUntisLayer } from "webuntis-api";
 
-const layer = Layer.unwrap(clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)));
+await Effect.runPromise(program.pipe(Effect.provide(webUntisLayer)));
 ```
 
-That layer provides the aggregate client plus the focused domain services.
+That layer provides the aggregate client plus the focused domain services, and resolves its
+configuration through the ambient `ConfigProvider` when it is built.
 
-The former public `layer` alias was removed. Use `makeWebUntisLayer(config)` so configuration and runtime ownership have one unambiguous entry point.
+If you hold a configuration value already, `makeWebUntisLayer(config)` takes it directly. The
+`Layer.unwrap(clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)))` dance earlier versions
+recommended still works, but `webUntisLayer` replaces it.
+
+The former public `layer` alias was removed.
 
 ## Runtime Behavior Changes
 
@@ -121,7 +126,7 @@ Request behavior is now modeled explicitly:
 - auth-only routes opt into `RequestPolicy.AuthOnly`
 - request descriptors validate dates, ranges, positive IDs, non-empty resources, and endpoint discriminants before transport
 
-Invalid caller input now fails as `InvalidRequestError`, which is included in `RequestFailure` and `WebUntisError`.
+Invalid caller input now fails as `InvalidRequestError`, which is included in `WebUntisError`.
 
 ## Zero-Argument Reads
 
@@ -172,3 +177,43 @@ If you maintained local patches on top of the old layout, expect path changes.
 7. Remove trailing `()` from zero-argument reads and authentication operations.
 8. Handle `InvalidRequestError` where you narrow request failures.
 9. Run `just lint`, `just test-unit`, and your live suite.
+
+## Audit Follow-Up Changes
+
+A full repository audit produced one further round of intentional changes.
+
+### Removed or renamed exports
+
+| Before                                                                                                                 | After                                                                                                   |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `RequestFailure`                                                                                                       | `WebUntisError` — the two were the same union under two names                                           |
+| `client.withSchoolYear(id)`                                                                                            | `withSchoolYear(id)` from the package root                                                              |
+| `AuthenticationError`, `SchemaDriftError`, `SchoolSearchError`, `MissingConfigurationError`, `UnexpectedResponseError` | the primary names: `AuthError`, `DecodeError`, `DiscoveryError`, `ConfigurationError`, `TransportError` |
+
+`withSchoolYear` never depended on the aggregate client, so the field was pure duplication of the
+root export. Replace `client.withSchoolYear(id)` with the imported operator; behavior is identical.
+
+### Added exports
+
+- `webUntisLayer`, the environment-driven composition root.
+- `ClientConfig.load`, which resolves configuration through the ambient `ConfigProvider`.
+- A type for every modeled response, including collection element types such as `MessageSummary`,
+  `TimetableEntry`, `Exam`, and `DisplayResource`.
+- `OnboardingType`, previously reachable only from the `/schemas` subpath.
+
+### Behavior changes
+
+- Entity identifiers decode with `Schema.Int` instead of `Schema.Finite`. A fractional id now fails
+  with `DecodeError` rather than entering the domain model. Whole JSON numbers are unaffected.
+- `timetableType` and `layout` on timetable entry requests reject blank strings, matching the
+  validation the other timetable routes already applied.
+- `ClientConfig.Live` no longer snapshots `process.env` at import time. It reads configuration when
+  the layer is built, so `ConfigProvider` overrides take effect.
+- Request types are now derived from their input schemas. `ExamDateRangeRequest`'s absent branch is
+  `{ start?: undefined; end?: undefined }` rather than `{ start?: never; end?: never }`; the two
+  disagreed under `exactOptionalPropertyTypes`.
+
+### Supported runtimes
+
+`engines.node` moved from `>=20.19.0` to `>=22.12.0`, and the build targets `node22`. Node 20 reached
+end of life on 2026-04-30, so the previous floor could not be built or verified.

@@ -1,3 +1,4 @@
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "@effect/vitest";
 import { Effect } from "effect";
 import { WebUntisClient } from "../../src/client.ts";
@@ -9,21 +10,56 @@ import * as api from "../../src/index.ts";
 import { jsonResponse, makeCoreTestLayer, makeJwt } from "./helpers.ts";
 
 describe("public structure", () => {
-  it("keeps the main root exports intact", () => {
-    expect(api).toHaveProperty("WebUntisClient");
-    expect(api).toHaveProperty("makeWebUntisLayer");
-    expect(api).toHaveProperty("withSchoolYear");
-    expect(api).toHaveProperty("clientConfigFromEnv");
-    expect(api).toHaveProperty("AppClient");
-    expect(api).toHaveProperty("MessagesClient");
-    expect(api).toHaveProperty("TimetableClient");
-    expect(api).toHaveProperty("TransportError");
-    expect(api).toHaveProperty("InvalidRequestError");
-    expect(api).not.toHaveProperty("layer");
-    expect(api).not.toHaveProperty("HomeSchema");
-    expect(api).not.toHaveProperty("WebUntisHttp");
-    expect(api).not.toHaveProperty("SchoolDiscovery");
-    expect(api).not.toHaveProperty("Bootstrap");
+  // A snapshot of the whole surface, so an accidental addition is as visible as
+  // an accidental removal. Schema values must stay on the `/schemas` subpath.
+  it("pins the root export surface", () => {
+    expect(Object.keys(api).sort()).toMatchInlineSnapshot(`
+      [
+        "AppClient",
+        "AuthClient",
+        "AuthError",
+        "ClassregClient",
+        "ClientConfig",
+        "ConfigurationError",
+        "DecodeError",
+        "DiscoveryError",
+        "ExamsClient",
+        "InvalidRequestError",
+        "MessagesClient",
+        "ProfileClient",
+        "SchoolyearsClient",
+        "SessionClient",
+        "TimetableClient",
+        "TransportError",
+        "WebUntisClient",
+        "clientConfigFromEnv",
+        "makeWebUntisLayer",
+        "webUntisLayer",
+        "withSchoolYear",
+      ]
+    `);
+  });
+
+  // Consumers need to name the element type of a collection response, not just
+  // its container, so the two must be exported together.
+  it("exports a type for every schema on the public schema surface", () => {
+    const domainsDir = new URL("../../src/domains/", import.meta.url);
+    const schemaFiles = readdirSync(domainsDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => new URL(`${entry.name}/schema.ts`, domainsDir))
+      .filter((url) => existsSync(url));
+
+    const missing = schemaFiles.flatMap((url) => {
+      const source = readFileSync(url, "utf8");
+      const types = new Set(source.match(/^export type (\w+)/gmu)?.map((line) => line.slice(12)));
+
+      return [...(source.match(/^export const (\w+)Schema\b/gmu) ?? [])]
+        .map((line) => line.slice(13, -6))
+        .filter((name) => !types.has(name))
+        .map((name) => `${url.pathname.split("/domains/")[1]}: ${name}Schema`);
+    });
+
+    expect(missing).toEqual([]);
   });
 
   it.effect("wires explicit domain services onto the composed client", () =>
@@ -39,7 +75,6 @@ describe("public structure", () => {
       expect(client.messages).toBe(messages);
       expect(client.timetable).toBe(timetable);
       expect(Effect.isEffect(client.app.getHome)).toBe(true);
-      expect(typeof client.withSchoolYear).toBe("function");
       expect(Effect.isEffect(client.app.getExamIntegrations)).toBe(true);
       expect(typeof client.classreg.getHomeworkList).toBe("function");
       expect(Effect.isEffect(client.exams.getForClass)).toBe(true);

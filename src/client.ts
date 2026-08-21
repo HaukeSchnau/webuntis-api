@@ -9,13 +9,16 @@ import { ProfileClient } from "./domains/profile/index.ts";
 import { SchoolyearsClient } from "./domains/schoolyears/index.ts";
 import { SessionClient } from "./domains/session/index.ts";
 import { TimetableClient } from "./domains/timetable/index.ts";
-import type { ClientConfig } from "./internal/config.ts";
+import { ClientConfig } from "./internal/config.ts";
 import { RawViewApiClient } from "./internal/raw-view-api.ts";
 import { makeWebUntisCoreLayer } from "./internal/runtime.ts";
-import { type SchoolYearScope, withSchoolYear } from "./internal/school-year-context.ts";
 
+/**
+ * Convenience aggregate over the focused domain services. Prefer depending on
+ * the individual services directly; this exists for programs that genuinely
+ * need most of the surface at once.
+ */
 export interface WebUntisClientShape {
-  readonly withSchoolYear: (schoolYearId: number) => SchoolYearScope;
   readonly auth: AuthClient["Service"];
   readonly app: AppClient["Service"];
   readonly classreg: ClassregClient["Service"];
@@ -44,7 +47,6 @@ export class WebUntisClient extends Context.Service<WebUntisClient, WebUntisClie
       const timetable = yield* TimetableClient;
 
       return WebUntisClient.of({
-        withSchoolYear,
         auth,
         app,
         classreg,
@@ -59,11 +61,11 @@ export class WebUntisClient extends Context.Service<WebUntisClient, WebUntisClie
   );
 }
 
-const makeLayers = (
-  config: ClientConfig["Service"],
+const makeLayers = <ConfigError>(
+  configLayer: Layer.Layer<ClientConfig, ConfigError>,
   transportLayer?: Layer.Layer<HttpClient.HttpClient>,
 ) => {
-  const coreLayer = makeWebUntisCoreLayer({ config, transportLayer });
+  const coreLayer = makeWebUntisCoreLayer({ configLayer, transportLayer });
 
   const domainServicesLayer = Layer.mergeAll(
     AuthClient.layer.pipe(Layer.provide(coreLayer)),
@@ -85,16 +87,34 @@ const makeLayers = (
   } as const;
 };
 
+/**
+ * Every public service, built from an already-resolved configuration.
+ *
+ * Use {@link webUntisLayer} instead when the configuration should come from the
+ * environment or from an installed `ConfigProvider`.
+ */
 export const makeWebUntisLayer = (
   config: ClientConfig["Service"],
   transportLayer?: Layer.Layer<HttpClient.HttpClient>,
-) => makeLayers(config, transportLayer).publicLayer;
+) => makeLayers(ClientConfig.layer(config), transportLayer).publicLayer;
 
+/**
+ * Every public service, configured from the ambient `ConfigProvider` when the
+ * layer is built. Fails with `ConfigurationError` if the `WEBUNTIS_*` settings
+ * are missing or malformed.
+ */
+export const webUntisLayer = makeLayers(ClientConfig.Live).publicLayer;
+
+/**
+ * Internal composition used by the reverse-engineering probes in `test/live`.
+ * It additionally exposes the raw view client and the core runtime services,
+ * neither of which is part of the published surface.
+ */
 export const makeWebUntisResearchLayer = (
   config: ClientConfig["Service"],
   transportLayer?: Layer.Layer<HttpClient.HttpClient>,
 ) => {
-  const layers = makeLayers(config, transportLayer);
+  const layers = makeLayers(ClientConfig.layer(config), transportLayer);
   const researchLayer = RawViewApiClient.layer.pipe(Layer.provide(layers.coreLayer));
   return Layer.mergeAll(layers.publicLayer, researchLayer, layers.coreLayer);
 };

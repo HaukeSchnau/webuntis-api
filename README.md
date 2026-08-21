@@ -8,7 +8,7 @@ For breaking API changes and upgrade notes, see [MIGRATION.md](./MIGRATION.md).
 
 ## What You Get
 
-- Explicit Effect v4 services and a single public `makeWebUntisLayer` composition root.
+- Explicit Effect v4 services with two composition roots: `webUntisLayer` for environment-driven wiring and `makeWebUntisLayer(config)` when you already hold a resolved configuration.
 - A small aggregate facade through `WebUntisClient` for convenience.
 - First-class domain services for `app`, `classreg`, `exams`, `messages`, `profile`, `schoolyears`, `session`, and `timetable`.
 - Descriptor-driven request construction, with explicit auth vs metadata header policy.
@@ -30,7 +30,7 @@ The current implementation follows the modern WebUntis flow:
 
 The service graph is split into a few distinct layers:
 
-- `ClientConfig` reads and validates `WEBUNTIS_*` config, including URL validation.
+- `ClientConfig` reads and validates `WEBUNTIS_*` config, including URL validation. `ClientConfig.load` goes through the ambient `ConfigProvider`; `ClientConfig.fromEnv` takes an explicit record.
 - `SchoolDiscovery` resolves the school deterministically and fails on ambiguous matches.
 - `SchoolResolver` caches the resolved tenant target.
 - `SessionState` manages cookies, login, token refresh, and auth retries.
@@ -55,8 +55,8 @@ The shell provides Node.js, pnpm, Just, SOPS, and age. Vite+ is installed with t
 The most familiar entry point is still the aggregate `WebUntisClient`.
 
 ```ts
-import { Effect, Layer } from "effect";
-import { WebUntisClient, clientConfigFromEnv, makeWebUntisLayer } from "webuntis-api";
+import { Effect } from "effect";
+import { WebUntisClient, webUntisLayer } from "webuntis-api";
 
 const program = Effect.gen(function* () {
   const client = yield* WebUntisClient;
@@ -69,9 +69,22 @@ const program = Effect.gen(function* () {
   };
 });
 
-const layer = Layer.unwrap(clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)));
+await Effect.runPromise(program.pipe(Effect.provide(webUntisLayer)));
+```
 
-await Effect.runPromise(program.pipe(Effect.provide(layer)));
+`webUntisLayer` reads its `WEBUNTIS_*` settings through Effect's ambient `ConfigProvider` when the layer is built, so `ConfigProvider.layer(...)` overrides apply and nothing is read at import time. It fails with `ConfigurationError` if the settings are missing or malformed.
+
+If you already have a configuration value — from a secret store, a test fixture, or your own config schema — use `makeWebUntisLayer` instead:
+
+```ts
+import { Effect } from "effect";
+import { clientConfigFromEnv, makeWebUntisLayer } from "webuntis-api";
+
+const config = await Effect.runPromise(
+  clientConfigFromEnv({ schoolName: "IGS Lilienthal", username: "...", password: "..." }),
+);
+
+const layer = makeWebUntisLayer(config);
 ```
 
 ## Preferred v4 Style
@@ -79,8 +92,8 @@ await Effect.runPromise(program.pipe(Effect.provide(layer)));
 For new code, prefer yielding focused services directly. That keeps dependencies explicit and matches the current Effect v4 style better than pushing everything through one large facade.
 
 ```ts
-import { Effect, Layer } from "effect";
-import { AppClient, MessagesClient, clientConfigFromEnv, makeWebUntisLayer } from "webuntis-api";
+import { Effect } from "effect";
+import { AppClient, MessagesClient, webUntisLayer } from "webuntis-api";
 
 const program = Effect.gen(function* () {
   const app = yield* AppClient;
@@ -94,16 +107,14 @@ const program = Effect.gen(function* () {
   };
 });
 
-const layer = Layer.unwrap(clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)));
-
-await Effect.runPromise(program.pipe(Effect.provide(layer)));
+await Effect.runPromise(program.pipe(Effect.provide(webUntisLayer)));
 ```
 
 The domain services are especially useful when a program only needs one slice of the API:
 
 ```ts
-import { Effect, Layer } from "effect";
-import { TimetableClient, clientConfigFromEnv, makeWebUntisLayer } from "webuntis-api";
+import { Effect } from "effect";
+import { TimetableClient, webUntisLayer } from "webuntis-api";
 
 const program = Effect.gen(function* () {
   const timetable = yield* TimetableClient;
@@ -116,9 +127,7 @@ const program = Effect.gen(function* () {
   });
 });
 
-const layer = Layer.unwrap(clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)));
-
-await Effect.runPromise(program.pipe(Effect.provide(layer)));
+await Effect.runPromise(program.pipe(Effect.provide(webUntisLayer)));
 ```
 
 ## School-Year Scoping
@@ -149,9 +158,9 @@ const historicalExams = Effect.gen(function* () {
 });
 ```
 
-The aggregate client exposes the same operator as `client.withSchoolYear(id)`. Only IDs returned by
-`schoolyears.list` should be selected. `timetable.search` still requires its endpoint-specific
-`schoolyear` query in addition to the scoped request header.
+`withSchoolYear` is a plain operator, so it applies to any effect regardless of which service produced
+it. Only IDs returned by `schoolyears.list` should be selected. `timetable.search` still requires its
+endpoint-specific `schoolyear` query in addition to the scoped request header.
 
 ## Public API Shape
 
@@ -169,17 +178,29 @@ The root package exports:
 - `TimetableClient`
 - `ClientConfig`
 - `clientConfigFromEnv`
-- `makeWebUntisLayer`
+- `webUntisLayer` and `makeWebUntisLayer`
 - `withSchoolYear`
 - `DiscoveryError`, `AuthError`, `TransportError`, `DecodeError`, `InvalidRequestError`, and `ConfigurationError`
 
-Schemas are exported from the dedicated subpath instead of the root barrel:
+Every response type is also exported from the root as a type. Every failure a request can produce is
+covered by the `WebUntisError` union.
+
+Schema _values_ live on the dedicated subpath instead of the root barrel:
 
 ```ts
 import { HomeSchema, TimetableEntriesSchema } from "webuntis-api/schemas";
 ```
 
-The root package does not export internal raw view helpers, broad schema wildcards, or public mutating experimental profile routes.
+The subpath exports one schema and one matching type per modeled response, including the element
+types of collection responses, so a caller can name intermediate values:
+
+```ts
+import type { MessageSummary, TimetableEntry } from "webuntis-api";
+
+const subjectOf = (message: MessageSummary) => message.subject;
+```
+
+The root package does not export internal raw view helpers, schema values, or public mutating experimental profile routes.
 
 Internal runtime services such as `SchoolDiscovery`, `SchoolResolver`, `SessionState`, `MetadataState`, and `WebUntisHttp` are intentionally kept off the root barrel.
 
@@ -242,9 +263,17 @@ Run the tests:
 just test
 ```
 
+Verify the published artifact — `publint`, `attw`, and a real consumer compiled against the packed
+tarball under both module-resolution modes with `skipLibCheck: false`:
+
+```bash
+just pack-check
+just pack-check-engines   # same, on the oldest Node in package.json#engines
+```
+
 The test suite is split into:
 
-- `test/unit` for config, session/metadata runtime behavior, discovery, and request-construction behavior
+- `test/unit` for config, session/metadata runtime behavior, discovery, request-construction behavior, and a snapshot that pins the root export surface
 - `test/contract` for strict drift detection and positive payload fixtures
 - `test/live/smoke.test.ts` for a small credential-gated smoke suite
 - `test/live/live.test.ts` for broader live coverage and snapshot drift detection
@@ -294,6 +323,8 @@ sops decrypt secrets/webuntis-live.env
 - Stable business routes belong on public domain services.
 - Reverse-engineering probes stay internal so the exported package surface remains coherent.
 - Snapshot churn in the live suite is treated as evidence of upstream change, not as noise to suppress.
+- Request types are derived from the schemas that validate them, so a caller-facing type and its runtime check cannot describe different shapes.
+- Entity identifiers decode as integers rather than as arbitrary finite numbers.
 - Runtime decoding accepts additive upstream fields while still rejecting missing or malformed known fields. Contract tests and targeted raw live probes apply strict excess-property decoding so additions remain visible to maintainers without breaking consumers. Public-client live snapshots exercise real endpoint behavior but cannot observe fields intentionally stripped by runtime decoding.
 
 Reverse-engineering artifacts live under [`docs/research/webuntis`](./docs/research/webuntis).

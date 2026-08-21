@@ -9,6 +9,7 @@ import {
   jsonResponse,
   makeCoreTestLayer,
   makeJwt,
+  makeJwtWithoutExpiry,
   testConfig,
   testGet,
   testGetSchema,
@@ -263,7 +264,7 @@ describe("bootstrap and transport", () => {
               });
             }
             if (pathname.endsWith("/api/token/new")) {
-              return new Response(makeJwt(undefined), { status: 200 });
+              return new Response(makeJwtWithoutExpiry(), { status: 200 });
             }
             if (pathname.endsWith("/api/rest/view/v1/app/data")) {
               metadataCalls += 1;
@@ -311,7 +312,7 @@ describe("bootstrap and transport", () => {
             }
             if (pathname.endsWith("/api/token/new")) {
               tokenCalls += 1;
-              return new Response(makeJwt(undefined), { status: 200 });
+              return new Response(makeJwtWithoutExpiry(), { status: 200 });
             }
 
             throw new Error(`Unexpected request: ${request.method} ${request.url}`);

@@ -1,12 +1,13 @@
 import { Context, Effect, Layer } from "effect";
-import type { RequestFailure } from "../../internal/http.ts";
+import { makeOperations } from "../../internal/domain.ts";
+import type { WebUntisError } from "../../internal/errors.ts";
 import { WebUntisHttp } from "../../internal/http.ts";
 import { ProfileRequests } from "./requests.ts";
 import type { UserContactData, UserEmail } from "./schema.ts";
 
 export interface ProfileClientShape {
-  readonly getUserContactData: Effect.Effect<UserContactData, RequestFailure>;
-  readonly getUserEmail: Effect.Effect<UserEmail, RequestFailure>;
+  readonly getUserContactData: Effect.Effect<UserContactData, WebUntisError>;
+  readonly getUserEmail: Effect.Effect<UserEmail, WebUntisError>;
 }
 
 export class ProfileClient extends Context.Service<ProfileClient, ProfileClientShape>()(
@@ -15,15 +16,11 @@ export class ProfileClient extends Context.Service<ProfileClient, ProfileClientS
   static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
-      const http = yield* WebUntisHttp;
+      const { read } = makeOperations(yield* WebUntisHttp, "ProfileClient");
 
       return ProfileClient.of({
-        getUserContactData: http
-          .requestSchema(ProfileRequests.getUserContactData, undefined)
-          .pipe(Effect.withSpan("ProfileClient.getUserContactData")),
-        getUserEmail: http
-          .requestSchema(ProfileRequests.getUserEmail, undefined)
-          .pipe(Effect.withSpan("ProfileClient.getUserEmail")),
+        getUserContactData: read("getUserContactData", ProfileRequests.getUserContactData),
+        getUserEmail: read("getUserEmail", ProfileRequests.getUserEmail),
       });
     }),
   );

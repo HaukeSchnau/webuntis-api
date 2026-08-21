@@ -8,10 +8,10 @@ import {
   DiscoveryError,
   decodeError,
   httpClientErrorToTransportError,
-  type TransportError,
+  TransportError,
 } from "./errors.ts";
-import { runtimeJsonParseOptions } from "./schema.ts";
-import type { ResolvedSchool } from "./types.ts";
+import { EntityId, runtimeJsonParseOptions } from "./schema.ts";
+import type { ResolvedSchool } from "./state.ts";
 
 const SchoolSearchResultSchema = Schema.Struct({
   server: Schema.String,
@@ -19,7 +19,7 @@ const SchoolSearchResultSchema = Schema.Struct({
   address: Schema.String,
   displayName: Schema.String,
   loginName: Schema.String,
-  schoolId: Schema.Finite,
+  schoolId: EntityId,
   useMobileServiceUrlIos: Schema.optional(Schema.Boolean),
   serverUrl: Schema.String,
   tenantId: Schema.String,
@@ -28,7 +28,7 @@ const SchoolSearchResultSchema = Schema.Struct({
 
 const SearchSchoolRpcResponseSchema = Schema.Struct({
   result: Schema.Struct({
-    size: Schema.optional(Schema.Finite),
+    size: Schema.optional(Schema.Int),
     schools: Schema.Array(SchoolSearchResultSchema),
   }),
   id: Schema.String,
@@ -93,11 +93,7 @@ export class SchoolDiscovery extends Context.Service<SchoolDiscovery, SchoolDisc
             ),
           ),
           Effect.mapError((error) =>
-            error instanceof DiscoveryError ||
-            (typeof error === "object" &&
-              error !== null &&
-              "_tag" in error &&
-              error._tag === "TransportError")
+            error instanceof DiscoveryError || error instanceof TransportError
               ? error
               : decodeError("/schoolquery2", error),
           ),
@@ -116,6 +112,10 @@ export class SchoolDiscovery extends Context.Service<SchoolDiscovery, SchoolDisc
           ),
         );
 
+      /** The sole element of `candidates`, or `undefined` if there is not exactly one. */
+      const onlyMatch = (candidates: ReadonlyArray<ResolvedSchool>): ResolvedSchool | undefined =>
+        candidates.length === 1 ? candidates[0] : undefined;
+
       const resolve: SchoolDiscoveryShape["resolve"] = (query) =>
         search(query).pipe(
           Effect.flatMap((schools) => {
@@ -128,11 +128,9 @@ export class SchoolDiscovery extends Context.Service<SchoolDiscovery, SchoolDisc
                 school.serverUrl.toLowerCase() === normalizedQuery,
             );
 
-            if (exactMatches.length === 1) {
-              const match = exactMatches[0];
-              if (match !== undefined) {
-                return Effect.succeed(match);
-              }
+            const exactMatch = onlyMatch(exactMatches);
+            if (exactMatch !== undefined) {
+              return Effect.succeed(exactMatch);
             }
 
             if (exactMatches.length > 1) {
@@ -154,11 +152,9 @@ export class SchoolDiscovery extends Context.Service<SchoolDiscovery, SchoolDisc
               );
             }
 
-            if (schools.length === 1) {
-              const match = schools[0];
-              if (match !== undefined) {
-                return Effect.succeed(match);
-              }
+            const soleMatch = onlyMatch(schools);
+            if (soleMatch !== undefined) {
+              return Effect.succeed(soleMatch);
             }
 
             return Effect.fail(

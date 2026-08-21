@@ -9,8 +9,8 @@ import {
   RequestPolicy,
   schemaRequest,
 } from "../../internal/request.ts";
+import { TimeGridSchema } from "../shared/schema.ts";
 import {
-  TimeGridSchema,
   TimetableAvailableRoomsSchema,
   TimetableCalendarSchema,
   TimetableEntriesSchema,
@@ -21,82 +21,77 @@ import {
   TimetableGridSchema,
   TimetableMenuSchema,
   TimetableResourceTypeSchema,
-  type TimetableResourceType,
   TimetableSearchSchema,
 } from "./schema.ts";
-
-export interface TimetableEntriesRequest {
-  readonly start: string;
-  readonly end: string;
-  readonly resourceType: TimetableResourceType;
-  readonly resources: readonly [number, ...Array<number>];
-  readonly timetableType?: string | undefined;
-  readonly format?: number | undefined;
-  readonly layout?: string | undefined;
-  readonly periodTypes?: string | undefined;
-}
-
-export interface TimetableFilterRequest {
-  readonly start: string;
-  readonly end: string;
-  readonly resourceType: TimetableResourceType;
-  readonly timetableType?: string | undefined;
-}
-
-export interface TimetableEntriesSettingsRequest {
-  readonly resourceType: TimetableResourceType;
-  readonly format?: number | undefined;
-}
-
-export interface TimetableSearchRequest {
-  readonly query: string;
-  readonly schoolyear: number;
-}
-
-export interface TimetableCalendarRequest {
-  readonly myTimetable?: boolean | undefined;
-  readonly timetableType?: string | undefined;
-}
-
-export interface TimetableExternalCalendarRequest {
-  readonly myTimetable?: boolean | undefined;
-}
-
-export interface TimetableAvailableRoomsRequest {
-  readonly startDateTime: string;
-  readonly endDateTime: string;
-}
-
-export interface TimetableEntriesWeekOverviewRequest {
-  readonly start: string;
-  readonly end: string;
-  readonly resourceType: TimetableResourceType;
-  readonly resources: readonly [number, ...Array<number>];
-  readonly timetableType?: string | undefined;
-}
-
-export interface TimetableGridRequest {
-  readonly timetableType?: string | undefined;
-}
 
 const EntriesInputFields = {
   start: IsoDate,
   end: IsoDate,
   resourceType: TimetableResourceTypeSchema,
   resources: Schema.NonEmptyArray(PositiveInteger),
-  timetableType: Schema.optional(Schema.String),
+  timetableType: Schema.optional(NonBlankString),
 } as const;
 
-const TimetableEntriesInput = Schema.Struct({
-  ...EntriesInputFields,
-  format: Schema.optional(Schema.Finite),
-  layout: Schema.optional(Schema.String),
-  periodTypes: Schema.optional(Schema.String),
-});
-
-const OrderedTimetableEntriesInput = orderedRange(TimetableEntriesInput);
+const TimetableEntriesInput = orderedRange(
+  Schema.Struct({
+    ...EntriesInputFields,
+    format: Schema.optional(PositiveInteger),
+    layout: Schema.optional(NonBlankString),
+    periodTypes: Schema.optional(Schema.String),
+  }),
+);
 
 const TimetableEntriesWeekOverviewInput = orderedRange(Schema.Struct(EntriesInputFields));
+
+const TimetableFilterInput = orderedRange(
+  Schema.Struct({
+    start: IsoDate,
+    end: IsoDate,
+    resourceType: TimetableResourceTypeSchema,
+    timetableType: Schema.optional(NonBlankString),
+  }),
+);
+
+const TimetableEntriesSettingsInput = Schema.Struct({
+  resourceType: TimetableResourceTypeSchema,
+  format: Schema.optional(PositiveInteger),
+});
+
+const TimetableSearchInput = Schema.Struct({
+  query: NonBlankString,
+  schoolyear: PositiveInteger,
+});
+
+const TimetableCalendarInput = Schema.Struct({
+  myTimetable: Schema.optional(Schema.Boolean),
+  timetableType: Schema.optional(NonBlankString),
+});
+
+const TimetableExternalCalendarInput = Schema.Struct({
+  myTimetable: Schema.optional(Schema.Boolean),
+});
+
+const TimetableAvailableRoomsInput = orderedDateTimeRange(
+  Schema.Struct({
+    startDateTime: DateTimeString,
+    endDateTime: DateTimeString,
+  }),
+);
+
+const TimetableGridInput = Schema.Struct({ timetableType: Schema.optional(NonBlankString) });
+
+// Request types are derived from the schemas that validate them, so the two can
+// never describe different shapes. Refinements such as `IsoDate` narrow values
+// at runtime only; they stay `string` here.
+export type TimetableEntriesRequest = typeof TimetableEntriesInput.Type;
+export type TimetableEntriesWeekOverviewRequest = typeof TimetableEntriesWeekOverviewInput.Type;
+export type TimetableFilterRequest = typeof TimetableFilterInput.Type;
+export type TimetableEntriesSettingsRequest = typeof TimetableEntriesSettingsInput.Type;
+export type TimetableSearchRequest = typeof TimetableSearchInput.Type;
+export type TimetableCalendarRequest = typeof TimetableCalendarInput.Type;
+export type TimetableExternalCalendarRequest = typeof TimetableExternalCalendarInput.Type;
+export type TimetableAvailableRoomsRequest = typeof TimetableAvailableRoomsInput.Type;
+export type TimetableGridRequest = typeof TimetableGridInput.Type;
 
 export const TimetableRequests = {
   getTimeGrid: schemaRequest<void, typeof TimeGridSchema>({
@@ -112,7 +107,7 @@ export const TimetableRequests = {
       timetableType: request.timetableType ?? "STANDARD",
     }),
     policy: RequestPolicy.Metadata,
-    inputSchema: Schema.Struct({ timetableType: Schema.optional(NonBlankString) }),
+    inputSchema: TimetableGridInput,
     supportsSchoolYearScope: true,
     schema: TimetableGridSchema,
   }),
@@ -126,14 +121,7 @@ export const TimetableRequests = {
       end: request.end,
     }),
     policy: RequestPolicy.Metadata,
-    inputSchema: orderedRange(
-      Schema.Struct({
-        start: IsoDate,
-        end: IsoDate,
-        resourceType: TimetableResourceTypeSchema,
-        timetableType: Schema.optional(NonBlankString),
-      }),
-    ),
+    inputSchema: TimetableFilterInput,
     supportsSchoolYearScope: true,
     schema: TimetableFilterSchema,
   }),
@@ -148,10 +136,7 @@ export const TimetableRequests = {
       resourceType: request.resourceType,
     }),
     policy: RequestPolicy.Metadata,
-    inputSchema: Schema.Struct({
-      resourceType: TimetableResourceTypeSchema,
-      format: Schema.optional(PositiveInteger),
-    }),
+    inputSchema: TimetableEntriesSettingsInput,
     supportsSchoolYearScope: true,
     schema: TimetableEntriesSettingsSchema,
   }),
@@ -169,10 +154,7 @@ export const TimetableRequests = {
       timetableType: request.timetableType,
     }),
     policy: RequestPolicy.AuthOnly,
-    inputSchema: Schema.Struct({
-      myTimetable: Schema.optional(Schema.Boolean),
-      timetableType: Schema.optional(NonBlankString),
-    }),
+    inputSchema: TimetableCalendarInput,
     schema: TimetableCalendarSchema,
   }),
   getExternalCalendar: schemaRequest<
@@ -185,7 +167,7 @@ export const TimetableRequests = {
       myTimetable: request.myTimetable,
     }),
     policy: RequestPolicy.AuthOnly,
-    inputSchema: Schema.Struct({ myTimetable: Schema.optional(Schema.Boolean) }),
+    inputSchema: TimetableExternalCalendarInput,
     schema: TimetableExternalCalendarSchema,
   }),
   search: schemaRequest<TimetableSearchRequest, typeof TimetableSearchSchema>({
@@ -196,10 +178,7 @@ export const TimetableRequests = {
       schoolyear: request.schoolyear,
     }),
     policy: RequestPolicy.AuthOnly,
-    inputSchema: Schema.Struct({
-      query: NonBlankString,
-      schoolyear: PositiveInteger,
-    }),
+    inputSchema: TimetableSearchInput,
     supportsSchoolYearScope: true,
     schema: TimetableSearchSchema,
   }),
@@ -214,12 +193,7 @@ export const TimetableRequests = {
       endDateTime: request.endDateTime,
     }),
     policy: RequestPolicy.AuthOnly,
-    inputSchema: orderedDateTimeRange(
-      Schema.Struct({
-        startDateTime: DateTimeString,
-        endDateTime: DateTimeString,
-      }),
-    ),
+    inputSchema: TimetableAvailableRoomsInput,
     supportsSchoolYearScope: true,
     schema: TimetableAvailableRoomsSchema,
   }),
@@ -237,7 +211,7 @@ export const TimetableRequests = {
       layout: request.layout ?? "START_TIME",
     }),
     policy: RequestPolicy.Metadata,
-    inputSchema: OrderedTimetableEntriesInput,
+    inputSchema: TimetableEntriesInput,
     supportsSchoolYearScope: true,
     schema: TimetableEntriesSchema,
   }),

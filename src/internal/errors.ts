@@ -11,7 +11,7 @@ export class DiscoveryError extends Schema.TaggedError<DiscoveryError>()("Discov
 export class AuthError extends Schema.TaggedError<AuthError>()("AuthError", {
   stage: Schema.Literals(["discovery", "bootstrap", "login", "token", "metadata"]),
   message: Schema.String,
-  status: Schema.optional(Schema.Finite),
+  status: Schema.optional(Schema.Int),
   cause: Schema.optional(Schema.Unknown),
 }) {}
 
@@ -19,7 +19,7 @@ export class TransportError extends Schema.TaggedError<TransportError>()("Transp
   method: Schema.String,
   path: Schema.String,
   message: Schema.String,
-  status: Schema.optional(Schema.Finite),
+  status: Schema.optional(Schema.Int),
   body: Schema.optional(Schema.String),
   cause: Schema.optional(Schema.Unknown),
 }) {}
@@ -47,6 +47,12 @@ export class ConfigurationError extends Schema.TaggedError<ConfigurationError>()
   },
 ) {}
 
+/**
+ * Every failure a request can produce once configuration has been resolved:
+ * discovery, authentication, transport, response decoding, and caller-input
+ * validation. `ConfigurationError` is deliberately absent because it can only
+ * occur while building the client, never while running a request.
+ */
 export type WebUntisError =
   | DiscoveryError
   | AuthError
@@ -106,11 +112,3 @@ export const decodeError = (path: string, error: unknown): DecodeError =>
     message: errorMessage(error),
     cause: error,
   });
-
-export {
-  AuthError as AuthenticationError,
-  ConfigurationError as MissingConfigurationError,
-  DecodeError as SchemaDriftError,
-  DiscoveryError as SchoolSearchError,
-  TransportError as UnexpectedResponseError,
-};

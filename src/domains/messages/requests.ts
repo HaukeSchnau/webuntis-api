@@ -11,7 +11,6 @@ import {
   MessageDraftsSchema,
   MessageRecipientFilterSchema,
   MessageRecipientOptionSchema,
-  type MessageRecipientOption,
   MessageRecipientQuickfiltersSchema,
   MessageRecipientSearchSchema,
   MessageReplyFormSchema,
@@ -21,30 +20,26 @@ import {
   MessagesStatusSchema,
 } from "./schema.ts";
 
-export interface MessageRecipientSearchRequest {
-  readonly recipientOption: MessageRecipientOption;
-  readonly searchText: string;
-}
-
-export interface MessageRecipientFilterRequest {
-  readonly recipientOption: MessageRecipientOption;
-}
-
-export interface MessageComposeRecipientsRequest {
-  readonly recipientOption: MessageRecipientOption;
-  readonly filters?: ReadonlyArray<unknown> | undefined;
-  readonly searchText?: string | undefined;
-}
-
-export interface MessageReplyFormRequest {
-  readonly id: number;
-}
-
-export interface MessageDetailRequest {
-  readonly id: number;
-}
-
 const RecipientOptionInput = Schema.Struct({ recipientOption: MessageRecipientOptionSchema });
+
+const MessageRecipientSearchInput = Schema.Struct({
+  recipientOption: MessageRecipientOptionSchema,
+  searchText: NonBlankString,
+});
+
+const MessageComposeRecipientsInput = Schema.Struct({
+  recipientOption: MessageRecipientOptionSchema,
+  filters: Schema.optional(Schema.Array(Schema.Unknown)),
+  searchText: Schema.optional(Schema.String),
+});
+
+const MessageIdInput = Schema.Struct({ id: PositiveInteger });
+
+export type MessageRecipientFilterRequest = typeof RecipientOptionInput.Type;
+export type MessageRecipientSearchRequest = typeof MessageRecipientSearchInput.Type;
+export type MessageComposeRecipientsRequest = typeof MessageComposeRecipientsInput.Type;
+export type MessageReplyFormRequest = typeof MessageIdInput.Type;
+export type MessageDetailRequest = typeof MessageIdInput.Type;
 
 export const MessagesRequests = {
   getInbox: schemaRequest<void, typeof MessagesInboxSchema>({
@@ -96,11 +91,7 @@ export const MessagesRequests = {
       searchText: request.searchText ?? "",
     }),
     policy: RequestPolicy.AuthOnly,
-    inputSchema: Schema.Struct({
-      recipientOption: MessageRecipientOptionSchema,
-      filters: Schema.optional(Schema.Array(Schema.Unknown)),
-      searchText: Schema.optional(Schema.String),
-    }),
+    inputSchema: MessageComposeRecipientsInput,
     schema: MessageComposeRecipientsSchema,
   }),
   searchRecipients: schemaRequest<
@@ -113,10 +104,7 @@ export const MessagesRequests = {
       `api/rest/view/v1/messages/recipients/${encodeURIComponent(request.recipientOption)}/search`,
     query: (request) => ({ searchText: request.searchText }),
     policy: RequestPolicy.AuthOnly,
-    inputSchema: Schema.Struct({
-      recipientOption: MessageRecipientOptionSchema,
-      searchText: NonBlankString,
-    }),
+    inputSchema: MessageRecipientSearchInput,
     schema: MessageRecipientSearchSchema,
   }),
   getSent: schemaRequest<void, typeof MessageSentSchema>({
@@ -136,7 +124,7 @@ export const MessagesRequests = {
     operation: "api/rest/view/v1/messages/{id}/reply-form",
     path: (request) => `api/rest/view/v1/messages/${request.id}/reply-form`,
     policy: RequestPolicy.AuthOnly,
-    inputSchema: Schema.Struct({ id: PositiveInteger }),
+    inputSchema: MessageIdInput,
     schema: MessageReplyFormSchema,
   }),
   getMessage: schemaRequest<MessageDetailRequest, typeof MessageDetailSchema>({
@@ -144,7 +132,7 @@ export const MessagesRequests = {
     operation: "api/rest/view/v1/messages/{id}",
     path: (request) => `api/rest/view/v1/messages/${request.id}`,
     policy: RequestPolicy.AuthOnly,
-    inputSchema: Schema.Struct({ id: PositiveInteger }),
+    inputSchema: MessageIdInput,
     schema: MessageDetailSchema,
   }),
 } as const;
