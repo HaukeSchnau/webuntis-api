@@ -1,6 +1,11 @@
 import { Schema } from "effect";
 import { EntityId } from "../../internal/schema.ts";
-import { DisplayResourceSchema, JsonObjectSchema, TimeRangeSchema } from "../shared/schema.ts";
+import {
+  DateRangeSchema,
+  DisplayResourceSchema,
+  JsonObjectSchema,
+  TimeRangeSchema,
+} from "../shared/schema.ts";
 
 export const TimeGridTypeSchema = Schema.Literals(["CLOCK_HOURS", "LESSON_GRID"]);
 
@@ -97,7 +102,7 @@ export const TimetableClassFilterItemSchema = Schema.Struct({
   class: DisplayResourceSchema,
   classTeacher1: Schema.NullOr(DisplayResourceSchema),
   classTeacher2: Schema.NullOr(DisplayResourceSchema),
-  department: TimetableDepartmentSchema,
+  department: Schema.NullOr(TimetableDepartmentSchema),
 });
 
 export type TimetableClassFilterItem = Schema.Schema.Type<typeof TimetableClassFilterItemSchema>;
@@ -119,6 +124,25 @@ export const TimetableSubjectFilterItemSchema = Schema.Struct({
 
 export type TimetableSubjectFilterItem = Schema.Schema.Type<
   typeof TimetableSubjectFilterItemSchema
+>;
+
+export const TimetableStudentClassSchema = Schema.Struct({
+  class: DisplayResourceSchema,
+  dateRange: DateRangeSchema,
+  department: Schema.NullOr(TimetableDepartmentSchema),
+});
+
+export type TimetableStudentClass = Schema.Schema.Type<typeof TimetableStudentClassSchema>;
+
+export const TimetableStudentFilterItemSchema = Schema.Struct({
+  student: DisplayResourceSchema,
+  classes: Schema.Array(TimetableStudentClassSchema),
+  assignmentGroups: Schema.Array(JsonObjectSchema),
+  imageUrl: Schema.NullOr(Schema.String),
+});
+
+export type TimetableStudentFilterItem = Schema.Schema.Type<
+  typeof TimetableStudentFilterItemSchema
 >;
 
 export const TimetableRoomFilterItemSchema = Schema.Struct({
@@ -151,7 +175,7 @@ export const TimetableFilterSchema = Schema.Struct({
   resources: Schema.Array(JsonObjectSchema),
   rooms: Schema.Array(TimetableRoomFilterItemSchema),
   subjects: Schema.Array(TimetableSubjectFilterItemSchema),
-  students: Schema.Array(JsonObjectSchema),
+  students: Schema.Array(TimetableStudentFilterItemSchema),
   teachers: Schema.Array(TimetableTeacherFilterItemSchema),
 });
 

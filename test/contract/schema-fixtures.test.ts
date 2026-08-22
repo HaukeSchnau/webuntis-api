@@ -676,12 +676,7 @@ const fixtures = [
           class: displayResource,
           classTeacher1: null,
           classTeacher2: null,
-          department: {
-            id: 1,
-            shortName: "SCI",
-            longName: "Science",
-            displayName: "Science",
-          },
+          department: null,
         },
       ],
       resources: [],
@@ -707,7 +702,20 @@ const fixtures = [
           ],
         },
       ],
-      students: [],
+      students: [
+        {
+          student: displayResource,
+          classes: [
+            {
+              class: displayResource,
+              dateRange,
+              department: null,
+            },
+          ],
+          assignmentGroups: [],
+          imageUrl: null,
+        },
+      ],
       teachers: [
         {
           teacher: teacherResource,

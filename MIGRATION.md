@@ -1,6 +1,12 @@
 # Migration Guide
 
-This release intentionally reshapes the package toward explicit Effect v4 services and a smaller public API.
+## 0.2.0
+
+This release reshapes the package toward explicit Effect v4 services and a smaller public API.
+
+Timetable class filters now model `department` as nullable, matching live tenants where some
+classes have no department. Student filter items also have a typed public schema with their class
+memberships and source date ranges.
 
 ## High-Level Changes
 
