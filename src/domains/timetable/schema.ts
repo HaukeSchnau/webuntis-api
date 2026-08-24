@@ -260,7 +260,7 @@ export const TimetableEntrySchema = Schema.StructWithRest(
     color: Schema.String,
     notesAll: Schema.NullOr(Schema.String),
     icons: Schema.Array(Schema.String),
-    position1: Schema.Array(TimetableEntryPositionSchema),
+    position1: TimetableEntryPositionsSchema,
     position2: TimetableEntryPositionsSchema,
     position3: TimetableEntryPositionsSchema,
     position4: TimetableEntryPositionsSchema,

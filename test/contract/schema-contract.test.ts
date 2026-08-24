@@ -290,6 +290,36 @@ describe("strict schema decoding", () => {
     expect(() => decode({ ids: [1] }, strictJsonParseOptions)).toThrow();
   });
 
+  it("preserves a null primary timetable position from historical entries", () => {
+    const decode = Schema.decodeUnknownSync(TimetableEntrySchema);
+
+    const entry = decode(
+      {
+        ids: [1],
+        duration: { start: "08:00", end: "09:00" },
+        type: "NORMAL_TEACHING_PERIOD",
+        status: "REGULAR",
+        layoutStartPosition: 0,
+        layoutWidth: 1,
+        layoutGroup: 0,
+        color: "#ffffff",
+        notesAll: null,
+        icons: [],
+        position1: null,
+        position2: null,
+        position3: null,
+        position4: null,
+        texts: [],
+        lessonText: null,
+        lessonInfo: null,
+        substitutionText: null,
+      },
+      strictJsonParseOptions,
+    );
+
+    expect(entry.position1).toBeNull();
+  });
+
   it("rejects non-object timetable external calendar payloads", () => {
     const decode = Schema.decodeUnknownSync(TimetableExternalCalendarItemSchema);
 
