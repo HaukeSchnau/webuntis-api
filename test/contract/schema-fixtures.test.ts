@@ -807,7 +807,7 @@ const fixtures = [
               layoutWidth: 100,
               layoutGroup: 0,
               color: "#ffffff",
-              notesAll: "",
+              notesAll: null,
               icons: ["HOMEWORK"],
               position1: [
                 {
@@ -829,9 +829,9 @@ const fixtures = [
               position6: null,
               position7: null,
               texts: [{ type: "LESSON_TEXT", text: "Exercise" }],
-              lessonText: "Exercise",
+              lessonText: null,
               lessonInfo: null,
-              substitutionText: "",
+              substitutionText: null,
               userName: null,
               moved: null,
               durationTotal: null,
