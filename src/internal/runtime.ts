@@ -1,6 +1,6 @@
-import { Layer } from "effect";
+import { Effect, Layer, Schedule } from "effect";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
-import type * as HttpClient from "effect/unstable/http/HttpClient";
+import * as HttpClient from "effect/unstable/http/HttpClient";
 import type { ClientConfig } from "./config.ts";
 import { SchoolDiscovery } from "./discovery.ts";
 import { WebUntisHttp } from "./http.ts";
@@ -13,6 +13,26 @@ export interface WebUntisRuntimeOptions<ConfigError> {
   readonly transportLayer?: Layer.Layer<HttpClient.HttpClient> | undefined;
 }
 
+const transientRetrySchedule = Schedule.exponential("500 millis").pipe(Schedule.jittered);
+
+/**
+ * Retries transport failures, timeouts, rate limiting, and transient HTTP responses before the
+ * WebUntis protocol layer decodes them. Permanent response and schema failures remain single-shot.
+ */
+export const withTransientRetries = <E, R>(client: HttpClient.HttpClient.With<E, R>) =>
+  client.pipe(
+    HttpClient.retryTransient({
+      retryOn: "errors-and-responses",
+      schedule: transientRetrySchedule,
+      times: 2,
+    }),
+  );
+
+const defaultTransportLayer = Layer.effect(
+  HttpClient.HttpClient,
+  Effect.map(HttpClient.HttpClient, withTransientRetries),
+).pipe(Layer.provide(FetchHttpClient.layer));
+
 /**
  * Builds the shared runtime every domain service sits on. The returned layer is
  * a single value, so providing it once gives all services the same session,
@@ -20,7 +40,7 @@ export interface WebUntisRuntimeOptions<ConfigError> {
  */
 export const makeWebUntisCoreLayer = <ConfigError>({
   configLayer,
-  transportLayer = FetchHttpClient.layer,
+  transportLayer = defaultTransportLayer,
 }: WebUntisRuntimeOptions<ConfigError>) => {
   const baseLayer = Layer.mergeAll(configLayer, transportLayer);
   const discoveryLayer = SchoolDiscovery.layer.pipe(Layer.provideMerge(baseLayer));
