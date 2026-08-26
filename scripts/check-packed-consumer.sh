@@ -24,7 +24,7 @@ cat >"$temp_dir/package.json" <<EOF
   "type": "module",
   "dependencies": {
     "effect": "$effect_peer_range",
-    "webuntis-api": "file:$package_path"
+    "@schnau/webuntis-api": "file:$package_path"
   }
 }
 EOF

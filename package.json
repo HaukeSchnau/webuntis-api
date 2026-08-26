@@ -1,5 +1,5 @@
 {
-  "name": "webuntis-api",
+  "name": "@schnau/webuntis-api",
   "version": "0.2.3",
   "description": "Read-only Effect client for WebUntis APIs.",
   "files": [

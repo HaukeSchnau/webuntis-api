@@ -1,5 +1,10 @@
 import { Effect, Layer } from "effect";
-import { AuthClient, WebUntisClient, clientConfigFromEnv, makeWebUntisLayer } from "webuntis-api";
+import {
+  AuthClient,
+  WebUntisClient,
+  clientConfigFromEnv,
+  makeWebUntisLayer,
+} from "@schnau/webuntis-api";
 
 const layer = Layer.unwrap(clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)));
 

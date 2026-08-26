@@ -56,7 +56,7 @@ The most familiar entry point is still the aggregate `WebUntisClient`.
 
 ```ts
 import { Effect } from "effect";
-import { WebUntisClient, webUntisLayer } from "webuntis-api";
+import { WebUntisClient, webUntisLayer } from "@schnau/webuntis-api";
 
 const program = Effect.gen(function* () {
   const client = yield* WebUntisClient;
@@ -78,7 +78,7 @@ If you already have a configuration value — from a secret store, a test fixtur
 
 ```ts
 import { Effect } from "effect";
-import { clientConfigFromEnv, makeWebUntisLayer } from "webuntis-api";
+import { clientConfigFromEnv, makeWebUntisLayer } from "@schnau/webuntis-api";
 
 const config = await Effect.runPromise(
   clientConfigFromEnv({ schoolName: "IGS Lilienthal", username: "...", password: "..." }),
@@ -93,7 +93,7 @@ For new code, prefer yielding focused services directly. That keeps dependencies
 
 ```ts
 import { Effect } from "effect";
-import { AppClient, MessagesClient, webUntisLayer } from "webuntis-api";
+import { AppClient, MessagesClient, webUntisLayer } from "@schnau/webuntis-api";
 
 const program = Effect.gen(function* () {
   const app = yield* AppClient;
@@ -114,7 +114,7 @@ The domain services are especially useful when a program only needs one slice of
 
 ```ts
 import { Effect } from "effect";
-import { TimetableClient, webUntisLayer } from "webuntis-api";
+import { TimetableClient, webUntisLayer } from "@schnau/webuntis-api";
 
 const program = Effect.gen(function* () {
   const timetable = yield* TimetableClient;
@@ -138,7 +138,7 @@ leak their selected year into one another.
 
 ```ts
 import { Effect } from "effect";
-import { ExamsClient, SchoolyearsClient, withSchoolYear } from "webuntis-api";
+import { ExamsClient, SchoolyearsClient, withSchoolYear } from "@schnau/webuntis-api";
 
 const historicalExams = Effect.gen(function* () {
   const exams = yield* ExamsClient;
@@ -188,14 +188,14 @@ covered by the `WebUntisError` union.
 Schema _values_ live on the dedicated subpath instead of the root barrel:
 
 ```ts
-import { HomeSchema, TimetableEntriesSchema } from "webuntis-api/schemas";
+import { HomeSchema, TimetableEntriesSchema } from "@schnau/webuntis-api/schemas";
 ```
 
 The subpath exports one schema and one matching type per modeled response, including the element
 types of collection responses, so a caller can name intermediate values:
 
 ```ts
-import type { MessageSummary, TimetableEntry } from "webuntis-api";
+import type { MessageSummary, TimetableEntry } from "@schnau/webuntis-api";
 
 const subjectOf = (message: MessageSummary) => message.subject;
 ```
@@ -207,7 +207,7 @@ Internal runtime services such as `SchoolDiscovery`, `SchoolResolver`, `SessionS
 If you need service types for your own signatures, prefer the service-native form:
 
 ```ts
-import type { AppClient, TimetableClient } from "webuntis-api";
+import type { AppClient, TimetableClient } from "@schnau/webuntis-api";
 
 type AppService = AppClient["Service"];
 type TimetableService = TimetableClient["Service"];
