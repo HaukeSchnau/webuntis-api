@@ -1,0 +1,50 @@
+name: Publish npm package
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: npm-publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.server_url == 'https://github.com'
+    runs-on: ubuntu-latest
+    environment: npm
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24.15.0"
+          registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
+
+      - name: Install release tools
+        run: npm install --global npm@12.0.2 pnpm@11.21.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify release tag
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync } from "node:fs";
+
+          const packageJson = JSON.parse(readFileSync("package.json", "utf8"));
+          const expectedTag = `v${packageJson.version}`;
+
+          if (process.env.GITHUB_REF_NAME !== expectedTag) {
+            throw new Error(`Release tag must be ${expectedTag}, received ${process.env.GITHUB_REF_NAME}`);
+          }
+          NODE
+
+      - name: Publish
+        run: npm publish --access public

@@ -2,12 +2,13 @@ default:
     @just --list
 
 build:
-    pnpm exec vp pack
+    pnpm run build
 
-pack-check: build
-    pnpm exec publint --strict
-    pnpm exec attw --pack . --profile esm-only
-    ./scripts/check-packed-consumer.sh
+pack-check:
+    pnpm run pack-check
+
+qa:
+    pnpm run qa
 
 packed-live: build
     ./scripts/check-packed-consumer.sh --live
@@ -18,7 +19,7 @@ pack-check-engines: build
         ./scripts/check-packed-consumer.sh
 
 test:
-    pnpm exec vp test run
+    pnpm run test
 
 test-unit:
     pnpm exec vp test run test/unit
@@ -39,7 +40,7 @@ test-watch:
     pnpm exec vp test
 
 lint:
-    pnpm exec vp lint
+    pnpm run lint
 
 format:
     pnpm exec vp fmt . --write
