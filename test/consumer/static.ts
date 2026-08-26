@@ -9,8 +9,8 @@ import {
   type MessageSummary,
   type TimetableEntriesRequest,
   type WebUntisClientConfig,
-} from "webuntis-api";
-import { HomeSchema } from "webuntis-api/schemas";
+} from "@schnau/webuntis-api";
+import { HomeSchema } from "@schnau/webuntis-api/schemas";
 
 const request: ExamDateRangeRequest = {
   start: "2026-01-01",

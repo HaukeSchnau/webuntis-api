@@ -73,7 +73,7 @@ Before, code often relied on inferred factory output types.
 After, prefer the service-native type shape:
 
 ```ts
-import type { MessagesClient } from "webuntis-api";
+import type { MessagesClient } from "@schnau/webuntis-api";
 
 type MessagesService = MessagesClient["Service"];
 ```
@@ -85,7 +85,7 @@ Before, raw view helpers and unstable routes leaked into the root export surface
 After:
 
 - raw view helpers are internal-only
-- schemas moved to the `webuntis-api/schemas` subpath
+- schemas moved to the `@schnau/webuntis-api/schemas` subpath
 - public mutating experimental profile routes are removed
 - the root package is intentionally read-only and stable-focused
 
@@ -97,7 +97,7 @@ The recommended wiring pattern is:
 
 ```ts
 import { Effect } from "effect";
-import { webUntisLayer } from "webuntis-api";
+import { webUntisLayer } from "@schnau/webuntis-api";
 
 await Effect.runPromise(program.pipe(Effect.provide(webUntisLayer)));
 ```
@@ -176,7 +176,7 @@ If you maintained local patches on top of the old layout, expect path changes.
 
 1. Replace inferred client-factory types with `ServiceClass["Service"]` where needed.
 2. Update programs to `yield*` the specific domain services they use.
-3. Switch schema imports to `webuntis-api/schemas`.
+3. Switch schema imports to `@schnau/webuntis-api/schemas`.
 4. Update positional lookup calls to the new request-object form.
 5. Remove any dependency on root-exported raw or experimental write routes.
 6. Re-check env configuration, especially tenant pinning and `WEBUNTIS_SERVER_URL`.

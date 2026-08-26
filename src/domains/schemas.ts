@@ -1,5 +1,5 @@
 /**
- * Public schema surface, published as `webuntis-api/schemas`.
+ * Public schema surface, published as `@schnau/webuntis-api/schemas`.
  *
  * Every response schema and its decoded type lives in a `src/domains/<domain>/schema.ts`
  * module, and all of them are re-exported here. Schemas that are implementation
