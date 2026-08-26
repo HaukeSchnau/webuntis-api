@@ -280,6 +280,20 @@ The test suite is split into:
 
 Without live credentials, the credential-gated tests are skipped and report which `WEBUNTIS_*` variables are missing.
 
+## Releasing
+
+Forgejo is the canonical repository. Its public
+[GitHub mirror](https://github.com/HaukeSchnau/webuntis-api) runs the npm release workflow because
+npm Trusted Publishing supports GitHub-hosted runners.
+
+A release is an exact `v<package-version>` tag. Push the version commit to Forgejo, then tag that
+commit. The mirror copies branches and tags to GitHub. The workflow rejects a tag that does not
+match `package.json`, installs the frozen dependency graph, runs `pnpm run qa`, and publishes through
+npm's short-lived OIDC credential. It does not store an npm token.
+
+The mirror normally syncs within 15 minutes. Start `git-mirrors-sync.service` on `srv-1` when a
+release should begin immediately.
+
 ## Encrypted Live Credentials
 
 The repository keeps live-test credentials in an encrypted SOPS file at [`secrets/webuntis-live.env`](./secrets/webuntis-live.env).

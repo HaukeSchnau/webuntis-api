@@ -1,7 +1,15 @@
 {
   "name": "@schnau/webuntis-api",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Read-only Effect client for WebUntis APIs.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HaukeSchnau/webuntis-api.git"
+  },
+  "homepage": "https://git.schnau.dev/schnau/webuntis-api",
+  "bugs": {
+    "url": "https://git.schnau.dev/schnau/webuntis-api/issues"
+  },
   "files": [
     "dist",
     "README.md",
@@ -27,8 +35,13 @@
   },
   "scripts": {
     "prepare": "effect-tsgo patch",
-    "prepack": "just build",
-    "prepublishOnly": "just lint && just test && just pack-check"
+    "build": "vp pack",
+    "lint": "vp lint",
+    "test": "vp test run",
+    "pack-check": "pnpm run build && publint --strict && attw --pack . --profile esm-only && ./scripts/check-packed-consumer.sh",
+    "qa": "pnpm run lint && pnpm run test && pnpm run pack-check",
+    "prepack": "pnpm run build",
+    "prepublishOnly": "pnpm run qa"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
