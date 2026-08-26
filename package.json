@@ -1,6 +1,6 @@
 {
   "name": "webuntis-api",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Read-only Effect client for WebUntis APIs.",
   "files": [
     "dist",
@@ -23,7 +23,7 @@
     }
   },
   "publishConfig": {
-    "registry": "https://npm.schnau.dev"
+    "registry": "https://registry.npmjs.org"
   },
   "scripts": {
     "prepare": "effect-tsgo patch",
