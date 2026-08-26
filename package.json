@@ -1,6 +1,6 @@
 {
   "name": "@schnau/webuntis-api",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Read-only Effect client for WebUntis APIs.",
   "repository": {
     "type": "git",

@@ -248,31 +248,60 @@ export type TimetableEntryText = Schema.Schema.Type<typeof TimetableEntryTextSch
 
 const TimetableEntryPositionsSchema = Schema.NullOr(Schema.Array(TimetableEntryPositionSchema));
 
+const TimetableEntryLayoutFields = {
+  duration: TimeRangeSchema,
+  type: Schema.String,
+  status: Schema.String,
+  layoutStartPosition: Schema.Int,
+  layoutWidth: Schema.Int,
+  color: Schema.String,
+  notesAll: Schema.NullOr(Schema.String),
+} as const;
+
+const TimetableEntryDetailFields = {
+  ids: Schema.Array(EntityId),
+  layoutGroup: Schema.Int,
+  icons: Schema.Array(Schema.String),
+  position1: TimetableEntryPositionsSchema,
+  position2: TimetableEntryPositionsSchema,
+  position3: TimetableEntryPositionsSchema,
+  position4: TimetableEntryPositionsSchema,
+  texts: Schema.Array(TimetableEntryTextSchema),
+  lessonText: Schema.NullOr(Schema.String),
+  lessonInfo: Schema.NullOr(Schema.String),
+  substitutionText: Schema.NullOr(Schema.String),
+} as const;
+
 export const TimetableEntrySchema = Schema.StructWithRest(
   Schema.Struct({
-    ids: Schema.Array(EntityId),
-    duration: TimeRangeSchema,
-    type: Schema.String,
-    status: Schema.String,
-    layoutStartPosition: Schema.Int,
-    layoutWidth: Schema.Int,
-    layoutGroup: Schema.Int,
-    color: Schema.String,
-    notesAll: Schema.NullOr(Schema.String),
-    icons: Schema.Array(Schema.String),
-    position1: TimetableEntryPositionsSchema,
-    position2: TimetableEntryPositionsSchema,
-    position3: TimetableEntryPositionsSchema,
-    position4: TimetableEntryPositionsSchema,
-    texts: Schema.Array(TimetableEntryTextSchema),
-    lessonText: Schema.NullOr(Schema.String),
-    lessonInfo: Schema.NullOr(Schema.String),
-    substitutionText: Schema.NullOr(Schema.String),
+    ...TimetableEntryLayoutFields,
+    ...TimetableEntryDetailFields,
   }),
   [TimetableEntryRestSchema],
 );
 
 export type TimetableEntry = Schema.Schema.Type<typeof TimetableEntrySchema>;
+
+/** Background layout rows omit occurrence-specific fields when no lesson occupies the slot. */
+export const TimetableBackEntrySchema = Schema.StructWithRest(
+  Schema.Struct({
+    ...TimetableEntryLayoutFields,
+    ids: Schema.optionalKey(TimetableEntryDetailFields.ids),
+    layoutGroup: Schema.optionalKey(TimetableEntryDetailFields.layoutGroup),
+    icons: Schema.optionalKey(TimetableEntryDetailFields.icons),
+    position1: Schema.optionalKey(TimetableEntryDetailFields.position1),
+    position2: Schema.optionalKey(TimetableEntryDetailFields.position2),
+    position3: Schema.optionalKey(TimetableEntryDetailFields.position3),
+    position4: Schema.optionalKey(TimetableEntryDetailFields.position4),
+    texts: Schema.optionalKey(TimetableEntryDetailFields.texts),
+    lessonText: Schema.optionalKey(TimetableEntryDetailFields.lessonText),
+    lessonInfo: Schema.optionalKey(TimetableEntryDetailFields.lessonInfo),
+    substitutionText: Schema.optionalKey(TimetableEntryDetailFields.substitutionText),
+  }),
+  [TimetableEntryRestSchema],
+);
+
+export type TimetableBackEntry = Schema.Schema.Type<typeof TimetableBackEntrySchema>;
 export const TimetableEntriesErrorSchema = JsonObjectSchema;
 
 export type TimetableEntriesError = Schema.Schema.Type<typeof TimetableEntriesErrorSchema>;
@@ -283,7 +312,7 @@ export const TimetableEntryDaySchema = Schema.Struct({
   status: DayDataStatusSchema,
   dayEntries: Schema.Array(TimetableEntrySchema),
   gridEntries: Schema.Array(TimetableEntrySchema),
-  backEntries: Schema.Array(TimetableEntrySchema),
+  backEntries: Schema.Array(TimetableBackEntrySchema),
 });
 
 export type TimetableEntryDay = Schema.Schema.Type<typeof TimetableEntryDaySchema>;
@@ -303,7 +332,7 @@ export const TimetableCalendarSchema = Schema.Struct({
 export type TimetableCalendar = Schema.Schema.Type<typeof TimetableCalendarSchema>;
 
 export const TimetableWeekOverviewCellSchema = Schema.Struct({
-  backEntries: Schema.Array(TimetableEntrySchema),
+  backEntries: Schema.Array(TimetableBackEntrySchema),
   gridEntries: Schema.Array(TimetableEntrySchema),
 });
 

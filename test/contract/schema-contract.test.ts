@@ -22,6 +22,7 @@ import {
 } from "../../src/domains/messages/schema.ts";
 import { TimeGridSchema } from "../../src/domains/shared/schema.ts";
 import {
+  TimetableEntriesSchema,
   TimetableEntriesWeekOverviewSchema,
   TimetableEntrySchema,
   TimetableExternalCalendarItemSchema,
@@ -318,6 +319,52 @@ describe("strict schema decoding", () => {
     );
 
     expect(entry.position1).toBeNull();
+  });
+
+  it("accepts sparse background layout entries without weakening lesson entries", () => {
+    const decode = Schema.decodeUnknownSync(TimetableEntriesSchema);
+
+    const response = decode(
+      {
+        format: 1,
+        days: [
+          {
+            date: "2026-09-14",
+            resourceType: "CLASS",
+            resource: {
+              id: 1,
+              shortName: "8.1",
+              longName: "8.1",
+              displayName: "8.1",
+            },
+            status: "REGULAR",
+            dayEntries: [],
+            gridEntries: [],
+            backEntries: [
+              {
+                duration: { start: "08:00", end: "08:45" },
+                type: "BACKGROUND",
+                status: "REGULAR",
+                layoutStartPosition: 0,
+                layoutWidth: 1,
+                color: "#ffffff",
+                notesAll: null,
+              },
+            ],
+          },
+        ],
+        errors: [],
+      },
+      strictJsonParseOptions,
+    );
+
+    expect(response.days[0]?.backEntries[0]?.ids).toBeUndefined();
+    expect(() =>
+      Schema.decodeUnknownSync(TimetableEntrySchema)(
+        response.days[0]?.backEntries[0],
+        strictJsonParseOptions,
+      ),
+    ).toThrow();
   });
 
   it("rejects non-object timetable external calendar payloads", () => {
