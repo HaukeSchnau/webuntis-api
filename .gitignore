@@ -35,3 +35,6 @@ secrets/*.local.env
 
 # Finder (MacOS) folder config
 .DS_Store
+
+# Local agent continuity notes
+agent-notes/
