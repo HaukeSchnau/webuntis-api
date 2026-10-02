@@ -1,6 +1,6 @@
 {
   "name": "@schnau/webuntis-api",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "description": "Read-only Effect client for WebUntis APIs.",
   "repository": {
     "type": "git",
@@ -56,7 +56,7 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "effect": "^4.0.0-rc.108"
+    "effect": "4.0.0-rc.108"
   },
   "engines": {
     "node": ">=22.12.0"

@@ -119,6 +119,22 @@ const buildRequest = (
 const drainBody = (response: HttpClientResponse.HttpClientResponse) =>
   response.text.pipe(Effect.orElseSucceed(() => ""));
 
+const maxBodyExcerptLength = 500;
+
+/**
+ * Appends a bounded, single-line body excerpt to error messages. WebUntis explains rejected
+ * requests in the body (for example `VALIDATION_ERROR`), and logged causes only show the message.
+ */
+const bodyExcerpt = (body: string) => {
+  const text = body.replace(/\s+/gu, " ").trim();
+  if (text === "") {
+    return "";
+  }
+  return text.length > maxBodyExcerptLength
+    ? `: ${text.slice(0, maxBodyExcerptLength)}…`
+    : `: ${text}`;
+};
+
 const failIfNonSuccess = (
   method: HttpMethod,
   path: string,
@@ -136,7 +152,7 @@ const failIfNonSuccess = (
           path,
           status: response.status,
           body,
-          message: `HTTP ${response.status} for ${method} ${path}`,
+          message: `HTTP ${response.status} for ${method} ${path}${bodyExcerpt(body)}`,
         }),
       ),
     ),

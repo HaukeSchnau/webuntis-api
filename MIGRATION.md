@@ -1,5 +1,31 @@
 # Migration Guide
 
+## 0.3.0
+
+`TimetableClient.getEntries` takes one `resource` ID instead of a `resources` array. Since
+2026-09-04 WebUntis rejects entries requests with several resources (`400 VALIDATION_ERROR`,
+"Exactly one resource required"), so callers must issue one request per resource:
+
+```ts
+// Before
+timetable.getEntries({ start, end, resourceType: "CLASS", resources: [1, 2] });
+
+// After
+Effect.forEach([1, 2], (resource) =>
+  timetable.getEntries({ start, end, resourceType: "CLASS", resource }),
+);
+```
+
+`getEntriesWeekOverview` still accepts a `resources` array.
+
+`TransportError.message` now ends with a single-line excerpt of the response body, so logged
+causes show WebUntis' reason for a rejected request. The full body stays in `TransportError.body`.
+
+The `effect` peer dependency is pinned to `4.0.0-rc.108`. Later release candidates and Effect
+4.0.0 moved `effect/unstable/http` to `effect/http` and changed `Config`, so the old
+`^4.0.0-rc.108` range admitted versions this package cannot load. Moving to Effect 4.0.0 needs its
+own release.
+
 ## 0.2.0
 
 This release reshapes the package toward explicit Effect v4 services and a smaller public API.

@@ -87,6 +87,12 @@ describe("request descriptor validation", () => {
         start: "2026-03-16",
         end: "2026-03-20",
         resourceType: "CLASS",
+        resource: 0,
+      });
+      yield* rejects(TimetableRequests.getEntriesWeekOverview, {
+        start: "2026-03-16",
+        end: "2026-03-20",
+        resourceType: "CLASS",
         resources: [],
       });
       yield* Effect.flip(
@@ -109,7 +115,7 @@ describe("request descriptor validation", () => {
         start: "2026-03-16",
         end: "2026-03-20",
         resourceType: "CLASS" as const,
-        resources: [1, 2] as const,
+        resource: 1,
       };
       expect(yield* validateRequest(TimetableRequests.getEntries, input)).toEqual(input);
     }),

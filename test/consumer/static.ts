@@ -17,13 +17,13 @@ const request: ExamDateRangeRequest = {
   end: "2026-01-31",
 };
 
-const resources: TimetableEntriesRequest["resources"] = [1];
+const resource: TimetableEntriesRequest["resource"] = 1;
 // Element types of collection responses must be nameable from the root entry.
 const summarySubject = (message: MessageSummary) => message.subject;
 // @ts-expect-error A date range must provide both boundaries.
 const invalidRange: ExamDateRangeRequest = { start: "2026-01-01" };
-// @ts-expect-error Timetable entry reads require at least one resource.
-const invalidResources: TimetableEntriesRequest["resources"] = [];
+// @ts-expect-error WebUntis accepts exactly one resource per timetable entries request.
+const invalidResources: TimetableEntriesRequest["resource"] = [1, 2];
 
 const config: WebUntisClientConfig = await Effect.runPromise(
   ClientConfig.fromEnv({
@@ -46,6 +46,6 @@ void HomeSchema;
 void InvalidRequestError;
 void layer;
 void program;
-void resources;
+void resource;
 void invalidRange;
 void invalidResources;

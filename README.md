@@ -123,7 +123,7 @@ const program = Effect.gen(function* () {
     start: "2026-03-23",
     end: "2026-03-27",
     resourceType: "CLASS",
-    resources: [1],
+    resource: 1,
   });
 });
 

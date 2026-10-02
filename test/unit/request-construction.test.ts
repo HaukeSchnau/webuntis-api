@@ -9,6 +9,8 @@ import { ProfileClient } from "../../src/domains/profile/index.ts";
 import { SchoolyearsClient } from "../../src/domains/schoolyears/index.ts";
 import { SessionClient } from "../../src/domains/session/index.ts";
 import { TimetableClient } from "../../src/domains/timetable/index.ts";
+import { TransportError } from "../../src/internal/errors.ts";
+import { RawViewApiClient } from "../../src/internal/raw-view-api.ts";
 import { withSchoolYear } from "../../src/internal/school-year-context.ts";
 import { jsonResponse, makeCoreTestLayer, makeJwt } from "./helpers.ts";
 
@@ -371,6 +373,14 @@ const makeRecorderLayer = (
           ],
           errors: [],
         });
+      case "/WebUntis/api/rest/view/v1/test/validation-error":
+        return new Response(
+          JSON.stringify({
+            errorCode: "VALIDATION_ERROR",
+            errorMessage: "Exactly one resource required",
+          }),
+          { status: 400, headers: { "content-type": "application/json" } },
+        );
       case "/WebUntis/api/rest/view/v1/timetable/entriesWeekOverview":
         return jsonResponse({
           slots: [],
@@ -818,7 +828,7 @@ describe("request descriptors", () => {
         start: "2026-03-16",
         end: "2026-03-20",
         resourceType: "ROOM",
-        resources: [1, 2],
+        resource: 2,
         timetableType: "STANDARD",
         format: 3,
         layout: "START_TIME",
@@ -827,11 +837,23 @@ describe("request descriptors", () => {
 
       const request = getLast(observed);
       expect(request.url.pathname).toBe("/WebUntis/api/rest/view/v1/timetable/entries");
-      expect(request.query["resources"]).toBe("1,2");
+      expect(request.query["resources"]).toBe("2");
       expect(request.query["resourceType"]).toBe("ROOM");
       expect(request.headers["x-webuntis-api-school-year-id"]).toBe("7");
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
+
+  it.effect("rejected requests carry the WebUntis response body in the error message", () =>
+    Effect.gen(function* () {
+      const raw = yield* RawViewApiClient;
+      const error = yield* Effect.flip(raw.getJson("api/rest/view/v1/test/validation-error"));
+
+      expect(error).toBeInstanceOf(TransportError);
+      expect(error.message).toBe(
+        'HTTP 400 for GET api/rest/view/v1/test/validation-error: {"errorCode":"VALIDATION_ERROR","errorMessage":"Exactly one resource required"}',
+      );
+    }).pipe(Effect.provide(makeRecorderLayer([]))),
+  );
 
   it.effect("timetable grid routes use request-object inputs", () => {
     const observed: Array<ObservedRequest> = [];

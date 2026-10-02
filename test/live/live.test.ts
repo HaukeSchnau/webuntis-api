@@ -396,27 +396,23 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
               ...historicalDataWindow,
               resourceType: "CLASS",
             });
-            const [firstClassId, ...remainingClassIds] = filter.classes
-              .slice(0, 12)
-              .map((item) => item.class.id);
-            if (firstClassId === undefined) {
+            const classIds = filter.classes.slice(0, 4).map((item) => item.class.id);
+            if (classIds.length === 0) {
               throw new Error("Expected at least one historical class");
             }
-            const classIds: [number, ...Array<number>] = [firstClassId, ...remainingClassIds];
+            const windows = [
+              ["2025-09-15", "2025-09-19"],
+              ["2026-01-19", "2026-01-23"],
+              ["2026-03-16", "2026-03-20"],
+            ] as const;
 
+            // WebUntis accepts exactly one resource per entries request.
             return yield* Effect.forEach(
-              [
-                ["2025-09-15", "2025-09-19"],
-                ["2026-01-19", "2026-01-23"],
-                ["2026-03-16", "2026-03-20"],
-              ] as const,
-              ([start, end]) =>
-                client.timetable.getEntries({
-                  start,
-                  end,
-                  resourceType: "CLASS",
-                  resources: classIds,
-                }),
+              windows.flatMap(([start, end]) =>
+                classIds.map((resource) => ({ start, end, resource })),
+              ),
+              ({ start, end, resource }) =>
+                client.timetable.getEntries({ start, end, resourceType: "CLASS", resource }),
               { concurrency: 3 },
             );
           }).pipe(withSchoolYear(historicalSchoolyear.id));
@@ -689,22 +685,25 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
               ...historicalDataWindow,
               resourceType: "CLASS",
             });
-            const [firstClassId, ...remainingClassIds] = filter.classes
-              .slice(0, 12)
-              .map((item) => item.class.id);
-            if (firstClassId === undefined) {
+            const classIds = filter.classes.slice(0, 4).map((item) => item.class.id);
+            if (classIds.length === 0) {
               throw new Error("Expected at least one historical class");
             }
-            const classIds: [number, ...Array<number>] = [firstClassId, ...remainingClassIds];
             const grid = yield* client.timetable.getGrid();
             const settings = yield* client.timetable.getEntriesSettings({
               resourceType: "CLASS",
             });
-            const entries = yield* client.timetable.getEntries({
-              ...historicalDataWindow,
-              resourceType: "CLASS",
-              resources: classIds,
-            });
+            // Some leading class IDs are empty collections, so sample a few, one request each.
+            const entries = yield* Effect.forEach(
+              classIds,
+              (resource) =>
+                client.timetable.getEntries({
+                  ...historicalDataWindow,
+                  resourceType: "CLASS",
+                  resource,
+                }),
+              { concurrency: 2 },
+            );
             return { entries, filter, grid, settings };
           }).pipe(withSchoolYear(historicalSchoolyear.id));
 
@@ -713,7 +712,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           }
 
           expect(filter.classes.length).toBeGreaterThan(0);
-          expect(timetableEntryCount([entries])).toBeGreaterThan(0);
+          expect(timetableEntryCount(entries)).toBeGreaterThan(0);
           expect(normalizeTimetableGrid(grid)).toMatchSnapshot();
           expect(normalizeTimetableFilter(filter)).toMatchSnapshot();
           expect(normalizeTimetableEntriesSettings(settings)).toMatchSnapshot();

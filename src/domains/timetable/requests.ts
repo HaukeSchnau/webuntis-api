@@ -24,24 +24,29 @@ import {
   TimetableSearchSchema,
 } from "./schema.ts";
 
-const EntriesInputFields = {
+const RangeInputFields = {
   start: IsoDate,
   end: IsoDate,
   resourceType: TimetableResourceTypeSchema,
-  resources: Schema.NonEmptyArray(PositiveInteger),
   timetableType: Schema.optional(NonBlankString),
 } as const;
 
+// WebUntis rejects `timetable/entries` with more than one resource ("Exactly one resource
+// required", observed since 2026-09-04), so the input takes a single ID.
 const TimetableEntriesInput = orderedRange(
   Schema.Struct({
-    ...EntriesInputFields,
+    ...RangeInputFields,
+    resource: PositiveInteger,
     format: Schema.optional(PositiveInteger),
     layout: Schema.optional(NonBlankString),
     periodTypes: Schema.optional(Schema.String),
   }),
 );
 
-const TimetableEntriesWeekOverviewInput = orderedRange(Schema.Struct(EntriesInputFields));
+// The week overview still accepts several resources per request.
+const TimetableEntriesWeekOverviewInput = orderedRange(
+  Schema.Struct({ ...RangeInputFields, resources: Schema.NonEmptyArray(PositiveInteger) }),
+);
 
 const TimetableFilterInput = orderedRange(
   Schema.Struct({
@@ -205,7 +210,7 @@ export const TimetableRequests = {
       end: request.end,
       format: request.format ?? 2,
       resourceType: request.resourceType,
-      resources: request.resources.join(","),
+      resources: request.resource,
       periodTypes: request.periodTypes ?? "",
       timetableType: request.timetableType ?? "STANDARD",
       layout: request.layout ?? "START_TIME",
