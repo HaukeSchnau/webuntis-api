@@ -291,8 +291,7 @@ commit. The mirror copies branches and tags to GitHub. The workflow rejects a ta
 match `package.json`, installs the frozen dependency graph, runs `pnpm run qa`, and publishes through
 npm's short-lived OIDC credential. It does not store an npm token.
 
-The mirror normally syncs within 15 minutes. Start `git-mirrors-sync.service` on `srv-1` when a
-release should begin immediately.
+The mirror normally syncs within 15 minutes.
 
 ## Encrypted Live Credentials
 
