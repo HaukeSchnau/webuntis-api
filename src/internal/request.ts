@@ -63,30 +63,28 @@ export const resolveRequest = <Input>(
   supportsSchoolYearScope: descriptor.supportsSchoolYearScope,
 });
 
-const errorPathFor = <Input>(descriptor: RequestDescriptor<Input>): string =>
+export const errorPathFor = <Input>(descriptor: RequestDescriptor<Input>): string =>
   typeof descriptor.path === "string"
     ? descriptor.path
     : (descriptor.operation ?? "<dynamic request path>");
 
+/** Validates caller input against `schema`, failing before anything is sent. */
+export const validateInput =
+  <Input>(schema: Schema.Codec<Input, unknown>, path: string) =>
+  (input: Input): Effect.Effect<Input, InvalidRequestError> =>
+    Schema.decodeUnknownEffect(schema)(input).pipe(
+      Effect.mapError(
+        (cause) => new InvalidRequestError({ path, message: errorMessage(cause), cause }),
+      ),
+    );
+
 export const validateRequest = <Input>(
   descriptor: RequestDescriptor<Input>,
   input: Input,
-): Effect.Effect<Input, InvalidRequestError> => {
-  if (descriptor.inputSchema === undefined) {
-    return Effect.succeed(input);
-  }
-
-  return Schema.decodeUnknownEffect(descriptor.inputSchema)(input).pipe(
-    Effect.mapError(
-      (cause) =>
-        new InvalidRequestError({
-          path: errorPathFor(descriptor),
-          message: errorMessage(cause),
-          cause,
-        }),
-    ),
-  );
-};
+): Effect.Effect<Input, InvalidRequestError> =>
+  descriptor.inputSchema === undefined
+    ? Effect.succeed(input)
+    : validateInput(descriptor.inputSchema, errorPathFor(descriptor))(input);
 
 export const validateAndResolveRequest = <Input>(
   descriptor: RequestDescriptor<Input>,

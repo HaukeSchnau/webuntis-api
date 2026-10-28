@@ -15,6 +15,7 @@
 - **School-year scope**: fiber-local context that adds a historical school-year header without leaking between nested or concurrent reads.
 - **Refusal**: a non-2xx answer, classified once as permission denied, rate limited, rejected with a WebUntis `errorCode`, or an unexplained transport error.
 - **Limits**: a connection's optional concurrency cap and request budget.
+- **Raw body**: a response's parsed JSON before runtime decoding, kept on request so nothing WebUntis sent is lost.
 - **Drift check**: strict decoding used by contract tests and targeted raw live probes to reveal additive upstream changes.
 
 ## Architecture
@@ -50,3 +51,4 @@ Raw research routes remain internal. The public schema surface is exactly the un
 - [ADR 0003: Descriptor-owned endpoint contracts](docs/adr/0003-request-descriptors.md)
 - [ADR 0004: Connections are values, each with its own runtime](docs/adr/0004-connections-from-values.md)
 - [ADR 0005: Typed refusals and per-connection limits](docs/adr/0005-typed-refusals-and-limits.md)
+- [ADR 0006: Batches report per resource and can keep the raw body](docs/adr/0006-batch-results-per-resource.md)

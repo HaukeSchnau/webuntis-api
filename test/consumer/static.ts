@@ -12,7 +12,9 @@ import {
   type MessageSummary,
   type School,
   type SchoolTarget,
+  type TimetableEntriesForResource,
   type TimetableEntriesRequest,
+  TimetableClient,
 } from "@schnau/webuntis-api";
 import { HomeSchema, SchoolSchema } from "@schnau/webuntis-api/schemas";
 
@@ -51,6 +53,12 @@ const years = SchoolyearsClient.use((client) => client.list).pipe(
   Effect.provide(Schools.get("fixture")),
   Effect.provide(Schools.layer),
 );
+const batch = TimetableClient.use((timetable) =>
+  timetable.getEntriesForResources(
+    { start: "2026-01-05", end: "2026-01-09", resourceType: "CLASS", resources: [1, 2] },
+    { concurrency: 4, raw: true },
+  ),
+).pipe(Effect.map((results): ReadonlyArray<TimetableEntriesForResource> => results));
 const program = Effect.gen(function* () {
   const client = yield* WebUntisClient;
   return yield* client.exams.list(request);
@@ -66,6 +74,7 @@ void fromEnv;
 void search;
 void program;
 void years;
+void batch;
 void resource;
 void invalidRange;
 void invalidResources;

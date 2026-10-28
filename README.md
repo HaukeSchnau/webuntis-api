@@ -199,6 +199,38 @@ const program = Effect.gen(function* () {
 await Effect.runPromise(program.pipe(Effect.provide(WebUntis)));
 ```
 
+## Timetables for many resources
+
+WebUntis answers `timetable/entries` for one resource per request. `getEntriesForResources`
+sends one request per resource and reports each on its own, so one refused or malformed
+response does not cost the others:
+
+```ts
+import { Effect, Result } from "effect";
+import { TimetableClient } from "@schnau/webuntis-api";
+
+const program = Effect.gen(function* () {
+  const timetable = yield* TimetableClient;
+  const results = yield* timetable.getEntriesForResources(
+    { start: "2026-03-23", end: "2026-03-27", resourceType: "CLASS", resources: [1, 2, 3] },
+    { concurrency: 4, raw: true },
+  );
+
+  for (const { resource, raw, result } of results) {
+    if (Result.isSuccess(result)) {
+      // result.success is the decoded timetable; raw is the JSON exactly as WebUntis sent it
+    } else {
+      // result.failure is a WebUntisError; raw is still set if the body was JSON that failed to decode
+    }
+  }
+});
+```
+
+Only invalid input fails the whole effect, with `InvalidRequestError`, before anything is
+sent. `concurrency` defaults to 1, like `Effect.forEach`; the connection's `limits` apply on
+top. With `raw: true`, each result keeps the parsed JSON body next to the decoded value,
+including fields the schema does not model and bodies that failed to decode.
+
 ## Errors
 
 Every failure is a typed value in the error channel; nothing throws. A request fails with one of

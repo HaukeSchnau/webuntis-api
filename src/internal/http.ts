@@ -1,6 +1,7 @@
-import { Clock, Context, Effect, Layer, Schema } from "effect";
+import { Clock, Context, Effect, Layer, type Result, type Schema } from "effect";
 import { HttpClientRequest, HttpClientResponse } from "effect/http";
 import {
+  type DecodeError,
   decodeError,
   errorMessage,
   responseError,
@@ -17,7 +18,7 @@ import {
   type SchemaRequestDescriptor,
   validateAndResolveRequest,
 } from "./request.ts";
-import { runtimeJsonParseOptions } from "./schema.ts";
+import { decodeResponse } from "./schema.ts";
 import { CurrentSchoolYearId } from "./school-year-context.ts";
 import { SessionState } from "./session-state.ts";
 import type { AuthenticatedState, MetadataSnapshot } from "./state.ts";
@@ -150,6 +151,19 @@ export interface WebUntisHttpShape {
     descriptor: SchemaRequestDescriptor<Input, S>,
     input: Input,
   ) => Effect.Effect<S["Type"], WebUntisError, S["DecodingServices"]>;
+  /**
+   * The parsed JSON body next to its decoding, so a caller can keep what the
+   * runtime schema drops, or the whole body when decoding fails.
+   */
+  readonly requestDecoded: <Input, S extends Schema.Top>(
+    descriptor: SchemaRequestDescriptor<Input, S>,
+    input: Input,
+  ) => Effect.Effect<Decoded<S["Type"]>, WebUntisError, S["DecodingServices"]>;
+}
+
+export interface Decoded<A> {
+  readonly raw: unknown;
+  readonly decoded: Result.Result<A, DecodeError>;
 }
 
 export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShape>()(
@@ -248,9 +262,22 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
         validateAndResolveRequest(descriptor, input).pipe(
           Effect.flatMap((resolved) =>
             executeJson(resolved).pipe(
-              Effect.flatMap((json) =>
-                Schema.decodeUnknownEffect(descriptor.schema)(json, runtimeJsonParseOptions).pipe(
-                  Effect.mapError((error) => decodeError(resolved.path, error)),
+              Effect.flatMap(decodeResponse(descriptor.schema, resolved.path)),
+            ),
+          ),
+        );
+
+      const requestDecoded: WebUntisHttpShape["requestDecoded"] = (descriptor, input) =>
+        validateAndResolveRequest(descriptor, input).pipe(
+          Effect.flatMap((resolved) =>
+            executeJson(resolved).pipe(
+              Effect.flatMap((raw) =>
+                decodeResponse(
+                  descriptor.schema,
+                  resolved.path,
+                )(raw).pipe(
+                  Effect.result,
+                  Effect.map((decoded) => ({ raw, decoded })),
                 ),
               ),
             ),
@@ -261,6 +288,7 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
         request,
         requestJson,
         requestSchema,
+        requestDecoded,
       });
     }),
   );

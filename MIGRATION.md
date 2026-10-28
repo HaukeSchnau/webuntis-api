@@ -73,6 +73,28 @@ in one process. The README shows how to key them with `LayerMap`.
 its unused `"discovery"` stage. A 403 from the metadata bootstrap (`app/data`) is now
 `PermissionDenied` instead of `AuthError { stage: "metadata" }`.
 
+### Timetables for many resources
+
+`TimetableClient.getEntriesForResources` replaces the `Effect.forEach` over `getEntries` that
+0.3.0 recommended. It returns one `{ resource, result, raw? }` per resource, where `result` is a
+`Result`, so a single failing resource no longer fails the whole batch:
+
+```ts
+// Before
+Effect.forEach([1, 2], (resource) =>
+  timetable.getEntries({ start, end, resourceType: "CLASS", resource }),
+);
+
+// After
+timetable.getEntriesForResources(
+  { start, end, resourceType: "CLASS", resources: [1, 2] },
+  { concurrency: 4, raw: true },
+);
+```
+
+`raw: true` keeps each response's JSON body next to the decoded value, also when decoding
+failed.
+
 ### Limits
 
 `WebUntisConnection.limits` takes an optional `concurrency` and `budget`

@@ -25,6 +25,9 @@ export type { SessionStatusRequest } from "./domains/session/index.ts";
 export { SessionClient } from "./domains/session/index.ts";
 export type {
   TimetableAvailableRoomsRequest,
+  TimetableEntriesForResource,
+  TimetableEntriesForResourcesOptions,
+  TimetableEntriesForResourcesRequest,
   TimetableCalendarRequest,
   TimetableEntriesRequest,
   TimetableEntriesSettingsRequest,

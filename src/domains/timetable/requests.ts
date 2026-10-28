@@ -31,15 +31,24 @@ const RangeInputFields = {
   timetableType: Schema.optional(NonBlankString),
 } as const;
 
+const EntriesOptionFields = {
+  format: Schema.optional(PositiveInteger),
+  layout: Schema.optional(NonBlankString),
+  periodTypes: Schema.optional(Schema.String),
+} as const;
+
 // WebUntis rejects `timetable/entries` with more than one resource ("Exactly one resource
 // required", observed since 2026-09-04), so the input takes a single ID.
 const TimetableEntriesInput = orderedRange(
+  Schema.Struct({ ...RangeInputFields, ...EntriesOptionFields, resource: PositiveInteger }),
+);
+
+/** Input of the client-side batch that sends one entries request per resource. */
+export const TimetableEntriesForResourcesInput = orderedRange(
   Schema.Struct({
     ...RangeInputFields,
-    resource: PositiveInteger,
-    format: Schema.optional(PositiveInteger),
-    layout: Schema.optional(NonBlankString),
-    periodTypes: Schema.optional(Schema.String),
+    ...EntriesOptionFields,
+    resources: Schema.NonEmptyArray(PositiveInteger),
   }),
 );
 
@@ -89,6 +98,7 @@ const TimetableGridInput = Schema.Struct({ timetableType: Schema.optional(NonBla
 // never describe different shapes. Refinements such as `IsoDate` narrow values
 // at runtime only; they stay `string` here.
 export type TimetableEntriesRequest = typeof TimetableEntriesInput.Type;
+export type TimetableEntriesForResourcesRequest = typeof TimetableEntriesForResourcesInput.Type;
 export type TimetableEntriesWeekOverviewRequest = typeof TimetableEntriesWeekOverviewInput.Type;
 export type TimetableFilterRequest = typeof TimetableFilterInput.Type;
 export type TimetableEntriesSettingsRequest = typeof TimetableEntriesSettingsInput.Type;
