@@ -10,7 +10,8 @@ import {
   makeCoreTestLayer,
   makeJwt,
   makeJwtWithoutExpiry,
-  testConfig,
+  testConnection,
+  testSchoolTarget,
   testGet,
   testGetSchema,
 } from "./helpers.ts";
@@ -217,7 +218,10 @@ describe("bootstrap and transport", () => {
               finalHeaders.push(request.headers);
               return jsonResponse({ ok: true });
             },
-            { ...testConfig, tenantId: "tenant-42" },
+            {
+              ...testConnection,
+              school: { ...testSchoolTarget, tenantId: "tenant-42" },
+            },
           ),
         ),
       );

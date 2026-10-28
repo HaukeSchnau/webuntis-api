@@ -1,5 +1,4 @@
 import { Context, Effect, Layer } from "effect";
-import type { HttpClient } from "effect/http";
 import { AuthClient } from "./auth.ts";
 import { AppClient } from "./domains/app/index.ts";
 import { ClassregClient } from "./domains/classreg/index.ts";
@@ -9,7 +8,7 @@ import { ProfileClient } from "./domains/profile/index.ts";
 import { SchoolyearsClient } from "./domains/schoolyears/index.ts";
 import { SessionClient } from "./domains/session/index.ts";
 import { TimetableClient } from "./domains/timetable/index.ts";
-import { ClientConfig } from "./internal/config.ts";
+import type { WebUntisConnection } from "./internal/connection.ts";
 import { RawViewApiClient } from "./internal/raw-view-api.ts";
 import { makeWebUntisCoreLayer } from "./internal/runtime.ts";
 
@@ -61,23 +60,20 @@ export class WebUntisClient extends Context.Service<WebUntisClient, WebUntisClie
   );
 }
 
-const makeLayers = <ConfigError>(
-  configLayer: Layer.Layer<ClientConfig, ConfigError>,
-  transportLayer?: Layer.Layer<HttpClient.HttpClient>,
-) => {
-  const coreLayer = makeWebUntisCoreLayer({ configLayer, transportLayer });
+const makeLayers = (connection: WebUntisConnection) => {
+  const coreLayer = makeWebUntisCoreLayer(connection);
 
   const domainServicesLayer = Layer.mergeAll(
-    AuthClient.layer.pipe(Layer.provide(coreLayer)),
-    AppClient.layer.pipe(Layer.provide(coreLayer)),
-    ClassregClient.layer.pipe(Layer.provide(coreLayer)),
-    ExamsClient.layer.pipe(Layer.provide(coreLayer)),
-    MessagesClient.layer.pipe(Layer.provide(coreLayer)),
-    ProfileClient.layer.pipe(Layer.provide(coreLayer)),
-    SchoolyearsClient.layer.pipe(Layer.provide(coreLayer)),
-    SessionClient.layer.pipe(Layer.provide(coreLayer)),
-    TimetableClient.layer.pipe(Layer.provide(coreLayer)),
-  );
+    AuthClient.layer,
+    AppClient.layer,
+    ClassregClient.layer,
+    ExamsClient.layer,
+    MessagesClient.layer,
+    ProfileClient.layer,
+    SchoolyearsClient.layer,
+    SessionClient.layer,
+    TimetableClient.layer,
+  ).pipe(Layer.provide(coreLayer));
 
   const aggregateLayer = WebUntisClient.layer.pipe(Layer.provide(domainServicesLayer));
 
@@ -88,33 +84,27 @@ const makeLayers = <ConfigError>(
 };
 
 /**
- * Every public service, built from an already-resolved configuration.
+ * Every public service for one connection. Each call builds an independent
+ * client with its own session, so several schools or accounts can run side by
+ * side in one process. Building fails with `ConfigurationError` if a pinned
+ * school's server URL is unusable.
  *
- * Use {@link webUntisLayer} instead when the configuration should come from the
- * environment or from an installed `ConfigProvider`.
+ * The layer needs an `HttpClient`. Provide `FetchHttpClient.layer` from
+ * `effect/http`; logging in relies on fetch's `redirect: "manual"`.
  */
-export const makeWebUntisLayer = (
-  config: ClientConfig["Service"],
-  transportLayer?: Layer.Layer<HttpClient.HttpClient>,
-) => makeLayers(ClientConfig.layer(config), transportLayer).publicLayer;
+export const webUntisLayer = (connection: WebUntisConnection) =>
+  // The service layers are module-level values that Effect memoizes by identity,
+  // also across nested and `LayerMap` builds. A fresh memo map per connection
+  // keeps a second connection from reusing the first one's session.
+  Layer.fresh(makeLayers(connection).publicLayer);
 
 /**
- * Every public service, configured from the ambient `ConfigProvider` when the
- * layer is built. Fails with `ConfigurationError` if the `WEBUNTIS_*` settings
- * are missing or malformed.
+ * Internal composition used by tests and the reverse-engineering probes in
+ * `test/live`. It additionally exposes the raw view client and the core runtime
+ * services, neither of which is part of the published surface.
  */
-export const webUntisLayer = makeLayers(ClientConfig.Live).publicLayer;
-
-/**
- * Internal composition used by the reverse-engineering probes in `test/live`.
- * It additionally exposes the raw view client and the core runtime services,
- * neither of which is part of the published surface.
- */
-export const makeWebUntisResearchLayer = (
-  config: ClientConfig["Service"],
-  transportLayer?: Layer.Layer<HttpClient.HttpClient>,
-) => {
-  const layers = makeLayers(ClientConfig.layer(config), transportLayer);
+export const makeWebUntisResearchLayer = (connection: WebUntisConnection) => {
+  const layers = makeLayers(connection);
   const researchLayer = RawViewApiClient.layer.pipe(Layer.provide(layers.coreLayer));
-  return Layer.mergeAll(layers.publicLayer, researchLayer, layers.coreLayer);
+  return Layer.fresh(Layer.mergeAll(layers.publicLayer, researchLayer, layers.coreLayer));
 };

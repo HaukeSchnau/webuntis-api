@@ -6,7 +6,11 @@ import {
   HttpClientResponse,
 } from "effect/http";
 import { makeWebUntisResearchLayer } from "../../src/client.ts";
-import type { ClientConfig } from "../../src/internal/config.ts";
+import {
+  Credential,
+  type SchoolTarget,
+  type WebUntisConnection,
+} from "../../src/internal/connection.ts";
 import type { WebUntisError } from "../../src/internal/errors.ts";
 import type { WebUntisHttp } from "../../src/internal/http.ts";
 import {
@@ -17,12 +21,14 @@ import {
   schemaRequest,
 } from "../../src/internal/request.ts";
 
-export const testConfig: ClientConfig["Service"] = {
-  schoolName: "IGS Lilienthal",
-  schoolLoginName: "igs-lilienthal",
+export const testSchoolTarget: SchoolTarget = {
+  loginName: "igs-lilienthal",
   serverUrl: "https://igs-lilienthal.webuntis.com/WebUntis/?school=igs-lilienthal",
-  username: "tester",
-  password: Redacted.make("secret"),
+};
+
+export const testConnection: WebUntisConnection = {
+  school: testSchoolTarget,
+  credential: Credential.Password({ username: "tester", password: Redacted.make("secret") }),
 };
 
 const encodeJwt = (payloadValue: object) => {
@@ -71,13 +77,14 @@ export const makeMockHttpClient = (
     }),
   );
 
+/** A mock `HttpClient` as a layer, for code that takes the client from context. */
+export const mockHttpLayer = (handler: Parameters<typeof makeMockHttpClient>[0]) =>
+  Layer.succeed(HttpClient.HttpClient, makeMockHttpClient(handler));
+
 export const makeCoreTestLayer = (
   handler: Parameters<typeof makeMockHttpClient>[0],
-  config: ClientConfig["Service"] = testConfig,
-) => {
-  const transportLayer = Layer.succeed(HttpClient.HttpClient, makeMockHttpClient(handler));
-  return makeWebUntisResearchLayer(config, transportLayer);
-};
+  connection: WebUntisConnection = testConnection,
+) => makeWebUntisResearchLayer(connection).pipe(Layer.provide(mockHttpLayer(handler)));
 
 interface TestGetOptions {
   readonly query?: QueryParams | undefined;

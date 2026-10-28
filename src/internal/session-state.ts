@@ -1,6 +1,6 @@
 import { Clock, Context, Effect, Layer, Redacted, Ref, Schema, SynchronizedRef } from "effect";
 import { Cookies, FetchHttpClient, HttpClient, HttpClientRequest } from "effect/http";
-import { ClientConfig } from "./config.ts";
+import { Connection, type Credential } from "./connection.ts";
 import {
   AuthError,
   type DecodeError,
@@ -11,7 +11,7 @@ import {
 import { SchoolResolver } from "./school-resolver.ts";
 import type { AuthenticatedState, SessionCache } from "./state.ts";
 import { emptySessionState, hasFreshToken, tokenFallbackValidityMs } from "./state.ts";
-import { resolveBaseUrl } from "./url.ts";
+import { withTransientRetries } from "./transport.ts";
 
 /** Only the claim we need; anything else in the payload is irrelevant here. */
 const JwtPayloadSchema = Schema.Struct({
@@ -48,6 +48,18 @@ const loginResponseLooksLikeHtml = (body: string): boolean => {
   return trimmed.startsWith("<!DOCTYPE") || trimmed.startsWith("<html");
 };
 
+/** The form `j_spring_security_check` expects for each kind of credential. */
+const loginForm = (loginName: string, credential: Credential) => {
+  switch (credential._tag) {
+    case "Password":
+      return {
+        school: loginName,
+        j_username: credential.username,
+        j_password: Redacted.value(credential.password),
+      };
+  }
+};
+
 export interface SessionStateShape {
   readonly client: HttpClient.HttpClient;
   readonly ensureAuthenticated: Effect.Effect<
@@ -69,16 +81,16 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
     this,
     Effect.gen(function* () {
       const baseClient = yield* HttpClient.HttpClient;
-      const clientConfig = yield* ClientConfig;
+      const { credential } = yield* Connection;
       const schoolResolver = yield* SchoolResolver;
       const cookiesRef = yield* Ref.make(Cookies.empty);
       const stateRef = yield* SynchronizedRef.make<SessionCache>(emptySessionState());
-      const client = baseClient.pipe(HttpClient.withCookiesRef(cookiesRef));
+      const client = baseClient.pipe(withTransientRetries, HttpClient.withCookiesRef(cookiesRef));
 
       const refreshSessionState = (previous: SessionCache) =>
         Effect.gen(function* () {
           const school = yield* schoolResolver.resolve;
-          const baseUrl = resolveBaseUrl(school);
+          const { baseUrl } = school;
 
           const seedResponse = yield* client
             .execute(
@@ -94,18 +106,14 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
             return yield* new AuthError({
               stage: "bootstrap",
               status: seedResponse.status,
-              message: `Seed request failed for ${school.server}`,
+              message: `Seed request failed for ${baseUrl}`,
             });
           }
 
           const loginResponse = yield* client
             .execute(
               HttpClientRequest.post(`${baseUrl}/j_spring_security_check`).pipe(
-                HttpClientRequest.bodyUrlParams({
-                  school: school.loginName,
-                  j_username: clientConfig.username,
-                  j_password: Redacted.value(clientConfig.password),
-                }),
+                HttpClientRequest.bodyUrlParams(loginForm(school.loginName, credential)),
               ),
             )
             .pipe(
@@ -125,7 +133,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
             return yield* new AuthError({
               stage: "login",
               status: loginResponse.status,
-              message: `WebUntis login handshake failed for ${clientConfig.username}`,
+              message: `WebUntis login handshake failed for ${credential.username}`,
             });
           }
 
@@ -164,7 +172,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
             return yield* new AuthError({
               stage: "token",
               status: tokenResponse.status,
-              message: `Token minting failed for ${school.server}`,
+              message: `Token minting failed for ${baseUrl}`,
             });
           }
 
@@ -185,7 +193,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
 
           return {
             resolvedSchool: school,
-            tenantId: clientConfig.tenantId ?? school.tenantId,
+            tenantId: school.tenantId,
             token: Redacted.make(tokenString),
             tokenExpiresAt: parseJwtExpiration(tokenString) ?? now + tokenFallbackValidityMs,
             generation: previous.generation + 1,

@@ -1,33 +1,21 @@
-import { Clock, Context, Effect, Layer, Schema } from "effect";
+import { Clock, Effect, Schema } from "effect";
 import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/http";
-import { ClientConfig } from "./config.ts";
+import { type School, SchoolSchema } from "../domains/schools/schema.ts";
 import {
   type DecodeError,
   DiscoveryError,
   decodeError,
   httpClientErrorToTransportError,
-  TransportError,
+  type TransportError,
 } from "./errors.ts";
-import { EntityId, runtimeJsonParseOptions } from "./schema.ts";
-import type { ResolvedSchool } from "./state.ts";
+import { runtimeJsonParseOptions } from "./schema.ts";
 
-const SchoolSearchResultSchema = Schema.Struct({
-  server: Schema.String,
-  useMobileServiceUrlAndroid: Schema.optional(Schema.Boolean),
-  address: Schema.String,
-  displayName: Schema.String,
-  loginName: Schema.String,
-  schoolId: EntityId,
-  useMobileServiceUrlIos: Schema.optional(Schema.Boolean),
-  serverUrl: Schema.String,
-  tenantId: Schema.String,
-  mobileServiceUrl: Schema.optional(Schema.NullOr(Schema.String)),
-});
+const schoolSearchEndpoint = "https://schoolsearch.webuntis.com/schoolquery2";
 
 const SearchSchoolRpcResponseSchema = Schema.Struct({
   result: Schema.Struct({
     size: Schema.optional(Schema.Int),
-    schools: Schema.Array(SchoolSearchResultSchema),
+    schools: Schema.Array(SchoolSchema),
   }),
   id: Schema.String,
   jsonrpc: Schema.Literal("2.0"),
@@ -40,135 +28,99 @@ const searchPayload = (query: string, now: number) => ({
   jsonrpc: "2.0" as const,
 });
 
-export interface SchoolDiscoveryShape {
-  readonly search: (
-    query: string,
-  ) => Effect.Effect<ReadonlyArray<ResolvedSchool>, DiscoveryError | TransportError | DecodeError>;
-  readonly resolve: (
-    query: string,
-  ) => Effect.Effect<ResolvedSchool, DiscoveryError | TransportError | DecodeError>;
-}
+/**
+ * Searches WebUntis' public school directory. Needs no account; any result can
+ * be passed as the `school` of a connection.
+ */
+export const searchSchools = (
+  query: string,
+): Effect.Effect<
+  ReadonlyArray<School>,
+  DiscoveryError | TransportError | DecodeError,
+  HttpClient.HttpClient
+> =>
+  Effect.gen(function* () {
+    const client = yield* HttpClient.HttpClient;
+    const now = yield* Clock.currentTimeMillis;
+    const response = yield* HttpClientRequest.post(schoolSearchEndpoint).pipe(
+      HttpClientRequest.acceptJson,
+      HttpClientRequest.bodyJson(searchPayload(query, now)),
+      Effect.flatMap(client.execute),
+      Effect.mapError((error) => httpClientErrorToTransportError("POST", "/schoolquery2", error)),
+    );
+    const ok = yield* HttpClientResponse.filterStatusOk(response).pipe(
+      Effect.mapError(
+        (cause) =>
+          new DiscoveryError({
+            query,
+            message: `School search failed for ${JSON.stringify(query)}`,
+            cause,
+          }),
+      ),
+    );
+    const decoded = yield* HttpClientResponse.schemaBodyJson(
+      SearchSchoolRpcResponseSchema,
+      runtimeJsonParseOptions,
+    )(ok).pipe(Effect.mapError((error) => decodeError("/schoolquery2", error)));
+    return decoded.result.schools;
+  }).pipe(Effect.withSpan("searchSchools"));
 
-export class SchoolDiscovery extends Context.Service<SchoolDiscovery, SchoolDiscoveryShape>()(
-  "webuntis/internal/SchoolDiscovery",
-) {
-  static readonly layer = Layer.effect(
-    this,
-    Effect.gen(function* () {
-      const client = yield* HttpClient.HttpClient;
-      const config = yield* ClientConfig;
+/** The sole element of `candidates`, or `undefined` if there is not exactly one. */
+const onlyMatch = (candidates: ReadonlyArray<School>): School | undefined =>
+  candidates.length === 1 ? candidates[0] : undefined;
 
-      const search: SchoolDiscoveryShape["search"] = (query) =>
-        Clock.currentTimeMillis.pipe(
-          Effect.flatMap((now) =>
-            HttpClientRequest.post(
-              config.discoveryEndpoint ?? "https://schoolsearch.webuntis.com/schoolquery2",
-            ).pipe(
-              HttpClientRequest.acceptJson,
-              HttpClientRequest.bodyJson(searchPayload(query, now)),
-            ),
-          ),
-          Effect.flatMap(client.execute),
-          Effect.mapError((error) =>
-            httpClientErrorToTransportError("POST", "/schoolquery2", error),
-          ),
-          Effect.flatMap((response) =>
-            HttpClientResponse.filterStatusOk(response).pipe(
-              Effect.mapError(
-                (error) =>
-                  new DiscoveryError({
-                    query,
-                    message: `School search failed for ${JSON.stringify(query)}`,
-                    cause: error,
-                  }),
-              ),
-            ),
-          ),
-          Effect.flatMap(
-            HttpClientResponse.schemaBodyJson(
-              SearchSchoolRpcResponseSchema,
-              runtimeJsonParseOptions,
-            ),
-          ),
-          Effect.mapError((error) =>
-            error instanceof DiscoveryError || error instanceof TransportError
-              ? error
-              : decodeError("/schoolquery2", error),
-          ),
-          Effect.map((decoded) =>
-            decoded.result.schools.map(
-              (school) =>
-                ({
-                  displayName: school.displayName,
-                  loginName: school.loginName,
-                  server: school.server,
-                  serverUrl: school.serverUrl,
-                  schoolId: school.schoolId,
-                  tenantId: school.tenantId,
-                }) satisfies ResolvedSchool,
-            ),
-          ),
-        );
+/**
+ * Resolves a school name to exactly one school. An exact match on display
+ * name, login name, server, or server URL wins; otherwise the search must
+ * return a single result.
+ */
+export const findSchool = (query: string) =>
+  searchSchools(query).pipe(
+    Effect.flatMap((schools) => {
+      const normalizedQuery = query.trim().toLowerCase();
+      const exactMatches = schools.filter(
+        (school) =>
+          school.displayName.toLowerCase() === normalizedQuery ||
+          school.loginName.toLowerCase() === normalizedQuery ||
+          school.server.toLowerCase() === normalizedQuery ||
+          school.serverUrl.toLowerCase() === normalizedQuery,
+      );
 
-      /** The sole element of `candidates`, or `undefined` if there is not exactly one. */
-      const onlyMatch = (candidates: ReadonlyArray<ResolvedSchool>): ResolvedSchool | undefined =>
-        candidates.length === 1 ? candidates[0] : undefined;
+      const exactMatch = onlyMatch(exactMatches);
+      if (exactMatch !== undefined) {
+        return Effect.succeed(exactMatch);
+      }
 
-      const resolve: SchoolDiscoveryShape["resolve"] = (query) =>
-        search(query).pipe(
-          Effect.flatMap((schools) => {
-            const normalizedQuery = query.trim().toLowerCase();
-            const exactMatches = schools.filter(
-              (school) =>
-                school.displayName.toLowerCase() === normalizedQuery ||
-                school.loginName.toLowerCase() === normalizedQuery ||
-                school.server.toLowerCase() === normalizedQuery ||
-                school.serverUrl.toLowerCase() === normalizedQuery,
-            );
-
-            const exactMatch = onlyMatch(exactMatches);
-            if (exactMatch !== undefined) {
-              return Effect.succeed(exactMatch);
-            }
-
-            if (exactMatches.length > 1) {
-              return Effect.fail(
-                new DiscoveryError({
-                  query,
-                  message: `Multiple WebUntis tenants matched ${JSON.stringify(query)} exactly`,
-                  matches: exactMatches.map((school) => school.serverUrl),
-                }),
-              );
-            }
-
-            if (schools.length === 0) {
-              return Effect.fail(
-                new DiscoveryError({
-                  query,
-                  message: `No WebUntis tenant matched ${JSON.stringify(query)}`,
-                }),
-              );
-            }
-
-            const soleMatch = onlyMatch(schools);
-            if (soleMatch !== undefined) {
-              return Effect.succeed(soleMatch);
-            }
-
-            return Effect.fail(
-              new DiscoveryError({
-                query,
-                message: `School discovery for ${JSON.stringify(query)} was ambiguous; provide WEBUNTIS_SCHOOL_LOGIN_NAME and server details`,
-                matches: schools.map((school) => `${school.displayName} <${school.serverUrl}>`),
-              }),
-            );
+      if (exactMatches.length > 1) {
+        return Effect.fail(
+          new DiscoveryError({
+            query,
+            message: `Multiple WebUntis tenants matched ${JSON.stringify(query)} exactly`,
+            matches: exactMatches.map((school) => school.serverUrl),
           }),
         );
+      }
 
-      return SchoolDiscovery.of({
-        search,
-        resolve,
-      });
+      if (schools.length === 0) {
+        return Effect.fail(
+          new DiscoveryError({
+            query,
+            message: `No WebUntis tenant matched ${JSON.stringify(query)}`,
+          }),
+        );
+      }
+
+      const soleMatch = onlyMatch(schools);
+      if (soleMatch !== undefined) {
+        return Effect.succeed(soleMatch);
+      }
+
+      return Effect.fail(
+        new DiscoveryError({
+          query,
+          message: `School discovery for ${JSON.stringify(query)} was ambiguous; pass the chosen school from searchSchools instead of its name`,
+          matches: schools.map((school) => `${school.displayName} <${school.serverUrl}>`),
+        }),
+      );
     }),
   );
-}

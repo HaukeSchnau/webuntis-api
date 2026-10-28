@@ -1,12 +1,15 @@
 import { Effect, Layer } from "effect";
+import { FetchHttpClient } from "effect/http";
 import {
   AuthClient,
   WebUntisClient,
-  clientConfigFromEnv,
-  makeWebUntisLayer,
+  WebUntisConnection,
+  webUntisLayer,
 } from "@schnau/webuntis-api";
 
-const layer = Layer.unwrap(clientConfigFromEnv().pipe(Effect.map(makeWebUntisLayer)));
+const layer = Layer.unwrap(Effect.map(WebUntisConnection.fromEnv, webUntisLayer)).pipe(
+  Layer.provide(FetchHttpClient.layer),
+);
 
 const result = await Effect.runPromise(
   Effect.gen(function* () {

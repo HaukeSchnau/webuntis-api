@@ -15,7 +15,6 @@ import { runtimeJsonParseOptions } from "./schema.ts";
 import { CurrentSchoolYearId } from "./school-year-context.ts";
 import { SessionState } from "./session-state.ts";
 import type { AuthenticatedState, MetadataSnapshot } from "./state.ts";
-import { resolveBaseUrl } from "./url.ts";
 
 const defaultAcceptHeader = "application/json, text/plain, */*";
 const absoluteUrlPattern = /^https?:\/\//u;
@@ -53,7 +52,7 @@ const transportError = (method: HttpMethod, path: string, error: unknown) =>
 const requestUrl = (state: RequestState, path: string): string =>
   absoluteUrlPattern.test(path)
     ? path
-    : `${resolveBaseUrl(state.resolvedSchool)}/${path.replace(leadingSlashes, "")}`;
+    : `${state.resolvedSchool.baseUrl}/${path.replace(leadingSlashes, "")}`;
 
 /**
  * School year to scope the request to.

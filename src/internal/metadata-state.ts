@@ -12,7 +12,6 @@ import { EntityId, runtimeJsonParseOptions } from "./schema.ts";
 import { SessionState } from "./session-state.ts";
 import type { AuthenticatedState, MetadataCache, MetadataSnapshot } from "./state.ts";
 import { emptyMetadataState, hasMetadataForSession, toMetadataSnapshot } from "./state.ts";
-import { resolveBaseUrl } from "./url.ts";
 
 // Minimal projection of `app/data`. Metadata bootstrap runs before the request
 // policy that `AppDataSchema` decoding depends on, so it deliberately reads only
@@ -50,7 +49,7 @@ export class MetadataState extends Context.Service<MetadataState, MetadataStateS
           const response = yield* sessionState.client
             .execute(
               HttpClientRequest.get(
-                `${resolveBaseUrl(session.resolvedSchool)}/api/rest/view/v1/app/data`,
+                `${session.resolvedSchool.baseUrl}/api/rest/view/v1/app/data`,
               ).pipe(HttpClientRequest.acceptJson, HttpClientRequest.bearerToken(session.token)),
             )
             .pipe(

@@ -1,8 +1,9 @@
 import { describe, expect, layer } from "@effect/vitest";
 import { Effect, Layer } from "effect";
+import { FetchHttpClient } from "effect/http";
 import { AuthClient } from "../../src/auth.ts";
-import { makeWebUntisLayer, WebUntisClient } from "../../src/client.ts";
-import { ClientConfig } from "../../src/internal/config.ts";
+import { WebUntisClient, webUntisLayer } from "../../src/client.ts";
+import { WebUntisConnection } from "../../src/internal/connection.ts";
 import {
   liveEnvMissing,
   normalizeAppData,
@@ -13,7 +14,9 @@ import {
 
 const hasLiveEnv = liveEnvMissing.length === 0;
 
-const liveLayer = Layer.unwrap(ClientConfig.fromEnv().pipe(Effect.map(makeWebUntisLayer)));
+const liveLayer = Layer.unwrap(WebUntisConnection.fromEnv.pipe(Effect.map(webUntisLayer))).pipe(
+  Layer.provide(FetchHttpClient.layer),
+);
 
 describe.skipIf(!hasLiveEnv)("live WebUntis smoke", () => {
   layer(liveLayer, { excludeTestServices: true })("with live layer", (it) => {

@@ -8,6 +8,53 @@ The package runs on stable Effect 4. The `effect` peer range is `^4.0.0`, so any
 release satisfies it. Effect 4.0.0 moved the HTTP modules from `effect/unstable/http` to
 `effect/http`; if your own code imports them, update those imports together with this package.
 
+### Connections from values
+
+The client no longer reads its configuration on its own. You build a layer from a connection
+value, and the layer takes its `HttpClient` from context:
+
+```ts
+// Before
+program.pipe(Effect.provide(webUntisLayer)); // read WEBUNTIS_* from the environment
+program.pipe(Effect.provide(makeWebUntisLayer(config)));
+
+// After
+const WebUntis = webUntisLayer({
+  school: { loginName: "igs-lilienthal", serverUrl: "igs-lilienthal.webuntis.com" },
+  credential: Credential.Password({ username, password: Redacted.make(password) }),
+}).pipe(Layer.provide(FetchHttpClient.layer));
+program.pipe(Effect.provide(WebUntis));
+```
+
+To keep reading the environment, unwrap `WebUntisConnection.fromEnv`, a `Config` that reads
+through the current `ConfigProvider`:
+
+```ts
+const WebUntis = Layer.unwrap(Effect.map(WebUntisConnection.fromEnv, webUntisLayer)).pipe(
+  Layer.provide(FetchHttpClient.layer),
+);
+```
+
+| Removed                                     | Replacement                                                  |
+| ------------------------------------------- | ------------------------------------------------------------ |
+| `webUntisLayer` (a value)                   | `webUntisLayer(connection)`                                  |
+| `makeWebUntisLayer(config, transportLayer)` | `webUntisLayer(connection)` plus `Layer.provide(httpClient)` |
+| `ClientConfig`, `clientConfigFromEnv`       | `WebUntisConnection.fromEnv`                                 |
+| `WebUntisClientConfig`, `LiveEnvInput`      | `WebUntisConnection`                                         |
+| `WEBUNTIS_SERVER`                           | `WEBUNTIS_SERVER_URL`, which also accepts a bare host        |
+| `WEBUNTIS_DISCOVERY_ENDPOINT`               | none; `searchSchools` always queries WebUntis' school search |
+
+`school` takes a `SchoolTarget` or a name to look up. `WebUntisConnection.fromEnv` pins the
+school only when both `WEBUNTIS_SCHOOL_LOGIN_NAME` and `WEBUNTIS_SERVER_URL` are set; a lone
+`WEBUNTIS_TENANT_ID` no longer pins anything.
+
+`searchSchools(query)` is new and returns WebUntis' description of each matching school. Any
+result can be passed as a connection's `school`. Its schema is `SchoolSchema` on the
+`/schemas` subpath.
+
+Each `webUntisLayer` call builds an independent client, so several schools or accounts can run
+in one process. The README shows how to key them with `LayerMap`.
+
 ## 0.3.0
 
 `TimetableClient.getEntries` takes one `resource` ID instead of a `resources` array. Since

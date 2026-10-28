@@ -1,16 +1,20 @@
-import { Effect } from "effect";
+import { Effect, Layer, LayerMap, Redacted } from "effect";
+import { FetchHttpClient } from "effect/http";
 import {
-  ClientConfig,
+  Credential,
   InvalidRequestError,
+  SchoolyearsClient,
   WebUntisClient,
-  makeWebUntisLayer,
+  WebUntisConnection,
+  searchSchools,
   webUntisLayer,
   type ExamDateRangeRequest,
   type MessageSummary,
+  type School,
+  type SchoolTarget,
   type TimetableEntriesRequest,
-  type WebUntisClientConfig,
 } from "@schnau/webuntis-api";
-import { HomeSchema } from "@schnau/webuntis-api/schemas";
+import { HomeSchema, SchoolSchema } from "@schnau/webuntis-api/schemas";
 
 const request: ExamDateRangeRequest = {
   start: "2026-01-01",
@@ -24,28 +28,44 @@ const summarySubject = (message: MessageSummary) => message.subject;
 const invalidRange: ExamDateRangeRequest = { start: "2026-01-01" };
 // @ts-expect-error WebUntis accepts exactly one resource per timetable entries request.
 const invalidResources: TimetableEntriesRequest["resource"] = [1, 2];
+// A search result is a valid school target.
+const asTarget = (school: School): SchoolTarget => school;
 
-const config: WebUntisClientConfig = await Effect.runPromise(
-  ClientConfig.fromEnv({
-    schoolName: "Consumer fixture",
-    username: "fixture",
-    password: "fixture",
-    serverUrl: "https://example.webuntis.com/WebUntis/",
-  }),
+const layer = webUntisLayer({
+  school: { loginName: "fixture", serverUrl: "https://example.webuntis.com/WebUntis/" },
+  credential: Credential.Password({ username: "fixture", password: Redacted.make("fixture") }),
+}).pipe(Layer.provide(FetchHttpClient.layer));
+const fromEnv = Layer.unwrap(Effect.map(WebUntisConnection.fromEnv, webUntisLayer));
+const search = searchSchools("fixture").pipe(Effect.provide(FetchHttpClient.layer));
+// The multi-school pattern the README documents.
+class Schools extends LayerMap.Service<Schools>()("Schools", {
+  lookup: (loginName: string) =>
+    webUntisLayer({
+      school: { loginName, serverUrl: "https://example.webuntis.com" },
+      credential: Credential.Password({ username: "fixture", password: Redacted.make("fixture") }),
+    }),
+  dependencies: [FetchHttpClient.layer],
+  idleTimeToLive: "10 minutes",
+}) {}
+const years = SchoolyearsClient.use((client) => client.list).pipe(
+  Effect.provide(Schools.get("fixture")),
+  Effect.provide(Schools.layer),
 );
-
-const layer = makeWebUntisLayer(config);
 const program = Effect.gen(function* () {
   const client = yield* WebUntisClient;
   return yield* client.exams.list(request);
 });
 
 void summarySubject;
-void webUntisLayer;
 void HomeSchema;
+void SchoolSchema;
 void InvalidRequestError;
+void asTarget;
 void layer;
+void fromEnv;
+void search;
 void program;
+void years;
 void resource;
 void invalidRange;
 void invalidResources;

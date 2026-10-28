@@ -8,7 +8,8 @@ For breaking API changes and upgrade notes, see [MIGRATION.md](./MIGRATION.md).
 
 ## What You Get
 
-- Explicit Effect v4 services with two composition roots: `webUntisLayer` for environment-driven wiring and `makeWebUntisLayer(config)` when you already hold a resolved configuration.
+- Connections built from plain values: `webUntisLayer({ school, credential })` gives one school and account its own session, so several can run in one process.
+- Public school search through `searchSchools`.
 - A small aggregate facade through `WebUntisClient` for convenience.
 - First-class domain services for `app`, `classreg`, `exams`, `messages`, `profile`, `schoolyears`, `session`, and `timetable`.
 - Descriptor-driven request construction, with explicit auth vs metadata header policy.
@@ -28,11 +29,12 @@ The current implementation follows the modern WebUntis flow:
 4. Token minting via `GET /WebUntis/api/token/new`
 5. Bearer-authenticated requests to `/WebUntis/api/rest/view/...`
 
-The service graph is split into a few distinct layers:
+Step 1 only runs when a connection names its school instead of pinning it.
 
-- `ClientConfig` reads and validates `WEBUNTIS_*` config, including URL validation. `ClientConfig.load` goes through the ambient `ConfigProvider`; `ClientConfig.fromEnv` takes an explicit record.
-- `SchoolDiscovery` resolves the school deterministically and fails on ambiguous matches.
-- `SchoolResolver` caches the resolved tenant target.
+The service graph is split into a few distinct layers, built once per connection:
+
+- `Connection` holds the school and credential the layer was built for, and rejects a pinned server URL that cannot address WebUntis.
+- `SchoolResolver` turns the connection's school into a request target, searching by name at most once.
 - `SessionState` manages cookies, login, token refresh, and auth retries.
 - `MetadataState` caches tenant and school-year headers per authenticated session.
 - `AuthClient` exposes authentication-specific operations.
@@ -52,11 +54,20 @@ The shell provides Node.js, pnpm, Just, SOPS, and age. Vite+ is installed with t
 
 ## Quick Start
 
-The most familiar entry point is still the aggregate `WebUntisClient`.
+A connection is a plain value: the school and the credential to log in with.
+`webUntisLayer` turns it into every service of the package. The layer takes its
+`HttpClient` from context; provide `FetchHttpClient.layer`, whose
+`redirect: "manual"` support the login relies on.
 
 ```ts
-import { Effect } from "effect";
-import { WebUntisClient, webUntisLayer } from "@schnau/webuntis-api";
+import { Effect, Layer, Redacted } from "effect";
+import { FetchHttpClient } from "effect/http";
+import { Credential, WebUntisClient, webUntisLayer } from "@schnau/webuntis-api";
+
+const WebUntis = webUntisLayer({
+  school: { loginName: "igs-lilienthal", serverUrl: "igs-lilienthal.webuntis.com" },
+  credential: Credential.Password({ username: "jane", password: Redacted.make("secret") }),
+}).pipe(Layer.provide(FetchHttpClient.layer));
 
 const program = Effect.gen(function* () {
   const client = yield* WebUntisClient;
@@ -69,23 +80,81 @@ const program = Effect.gen(function* () {
   };
 });
 
-await Effect.runPromise(program.pipe(Effect.provide(webUntisLayer)));
+await Effect.runPromise(program.pipe(Effect.provide(WebUntis)));
 ```
 
-`webUntisLayer` reads its `WEBUNTIS_*` settings through Effect's ambient `ConfigProvider` when the layer is built, so `ConfigProvider.layer(...)` overrides apply and nothing is read at import time. It fails with `ConfigurationError` if the settings are missing or malformed.
+## Connections
 
-If you already have a configuration value — from a secret store, a test fixture, or your own config schema — use `makeWebUntisLayer` instead:
+`school` is either a `SchoolTarget` (`loginName`, `serverUrl`, optional `tenantId`) or a
+school name. A name is looked up through school search when the connection first logs in and
+must match exactly one school. `serverUrl` accepts a bare host or any URL on the school's
+WebUntis server. Building the layer fails with `ConfigurationError` if a pinned `serverUrl`
+cannot address WebUntis.
+
+`credential` is a `Credential` tagged union. `Credential.Password({ username, password })` is
+the only variant today; the union leaves room for other WebUntis login methods.
+
+### School search
+
+`searchSchools(query)` searches WebUntis' public school directory without an account. Every
+`School` it returns is a valid `SchoolTarget`, so you can store a result and pass it back as a
+connection's `school`:
 
 ```ts
 import { Effect } from "effect";
-import { clientConfigFromEnv, makeWebUntisLayer } from "@schnau/webuntis-api";
+import { FetchHttpClient } from "effect/http";
+import { searchSchools } from "@schnau/webuntis-api";
 
-const config = await Effect.runPromise(
-  clientConfigFromEnv({ schoolName: "IGS Lilienthal", username: "...", password: "..." }),
+const schools = await Effect.runPromise(
+  searchSchools("Lilienthal").pipe(Effect.provide(FetchHttpClient.layer)),
 );
-
-const layer = makeWebUntisLayer(config);
 ```
+
+### From the environment
+
+Nothing reads `process.env` implicitly. `WebUntisConnection.fromEnv` is a `Config` that reads
+one connection through the current `ConfigProvider`, which is the process environment unless
+you install another:
+
+```ts
+import { Effect, Layer } from "effect";
+import { FetchHttpClient } from "effect/http";
+import { WebUntisConnection, webUntisLayer } from "@schnau/webuntis-api";
+
+const WebUntis = Layer.unwrap(Effect.map(WebUntisConnection.fromEnv, webUntisLayer)).pipe(
+  Layer.provide(FetchHttpClient.layer),
+);
+```
+
+It reads `WEBUNTIS_USERNAME` and `WEBUNTIS_PASSWORD`. `WEBUNTIS_SCHOOL_LOGIN_NAME` together
+with `WEBUNTIS_SERVER_URL` (plus an optional `WEBUNTIS_TENANT_ID`) pin the school; without
+them, `WEBUNTIS_SCHOOL_NAME` is looked up through school search.
+
+### Several schools and accounts
+
+Each `webUntisLayer` call builds an independent client with its own cookies, session, and
+caches. To serve many schools from one process, key the layers with Effect's `LayerMap`, which
+builds each connection once and shares it between the effects that use it:
+
+```ts
+import { Effect, Layer, LayerMap } from "effect";
+import { FetchHttpClient } from "effect/http";
+import { SchoolyearsClient, webUntisLayer, type WebUntisConnection } from "@schnau/webuntis-api";
+
+declare const connectionFor: (schoolId: string) => WebUntisConnection;
+
+class Schools extends LayerMap.Service<Schools>()("Schools", {
+  lookup: (schoolId: string) => webUntisLayer(connectionFor(schoolId)),
+  dependencies: [FetchHttpClient.layer],
+  idleTimeToLive: "10 minutes",
+}) {}
+
+const years = (schoolId: string) =>
+  SchoolyearsClient.use((client) => client.list).pipe(Effect.provide(Schools.get(schoolId)));
+```
+
+WebUntis invalidates a session when the same account logs in elsewhere, so two clients for one
+account log each other out. Build one connection per account and share it.
 
 ## Preferred v4 Style
 
@@ -93,7 +162,7 @@ For new code, prefer yielding focused services directly. That keeps dependencies
 
 ```ts
 import { Effect } from "effect";
-import { AppClient, MessagesClient, webUntisLayer } from "@schnau/webuntis-api";
+import { AppClient, MessagesClient } from "@schnau/webuntis-api";
 
 const program = Effect.gen(function* () {
   const app = yield* AppClient;
@@ -107,14 +176,14 @@ const program = Effect.gen(function* () {
   };
 });
 
-await Effect.runPromise(program.pipe(Effect.provide(webUntisLayer)));
+await Effect.runPromise(program.pipe(Effect.provide(WebUntis)));
 ```
 
 The domain services are especially useful when a program only needs one slice of the API:
 
 ```ts
 import { Effect } from "effect";
-import { TimetableClient, webUntisLayer } from "@schnau/webuntis-api";
+import { TimetableClient } from "@schnau/webuntis-api";
 
 const program = Effect.gen(function* () {
   const timetable = yield* TimetableClient;
@@ -127,7 +196,7 @@ const program = Effect.gen(function* () {
   });
 });
 
-await Effect.runPromise(program.pipe(Effect.provide(webUntisLayer)));
+await Effect.runPromise(program.pipe(Effect.provide(WebUntis)));
 ```
 
 ## School-Year Scoping
@@ -176,9 +245,8 @@ The root package exports:
 - `SchoolyearsClient`
 - `SessionClient`
 - `TimetableClient`
-- `ClientConfig`
-- `clientConfigFromEnv`
-- `webUntisLayer` and `makeWebUntisLayer`
+- `webUntisLayer`, `WebUntisConnection`, `Credential`, and the `SchoolTarget` type
+- `searchSchools`
 - `withSchoolYear`
 - `DiscoveryError`, `AuthError`, `TransportError`, `DecodeError`, `InvalidRequestError`, and `ConfigurationError`
 
@@ -202,7 +270,7 @@ const subjectOf = (message: MessageSummary) => message.subject;
 
 The root package does not export internal raw view helpers, schema values, or public mutating experimental profile routes.
 
-Internal runtime services such as `SchoolDiscovery`, `SchoolResolver`, `SessionState`, `MetadataState`, and `WebUntisHttp` are intentionally kept off the root barrel.
+Internal runtime services such as `Connection`, `SchoolResolver`, `SessionState`, `MetadataState`, and `WebUntisHttp` are intentionally kept off the root barrel.
 
 If you need service types for your own signatures, prefer the service-native form:
 
@@ -225,29 +293,6 @@ const results =
     searchText: "anna",
   });
 ```
-
-## Configuration
-
-The live layer reads these environment variables:
-
-```bash
-export WEBUNTIS_SCHOOL_NAME="IGS Lilienthal"
-export WEBUNTIS_USERNAME="..."
-export WEBUNTIS_PASSWORD="..."
-```
-
-Optional overrides:
-
-- `WEBUNTIS_SCHOOL_LOGIN_NAME`
-- `WEBUNTIS_SERVER`
-- `WEBUNTIS_SERVER_URL`
-- `WEBUNTIS_TENANT_ID`
-- `WEBUNTIS_DISCOVERY_ENDPOINT`
-
-Notable behavior changes:
-
-- `WEBUNTIS_SERVER_URL` is now validated during config loading.
-- School discovery now fails on ambiguous results unless you pin the tenant via `WEBUNTIS_SCHOOL_LOGIN_NAME`, `WEBUNTIS_SERVER`, `WEBUNTIS_SERVER_URL`, or `WEBUNTIS_TENANT_ID`.
 
 ## Testing
 

@@ -1,111 +1,69 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Effect } from "effect";
-import { SchoolDiscovery } from "../../src/internal/discovery.ts";
+import { AuthClient } from "../../src/auth.ts";
+import { findSchool, searchSchools } from "../../src/internal/discovery.ts";
 import { DiscoveryError } from "../../src/internal/errors.ts";
-import { jsonResponse, makeCoreTestLayer, testConfig } from "./helpers.ts";
+import {
+  jsonResponse,
+  makeCoreTestLayer,
+  makeJwt,
+  mockHttpLayer,
+  testConnection,
+} from "./helpers.ts";
 
-describe("school discovery", () => {
+const school = (loginName: string, displayName: string, server: string, schoolId: number) => ({
+  server,
+  address: "",
+  displayName,
+  loginName,
+  schoolId,
+  serverUrl: `https://${server}/WebUntis/?school=${loginName}`,
+  tenantId: `tenant-${schoolId}`,
+});
+
+const igs = school("igs-lilienthal", "IGS Lilienthal", "igs-lilienthal.webuntis.com", 1);
+
+const searchReturning = (schools: ReadonlyArray<ReturnType<typeof school>>) =>
+  mockHttpLayer((request) => {
+    if (new URL(request.url).pathname === "/schoolquery2") {
+      return jsonResponse({ result: { schools }, id: "wu_schulsuche-1", jsonrpc: "2.0" });
+    }
+    throw new Error(`Unexpected request: ${request.method} ${request.url}`);
+  });
+
+describe("school search", () => {
+  it.effect("returns every school the directory describes", () =>
+    Effect.gen(function* () {
+      const schools = yield* searchSchools("lilienthal");
+
+      expect(schools).toEqual([igs]);
+    }).pipe(Effect.provide(searchReturning([igs]))),
+  );
+
   it.effect("resolves an exact school match", () =>
     Effect.gen(function* () {
-      const discovery = yield* SchoolDiscovery;
-      const school = yield* discovery.resolve("IGS Lilienthal");
+      const found = yield* findSchool("IGS Lilienthal");
 
-      expect(school.loginName).toBe("igs-lilienthal");
-      expect(school.server).toBe("igs-lilienthal.webuntis.com");
+      expect(found.loginName).toBe("igs-lilienthal");
+      expect(found.server).toBe("igs-lilienthal.webuntis.com");
     }).pipe(
       Effect.provide(
-        makeCoreTestLayer(
-          (request) => {
-            const { pathname } = new URL(request.url);
-
-            if (pathname === "/schoolquery2") {
-              return jsonResponse({
-                result: {
-                  size: 0,
-                  schools: [
-                    {
-                      server: "igs-lilienthal.webuntis.com",
-                      useMobileServiceUrlAndroid: false,
-                      address: "",
-                      displayName: "IGS Lilienthal",
-                      loginName: "igs-lilienthal",
-                      schoolId: 1,
-                      useMobileServiceUrlIos: false,
-                      serverUrl:
-                        "https://igs-lilienthal.webuntis.com/WebUntis/?school=igs-lilienthal",
-                      tenantId: "tenant-42",
-                      mobileServiceUrl: null,
-                    },
-                  ],
-                },
-                id: "wu_schulsuche-1",
-                jsonrpc: "2.0",
-              });
-            }
-
-            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
-          },
-          {
-            ...testConfig,
-            schoolLoginName: undefined,
-            serverUrl: undefined,
-          },
-        ),
+        searchReturning([igs, school("igs-lilienthal-2", "IGS Lilienthal 2", "other.test", 2)]),
       ),
     ),
   );
 
   it.effect("resolves a sole login-name match", () =>
     Effect.gen(function* () {
-      const discovery = yield* SchoolDiscovery;
-      const school = yield* discovery.resolve("igs-lilienthal");
+      const found = yield* findSchool("igs");
 
-      expect(school.displayName).toBe("IGS Lilienthal");
-      expect(school.loginName).toBe("igs-lilienthal");
-      expect(school.server).toBe("igs-lilienthal.webuntis.com");
-    }).pipe(
-      Effect.provide(
-        makeCoreTestLayer(
-          (request) => {
-            const { pathname } = new URL(request.url);
-
-            if (pathname === "/schoolquery2") {
-              return jsonResponse({
-                result: {
-                  schools: [
-                    {
-                      server: "igs-lilienthal.webuntis.com",
-                      address: "",
-                      displayName: "IGS Lilienthal",
-                      loginName: "igs-lilienthal",
-                      schoolId: 1,
-                      serverUrl:
-                        "https://igs-lilienthal.webuntis.com/WebUntis/?school=igs-lilienthal",
-                      tenantId: "tenant-42",
-                    },
-                  ],
-                },
-                id: "wu_schulsuche-1",
-                jsonrpc: "2.0",
-              });
-            }
-
-            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
-          },
-          {
-            ...testConfig,
-            schoolLoginName: undefined,
-            serverUrl: undefined,
-          },
-        ),
-      ),
-    ),
+      expect(found.displayName).toBe("IGS Lilienthal");
+    }).pipe(Effect.provide(searchReturning([igs]))),
   );
 
   it.effect("fails when school discovery results are ambiguous", () =>
     Effect.gen(function* () {
-      const discovery = yield* SchoolDiscovery;
-      const error = yield* Effect.flip(discovery.resolve("IGS Lilienthal"));
+      const error = yield* Effect.flip(findSchool("IGS"));
 
       expect(error).toBeInstanceOf(DiscoveryError);
       if (error instanceof DiscoveryError) {
@@ -114,87 +72,61 @@ describe("school discovery", () => {
       }
     }).pipe(
       Effect.provide(
-        makeCoreTestLayer(
-          (request) => {
-            const { pathname } = new URL(request.url);
-
-            if (pathname === "/schoolquery2") {
-              return jsonResponse({
-                result: {
-                  schools: [
-                    {
-                      server: "igs-lilienthal.webuntis.com",
-                      address: "",
-                      displayName: "IGS Lilienthal Campus A",
-                      loginName: "igs-lilienthal-a",
-                      schoolId: 1,
-                      serverUrl:
-                        "https://igs-lilienthal.webuntis.com/WebUntis/?school=igs-lilienthal-a",
-                      tenantId: "tenant-a",
-                    },
-                    {
-                      server: "igs-lilienthal-2.webuntis.com",
-                      address: "",
-                      displayName: "IGS Lilienthal Campus B",
-                      loginName: "igs-lilienthal-b",
-                      schoolId: 2,
-                      serverUrl:
-                        "https://igs-lilienthal-2.webuntis.com/WebUntis/?school=igs-lilienthal-b",
-                      tenantId: "tenant-b",
-                    },
-                  ],
-                },
-                id: "wu_schulsuche-1",
-                jsonrpc: "2.0",
-              });
-            }
-
-            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
-          },
-          {
-            ...testConfig,
-            schoolLoginName: undefined,
-            serverUrl: undefined,
-          },
-        ),
+        searchReturning([
+          school("igs-a", "IGS Campus A", "a.webuntis.com", 1),
+          school("igs-b", "IGS Campus B", "b.webuntis.com", 2),
+        ]),
       ),
     ),
   );
 
   it.effect("fails when school discovery returns no matches", () =>
     Effect.gen(function* () {
-      const discovery = yield* SchoolDiscovery;
-      const error = yield* Effect.flip(discovery.resolve("Unknown School"));
+      const error = yield* Effect.flip(findSchool("Unknown School"));
 
       expect(error).toBeInstanceOf(DiscoveryError);
-      if (error instanceof DiscoveryError) {
-        expect(error.message).toContain("No WebUntis tenant matched");
-      }
+      expect(error.message).toContain("No WebUntis tenant matched");
+    }).pipe(Effect.provide(searchReturning([]))),
+  );
+
+  it.effect("looks a school name up once when the connection first logs in", () => {
+    const requests: Array<string> = [];
+
+    return Effect.gen(function* () {
+      const auth = yield* AuthClient;
+      yield* auth.ensureAuthenticated;
+      yield* auth.refresh;
+
+      expect(requests).toEqual([
+        "schoolsearch.webuntis.com/schoolquery2",
+        "igs-lilienthal.webuntis.com/WebUntis/index.do",
+        "igs-lilienthal.webuntis.com/WebUntis/j_spring_security_check",
+        "igs-lilienthal.webuntis.com/WebUntis/api/token/new",
+        "igs-lilienthal.webuntis.com/WebUntis/index.do",
+        "igs-lilienthal.webuntis.com/WebUntis/j_spring_security_check",
+        "igs-lilienthal.webuntis.com/WebUntis/api/token/new",
+      ]);
     }).pipe(
       Effect.provide(
         makeCoreTestLayer(
           (request) => {
-            const { pathname } = new URL(request.url);
+            const url = new URL(request.url);
+            requests.push(`${url.host}${url.pathname}`);
 
-            if (pathname === "/schoolquery2") {
-              return jsonResponse({
-                result: {
-                  schools: [],
-                },
-                id: "wu_schulsuche-1",
-                jsonrpc: "2.0",
-              });
+            if (url.pathname === "/schoolquery2") {
+              return jsonResponse({ result: { schools: [igs] }, id: "1", jsonrpc: "2.0" });
             }
-
-            throw new Error(`Unexpected request: ${request.method} ${request.url}`);
+            if (url.pathname.endsWith("/j_spring_security_check")) {
+              return new Response("", { status: 302 });
+            }
+            if (url.pathname.endsWith("/api/token/new")) {
+              return new Response(makeJwt(), { status: 200 });
+            }
+            return new Response("", { status: 200 });
           },
-          {
-            ...testConfig,
-            schoolLoginName: undefined,
-            serverUrl: undefined,
-          },
+          { ...testConnection, school: "IGS Lilienthal" },
         ),
       ),
-    ),
-  );
+    );
+  });
 });

@@ -1,5 +1,6 @@
 import { describe, expect, it, layer } from "@effect/vitest";
 import { Effect, Layer, Schema } from "effect";
+import { FetchHttpClient } from "effect/http";
 import { makeWebUntisResearchLayer, WebUntisClient } from "../../src/client.ts";
 import {
   HomeSchema,
@@ -8,7 +9,7 @@ import {
   StartupActionsSchema,
 } from "../../src/domains/schemas.ts";
 import { MobileDataV1V2Schema } from "../../src/domains/app/schema.ts";
-import { ClientConfig } from "../../src/internal/config.ts";
+import { WebUntisConnection } from "../../src/internal/connection.ts";
 import { TransportError } from "../../src/internal/errors.ts";
 import { RawViewApiClient } from "../../src/internal/raw-view-api.ts";
 import { RequestPolicy } from "../../src/internal/request.ts";
@@ -101,8 +102,8 @@ const timetableEntryCount = (
   );
 
 const liveLayer = Layer.unwrap(
-  ClientConfig.fromEnv().pipe(Effect.map((config) => makeWebUntisResearchLayer(config))),
-);
+  WebUntisConnection.fromEnv.pipe(Effect.map(makeWebUntisResearchLayer)),
+).pipe(Layer.provide(FetchHttpClient.layer));
 
 describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
   layer(liveLayer, { excludeTestServices: true })("with live layer", (it) => {

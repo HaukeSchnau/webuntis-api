@@ -1,7 +1,7 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Duration, Effect, Fiber } from "effect";
 import { TestClock } from "effect/testing";
-import { withTransientRetries } from "../../src/internal/runtime.ts";
+import { withTransientRetries } from "../../src/internal/transport.ts";
 import { makeMockHttpClient } from "./helpers.ts";
 
 describe("WebUntis transport retries", () => {

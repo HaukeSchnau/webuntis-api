@@ -1,60 +1,57 @@
 import { Context, Effect, Layer, SynchronizedRef } from "effect";
-import { ClientConfig } from "./config.ts";
-import { SchoolDiscovery } from "./discovery.ts";
-import type { DecodeError, DiscoveryError, TransportError } from "./errors.ts";
+import { HttpClient } from "effect/http";
+import { Connection, type SchoolTarget } from "./connection.ts";
+import { findSchool } from "./discovery.ts";
+import { type DecodeError, DiscoveryError, type TransportError } from "./errors.ts";
 import type { ResolvedSchool } from "./state.ts";
-import { resolveTenantHost } from "./url.ts";
+import { resolveBaseUrl } from "./url.ts";
 
 export interface SchoolResolverShape {
   readonly resolve: Effect.Effect<ResolvedSchool, DiscoveryError | TransportError | DecodeError>;
 }
 
+const toResolvedSchool = (query: string, target: SchoolTarget) => {
+  const baseUrl = resolveBaseUrl(target);
+  return baseUrl === undefined
+    ? Effect.fail(
+        new DiscoveryError({
+          query,
+          message: `WebUntis returned an unusable server URL ${JSON.stringify(target.serverUrl)}`,
+        }),
+      )
+    : Effect.succeed<ResolvedSchool>({
+        loginName: target.loginName,
+        baseUrl,
+        tenantId: target.tenantId,
+      });
+};
+
+/** Resolves the connection's school once and caches the target for every later login. */
 export class SchoolResolver extends Context.Service<SchoolResolver, SchoolResolverShape>()(
   "webuntis/internal/SchoolResolver",
 ) {
   static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
-      const clientConfig = yield* ClientConfig;
-      const discovery = yield* SchoolDiscovery;
+      const { school } = yield* Connection;
+      const client = yield* HttpClient.HttpClient;
       const cacheRef = yield* SynchronizedRef.make<ResolvedSchool | undefined>(undefined);
 
-      const resolveConfiguredSchool = (): ResolvedSchool | undefined => {
-        const tenantHost = resolveTenantHost(clientConfig);
-        if (tenantHost === undefined || clientConfig.schoolLoginName === undefined) {
-          return undefined;
-        }
+      const lookup =
+        typeof school === "string"
+          ? findSchool(school).pipe(
+              Effect.provideService(HttpClient.HttpClient, client),
+              Effect.flatMap((found) => toResolvedSchool(school, found)),
+            )
+          : toResolvedSchool(school.loginName, school);
 
-        return {
-          displayName: clientConfig.schoolName,
-          loginName: clientConfig.schoolLoginName,
-          server: tenantHost,
-          serverUrl:
-            clientConfig.serverUrl ??
-            `https://${tenantHost}/WebUntis/?school=${clientConfig.schoolLoginName}`,
-          schoolId: 0,
-          tenantId: clientConfig.tenantId,
-        };
-      };
+      const resolve = SynchronizedRef.modifyEffect(cacheRef, (cached) =>
+        cached === undefined
+          ? lookup.pipe(Effect.map((resolved) => [resolved, resolved] as const))
+          : Effect.succeed([cached, cached] as const),
+      );
 
-      const resolve = SynchronizedRef.modifyEffect(cacheRef, (cached) => {
-        if (cached !== undefined) {
-          return Effect.succeed([cached, cached] as const);
-        }
-
-        const configured = resolveConfiguredSchool();
-        if (configured !== undefined) {
-          return Effect.succeed([configured, configured] as const);
-        }
-
-        return discovery
-          .resolve(clientConfig.schoolName)
-          .pipe(Effect.map((resolved) => [resolved, resolved] as const));
-      });
-
-      return SchoolResolver.of({
-        resolve,
-      });
+      return SchoolResolver.of({ resolve });
     }),
   );
 }

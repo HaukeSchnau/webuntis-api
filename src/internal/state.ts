@@ -9,13 +9,10 @@ export const tokenFallbackValidityMs = 15 * 60 * 1_000;
  */
 export const tokenRefreshSkewMs = 60 * 1_000;
 
-/** A WebUntis school resolved to a concrete request target. */
+/** A school target with its server URL normalized to the `<origin>/WebUntis` request prefix. */
 export interface ResolvedSchool {
-  readonly displayName: string;
   readonly loginName: string;
-  readonly server: string;
-  readonly serverUrl: string;
-  readonly schoolId: number;
+  readonly baseUrl: string;
   readonly tenantId?: string | undefined;
 }
 
