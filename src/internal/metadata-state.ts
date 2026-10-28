@@ -1,12 +1,14 @@
-import { Context, Effect, Layer, Schema, SynchronizedRef } from "effect";
+import { Clock, Context, Effect, Layer, Schema, SynchronizedRef } from "effect";
 import { HttpClientRequest, HttpClientResponse } from "effect/http";
 import {
   AuthError,
-  type DecodeError,
-  type DiscoveryError,
   decodeError,
   httpClientErrorToTransportError,
-  type TransportError,
+  type LoginError,
+  type PermissionDenied,
+  type RateLimited,
+  responseError,
+  type UpstreamRejected,
 } from "./errors.ts";
 import { EntityId, runtimeJsonParseOptions } from "./schema.ts";
 import { SessionState } from "./session-state.ts";
@@ -21,11 +23,11 @@ const BootstrapAppDataSchema = Schema.Struct({
   tenant: Schema.Struct({ id: Schema.String }),
 });
 
+/** Logging in, plus the ways the authenticated `app/data` read itself can be refused. */
+export type MetadataError = LoginError | PermissionDenied | RateLimited | UpstreamRejected;
+
 export interface MetadataStateShape {
-  readonly ensureMetadata: Effect.Effect<
-    MetadataSnapshot,
-    DiscoveryError | AuthError | TransportError | DecodeError
-  >;
+  readonly ensureMetadata: Effect.Effect<MetadataSnapshot, MetadataError>;
   readonly clear: Effect.Effect<void>;
 }
 
@@ -41,10 +43,7 @@ export class MetadataState extends Context.Service<MetadataState, MetadataStateS
       const fetchMetadata = (
         session: AuthenticatedState,
         mayRetry = true,
-      ): Effect.Effect<
-        readonly [MetadataSnapshot, MetadataCache],
-        DiscoveryError | AuthError | TransportError | DecodeError
-      > =>
+      ): Effect.Effect<readonly [MetadataSnapshot, MetadataCache], MetadataError> =>
         Effect.gen(function* () {
           const response = yield* sessionState.client
             .execute(
@@ -61,17 +60,22 @@ export class MetadataState extends Context.Service<MetadataState, MetadataStateS
           if (response.status < 200 || response.status >= 300) {
             const body = yield* response.text.pipe(Effect.orElseSucceed(() => ""));
 
-            if (mayRetry && (response.status === 401 || response.status === 403)) {
-              yield* sessionState.invalidate(session.generation);
-              const refreshedSession = yield* sessionState.ensureAuthenticated;
-              return yield* fetchMetadata(refreshedSession, false);
+            if (response.status === 401) {
+              if (mayRetry) {
+                yield* sessionState.invalidate(session.generation);
+                const refreshedSession = yield* sessionState.ensureAuthenticated;
+                return yield* fetchMetadata(refreshedSession, false);
+              }
+
+              return yield* new AuthError({
+                stage: "metadata",
+                status: response.status,
+                message: `Metadata bootstrap failed: ${body}`,
+              });
             }
 
-            return yield* new AuthError({
-              stage: "metadata",
-              status: response.status,
-              message: `Metadata bootstrap failed: ${body}`,
-            });
+            const now = yield* Clock.currentTimeMillis;
+            return yield* responseError("GET", "api/rest/view/v1/app/data", response, body, now);
           }
 
           const appData = yield* HttpClientResponse.schemaBodyJson(

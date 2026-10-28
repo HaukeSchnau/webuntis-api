@@ -55,6 +55,29 @@ result can be passed as a connection's `school`. Its schema is `SchoolSchema` on
 Each `webUntisLayer` call builds an independent client, so several schools or accounts can run
 in one process. The README shows how to key them with `LayerMap`.
 
+### Typed refusals
+
+`WebUntisError` gained four members, so exhaustive matches need new cases:
+
+- `InvalidCredentials` replaces `AuthError { stage: "token", status: 302 }` for a wrong
+  password. The connection remembers the refusal and stops logging in until
+  `AuthClient.refresh` or `AuthClient.clear`.
+- `PermissionDenied` replaces `TransportError { status: 403 }`. A 403 no longer drops the
+  session and logs in again; only a 401 does.
+- `RateLimited` replaces `TransportError { status: 429 }` once retries that honored
+  `Retry-After` are used up.
+- `UpstreamRejected` replaces `TransportError` for any other non-2xx response whose JSON body
+  carries an `errorCode`. `errorCode`, `status`, and the full `body` are fields.
+
+`TransportError` remains for network failures and unexplained responses. `AuthError` lost
+its unused `"discovery"` stage. A 403 from the metadata bootstrap (`app/data`) is now
+`PermissionDenied` instead of `AuthError { stage: "metadata" }`.
+
+### Limits
+
+`WebUntisConnection.limits` takes an optional `concurrency` and `budget`
+(`{ requests, window }`). Both default to unlimited, as before.
+
 ## 0.3.0
 
 `TimetableClient.getEntries` takes one `resource` ID instead of a `resources` array. Since

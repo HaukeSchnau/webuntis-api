@@ -199,6 +199,47 @@ const program = Effect.gen(function* () {
 await Effect.runPromise(program.pipe(Effect.provide(WebUntis)));
 ```
 
+## Errors
+
+Every failure is a typed value in the error channel; nothing throws. A request fails with one of
+the `WebUntisError` members:
+
+| Error                 | When                                                                                                 |
+| --------------------- | ---------------------------------------------------------------------------------------------------- |
+| `InvalidCredentials`  | WebUntis refused the credential. The connection stops logging in until `AuthClient.refresh`/`clear`. |
+| `PermissionDenied`    | HTTP 403. The account lacks the right; the session stays valid and is not renewed.                   |
+| `RateLimited`         | HTTP 429 persisted after waiting as long as each `Retry-After` asked. Carries the last `retryAfter`. |
+| `UpstreamRejected`    | Any other refusal whose body names a WebUntis `errorCode`, such as `VALIDATION_ERROR`.               |
+| `TransportError`      | No answer, or a refusal WebUntis did not explain. Carries `status` and `body` when there was one.    |
+| `DecodeError`         | The response did not match the modeled schema.                                                       |
+| `InvalidRequestError` | The caller's input failed validation; nothing was sent.                                              |
+| `AuthError`           | Another step of logging in failed, for example the token endpoint answering 5xx.                     |
+| `DiscoveryError`      | A school name matched no school or more than one.                                                    |
+
+A 401 makes the client log in again and retry once. Timeouts, network failures, and 408, 429, 500, 502, 503, and 504
+responses are retried twice with exponential backoff, never sooner than `Retry-After`.
+
+## Limits
+
+Each connection can cap how hard it uses WebUntis. Both limits are off unless you set them:
+
+```ts
+webUntisLayer({
+  school,
+  credential,
+  limits: {
+    concurrency: 4,
+    budget: { requests: 600, window: "1 minute" },
+  },
+});
+```
+
+`concurrency` bounds requests in flight, counting logins and a request waiting to retry.
+`budget` refills evenly (here one request every 100 ms, with bursts up to 600); requests
+beyond it wait instead of failing, and every retry attempt counts. After a 429 with
+`Retry-After`, the budget also holds back the connection's other requests until the server's
+delay has passed.
+
 ## School-Year Scoping
 
 `withSchoolYear` applies an explicit school-year context to supported timetable, exam, and
@@ -248,7 +289,7 @@ The root package exports:
 - `webUntisLayer`, `WebUntisConnection`, `Credential`, and the `SchoolTarget` type
 - `searchSchools`
 - `withSchoolYear`
-- `DiscoveryError`, `AuthError`, `TransportError`, `DecodeError`, `InvalidRequestError`, and `ConfigurationError`
+- `DiscoveryError`, `AuthError`, `InvalidCredentials`, `PermissionDenied`, `RateLimited`, `UpstreamRejected`, `TransportError`, `DecodeError`, `InvalidRequestError`, and `ConfigurationError`
 
 Every response type is also exported from the root as a type. Every failure a request can produce is
 covered by the `WebUntisError` union.

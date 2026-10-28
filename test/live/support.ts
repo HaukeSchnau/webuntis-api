@@ -46,7 +46,7 @@ import type {
   UserEmail,
 } from "../../src/domains/schemas.ts";
 import type { MobileDataV1V2 } from "../../src/domains/app/schema.ts";
-import { TransportError } from "../../src/internal/errors.ts";
+import { PermissionDenied, TransportError, UpstreamRejected } from "../../src/internal/errors.ts";
 
 const isBlank = (value: string | undefined) => value === undefined || value === "";
 
@@ -213,9 +213,16 @@ export const normalizeTimetableMenu = (value: TimetableMenu) => normalizeUnknown
 export const normalizeTimetableSearch = (value: TimetableSearch) => normalizeUnknown(value);
 export const normalizeTodayMeta = (value: TodayMeta) => normalizeUnknown(value);
 
-export const normalizeTransportError = (error: unknown) => {
-  if (!(error instanceof TransportError)) {
-    throw new TypeError(`expected a TransportError, got ${String(error)}`);
+/** A refused request as status, path, and body, whichever error class reported it. */
+export const normalizeRejection = (error: unknown) => {
+  if (
+    !(
+      error instanceof TransportError ||
+      error instanceof PermissionDenied ||
+      error instanceof UpstreamRejected
+    )
+  ) {
+    throw new TypeError(`expected a refused request, got ${String(error)}`);
   }
 
   const rawBody = error.body ?? "";
@@ -228,7 +235,7 @@ export const normalizeTransportError = (error: unknown) => {
 
   return {
     path: error.path.replace(/\/\d+(?=\/|$)/gu, "/{id}"),
-    status: error.status,
+    status: error instanceof PermissionDenied ? 403 : error.status,
     body: normalizeUnknown(body),
   };
 };

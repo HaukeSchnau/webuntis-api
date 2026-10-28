@@ -46,7 +46,12 @@ export {
   ConfigurationError,
   DecodeError,
   DiscoveryError,
+  InvalidCredentials,
   InvalidRequestError,
+  PermissionDenied,
+  RateLimited,
   TransportError,
+  UpstreamRejected,
 } from "./internal/errors.ts";
-export type { WebUntisError } from "./internal/errors.ts";
+export type { LoginError, WebUntisError } from "./internal/errors.ts";
+export type { ConnectionLimits } from "./internal/transport.ts";

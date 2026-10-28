@@ -10,7 +10,6 @@ import {
 } from "../../src/domains/schemas.ts";
 import { MobileDataV1V2Schema } from "../../src/domains/app/schema.ts";
 import { WebUntisConnection } from "../../src/internal/connection.ts";
-import { TransportError } from "../../src/internal/errors.ts";
 import { RawViewApiClient } from "../../src/internal/raw-view-api.ts";
 import { RequestPolicy } from "../../src/internal/request.ts";
 import { withSchoolYear } from "../../src/internal/school-year-context.ts";
@@ -56,7 +55,7 @@ import {
   normalizeTimetableMenu,
   normalizeTimetableSearch,
   normalizeTodayMeta,
-  normalizeTransportError,
+  normalizeRejection,
   normalizeUserContactData,
   normalizeUserEmail,
 } from "./support.ts";
@@ -456,10 +455,8 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             }),
           );
 
-          expect(profileError).toBeInstanceOf(TransportError);
-          expect(adminDetailsError).toBeInstanceOf(TransportError);
-          expect(normalizeTransportError(profileError)).toMatchSnapshot();
-          expect(normalizeTransportError(adminDetailsError)).toMatchSnapshot();
+          expect(normalizeRejection(profileError)).toMatchSnapshot();
+          expect(normalizeRejection(adminDetailsError)).toMatchSnapshot();
         }),
       30_000,
     );
@@ -565,12 +562,9 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             }),
           );
 
-          expect(formatListError).toBeInstanceOf(TransportError);
-          expect(generalSettingsError).toBeInstanceOf(TransportError);
-          expect(visibilityRestrictionError).toBeInstanceOf(TransportError);
-          expect(normalizeTransportError(formatListError)).toMatchSnapshot();
-          expect(normalizeTransportError(generalSettingsError)).toMatchSnapshot();
-          expect(normalizeTransportError(visibilityRestrictionError)).toMatchSnapshot();
+          expect(normalizeRejection(formatListError)).toMatchSnapshot();
+          expect(normalizeRejection(generalSettingsError)).toMatchSnapshot();
+          expect(normalizeRejection(visibilityRestrictionError)).toMatchSnapshot();
         }),
       30_000,
     );
@@ -667,8 +661,7 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
             subjectsError,
             subjectDetailError,
           ]) {
-            expect(error).toBeInstanceOf(TransportError);
-            expect(normalizeTransportError(error)).toMatchSnapshot();
+            expect(normalizeRejection(error)).toMatchSnapshot();
           }
         }),
       30_000,

@@ -1,4 +1,5 @@
 import type { Redacted } from "effect";
+import type { InvalidCredentials } from "./errors.ts";
 
 /** Lifetime assumed for a token whose `exp` claim could not be read. */
 export const tokenFallbackValidityMs = 15 * 60 * 1_000;
@@ -21,6 +22,8 @@ export interface ResolvedSchool {
  * stale 401 cannot invalidate a newer session (see ADR 0001).
  */
 export interface SessionCache {
+  /** Set once WebUntis refuses the credential; cleared by an explicit refresh or clear. */
+  readonly rejected?: InvalidCredentials | undefined;
   readonly resolvedSchool?: ResolvedSchool | undefined;
   readonly token?: Redacted.Redacted | undefined;
   readonly tokenExpiresAt?: number | undefined;

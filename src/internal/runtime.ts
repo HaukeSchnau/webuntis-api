@@ -1,4 +1,5 @@
 import { Layer } from "effect";
+import { RateLimiter } from "effect/persistence";
 import { Connection, type WebUntisConnection } from "./connection.ts";
 import { WebUntisHttp } from "./http.ts";
 import { MetadataState } from "./metadata-state.ts";
@@ -12,7 +13,9 @@ import { SessionState } from "./session-state.ts";
  * graph, which is what keeps several schools and accounts apart in one process.
  */
 export const makeWebUntisCoreLayer = (connection: WebUntisConnection) => {
-  const connectionLayer = Connection.layer(connection);
+  // In-memory, and fresh per connection because `webUntisLayer` builds in `Layer.fresh`.
+  const limiterLayer = RateLimiter.layer.pipe(Layer.provide(RateLimiter.layerStoreMemory));
+  const connectionLayer = Layer.mergeAll(Connection.layer(connection), limiterLayer);
   const schoolResolverLayer = SchoolResolver.layer.pipe(Layer.provideMerge(connectionLayer));
   const sessionLayer = SessionState.layer.pipe(Layer.provideMerge(schoolResolverLayer));
   const metadataLayer = MetadataState.layer.pipe(Layer.provideMerge(sessionLayer));

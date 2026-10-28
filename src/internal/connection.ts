@@ -1,5 +1,6 @@
-import { Config, Context, Data, Effect, Layer, Option, type Redacted } from "effect";
+import { Config, Context, Data, Duration, Effect, Layer, Option, type Redacted } from "effect";
 import { ConfigurationError } from "./errors.ts";
+import type { ConnectionLimits } from "./transport.ts";
 import { resolveBaseUrl } from "./url.ts";
 
 /**
@@ -40,6 +41,7 @@ export interface WebUntisConnection {
    */
   readonly school: string | SchoolTarget;
   readonly credential: Credential;
+  readonly limits?: ConnectionLimits | undefined;
 }
 
 const pinnedSchool = Config.all({
@@ -68,20 +70,41 @@ export const WebUntisConnection = {
   }) satisfies Config.Config<WebUntisConnection>,
 };
 
+const isPositiveInteger = (value: number) => Number.isSafeInteger(value) && value > 0;
+
+/** Why a connection value cannot work, or `undefined` if it can. */
+const connectionProblem = ({ school, limits = {} }: WebUntisConnection): string | undefined => {
+  if (typeof school !== "string" && resolveBaseUrl(school) === undefined) {
+    return `serverUrl ${JSON.stringify(school.serverUrl)} is not an HTTP(S) URL or host`;
+  }
+  if (limits.concurrency !== undefined && !isPositiveInteger(limits.concurrency)) {
+    return `limits.concurrency must be a positive integer, got ${limits.concurrency}`;
+  }
+  if (limits.budget !== undefined) {
+    const window = Duration.fromInput(limits.budget.window);
+    if (!isPositiveInteger(limits.budget.requests)) {
+      return `limits.budget.requests must be a positive integer, got ${limits.budget.requests}`;
+    }
+    if (Option.isNone(window) || !Duration.isPositive(window.value)) {
+      return "limits.budget.window must be a positive duration";
+    }
+  }
+  return undefined;
+};
+
 /** The connection one client graph was built for. */
 export class Connection extends Context.Service<Connection, WebUntisConnection>()(
   "webuntis/internal/Connection",
 ) {
-  /** Rejects a pinned school whose server URL cannot address WebUntis. */
+  /** Rejects a connection that cannot work before anything talks to WebUntis. */
   static readonly layer = (connection: WebUntisConnection) =>
     Layer.effect(
       this,
-      typeof connection.school === "string" || resolveBaseUrl(connection.school) !== undefined
-        ? Effect.succeed(connection)
-        : Effect.fail(
-            new ConfigurationError({
-              message: `serverUrl ${JSON.stringify(connection.school.serverUrl)} is not an HTTP(S) URL or host`,
-            }),
-          ),
+      Effect.suspend(() => {
+        const problem = connectionProblem(connection);
+        return problem === undefined
+          ? Effect.succeed(connection)
+          : Effect.fail(new ConfigurationError({ message: problem }));
+      }),
     );
 }

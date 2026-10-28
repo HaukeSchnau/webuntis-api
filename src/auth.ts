@@ -1,14 +1,13 @@
 import { Context, Effect, Layer } from "effect";
-import type { AuthError, DecodeError, DiscoveryError, TransportError } from "./internal/errors.ts";
+import type { LoginError } from "./internal/errors.ts";
 import { MetadataState } from "./internal/metadata-state.ts";
 import { SessionState } from "./internal/session-state.ts";
 
 export interface AuthClientShape {
-  readonly ensureAuthenticated: Effect.Effect<
-    void,
-    DiscoveryError | AuthError | TransportError | DecodeError
-  >;
-  readonly refresh: Effect.Effect<void, DiscoveryError | AuthError | TransportError | DecodeError>;
+  readonly ensureAuthenticated: Effect.Effect<void, LoginError>;
+  /** Logs in again, also after WebUntis refused the credential. */
+  readonly refresh: Effect.Effect<void, LoginError>;
+  /** Forgets the session and any refused credential. */
   readonly clear: Effect.Effect<void>;
 }
 

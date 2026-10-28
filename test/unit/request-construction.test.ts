@@ -9,7 +9,7 @@ import { ProfileClient } from "../../src/domains/profile/index.ts";
 import { SchoolyearsClient } from "../../src/domains/schoolyears/index.ts";
 import { SessionClient } from "../../src/domains/session/index.ts";
 import { TimetableClient } from "../../src/domains/timetable/index.ts";
-import { TransportError } from "../../src/internal/errors.ts";
+import { UpstreamRejected } from "../../src/internal/errors.ts";
 import { RawViewApiClient } from "../../src/internal/raw-view-api.ts";
 import { withSchoolYear } from "../../src/internal/school-year-context.ts";
 import { jsonResponse, makeCoreTestLayer, makeJwt } from "./helpers.ts";
@@ -846,12 +846,13 @@ describe("request descriptors", () => {
     }).pipe(Effect.provide(makeRecorderLayer(observed)));
   });
 
-  it.effect("rejected requests carry the WebUntis response body in the error message", () =>
+  it.effect("rejected requests carry the WebUntis error code and response body", () =>
     Effect.gen(function* () {
       const raw = yield* RawViewApiClient;
       const error = yield* Effect.flip(raw.getJson("api/rest/view/v1/test/validation-error"));
 
-      expect(error).toBeInstanceOf(TransportError);
+      expect(error).toBeInstanceOf(UpstreamRejected);
+      expect(error).toMatchObject({ status: 400, errorCode: "VALIDATION_ERROR" });
       expect(error.message).toBe(
         'HTTP 400 for GET api/rest/view/v1/test/validation-error: {"errorCode":"VALIDATION_ERROR","errorMessage":"Exactly one resource required"}',
       );

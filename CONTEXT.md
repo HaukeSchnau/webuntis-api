@@ -13,6 +13,8 @@
 - **Metadata**: tenant and current-school-year headers derived from authenticated `app/data`.
 - **Request descriptor**: the single definition of an endpoint's method, path, input validation, query encoding, response schema, and auth policy.
 - **School-year scope**: fiber-local context that adds a historical school-year header without leaking between nested or concurrent reads.
+- **Refusal**: a non-2xx answer, classified once as permission denied, rate limited, rejected with a WebUntis `errorCode`, or an unexplained transport error.
+- **Limits**: a connection's optional concurrency cap and request budget.
 - **Drift check**: strict decoding used by contract tests and targeted raw live probes to reveal additive upstream changes.
 
 ## Architecture
@@ -32,6 +34,8 @@ Raw research routes remain internal. The public schema surface is exactly the un
 - Invalid caller input fails before transport.
 - Authentication is single-flight, session generations never go backwards, and stale 401s cannot clear newer state.
 - A request retries authentication at most once and resolves the same header policy on both attempts.
+- Only a 401 renews the session; a 403 never does.
+- A refused credential is not sent again until the caller explicitly refreshes or clears the session.
 - Runtime decoding accepts additive fields but rejects malformed known fields; strict contract tests and targeted raw live probes retain drift visibility.
 - Effect is a peer dependency so consumers and services share one runtime identity.
 - Connections share no state. A layer built for one connection never reuses another connection's session, even under the same memo map.
@@ -45,3 +49,4 @@ Raw research routes remain internal. The public schema surface is exactly the un
 - [ADR 0002: Runtime and drift decoding policies](docs/adr/0002-decoding-policy.md)
 - [ADR 0003: Descriptor-owned endpoint contracts](docs/adr/0003-request-descriptors.md)
 - [ADR 0004: Connections are values, each with its own runtime](docs/adr/0004-connections-from-values.md)
+- [ADR 0005: Typed refusals and per-connection limits](docs/adr/0005-typed-refusals-and-limits.md)

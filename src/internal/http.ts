@@ -1,6 +1,12 @@
-import { Context, Effect, Layer, type Schema } from "effect";
+import { Clock, Context, Effect, Layer, Schema } from "effect";
 import { HttpClientRequest, HttpClientResponse } from "effect/http";
-import { decodeError, errorMessage, TransportError, type WebUntisError } from "./errors.ts";
+import {
+  decodeError,
+  errorMessage,
+  responseError,
+  TransportError,
+  type WebUntisError,
+} from "./errors.ts";
 import { MetadataState } from "./metadata-state.ts";
 import {
   type HeaderParams,
@@ -117,22 +123,6 @@ const buildRequest = (
 const drainBody = (response: HttpClientResponse.HttpClientResponse) =>
   response.text.pipe(Effect.orElseSucceed(() => ""));
 
-const maxBodyExcerptLength = 500;
-
-/**
- * Appends a bounded, single-line body excerpt to error messages. WebUntis explains rejected
- * requests in the body (for example `VALIDATION_ERROR`), and logged causes only show the message.
- */
-const bodyExcerpt = (body: string) => {
-  const text = body.replace(/\s+/gu, " ").trim();
-  if (text === "") {
-    return "";
-  }
-  return text.length > maxBodyExcerptLength
-    ? `: ${text.slice(0, maxBodyExcerptLength)}…`
-    : `: ${text}`;
-};
-
 const failIfNonSuccess = (
   method: HttpMethod,
   path: string,
@@ -142,18 +132,8 @@ const failIfNonSuccess = (
     return Effect.succeed(response);
   }
 
-  return drainBody(response).pipe(
-    Effect.flatMap((body) =>
-      Effect.fail(
-        new TransportError({
-          method,
-          path,
-          status: response.status,
-          body,
-          message: `HTTP ${response.status} for ${method} ${path}${bodyExcerpt(body)}`,
-        }),
-      ),
-    ),
+  return Effect.all([drainBody(response), Clock.currentTimeMillis]).pipe(
+    Effect.flatMap(([body, now]) => Effect.fail(responseError(method, path, response, body, now))),
   );
 };
 
@@ -220,7 +200,9 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
           const state = yield* resolveState(policy);
           const initialResponse = yield* executeRequest(state, method, path, attemptOptions);
 
-          if (initialResponse.status !== 401 && initialResponse.status !== 403) {
+          // Only 401 means the session is gone. A 403 is a permission the
+          // account lacks, and logging in again would not change it.
+          if (initialResponse.status !== 401) {
             return yield* failIfNonSuccess(method, path, initialResponse);
           }
 
@@ -252,26 +234,24 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
       const request: WebUntisHttpShape["request"] = (descriptor, input) =>
         validateAndResolveRequest(descriptor, input).pipe(Effect.flatMap(executeResolved));
 
-      const requestJson: WebUntisHttpShape["requestJson"] = (descriptor, input) =>
-        validateAndResolveRequest(descriptor, input).pipe(
-          Effect.flatMap((resolved) =>
-            executeResolved(resolved).pipe(
-              Effect.flatMap((response) =>
-                response.json.pipe(Effect.mapError((error) => decodeError(resolved.path, error))),
-              ),
-            ),
+      const executeJson = (resolved: ResolvedRequestDescriptor) =>
+        executeResolved(resolved).pipe(
+          Effect.flatMap((response) =>
+            response.json.pipe(Effect.mapError((error) => decodeError(resolved.path, error))),
           ),
         );
+
+      const requestJson: WebUntisHttpShape["requestJson"] = (descriptor, input) =>
+        validateAndResolveRequest(descriptor, input).pipe(Effect.flatMap(executeJson));
 
       const requestSchema: WebUntisHttpShape["requestSchema"] = (descriptor, input) =>
         validateAndResolveRequest(descriptor, input).pipe(
           Effect.flatMap((resolved) =>
-            executeResolved(resolved).pipe(
-              Effect.flatMap(
-                HttpClientResponse.schemaBodyJson(descriptor.schema, runtimeJsonParseOptions),
-              ),
-              Effect.mapError((error) =>
-                error instanceof TransportError ? error : decodeError(resolved.path, error),
+            executeJson(resolved).pipe(
+              Effect.flatMap((json) =>
+                Schema.decodeUnknownEffect(descriptor.schema)(json, runtimeJsonParseOptions).pipe(
+                  Effect.mapError((error) => decodeError(resolved.path, error)),
+                ),
               ),
             ),
           ),

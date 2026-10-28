@@ -1,17 +1,17 @@
 import { Clock, Context, Effect, Layer, Redacted, Ref, Schema, SynchronizedRef } from "effect";
 import { Cookies, FetchHttpClient, HttpClient, HttpClientRequest } from "effect/http";
+import { RateLimiter } from "effect/persistence";
 import { Connection, type Credential } from "./connection.ts";
 import {
   AuthError,
-  type DecodeError,
-  type DiscoveryError,
   httpClientErrorToTransportError,
-  type TransportError,
+  InvalidCredentials,
+  type LoginError,
 } from "./errors.ts";
 import { SchoolResolver } from "./school-resolver.ts";
 import type { AuthenticatedState, SessionCache } from "./state.ts";
 import { emptySessionState, hasFreshToken, tokenFallbackValidityMs } from "./state.ts";
-import { withTransientRetries } from "./transport.ts";
+import { makeConnectionClient } from "./transport.ts";
 
 /** Only the claim we need; anything else in the payload is irrelevant here. */
 const JwtPayloadSchema = Schema.Struct({
@@ -60,16 +60,14 @@ const loginForm = (loginName: string, credential: Credential) => {
   }
 };
 
+/** What a login attempt yields to its caller, and the session state it leaves behind. */
+type LoginAttempt = readonly [Effect.Effect<AuthenticatedState, InvalidCredentials>, SessionCache];
+
 export interface SessionStateShape {
+  /** The caller's client with this connection's limits, retries, and cookie jar applied. */
   readonly client: HttpClient.HttpClient;
-  readonly ensureAuthenticated: Effect.Effect<
-    AuthenticatedState,
-    DiscoveryError | AuthError | TransportError | DecodeError
-  >;
-  readonly refreshSession: Effect.Effect<
-    AuthenticatedState,
-    DiscoveryError | AuthError | TransportError | DecodeError
-  >;
+  readonly ensureAuthenticated: Effect.Effect<AuthenticatedState, LoginError>;
+  readonly refreshSession: Effect.Effect<AuthenticatedState, LoginError>;
   readonly invalidate: (expectedGeneration: number) => Effect.Effect<boolean>;
   readonly clear: Effect.Effect<void>;
 }
@@ -81,11 +79,14 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
     this,
     Effect.gen(function* () {
       const baseClient = yield* HttpClient.HttpClient;
-      const { credential } = yield* Connection;
+      const { credential, limits } = yield* Connection;
+      const limiter = yield* RateLimiter.RateLimiter;
       const schoolResolver = yield* SchoolResolver;
       const cookiesRef = yield* Ref.make(Cookies.empty);
       const stateRef = yield* SynchronizedRef.make<SessionCache>(emptySessionState());
-      const client = baseClient.pipe(withTransientRetries, HttpClient.withCookiesRef(cookiesRef));
+      const client = (yield* makeConnectionClient(baseClient, limiter, limits)).pipe(
+        HttpClient.withCookiesRef(cookiesRef),
+      );
 
       const refreshSessionState = (previous: SessionCache) =>
         Effect.gen(function* () {
@@ -168,6 +169,20 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
               ),
             );
 
+          // A rejected password still gets a 302 from the login form; only the
+          // token endpoint tells, by redirecting to the anonymous start page.
+          const rejected = new InvalidCredentials({
+            school: school.loginName,
+            message: `WebUntis rejected the credential for ${credential.username} at ${school.loginName}`,
+          });
+
+          if (
+            (tokenResponse.status >= 300 && tokenResponse.status < 400) ||
+            tokenResponse.status === 401
+          ) {
+            return yield* rejected;
+          }
+
           if (tokenResponse.status < 200 || tokenResponse.status >= 300) {
             return yield* new AuthError({
               stage: "token",
@@ -183,10 +198,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
           )).trim();
 
           if (tokenString.length === 0 || loginResponseLooksLikeHtml(tokenString)) {
-            return yield* new AuthError({
-              stage: "token",
-              message: "Token minting redirected to anonymous WebUntis HTML",
-            });
+            return yield* rejected;
           }
 
           const now = yield* Clock.currentTimeMillis;
@@ -200,25 +212,39 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
           } satisfies AuthenticatedState;
         });
 
-      const ensureAuthenticated = SynchronizedRef.modifyEffect(stateRef, (state) =>
-        Clock.currentTimeMillis.pipe(
-          Effect.flatMap((now) =>
-            hasFreshToken(state, now)
-              ? Effect.succeed([state, state] as const)
-              : refreshSessionState(state).pipe(
-                  Effect.map((nextState) => [nextState, nextState] as const),
-                ),
+      /** Logs in and records a refused credential so later calls fail without asking WebUntis. */
+      const login = (state: SessionCache): Effect.Effect<LoginAttempt, LoginError> =>
+        refreshSessionState(state).pipe(
+          Effect.map((next): LoginAttempt => [Effect.succeed(next), next]),
+          Effect.catchTag("InvalidCredentials", (error): Effect.Effect<LoginAttempt> =>
+            Effect.succeed([
+              Effect.fail(error),
+              { ...emptySessionState(state.generation), rejected: error },
+            ]),
           ),
-        ),
-      );
+        );
 
-      const refreshSession = SynchronizedRef.modifyEffect(stateRef, (state) =>
-        refreshSessionState(state).pipe(Effect.map((nextState) => [nextState, nextState] as const)),
-      );
+      const ensureAuthenticated = SynchronizedRef.modifyEffect(
+        stateRef,
+        (state): Effect.Effect<LoginAttempt, LoginError> =>
+          Clock.currentTimeMillis.pipe(
+            Effect.flatMap((now) => {
+              if (state.rejected !== undefined) {
+                return Effect.succeed<LoginAttempt>([Effect.fail(state.rejected), state]);
+              }
+              return hasFreshToken(state, now)
+                ? Effect.succeed<LoginAttempt>([Effect.succeed(state), state])
+                : login(state);
+            }),
+          ),
+      ).pipe(Effect.flatten);
+
+      const refreshSession = SynchronizedRef.modifyEffect(stateRef, login).pipe(Effect.flatten);
 
       const invalidate = (expectedGeneration: number) =>
         SynchronizedRef.modifyEffect(stateRef, (state) => {
-          if (state.generation !== expectedGeneration) {
+          // A refused credential stays refused; a stale 401 must not reopen it.
+          if (state.generation !== expectedGeneration || state.rejected !== undefined) {
             return Effect.succeed([false, state] as const);
           }
 
