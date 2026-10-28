@@ -1,5 +1,5 @@
 import { Schema } from "effect";
-import * as HttpClientError from "effect/unstable/http/HttpClientError";
+import { HttpClientError } from "effect/http";
 
 export class DiscoveryError extends Schema.TaggedError<DiscoveryError>()("DiscoveryError", {
   query: Schema.String,

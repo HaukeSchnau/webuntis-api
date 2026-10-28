@@ -1,6 +1,6 @@
 # webuntis-api
 
-Headless WebUntis client built on the Effect v4 beta ecosystem.
+Headless WebUntis client built on Effect 4.
 
 This package models the modern WebUntis REST surface as explicit `Context.Service` services. You can consume the aggregate `WebUntisClient`, or depend on focused domain services such as `AppClient`, `MessagesClient`, `SchoolyearsClient`, or `TimetableClient`.
 

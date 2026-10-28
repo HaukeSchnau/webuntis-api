@@ -2,13 +2,13 @@
   "name": "@schnau/webuntis-api",
   "version": "0.3.0",
   "description": "Read-only Effect client for WebUntis APIs.",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/HaukeSchnau/webuntis-api.git"
-  },
   "homepage": "https://git.schnau.dev/schnau/webuntis-api",
   "bugs": {
     "url": "https://git.schnau.dev/schnau/webuntis-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HaukeSchnau/webuntis-api.git"
   },
   "files": [
     "dist",
@@ -45,18 +45,18 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
-    "@effect/tsgo": "^0.36.4",
-    "@effect/vitest": "^4.0.0-rc.108",
-    "@types/node": "^26.2.0",
-    "effect": "^4.0.0-rc.108",
-    "publint": "^0.3.23",
+    "@effect/tsgo": "^0.63.0",
+    "@effect/vitest": "^4.0.7",
+    "@types/node": "^26.6.5",
+    "effect": "^4.0.7",
+    "publint": "^0.3.25",
     "typescript": "^7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "effect": "4.0.0-rc.108"
+    "effect": "^4.0.0"
   },
   "engines": {
     "node": ">=22.12.0"

@@ -1,7 +1,5 @@
 import { Clock, Context, Effect, Layer, Schema } from "effect";
-import * as HttpClient from "effect/unstable/http/HttpClient";
-import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
-import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
+import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/http";
 import { ClientConfig } from "./config.ts";
 import {
   type DecodeError,

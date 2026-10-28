@@ -1,6 +1,5 @@
 import { Effect, Layer, Schedule } from "effect";
-import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
-import * as HttpClient from "effect/unstable/http/HttpClient";
+import { FetchHttpClient, HttpClient } from "effect/http";
 import type { ClientConfig } from "./config.ts";
 import { SchoolDiscovery } from "./discovery.ts";
 import { WebUntisHttp } from "./http.ts";

@@ -30,7 +30,7 @@ export interface LiveEnvInput {
 }
 
 const optionalString = (name: string) =>
-  Config.option(Config.string(name)).pipe(
+  Config.option(Config.String(name)).pipe(
     Config.map((value) => (Option.isSome(value) ? value.value : undefined)),
   );
 
@@ -60,13 +60,13 @@ export class ClientConfig extends Context.Service<ClientConfig, WebUntisClientCo
   "webuntis/internal/ClientConfig",
 ) {
   static readonly config = Config.unwrap({
-    schoolName: Config.string("WEBUNTIS_SCHOOL_NAME"),
+    schoolName: Config.String("WEBUNTIS_SCHOOL_NAME"),
     schoolLoginName: optionalString("WEBUNTIS_SCHOOL_LOGIN_NAME"),
     server: optionalString("WEBUNTIS_SERVER"),
     serverUrl: optionalString("WEBUNTIS_SERVER_URL"),
     tenantId: optionalString("WEBUNTIS_TENANT_ID"),
-    username: Config.string("WEBUNTIS_USERNAME"),
-    password: Config.redacted("WEBUNTIS_PASSWORD"),
+    username: Config.String("WEBUNTIS_USERNAME"),
+    password: Config.Redacted("WEBUNTIS_PASSWORD"),
     discoveryEndpoint: optionalString("WEBUNTIS_DISCOVERY_ENDPOINT"),
   }) satisfies Config.Config<WebUntisClientConfig>;
 

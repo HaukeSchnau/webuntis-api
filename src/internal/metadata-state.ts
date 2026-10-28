@@ -1,6 +1,5 @@
 import { Context, Effect, Layer, Schema, SynchronizedRef } from "effect";
-import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
-import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
+import { HttpClientRequest, HttpClientResponse } from "effect/http";
 import {
   AuthError,
   type DecodeError,

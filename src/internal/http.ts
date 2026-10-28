@@ -1,6 +1,5 @@
 import { Context, Effect, Layer, type Schema } from "effect";
-import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
-import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
+import { HttpClientRequest, HttpClientResponse } from "effect/http";
 import { decodeError, errorMessage, TransportError, type WebUntisError } from "./errors.ts";
 import { MetadataState } from "./metadata-state.ts";
 import {

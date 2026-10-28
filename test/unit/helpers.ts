@@ -1,8 +1,10 @@
 import { Effect, Layer, Redacted, type Schema } from "effect";
-import * as HttpClient from "effect/unstable/http/HttpClient";
-import * as HttpClientError from "effect/unstable/http/HttpClientError";
-import type * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
-import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
+import {
+  HttpClient,
+  HttpClientError,
+  type HttpClientRequest,
+  HttpClientResponse,
+} from "effect/http";
 import { makeWebUntisResearchLayer } from "../../src/client.ts";
 import type { ClientConfig } from "../../src/internal/config.ts";
 import type { WebUntisError } from "../../src/internal/errors.ts";

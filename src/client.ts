@@ -1,5 +1,5 @@
 import { Context, Effect, Layer } from "effect";
-import type * as HttpClient from "effect/unstable/http/HttpClient";
+import type { HttpClient } from "effect/http";
 import { AuthClient } from "./auth.ts";
 import { AppClient } from "./domains/app/index.ts";
 import { ClassregClient } from "./domains/classreg/index.ts";

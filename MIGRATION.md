@@ -1,5 +1,13 @@
 # Migration Guide
 
+## 0.4.0
+
+### Effect 4
+
+The package runs on stable Effect 4. The `effect` peer range is `^4.0.0`, so any Effect 4.x
+release satisfies it. Effect 4.0.0 moved the HTTP modules from `effect/unstable/http` to
+`effect/http`; if your own code imports them, update those imports together with this package.
+
 ## 0.3.0
 
 `TimetableClient.getEntries` takes one `resource` ID instead of a `resources` array. Since

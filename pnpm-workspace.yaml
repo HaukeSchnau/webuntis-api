@@ -1,29 +1,19 @@
 minimumReleaseAgeExclude:
   # Intentionally pinned fresh releases that are required for this upgrade.
-  - "@effect/tsgo-darwin-arm64@0.36.4"
-  - "@effect/tsgo-darwin-x64@0.36.4"
-  - "@effect/tsgo-linux-arm64@0.36.4"
-  - "@effect/tsgo-linux-arm@0.36.4"
-  - "@effect/tsgo-linux-x64@0.36.4"
-  - "@effect/tsgo-win32-arm64@0.36.4"
-  - "@effect/tsgo-win32-x64@0.36.4"
-  - "@effect/tsgo@0.36.4"
-  - "@effect/vitest@4.0.0-rc.108"
-  - "@voidzero-dev/vite-plus-core@0.2.9"
-  - "@voidzero-dev/vite-plus-darwin-arm64@0.2.9"
-  - "@voidzero-dev/vite-plus-darwin-x64@0.2.9"
-  - "@voidzero-dev/vite-plus-linux-arm64-gnu@0.2.9"
-  - "@voidzero-dev/vite-plus-linux-arm64-musl@0.2.9"
-  - "@voidzero-dev/vite-plus-linux-x64-gnu@0.2.9"
-  - "@voidzero-dev/vite-plus-linux-x64-musl@0.2.9"
-  - "@voidzero-dev/vite-plus-win32-arm64-msvc@0.2.9"
-  - "@voidzero-dev/vite-plus-win32-x64-msvc@0.2.9"
-  - "effect@4.0.0-rc.108"
-  - "vite-plus@0.2.9"
+  - "@effect/tsgo@0.63.0"
+  - "@effect/tsgo-darwin-arm64@0.63.0"
+  - "@effect/tsgo-darwin-x64@0.63.0"
+  - "@effect/tsgo-linux-arm64@0.63.0"
+  - "@effect/tsgo-linux-arm@0.63.0"
+  - "@effect/tsgo-linux-x64@0.63.0"
+  - "@effect/tsgo-win32-arm64@0.63.0"
+  - "@effect/tsgo-win32-x64@0.63.0"
+  - "@effect/vitest@4.0.7"
+  - "effect@4.0.7"
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@0.2.9
-  vitest: 4.1.10
-  vite-plus: 0.2.9
+  vite: npm:@voidzero-dev/vite-plus-core@1.4.0
+  vitest: 5.0.5
+  vite-plus: 1.4.0
 overrides:
   vite: "catalog:"
   vitest: "catalog:"

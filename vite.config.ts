@@ -10,7 +10,7 @@ export default defineConfig({
     platform: "node",
     target: "node22",
     dts: {
-      tsgo: true,
+      generator: "tsgo",
       sourcemap: true,
     },
     sourcemap: true,

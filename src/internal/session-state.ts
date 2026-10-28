@@ -1,8 +1,5 @@
 import { Clock, Context, Effect, Layer, Redacted, Ref, Schema, SynchronizedRef } from "effect";
-import * as Cookies from "effect/unstable/http/Cookies";
-import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
-import * as HttpClient from "effect/unstable/http/HttpClient";
-import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
+import { Cookies, FetchHttpClient, HttpClient, HttpClientRequest } from "effect/http";
 import { ClientConfig } from "./config.ts";
 import {
   AuthError,

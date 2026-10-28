@@ -88,7 +88,10 @@ const makeRecorderLayer = (
       method: request.method,
       url,
       query: Object.fromEntries(
-        Array.from(request.urlParams, ([key, value]) => [key, String(value)]),
+        Array.from(request.urlParams, ([key, value]) => [
+          key,
+          typeof value === "string" ? value : "<redacted>",
+        ]),
       ),
       headers: request.headers,
       body: decodeBody(request.body),
