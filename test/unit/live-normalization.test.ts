@@ -27,7 +27,7 @@ describe("live snapshot normalization", () => {
       items: [
         {
           id: 3,
-          name: "Staff",
+          name: "<text>",
           personCount: "<dynamic-count>",
           deletable: false,
           editable: false,
@@ -75,6 +75,24 @@ describe("live snapshot normalization", () => {
       updatedAt: "<dynamic-datetime>",
       validOn: "<dynamic-date>",
       wuVersion: "<dynamic-version>",
+    });
+  });
+
+  it("redacts names and other free text in any field outside the vocabulary", () => {
+    expect(
+      normalizeSnapshotValue({
+        displayName: "Erika Mustermann",
+        shortName: "MUS",
+        students: [{ longName: "Max Muster", type: "STUDENT" }],
+        tags: ["Klausur Mathe"],
+        remark: "",
+      }),
+    ).toEqual({
+      displayName: "<text>",
+      shortName: "<text>",
+      students: [{ longName: "<text>", type: "STUDENT" }],
+      tags: ["<text>"],
+      remark: "",
     });
   });
 

@@ -454,6 +454,7 @@ sops decrypt secrets/webuntis-live.env
 - Stable business routes belong on public domain services.
 - Reverse-engineering probes stay internal so the exported package surface remains coherent.
 - Snapshot churn in the live suite is treated as evidence of upstream change, not as noise to suppress.
+- Live snapshots keep structure, numbers, enums and API paths. Every other string becomes `<text>`, because WebUntis returns real names of students and teachers and the snapshots are public. A field earns readable values only by joining the vocabulary in `test/live/support.ts`.
 - Request types are derived from the schemas that validate them, so a caller-facing type and its runtime check cannot describe different shapes.
 - Entity identifiers decode as integers rather than as arbitrary finite numbers.
 - Runtime decoding accepts additive upstream fields while still rejecting missing or malformed known fields. Contract tests and targeted raw live probes apply strict excess-property decoding so additions remain visible to maintainers without breaking consumers. Public-client live snapshots exercise real endpoint behavior but cannot observe fields intentionally stripped by runtime decoding.

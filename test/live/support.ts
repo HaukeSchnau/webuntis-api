@@ -67,7 +67,28 @@ const stableVocabularyKeys = new Set([
   "views",
 ]);
 
+// These snapshots are committed to a public repository, and WebUntis puts real
+// names of students and teachers into fields such as displayName. So every string
+// outside the vocabulary above becomes "<text>", including fields added later.
+const placeholders = new Set([
+  "<dynamic-count>",
+  "<dynamic-date>",
+  "<dynamic-datetime>",
+  "<dynamic-id>",
+  "<dynamic-version>",
+  "<personal-email>",
+  "<personal-id>",
+  "<personal-name>",
+  "<personal-username>",
+  "<representative-items>",
+  "<secret>",
+  "<text>",
+]);
+
 function normalizeString(value: string, parentKey?: string): string {
+  if (value === "" || placeholders.has(value)) {
+    return value;
+  }
   if (/^\d{4}-\d{2}-\d{2}T[^"]*$/u.test(value)) {
     return "<dynamic-datetime>";
   }
@@ -83,7 +104,7 @@ function normalizeString(value: string, parentKey?: string): string {
   if (parentKey !== undefined && stableVocabularyKeys.has(parentKey)) {
     return value;
   }
-  return value.replace(/[A-Z][A-ZÄÖÜ-]{1,}/gu, "<personal-label>");
+  return "<text>";
 }
 
 export function normalizeSnapshotValue(value: unknown, parentKey?: string): unknown {
@@ -162,7 +183,12 @@ export const normalizeDashboardCardsDetail = (value: DashboardCardsDetail) =>
   normalizeUnknown(value);
 export const normalizeDashboardCardsStatus = (value: DashboardCardsStatus) =>
   normalizeUnknown(value);
-export const normalizeExamDetail = (value: ExamDetail) => normalizeUnknown(value);
+// A student's id sits next to flags such as disadvantageCompensation.
+export const normalizeExamDetail = (value: ExamDetail) =>
+  normalizeUnknown({
+    ...value,
+    students: value.students.map((student) => ({ ...student, id: "<personal-id>" })),
+  });
 export const normalizeExamFilter = (value: ExamFilter) =>
   normalizeUnknown({
     classes: normalizeCollection(value.classes),

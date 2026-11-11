@@ -1,0 +1,4695 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 1`] = `
+{
+  "body": {
+    "errorCode": "INTERNAL_ERROR",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/messages-of-the-day",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 2`] = `
+{
+  "body": {
+    "errorCode": "FORBIDDEN",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/messages/recipients/static/teachers",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 3`] = `
+{
+  "body": {
+    "errorCode": "INTERNAL_ERROR",
+    "errorMessage": "",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/messages/recipients/static/users",
+  "status": 500,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 4`] = `
+{
+  "body": {
+    "errorCode": "FORBIDDEN",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/messages/recipients/static/persons",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 5`] = `
+{
+  "body": {
+    "errorCode": "INTERNAL_ERROR",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/messages-of-the-day/form",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 6`] = `
+{
+  "body": {
+    "errorCode": "FORBIDDEN",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/rooms",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 7`] = `
+{
+  "body": {
+    "errorCode": "FORBIDDEN",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/rooms/{id}",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 8`] = `
+{
+  "body": {
+    "errorCode": "FORBIDDEN",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/buildings",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 9`] = `
+{
+  "body": {
+    "errorCode": "FORBIDDEN",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/teachers",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 10`] = `
+{
+  "body": {
+    "errorCode": "FORBIDDEN",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/teachers/{id}",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 11`] = `
+{
+  "body": {
+    "errorCode": "FORBIDDEN",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/subjects",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current blocked or unstable read-only endpoints 12`] = `
+{
+  "body": {
+    "errorCode": "FORBIDDEN",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/subjects/{id}",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current home and mobile version behavior 1`] = `
+{
+  "integrationsSection": [],
+  "isEmailUpdateRequired": false,
+  "schoolName": "<text>",
+  "sections": [
+    {
+      "cells": [
+        {
+          "badge": null,
+          "type": "MY_EVENTS",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current home and mobile version behavior 2`] = `
+{
+  "integrationsSection": [],
+  "isEmailUpdateRequired": false,
+  "schoolName": "<text>",
+  "sections": [
+    {
+      "cells": [
+        {
+          "badge": null,
+          "type": "MY_EVENTS",
+        },
+        {
+          "badge": null,
+          "type": "STUDENT_ABSENCES_ADMINISTRATION",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current home and mobile version behavior 3`] = `
+{
+  "schoolYear": null,
+  "tenant": {
+    "displayName": "<text>",
+    "id": "<text>",
+    "language": "",
+    "wuVersion": "<dynamic-version>",
+  },
+  "user": {
+    "departmentId": 0,
+    "id": 3711,
+    "locale": "<text>",
+    "permissions": [
+      "<text>",
+      "<text>",
+      "<text>",
+    ],
+    "person": null,
+    "referencedStudents": [],
+    "role": "STAFF",
+    "username": "<personal-username>",
+  },
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current home and mobile version behavior 4`] = `
+{
+  "schoolYear": null,
+  "tenant": {
+    "displayName": "<text>",
+    "id": "<text>",
+    "language": "",
+    "wuVersion": "<dynamic-version>",
+  },
+  "user": {
+    "departmentId": 0,
+    "id": 3711,
+    "locale": "<text>",
+    "permissions": [
+      "<text>",
+      "<text>",
+      "<text>",
+    ],
+    "person": null,
+    "referencedStudents": [],
+    "role": "STAFF",
+    "username": "<personal-username>",
+  },
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current home and mobile version behavior 5`] = `
+{
+  "schoolYear": null,
+  "tenant": {
+    "displayName": "<text>",
+    "id": "<text>",
+    "language": "",
+    "schoolLoginName": "<text>",
+    "wuVersion": "<dynamic-version>",
+  },
+  "user": {
+    "departmentId": 0,
+    "id": 3711,
+    "locale": "<text>",
+    "permissions": [
+      "<text>",
+      "<text>",
+      "<text>",
+    ],
+    "person": null,
+    "referencedStudents": [],
+    "role": "STAFF",
+    "username": "<personal-username>",
+  },
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current home and mobile version behavior 6`] = `
+{
+  "schoolYear": null,
+  "tenant": {
+    "displayName": "<text>",
+    "id": "<text>",
+    "language": "",
+    "schoolLoginName": "<text>",
+    "wuVersion": "<dynamic-version>",
+  },
+  "user": {
+    "departmentId": 0,
+    "id": 3711,
+    "locale": "<text>",
+    "permissions": [
+      "<text>",
+      "<text>",
+      "<text>",
+    ],
+    "person": null,
+    "referencedStudents": [],
+    "role": "STAFF",
+    "username": "<personal-username>",
+  },
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current startup v1 and v2 parity 1`] = `
+{
+  "startupActions": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current startup v1 and v2 parity 2`] = `
+{
+  "startupActions": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current timetable utility/settings access behavior 1`] = `
+{
+  "body": {
+    "errorCode": "FORBIDDEN",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/timetable/settings/format/list",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current timetable utility/settings access behavior 2`] = `
+{
+  "body": {
+    "errorCode": "FORBIDDEN",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/timetable/settings/general",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current timetable utility/settings access behavior 3`] = `
+{
+  "body": {
+    "errorCode": "FORBIDDEN",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/timetable/settings/visibilityRestriction",
+  "status": 403,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current upstream profile summary/admin failures 1`] = `
+{
+  "body": {
+    "errorCode": "INTERNAL_ERROR",
+    "errorMessage": "<text>",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/profile",
+  "status": 500,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > documents current upstream profile summary/admin failures 2`] = `
+{
+  "body": {
+    "errorCode": "INTERNAL_ERROR",
+    "errorMessage": "",
+    "requestId": "<dynamic-id>",
+    "traceId": "<dynamic-id>",
+  },
+  "path": "api/rest/view/v1/profile/admin/details",
+  "status": 500,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 1`] = `
+{
+  "calendar": null,
+  "greetingName": "<personal-name>",
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 2`] = `
+{
+  "dashboardCards": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 3`] = `
+{
+  "dashboardCardsDetails": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 4`] = `
+{
+  "unreadCardsCount": 0,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 5`] = `
+[
+  {
+    "icon": "<text>",
+    "id": 7,
+    "logoutUrl": null,
+    "name": "<text>",
+    "openInNewTab": true,
+    "redirectUrl": "<text>",
+  },
+]
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 6`] = `[]`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 7`] = `
+{
+  "playgroundUrl": null,
+  "sleekplanToken": "<secret>",
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional app bootstrap endpoints 8`] = `
+{
+  "step": "<text>",
+  "time": "<dynamic-datetime>",
+  "type": "TIMETABLE",
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional timetable overview endpoints 1`] = `
+{
+  "schoolyearId": -1,
+  "units": [
+    {
+      "endTime": 850,
+      "startTime": 800,
+      "unitOfDay": 1,
+    },
+    {
+      "endTime": 945,
+      "startTime": 855,
+      "unitOfDay": 2,
+    },
+    {
+      "endTime": 1050,
+      "startTime": 1000,
+      "unitOfDay": 3,
+    },
+    {
+      "endTime": 1145,
+      "startTime": 1055,
+      "unitOfDay": 4,
+    },
+    {
+      "endTime": 1240,
+      "startTime": 1150,
+      "unitOfDay": 5,
+    },
+    {
+      "endTime": 1335,
+      "startTime": 1245,
+      "unitOfDay": 6,
+    },
+    {
+      "endTime": 1430,
+      "startTime": 1340,
+      "unitOfDay": 7,
+    },
+    {
+      "endTime": 1525,
+      "startTime": 1435,
+      "unitOfDay": 8,
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional timetable overview endpoints 2`] = `
+{
+  "days": [
+    {
+      "day": "<dynamic-date>",
+      "resources": [
+        {
+          "cells": [
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+          ],
+          "resource": {
+            "displayName": "",
+            "id": 557,
+            "longName": "<text>",
+            "shortName": "<text>",
+          },
+          "status": "<text>",
+        },
+      ],
+    },
+    {
+      "day": "<dynamic-date>",
+      "resources": [
+        {
+          "cells": [
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+          ],
+          "resource": {
+            "displayName": "",
+            "id": 557,
+            "longName": "<text>",
+            "shortName": "<text>",
+          },
+          "status": "<text>",
+        },
+      ],
+    },
+    {
+      "day": "<dynamic-date>",
+      "resources": [
+        {
+          "cells": [
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+          ],
+          "resource": {
+            "displayName": "",
+            "id": 557,
+            "longName": "<text>",
+            "shortName": "<text>",
+          },
+          "status": "<text>",
+        },
+      ],
+    },
+    {
+      "day": "<dynamic-date>",
+      "resources": [
+        {
+          "cells": [
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+          ],
+          "resource": {
+            "displayName": "",
+            "id": 557,
+            "longName": "<text>",
+            "shortName": "<text>",
+          },
+          "status": "<text>",
+        },
+      ],
+    },
+    {
+      "day": "<dynamic-date>",
+      "resources": [
+        {
+          "cells": [
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+            {
+              "backEntries": [],
+              "gridEntries": [],
+            },
+          ],
+          "resource": {
+            "displayName": "",
+            "id": 557,
+            "longName": "<text>",
+            "shortName": "<text>",
+          },
+          "status": "<text>",
+        },
+      ],
+    },
+  ],
+  "slots": [
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "name": "<text>",
+      "number": 1,
+    },
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "name": "<text>",
+      "number": 2,
+    },
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "name": "<text>",
+      "number": 3,
+    },
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "name": "<text>",
+      "number": 4,
+    },
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "name": "<text>",
+      "number": 5,
+    },
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "name": "<text>",
+      "number": 6,
+    },
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "name": "<text>",
+      "number": 7,
+    },
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "name": "<text>",
+      "number": 8,
+    },
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "name": "<text>",
+      "number": 9,
+    },
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "name": "<text>",
+      "number": 10,
+    },
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "name": "<text>",
+      "number": 11,
+    },
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "name": "",
+      "number": 12,
+    },
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "name": "",
+      "number": 13,
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads additional timetable overview endpoints 3`] = `[]`;
+
+exports[`live WebUntis integration > with live layer > reads classreg meta and homework endpoints 1`] = `
+{
+  "assignmentGroups": [],
+  "canEditReason": true,
+  "classes": [
+    {
+      "id": 470,
+      "name": "<text>",
+    },
+    {
+      "id": 473,
+      "name": "<text>",
+    },
+    {
+      "id": 476,
+      "name": "<text>",
+    },
+    {
+      "id": 479,
+      "name": "<text>",
+    },
+    {
+      "id": 482,
+      "name": "<text>",
+    },
+    {
+      "id": 485,
+      "name": "<text>",
+    },
+    {
+      "id": 488,
+      "name": "<text>",
+    },
+    {
+      "id": 491,
+      "name": "<text>",
+    },
+    {
+      "id": 494,
+      "name": "<text>",
+    },
+    {
+      "id": 497,
+      "name": "<text>",
+    },
+    {
+      "id": 503,
+      "name": "<text>",
+    },
+    {
+      "id": 500,
+      "name": "<text>",
+    },
+    {
+      "id": 374,
+      "name": "<text>",
+    },
+    {
+      "id": 377,
+      "name": "<text>",
+    },
+    {
+      "id": 380,
+      "name": "<text>",
+    },
+    {
+      "id": 383,
+      "name": "<text>",
+    },
+    {
+      "id": 386,
+      "name": "<text>",
+    },
+    {
+      "id": 389,
+      "name": "<text>",
+    },
+    {
+      "id": 392,
+      "name": "<text>",
+    },
+    {
+      "id": 395,
+      "name": "<text>",
+    },
+    {
+      "id": 398,
+      "name": "<text>",
+    },
+    {
+      "id": 401,
+      "name": "<text>",
+    },
+    {
+      "id": 404,
+      "name": "<text>",
+    },
+    {
+      "id": 407,
+      "name": "<text>",
+    },
+    {
+      "id": 410,
+      "name": "<text>",
+    },
+    {
+      "id": 413,
+      "name": "<text>",
+    },
+    {
+      "id": 416,
+      "name": "<text>",
+    },
+    {
+      "id": 419,
+      "name": "<text>",
+    },
+    {
+      "id": 422,
+      "name": "<text>",
+    },
+    {
+      "id": 425,
+      "name": "<text>",
+    },
+    {
+      "id": 428,
+      "name": "<text>",
+    },
+    {
+      "id": 431,
+      "name": "<text>",
+    },
+    {
+      "id": 434,
+      "name": "<text>",
+    },
+    {
+      "id": 437,
+      "name": "<text>",
+    },
+    {
+      "id": 440,
+      "name": "<text>",
+    },
+    {
+      "id": 443,
+      "name": "<text>",
+    },
+    {
+      "id": 446,
+      "name": "<text>",
+    },
+    {
+      "id": 449,
+      "name": "<text>",
+    },
+    {
+      "id": 452,
+      "name": "<text>",
+    },
+    {
+      "id": 455,
+      "name": "<text>",
+    },
+    {
+      "id": 458,
+      "name": "<text>",
+    },
+    {
+      "id": 461,
+      "name": "<text>",
+    },
+    {
+      "id": 464,
+      "name": "<text>",
+    },
+    {
+      "id": 467,
+      "name": "<text>",
+    },
+  ],
+  "defaultExcuseStatusId": null,
+  "defaultReasonId": 41,
+  "excuseStatuses": [
+    {
+      "id": 0,
+      "name": "",
+      "type": "OPEN",
+    },
+    {
+      "id": 3,
+      "name": "<text>",
+      "type": "EXCUSED",
+    },
+    {
+      "id": 1,
+      "name": "<text>",
+      "type": "EXCUSED",
+    },
+    {
+      "id": 2,
+      "name": "<text>",
+      "type": "NOT_EXCUSED",
+    },
+  ],
+  "filterIsActiveForMissingAbsenceParentNotification": false,
+  "reasons": [
+    {
+      "automaticNotificationEnabled": false,
+      "id": 45,
+      "name": "<text>",
+    },
+    {
+      "automaticNotificationEnabled": false,
+      "id": 41,
+      "name": "<text>",
+    },
+    {
+      "automaticNotificationEnabled": false,
+      "id": 40,
+      "name": "<text>",
+    },
+    {
+      "automaticNotificationEnabled": false,
+      "id": 46,
+      "name": "<text>",
+    },
+    {
+      "automaticNotificationEnabled": false,
+      "id": 42,
+      "name": "<text>",
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads classreg meta and homework endpoints 2`] = `
+{
+  "classes": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "id": 374,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+      {
+        "id": 377,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+      {
+        "id": 380,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+      {
+        "id": 383,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+      {
+        "id": 386,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+  "schoolYears": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "dateRange": {
+          "end": "<dynamic-date>",
+          "start": "<dynamic-date>",
+        },
+        "id": 4,
+        "name": "<text>",
+        "parentId": 0,
+      },
+      {
+        "dateRange": {
+          "end": "<dynamic-date>",
+          "start": "<dynamic-date>",
+        },
+        "id": 6,
+        "name": "<text>",
+        "parentId": 0,
+      },
+      {
+        "dateRange": {
+          "end": "<dynamic-date>",
+          "start": "<dynamic-date>",
+        },
+        "id": 7,
+        "name": "<text>",
+        "parentId": 0,
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+  "subjects": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "id": 14,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+      {
+        "id": 18,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+      {
+        "id": 42,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+      {
+        "id": 50,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+      {
+        "id": 58,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+  "teachers": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "id": 2,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+      {
+        "id": 14,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+      {
+        "id": 18,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+      {
+        "id": 22,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+      {
+        "id": 26,
+        "name": "<text>",
+        "nameShort": "<text>",
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads classreg meta and homework endpoints 3`] = `
+{
+  "blockTopicAllowed": true,
+  "futureTopicAllowed": true,
+  "oneDriveAllowed": false,
+  "teachingMethods": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads classreg meta and homework endpoints 4`] = `
+{
+  "homeworkList": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "attachments": [],
+        "completed": false,
+        "createdByUser": "<text>",
+        "date": "<dynamic-date>",
+        "dueDate": "<dynamic-date>",
+        "homework": "<text>",
+        "id": 222,
+        "lessonId": 14894,
+        "remark": "",
+        "subject": {
+          "id": 318,
+          "name": "<text>",
+          "nameShort": "<text>",
+        },
+      },
+      {
+        "attachments": [],
+        "completed": false,
+        "createdByUser": "<text>",
+        "date": "<dynamic-date>",
+        "dueDate": "<dynamic-date>",
+        "homework": "<text>",
+        "id": 229,
+        "lessonId": 16191,
+        "remark": "",
+        "subject": {
+          "id": 818,
+          "name": "<text>",
+          "nameShort": "<text>",
+        },
+      },
+      {
+        "attachments": [],
+        "completed": false,
+        "createdByUser": "<text>",
+        "date": "<dynamic-date>",
+        "dueDate": "<dynamic-date>",
+        "homework": "<text>",
+        "id": 245,
+        "lessonId": 15260,
+        "remark": "",
+        "subject": {
+          "id": 526,
+          "name": "<text>",
+          "nameShort": "<text>",
+        },
+      },
+      {
+        "attachments": [],
+        "completed": true,
+        "createdByUser": "<text>",
+        "date": "<dynamic-date>",
+        "dueDate": "<dynamic-date>",
+        "homework": "<text>",
+        "id": 274,
+        "lessonId": 15268,
+        "remark": "",
+        "subject": {
+          "id": 534,
+          "name": "<text>",
+          "nameShort": "<text>",
+        },
+      },
+      {
+        "attachments": [],
+        "completed": false,
+        "createdByUser": "<text>",
+        "date": "<dynamic-date>",
+        "dueDate": "<dynamic-date>",
+        "homework": "<text>",
+        "id": 275,
+        "lessonId": 16137,
+        "remark": "",
+        "subject": {
+          "id": 798,
+          "name": "<text>",
+          "nameShort": "<text>",
+        },
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads non-empty exam data from a historical school year 1`] = `
+{
+  "classes": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "displayName": "<text>",
+        "id": 470,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      {
+        "displayName": "<text>",
+        "id": 473,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      {
+        "displayName": "<text>",
+        "id": 476,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      {
+        "displayName": "<text>",
+        "id": 479,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      {
+        "displayName": "<text>",
+        "id": 482,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+  "examTypes": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "displayName": "<text>",
+        "id": 4,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      {
+        "displayName": "<text>",
+        "id": 1,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+  "subjects": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "displayName": "<text>",
+        "id": 950,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      {
+        "displayName": "<text>",
+        "id": 946,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      {
+        "displayName": "<text>",
+        "id": 942,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      {
+        "displayName": "<text>",
+        "id": 1153,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      {
+        "displayName": "<text>",
+        "id": 1048,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+  "teachers": {
+    "itemCount": "<dynamic-count>",
+    "items": [
+      {
+        "displayName": "<text>",
+        "id": 2,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      {
+        "displayName": "<text>",
+        "id": 403,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      {
+        "displayName": "<text>",
+        "id": 14,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      {
+        "displayName": "<text>",
+        "id": 18,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      {
+        "displayName": "<text>",
+        "id": 22,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    ],
+    "summary": "<representative-items>",
+  },
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads non-empty exam data from a historical school year 2`] = `
+{
+  "canDelete": false,
+  "canEdit": false,
+  "canReadGrades": true,
+  "canWriteGrades": false,
+  "classes": [
+    {
+      "displayName": "<text>",
+      "id": 452,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+  ],
+  "deleted": false,
+  "examBooked": "<dynamic-datetime>",
+  "examBookedUser": {
+    "displayName": "<text>",
+    "id": 260,
+    "longName": "",
+    "shortName": "<text>",
+  },
+  "examDuration": 80,
+  "examEnd": "<dynamic-datetime>",
+  "examId": 191,
+  "examModified": "<dynamic-datetime>",
+  "examModifiedUser": {
+    "displayName": "<text>",
+    "id": 260,
+    "longName": "",
+    "shortName": "<text>",
+  },
+  "examName": "<text>",
+  "examReturned": null,
+  "examReturnedUser": null,
+  "examStart": "<dynamic-datetime>",
+  "examText": "<text>",
+  "examType": {
+    "displayName": "<text>",
+    "gradingScaleId": 2,
+    "id": 1,
+    "longName": "<text>",
+    "shortName": "<text>",
+  },
+  "exported": false,
+  "gradingScale": {
+    "displayName": "<text>",
+    "id": 2,
+    "longName": "",
+    "shortName": "<text>",
+  },
+  "invigilators": [
+    {
+      "end": "<dynamic-datetime>",
+      "start": "<dynamic-datetime>",
+      "teachers": [
+        {
+          "displayName": "<text>",
+          "id": 218,
+          "longName": "<text>",
+          "shortName": "<text>",
+        },
+      ],
+    },
+  ],
+  "isUntisExam": false,
+  "lessonId": 16173,
+  "numStudents": 25,
+  "rooms": [
+    {
+      "displayName": "<text>",
+      "id": 134,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+  ],
+  "studentgroup": {
+    "displayName": "<text>",
+    "id": 4319,
+    "longName": "<text>",
+    "shortName": "<text>",
+  },
+  "students": [
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "disadvantageCompensation": false,
+      "displayName": "<text>",
+      "gender": null,
+      "gradeProtection": false,
+      "id": "<personal-id>",
+      "imageUrl": "",
+      "klasse": null,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+  ],
+  "subject": {
+    "displayName": "<text>",
+    "id": 818,
+    "longName": "<text>",
+    "shortName": "<text>",
+  },
+  "teachers": [
+    {
+      "displayName": "<text>",
+      "id": 218,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads non-empty timetable entries using historical classes 1`] = `
+{
+  "classFormat": 2,
+  "firstDayOfWeek": "<text>",
+  "formatDefinitions": [
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "hideDetails": false,
+      "id": 0,
+      "longname": "<text>",
+      "minRows": 4,
+      "name": "<text>",
+      "showCancellations": true,
+      "showExternalCalendars": true,
+      "showStartEndTime": false,
+      "showStartEndTimeOfSlots": true,
+      "timeGridDays": [
+        "<text>",
+        "<text>",
+        "<text>",
+        "<text>",
+        "<text>",
+      ],
+      "timeGridSlots": [
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 1,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 2,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 3,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 4,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 5,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 6,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 7,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 8,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 9,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 10,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 11,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "",
+          "number": 12,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "",
+          "number": 13,
+        },
+      ],
+      "timeGridType": "<text>",
+    },
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "hideDetails": false,
+      "id": 2,
+      "longname": "<text>",
+      "minRows": 4,
+      "name": "<text>",
+      "showCancellations": true,
+      "showExternalCalendars": true,
+      "showStartEndTime": false,
+      "showStartEndTimeOfSlots": true,
+      "timeGridDays": [
+        "<text>",
+        "<text>",
+        "<text>",
+        "<text>",
+        "<text>",
+      ],
+      "timeGridSlots": [
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": null,
+          "number": null,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": null,
+          "number": null,
+        },
+      ],
+      "timeGridType": "<text>",
+    },
+    {
+      "duration": {
+        "end": "<text>",
+        "start": "<text>",
+      },
+      "hideDetails": false,
+      "id": -1,
+      "longname": "<text>",
+      "minRows": 1,
+      "name": "<text>",
+      "showCancellations": true,
+      "showExternalCalendars": true,
+      "showStartEndTime": false,
+      "showStartEndTimeOfSlots": true,
+      "timeGridDays": [
+        "<text>",
+        "<text>",
+        "<text>",
+        "<text>",
+        "<text>",
+      ],
+      "timeGridSlots": [
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 1,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 2,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 3,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 4,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 5,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 6,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 7,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 8,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 9,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 10,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "<text>",
+          "number": 11,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "",
+          "number": 12,
+        },
+        {
+          "duration": {
+            "end": "<text>",
+            "start": "<text>",
+          },
+          "name": "",
+          "number": 13,
+        },
+      ],
+      "timeGridType": "<text>",
+    },
+  ],
+  "resourceFormat": -1,
+  "roomFormat": 2,
+  "studentFormat": 2,
+  "subjectFormat": 2,
+  "teacherFormat": 2,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads non-empty timetable entries using historical classes 2`] = `
+{
+  "assignmentGroups": [],
+  "buildings": [],
+  "classes": [
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 470,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": null,
+      "classTeacher2": null,
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 473,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 106,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 126,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 476,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 154,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 198,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 479,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 98,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 186,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 482,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 486,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 445,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 485,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 346,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 477,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 488,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 338,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 342,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 491,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 406,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 258,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 10,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 494,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 370,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": null,
+      "department": {
+        "displayName": "<text>",
+        "id": 10,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 497,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 358,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": null,
+      "department": {
+        "displayName": "<text>",
+        "id": 10,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 503,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": null,
+      "classTeacher2": null,
+      "department": {
+        "displayName": "<text>",
+        "id": 10,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 500,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": null,
+      "classTeacher2": null,
+      "department": {
+        "displayName": "<text>",
+        "id": 10,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 374,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 30,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 226,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 377,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 22,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 448,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 380,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 206,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 58,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 383,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 462,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 483,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 386,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 500,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 194,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 389,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 421,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 250,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 392,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 34,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 318,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 395,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 90,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 409,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 398,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 459,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 480,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 401,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 402,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 42,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 404,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 474,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 503,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 407,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 492,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 214,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 410,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 162,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 266,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 413,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 74,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 468,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 416,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 362,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 322,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 419,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 50,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 146,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 422,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 122,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 70,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 425,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 102,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 238,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 6,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 428,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": null,
+      "classTeacher2": null,
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 431,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 62,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 18,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 434,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 94,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 246,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 437,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 66,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 274,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 440,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 314,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 54,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 443,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 86,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 182,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 446,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": null,
+      "classTeacher2": null,
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 449,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 222,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 166,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 452,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 218,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 158,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 455,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 202,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 242,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 458,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 282,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 354,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 461,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 78,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 134,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 464,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 310,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 334,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+    {
+      "class": {
+        "displayName": "<text>",
+        "id": 467,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher1": {
+        "displayName": "<text>",
+        "id": 298,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "classTeacher2": {
+        "displayName": "<text>",
+        "id": 382,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "department": {
+        "displayName": "<text>",
+        "id": 7,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+    },
+  ],
+  "departments": [
+    {
+      "displayName": "<text>",
+      "id": 6,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "displayName": "<text>",
+      "id": 2,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "displayName": "<text>",
+      "id": 7,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+    {
+      "displayName": "<text>",
+      "id": 10,
+      "longName": "<text>",
+      "shortName": "<text>",
+    },
+  ],
+  "preSelected": null,
+  "resourceType": "CLASS",
+  "resourceTypes": [],
+  "resources": [],
+  "roomGroups": [],
+  "rooms": [],
+  "students": [],
+  "subjects": [],
+  "teachers": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads non-empty timetable entries using historical classes 3`] = `
+{
+  "highlightCancellations": false,
+  "highlightChanges": false,
+  "highlightExams": false,
+  "highlightExternalEntries": false,
+  "showAllDropdownElements": false,
+  "showForeignSubstitutions": false,
+  "showICal": true,
+  "showICalExport": false,
+  "showResourceLocks": false,
+  "showRoomLocks": false,
+  "showStudentAbsences": false,
+  "showSymbols": false,
+  "showTeacherAbsences": false,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 1`] = `
+{
+  "incomingMessages": [],
+  "readConfirmationMessages": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 2`] = `
+{
+  "draftMessages": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 3`] = `
+{
+  "allowRequestReadConfirmation": true,
+  "canForbidReplies": true,
+  "maxFileCount": 5,
+  "maxFileSize": 7000000,
+  "recipientOptions": [
+    "STAFF",
+    "CUSTOM",
+  ],
+  "recipientSearchMaxResult": 100,
+  "showDraftsTab": true,
+  "showSentTab": true,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 4`] = `
+{
+  "canCreatePublic": false,
+  "items": [
+    {
+      "deletable": false,
+      "dynamic": false,
+      "editable": false,
+      "id": 7,
+      "name": "<text>",
+      "personCount": "<dynamic-count>",
+      "publicAccess": true,
+    },
+    {
+      "deletable": false,
+      "dynamic": false,
+      "editable": false,
+      "id": 3,
+      "name": "<text>",
+      "personCount": "<dynamic-count>",
+      "publicAccess": true,
+    },
+    {
+      "deletable": false,
+      "dynamic": false,
+      "editable": false,
+      "id": 11,
+      "name": "<text>",
+      "personCount": "<dynamic-count>",
+      "publicAccess": true,
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 5`] = `
+{
+  "filters": [
+    {
+      "items": [],
+      "type": "CLASS",
+    },
+    {
+      "items": [
+        "<text>",
+        "<text>",
+        "<text>",
+        "<text>",
+      ],
+      "type": "DEPARTMENT",
+    },
+    {
+      "items": [
+        "<text>",
+        "<text>",
+        "<text>",
+        "<text>",
+      ],
+      "type": "ROLE",
+    },
+    {
+      "items": [
+        "<text>",
+        "<text>",
+        "<text>",
+        "<text>",
+      ],
+      "type": "USER_GROUP",
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 6`] = `
+{
+  "users": [
+    {
+      "className": null,
+      "displayName": "<text>",
+      "id": 7,
+      "imageUrl": null,
+      "role": "TEACHER",
+      "tags": [],
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 7`] = `
+[
+  {
+    "className": null,
+    "displayName": "",
+    "imageUrl": null,
+    "personId": -1,
+    "role": "staff",
+  },
+  {
+    "className": null,
+    "displayName": "",
+    "imageUrl": null,
+    "personId": -1,
+    "role": "staff",
+  },
+  {
+    "className": null,
+    "displayName": "",
+    "imageUrl": null,
+    "personId": -1,
+    "role": "staff",
+  },
+  {
+    "className": null,
+    "displayName": "",
+    "imageUrl": null,
+    "personId": -1,
+    "role": "staff",
+  },
+]
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 8`] = `
+{
+  "sentMessages": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 9`] = `
+{
+  "unreadMessagesCount": 0,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 10`] = `
+{
+  "allowMessageDeletion": true,
+  "attachments": [],
+  "blobAttachment": null,
+  "content": null,
+  "id": 445,
+  "isReply": false,
+  "isReplyAllowed": true,
+  "isReplyForbidden": false,
+  "isReportMessage": false,
+  "replyHistory": [],
+  "requestConfirmation": null,
+  "sender": {
+    "className": null,
+    "displayName": "<text>",
+    "imageUrl": null,
+    "userId": 7,
+  },
+  "sentDateTime": "<text>",
+  "storageAttachments": [],
+  "subject": "<text>",
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads schoolyears and message endpoints 11`] = `
+{
+  "recipient": {
+    "className": null,
+    "displayName": "<text>",
+    "id": 330,
+  },
+  "replyHistory": [
+    {
+      "attachments": [],
+      "blobAttachment": null,
+      "content": null,
+      "id": 445,
+      "isRevoked": false,
+      "recipients": [],
+      "sender": {
+        "className": null,
+        "displayName": "<text>",
+        "imageUrl": null,
+        "userId": 7,
+      },
+      "sentDateTime": "<text>",
+      "storageAttachments": [],
+      "subject": "<text>",
+    },
+  ],
+  "subject": "<text>",
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads session status and timetable discovery endpoints 1`] = `
+{
+  "expiresInMs": 0,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads session status and timetable discovery endpoints 2`] = `
+{
+  "availableTimetables": [
+    "<text>",
+    "<text>",
+    "<text>",
+    "<text>",
+    "<text>",
+  ],
+  "dependents": [],
+  "myTimetable": null,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads session status and timetable discovery endpoints 3`] = `
+{
+  "numPartialMatches": 32,
+  "results": [
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 470,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "CLASS",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 473,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "CLASS",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 476,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "CLASS",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 479,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "CLASS",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 482,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "CLASS",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 485,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "CLASS",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 488,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "CLASS",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 34,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 90,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 572,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 122,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 134,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 138,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 142,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 146,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 150,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 154,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 158,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 162,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 182,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 186,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 190,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 194,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 198,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 258,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 262,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 266,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 270,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 274,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 278,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 386,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "ROOM",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 450,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "SUBJECT",
+    },
+    {
+      "imageUrl": null,
+      "resource": {
+        "displayName": "<text>",
+        "id": 1149,
+        "longName": "<text>",
+        "shortName": "<text>",
+      },
+      "type": "SUBJECT",
+    },
+  ],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads session status and timetable discovery endpoints 4`] = `
+{
+  "integrations": [],
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads session status and timetable discovery endpoints 5`] = `
+[
+  {
+    "displayName": "<text>",
+    "id": 2,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 6,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 10,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 14,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 18,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 22,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 26,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 30,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 34,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 38,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 42,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 46,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 50,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 54,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 58,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 62,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 66,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 74,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 78,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 82,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 86,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 90,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 94,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 98,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 106,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 110,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 122,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 126,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 130,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 138,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 154,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 158,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 162,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 170,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 178,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 198,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 202,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 206,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 214,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 218,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 222,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 226,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 230,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 234,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 238,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 242,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 246,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 250,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 254,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 262,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 270,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 282,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 286,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 290,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 294,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 298,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 302,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 330,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 334,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 338,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 342,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 346,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 354,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 358,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 362,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 366,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 382,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 386,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 406,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 410,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 414,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 418,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 422,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 426,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 430,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 434,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 438,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 442,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 446,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 450,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 454,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 458,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 466,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 470,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 478,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 490,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 494,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 498,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 502,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 506,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 510,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 514,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 518,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 526,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 530,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 534,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 538,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 550,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 553,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 556,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 557,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 558,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 567,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 570,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+  {
+    "displayName": "<text>",
+    "id": 572,
+    "longName": "<text>",
+    "name": "<text>",
+  },
+]
+`;
+
+exports[`live WebUntis integration > with live layer > reads user contact endpoints 1`] = `
+{
+  "areContactDetailsWriteable": false,
+  "city": null,
+  "email": "<personal-email>",
+  "mobileNumber": null,
+  "postCode": null,
+  "street": null,
+  "telephoneNumber": null,
+  "userEmailMissingOrDifferentToMasterData": false,
+}
+`;
+
+exports[`live WebUntis integration > with live layer > reads user contact endpoints 2`] = `
+{
+  "email": "<personal-email>",
+}
+`;
