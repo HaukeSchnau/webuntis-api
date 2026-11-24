@@ -22,7 +22,14 @@
     "erasableSyntaxOnly": true,
     "plugins": [
       {
-        "name": "@effect/language-service"
+        "name": "@effect/language-service",
+        // The unstable Effect 4 modules the client and its tests build on. Any other unstable API still fails.
+        "allowedUnstableApis": [
+          "effect/http",
+          "effect/persistence/RateLimiter",
+          "effect/LayerMap",
+          "@effect/vitest"
+        ]
       }
     ]
   },

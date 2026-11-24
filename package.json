@@ -34,7 +34,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "scripts": {
-    "prepare": "effect-tsgo patch",
+    "prepare": "effect-tsgo patch --tsrs --no-typescript",
     "build": "vp pack",
     "lint": "vp lint",
     "test": "vp test run",
@@ -45,12 +45,12 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
-    "@effect/tsgo": "^0.63.0",
+    "@effect/tsgo": "^0.73.4",
     "@effect/vitest": "^4.0.7",
     "@types/node": "^26.6.5",
     "effect": "^4.0.7",
     "publint": "^0.3.25",
-    "typescript": "^7.0.2",
+    "tsrs": "7.1.0-beta.tsrs4",
     "vite": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:"

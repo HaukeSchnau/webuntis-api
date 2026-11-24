@@ -1,4 +1,8 @@
+import { createRequire } from "node:module";
+import path from "node:path";
 import { defineConfig } from "vite-plus";
+
+const tsrsPackage = createRequire(import.meta.url).resolve("tsrs/package.json");
 
 export default defineConfig({
   pack: {
@@ -10,7 +14,10 @@ export default defineConfig({
     platform: "node",
     target: "node22",
     dts: {
+      // The tsdown that Vite+ 1.8 bundles has no "tsrs" generator. Its "tsgo" generator runs any
+      // tsc 7 CLI, so it runs tsrs. Switch to `generator: "tsrs"` once Vite+ bundles one that has it.
       generator: "tsgo",
+      tsgo: { path: path.join(path.dirname(tsrsPackage), "bin/tsrs") },
       sourcemap: true,
     },
     sourcemap: true,

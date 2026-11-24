@@ -54,12 +54,12 @@ pnpm --dir "$temp_dir" install --ignore-scripts --frozen-lockfile=false
 
 echo "==> consumer: module=NodeNext moduleResolution=NodeNext"
 write_tsconfig NodeNext NodeNext
-pnpm exec tsc --project "$temp_dir/tsconfig.json"
+pnpm exec tsrs --project "$temp_dir/tsconfig.json"
 "$node_bin" "$temp_dir/out/static.js"
 
 echo "==> consumer: module=Preserve moduleResolution=bundler"
 write_tsconfig Preserve bundler
-pnpm exec tsc --project "$temp_dir/tsconfig.json" --noEmit
+pnpm exec tsrs --project "$temp_dir/tsconfig.json" --noEmit
 
 if [ "${1:-}" = "--live" ]; then
   echo "==> consumer: live smoke"
