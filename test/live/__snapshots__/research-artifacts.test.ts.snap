@@ -290,7 +290,7 @@ Scope:
 
 - tenant: \`igs-lilienthal.webuntis.com\`
 - school: \`IGS Lilienthal\`
-- account: \`hauke.studienbuch\`
+- account: \`example.student\`
 - visible role in the SPA: \`STAFF\` / \`Verwaltung\`
 
 This artifact captures route-to-API observations from a real authenticated browser session.
