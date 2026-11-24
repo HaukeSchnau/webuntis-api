@@ -1,7 +1,7 @@
+pmOnFail: error
+# Vite+ 1.8.0 came out on 2026-11-24 at 03:17 UTC, inside pnpm's one-day minimumReleaseAge, which
+# pnpm 12 also applies to the lockfile. Delete this list after 2026-11-25 03:17 UTC.
 minimumReleaseAgeExclude:
-  # Intentionally pinned fresh releases that are required for this upgrade.
-  - "@effect/vitest@4.0.7"
-  - "effect@4.0.7"
   - "@voidzero-dev/vite-plus-core@8.3.8001"
   - "@voidzero-dev/vite-plus-darwin-arm64@1.8.0"
   - "@voidzero-dev/vite-plus-darwin-x64@1.8.0"

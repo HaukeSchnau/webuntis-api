@@ -40,7 +40,7 @@ test-watch:
     pnpm exec vp test
 
 lint:
-    pnpm run lint
+    pnpm exec vp lint
 
 format:
     pnpm exec vp fmt . --write
@@ -49,4 +49,4 @@ format-check:
     pnpm exec vp fmt --check
 
 check:
-    pnpm exec vp check
+    pnpm run check
