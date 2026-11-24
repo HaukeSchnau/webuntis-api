@@ -456,11 +456,10 @@ describe("request descriptors", () => {
     return Effect.gen(function* () {
       const client = yield* WebUntisClient;
 
-      yield* Effect.all([
-        client.exams.list(),
-        client.timetable.getGrid(),
-        client.classreg.getHomeworkMeta,
-      ]).pipe(withSchoolYear(6));
+      yield* Effect.all(
+        [client.exams.list(), client.timetable.getGrid(), client.classreg.getHomeworkMeta],
+        { concurrency: 1 },
+      ).pipe(withSchoolYear(6));
 
       expect(observed).toHaveLength(3);
       expect(observed.map((request) => request.headers["x-webuntis-api-school-year-id"])).toEqual([
@@ -856,7 +855,10 @@ describe("request descriptors", () => {
   it.effect("rejected requests carry the WebUntis error code and response body", () =>
     Effect.gen(function* () {
       const raw = yield* RawViewApiClient;
-      const error = yield* Effect.flip(raw.getJson("api/rest/view/v1/test/validation-error"));
+
+      const error = yield* raw
+        .getJson("api/rest/view/v1/test/validation-error")
+        .pipe(Effect.asVoid, Effect.flip);
 
       expect(error).toBeInstanceOf(UpstreamRejected);
       expect(error).toMatchObject({ status: 400, errorCode: "VALIDATION_ERROR" });

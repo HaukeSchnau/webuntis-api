@@ -15,7 +15,9 @@ export class SchoolyearsClient extends Context.Service<SchoolyearsClient, School
   static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
-      const { read } = makeOperations(yield* WebUntisHttp, "SchoolyearsClient");
+      const http = yield* WebUntisHttp;
+
+      const { read } = makeOperations(http, "SchoolyearsClient");
 
       return SchoolyearsClient.of({
         list: read("list", SchoolyearsRequests.list),

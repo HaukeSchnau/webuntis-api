@@ -113,10 +113,15 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           const client = yield* WebUntisClient;
           const rawViewApi = yield* RawViewApiClient;
 
-          const startupActionsV1 = yield* Schema.decodeUnknownEffect(StartupActionsSchema)(
-            yield* rawViewApi.getJson("api/rest/view/v1/trigger/startup", {
+          const startupActionsV1Json = yield* rawViewApi.getJson(
+            "api/rest/view/v1/trigger/startup",
+            {
               policy: RequestPolicy.AuthOnly,
-            }),
+            },
+          );
+
+          const startupActionsV1 = yield* Schema.decodeUnknownEffect(StartupActionsSchema)(
+            startupActionsV1Json,
             strictJsonParseOptions,
           );
 
@@ -136,33 +141,41 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           const client = yield* WebUntisClient;
           const rawViewApi = yield* RawViewApiClient;
 
+          const homeV1Json = yield* rawViewApi.getJson("api/rest/view/v1/home", {
+            policy: RequestPolicy.AuthOnly,
+          });
+
           const homeV1 = yield* Schema.decodeUnknownEffect(HomeSchema)(
-            yield* rawViewApi.getJson("api/rest/view/v1/home", {
-              policy: RequestPolicy.AuthOnly,
-            }),
+            homeV1Json,
             strictJsonParseOptions,
           );
 
           const homeV2 = yield* client.app.getHome;
 
+          const mobileDataV1Json = yield* rawViewApi.getJson("api/rest/view/v1/mobile/data", {
+            policy: RequestPolicy.AuthOnly,
+          });
+
           const mobileDataV1 = yield* Schema.decodeUnknownEffect(MobileDataV1V2Schema)(
-            yield* rawViewApi.getJson("api/rest/view/v1/mobile/data", {
-              policy: RequestPolicy.AuthOnly,
-            }),
+            mobileDataV1Json,
             strictJsonParseOptions,
           );
+
+          const mobileDataV2Json = yield* rawViewApi.getJson("api/rest/view/v2/mobile/data", {
+            policy: RequestPolicy.AuthOnly,
+          });
 
           const mobileDataV2 = yield* Schema.decodeUnknownEffect(MobileDataV1V2Schema)(
-            yield* rawViewApi.getJson("api/rest/view/v2/mobile/data", {
-              policy: RequestPolicy.AuthOnly,
-            }),
+            mobileDataV2Json,
             strictJsonParseOptions,
           );
 
+          const mobileDataV3Json = yield* rawViewApi.getJson("api/rest/view/v3/mobile/data", {
+            policy: RequestPolicy.AuthOnly,
+          });
+
           const mobileDataV3 = yield* Schema.decodeUnknownEffect(MobileDataSchema)(
-            yield* rawViewApi.getJson("api/rest/view/v3/mobile/data", {
-              policy: RequestPolicy.AuthOnly,
-            }),
+            mobileDataV3Json,
             strictJsonParseOptions,
           );
 
@@ -475,17 +488,17 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         Effect.gen(function* () {
           const rawViewApi = yield* RawViewApiClient;
 
-          const profileError = yield* Effect.flip(
-            rawViewApi.getJson("api/rest/view/v1/profile", {
+          const profileError = yield* rawViewApi
+            .getJson("api/rest/view/v1/profile", {
               policy: RequestPolicy.AuthOnly,
-            }),
-          );
+            })
+            .pipe(Effect.asVoid, Effect.flip);
 
-          const adminDetailsError = yield* Effect.flip(
-            rawViewApi.getJson("api/rest/view/v1/profile/admin/details", {
+          const adminDetailsError = yield* rawViewApi
+            .getJson("api/rest/view/v1/profile/admin/details", {
               policy: RequestPolicy.AuthOnly,
-            }),
-          );
+            })
+            .pipe(Effect.asVoid, Effect.flip);
 
           expect(normalizeRejection(profileError)).toMatchSnapshot();
           expect(normalizeRejection(adminDetailsError)).toMatchSnapshot();
@@ -590,23 +603,23 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
         Effect.gen(function* () {
           const rawViewApi = yield* RawViewApiClient;
 
-          const formatListError = yield* Effect.flip(
-            rawViewApi.getJson("api/rest/view/v1/timetable/settings/format/list", {
+          const formatListError = yield* rawViewApi
+            .getJson("api/rest/view/v1/timetable/settings/format/list", {
               policy: RequestPolicy.AuthOnly,
-            }),
-          );
+            })
+            .pipe(Effect.asVoid, Effect.flip);
 
-          const generalSettingsError = yield* Effect.flip(
-            rawViewApi.getJson("api/rest/view/v1/timetable/settings/general", {
+          const generalSettingsError = yield* rawViewApi
+            .getJson("api/rest/view/v1/timetable/settings/general", {
               policy: RequestPolicy.AuthOnly,
-            }),
-          );
+            })
+            .pipe(Effect.asVoid, Effect.flip);
 
-          const visibilityRestrictionError = yield* Effect.flip(
-            rawViewApi.getJson("api/rest/view/v1/timetable/settings/visibilityRestriction", {
+          const visibilityRestrictionError = yield* rawViewApi
+            .getJson("api/rest/view/v1/timetable/settings/visibilityRestriction", {
               policy: RequestPolicy.AuthOnly,
-            }),
-          );
+            })
+            .pipe(Effect.asVoid, Effect.flip);
 
           expect(normalizeRejection(formatListError)).toMatchSnapshot();
           expect(normalizeRejection(generalSettingsError)).toMatchSnapshot();
@@ -658,57 +671,63 @@ describe.skipIf(!hasLiveEnv)("live WebUntis integration", () => {
           expect(teacherId).toBeDefined();
           expect(subjectId).toBeDefined();
 
-          const messagesOfTheDayError = yield* Effect.flip(
-            rawViewApi.getJson("api/rest/view/v1/messages-of-the-day", {
+          const messagesOfTheDayError = yield* rawViewApi
+            .getJson("api/rest/view/v1/messages-of-the-day", {
               policy: RequestPolicy.AuthOnly,
-            }),
-          );
+            })
+            .pipe(Effect.asVoid, Effect.flip);
 
-          const staticTeachersError = yield* Effect.flip(
-            rawViewApi.getJson("api/rest/view/v1/messages/recipients/static/teachers", {
+          const staticTeachersError = yield* rawViewApi
+            .getJson("api/rest/view/v1/messages/recipients/static/teachers", {
               policy: RequestPolicy.AuthOnly,
-            }),
-          );
+            })
+            .pipe(Effect.asVoid, Effect.flip);
 
-          const staticUsersError = yield* Effect.flip(
-            rawViewApi.getJson("api/rest/view/v1/messages/recipients/static/users", {
+          const staticUsersError = yield* rawViewApi
+            .getJson("api/rest/view/v1/messages/recipients/static/users", {
               policy: RequestPolicy.AuthOnly,
-            }),
-          );
+            })
+            .pipe(Effect.asVoid, Effect.flip);
 
-          const staticPersonsError = yield* Effect.flip(
-            rawViewApi.getJson("api/rest/view/v1/messages/recipients/static/persons", {
+          const staticPersonsError = yield* rawViewApi
+            .getJson("api/rest/view/v1/messages/recipients/static/persons", {
               policy: RequestPolicy.AuthOnly,
-            }),
-          );
+            })
+            .pipe(Effect.asVoid, Effect.flip);
 
-          const messagesOfTheDayFormError = yield* Effect.flip(
-            rawViewApi.getJson("api/rest/view/v1/messages-of-the-day/form", {
+          const messagesOfTheDayFormError = yield* rawViewApi
+            .getJson("api/rest/view/v1/messages-of-the-day/form", {
               policy: RequestPolicy.AuthOnly,
-            }),
-          );
+            })
+            .pipe(Effect.asVoid, Effect.flip);
 
-          const roomsError = yield* Effect.flip(rawViewApi.getJson("api/rest/view/v1/rooms"));
+          const roomsError = yield* rawViewApi
+            .getJson("api/rest/view/v1/rooms")
+            .pipe(Effect.asVoid, Effect.flip);
 
-          const roomDetailError = yield* Effect.flip(
-            rawViewApi.getJson(`api/rest/view/v1/rooms/${roomId}`),
-          );
+          const roomDetailError = yield* rawViewApi
+            .getJson(`api/rest/view/v1/rooms/${roomId}`)
+            .pipe(Effect.asVoid, Effect.flip);
 
-          const buildingsError = yield* Effect.flip(
-            rawViewApi.getJson("api/rest/view/v1/buildings"),
-          );
+          const buildingsError = yield* rawViewApi
+            .getJson("api/rest/view/v1/buildings")
+            .pipe(Effect.asVoid, Effect.flip);
 
-          const teachersError = yield* Effect.flip(rawViewApi.getJson("api/rest/view/v1/teachers"));
+          const teachersError = yield* rawViewApi
+            .getJson("api/rest/view/v1/teachers")
+            .pipe(Effect.asVoid, Effect.flip);
 
-          const teacherDetailError = yield* Effect.flip(
-            rawViewApi.getJson(`api/rest/view/v1/teachers/${teacherId}`),
-          );
+          const teacherDetailError = yield* rawViewApi
+            .getJson(`api/rest/view/v1/teachers/${teacherId}`)
+            .pipe(Effect.asVoid, Effect.flip);
 
-          const subjectsError = yield* Effect.flip(rawViewApi.getJson("api/rest/view/v1/subjects"));
+          const subjectsError = yield* rawViewApi
+            .getJson("api/rest/view/v1/subjects")
+            .pipe(Effect.asVoid, Effect.flip);
 
-          const subjectDetailError = yield* Effect.flip(
-            rawViewApi.getJson(`api/rest/view/v1/subjects/${subjectId}`),
-          );
+          const subjectDetailError = yield* rawViewApi
+            .getJson(`api/rest/view/v1/subjects/${subjectId}`)
+            .pipe(Effect.asVoid, Effect.flip);
 
           for (const error of [
             messagesOfTheDayError,

@@ -183,33 +183,33 @@ describe("typed failures", () => {
   });
 });
 
+const limited = (limits: ConnectionLimits, onRead: () => Promise<Response>) =>
+  makeCoreTestLayer(
+    (request) => {
+      const { pathname } = new URL(request.url);
+
+      if (pathname.endsWith("/j_spring_security_check")) {
+        return new Response("", { status: 302 });
+      }
+
+      if (pathname.endsWith("/api/token/new")) {
+        return new Response(makeJwt(), { status: 200 });
+      }
+
+      if (pathname.endsWith("/app/data")) {
+        return jsonResponse({ currentSchoolYear: null, tenant: { id: "tenant-42" } });
+      }
+
+      if (pathname.endsWith("/index.do")) {
+        return new Response("", { status: 200 });
+      }
+
+      return onRead();
+    },
+    { ...testConnection, limits },
+  );
+
 describe("connection limits", () => {
-  const limited = (limits: ConnectionLimits, onRead: () => Promise<Response>) =>
-    makeCoreTestLayer(
-      (request) => {
-        const { pathname } = new URL(request.url);
-
-        if (pathname.endsWith("/j_spring_security_check")) {
-          return new Response("", { status: 302 });
-        }
-
-        if (pathname.endsWith("/api/token/new")) {
-          return new Response(makeJwt(), { status: 200 });
-        }
-
-        if (pathname.endsWith("/app/data")) {
-          return jsonResponse({ currentSchoolYear: null, tenant: { id: "tenant-42" } });
-        }
-
-        if (pathname.endsWith("/index.do")) {
-          return new Response("", { status: 200 });
-        }
-
-        return onRead();
-      },
-      { ...testConnection, limits },
-    );
-
   it.effect("keeps at most `concurrency` requests in flight", () => {
     let inFlight = 0;
     let peak = 0;
@@ -280,10 +280,10 @@ describe("connection limits", () => {
       for (const limits of invalid) {
         const connection: WebUntisConnection = { ...testConnection, limits };
 
-        const error = yield* Effect.flip(
-          Layer.build(webUntisLayer(connection)).pipe(
-            Effect.provide(mockHttpLayer(() => new Response())),
-          ),
+        const error = yield* webUntisLayer(connection).pipe(
+          Layer.build,
+          Effect.provide(mockHttpLayer(() => new Response())),
+          Effect.flip,
         );
 
         expect(error).toBeInstanceOf(ConfigurationError);

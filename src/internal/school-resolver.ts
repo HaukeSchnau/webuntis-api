@@ -15,7 +15,7 @@ const toResolvedSchool = (query: string, target: SchoolTarget) => {
 
   return baseUrl === undefined
     ? Effect.fail(
-        new DiscoveryError({
+        DiscoveryError.make({
           query,
           message: `WebUntis returned an unusable server URL ${JSON.stringify(target.serverUrl)}`,
         }),

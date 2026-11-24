@@ -16,7 +16,9 @@ export class ProfileClient extends Context.Service<ProfileClient, ProfileClientS
   static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
-      const { read } = makeOperations(yield* WebUntisHttp, "ProfileClient");
+      const http = yield* WebUntisHttp;
+
+      const { read } = makeOperations(http, "ProfileClient");
 
       return ProfileClient.of({
         getUserContactData: read("getUserContactData", ProfileRequests.getUserContactData),

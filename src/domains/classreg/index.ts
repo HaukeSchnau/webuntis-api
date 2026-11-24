@@ -25,7 +25,9 @@ export class ClassregClient extends Context.Service<ClassregClient, ClassregClie
   static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
-      const { read, call } = makeOperations(yield* WebUntisHttp, "ClassregClient");
+      const http = yield* WebUntisHttp;
+
+      const { read, call } = makeOperations(http, "ClassregClient");
 
       return ClassregClient.of({
         getAbsencesMeta: read("getAbsencesMeta", ClassregRequests.getAbsencesMeta),

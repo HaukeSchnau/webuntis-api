@@ -13,7 +13,7 @@ describe("public structure", () => {
   // A snapshot of the whole surface, so an accidental addition is as visible as
   // an accidental removal. Schema values must stay on the `/schemas` subpath.
   it("pins the root export surface", () => {
-    expect(Object.keys(api).sort()).toMatchInlineSnapshot(`
+    expect(Object.keys(api).toSorted()).toMatchInlineSnapshot(`
       [
         "AppClient",
         "AuthClient",
@@ -58,10 +58,11 @@ describe("public structure", () => {
       const source = readFileSync(url, "utf8");
       const types = new Set(source.match(/^export type (\w+)/gmu)?.map((line) => line.slice(12)));
 
-      return [...(source.match(/^export const (\w+)Schema\b/gmu) ?? [])]
-        .map((line) => line.slice(13, -6))
-        .filter((name) => !types.has(name))
-        .map((name) => `${url.pathname.split("/domains/")[1]}: ${name}Schema`);
+      return (source.match(/^export const (\w+)Schema\b/gmu) ?? []).flatMap((line) => {
+        const name = line.slice(13, -6);
+
+        return types.has(name) ? [] : [`${url.pathname.split("/domains/")[1]}: ${name}Schema`];
+      });
     });
 
     expect(missing).toEqual([]);

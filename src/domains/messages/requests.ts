@@ -29,7 +29,7 @@ const MessageRecipientSearchInput = Schema.Struct({
 
 const MessageComposeRecipientsInput = Schema.Struct({
   recipientOption: MessageRecipientOptionSchema,
-  filters: Schema.optional(Schema.Array(Schema.Unknown)),
+  filters: Schema.Unknown.pipe(Schema.Array, Schema.optional),
   searchText: Schema.optional(Schema.String),
 });
 

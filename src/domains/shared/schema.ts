@@ -3,7 +3,7 @@ import { EntityId } from "../../internal/schema.ts";
 
 export const JsonObjectSchema = Schema.Record(Schema.String, Schema.Json);
 
-export type JsonObject = Schema.Schema.Type<typeof JsonObjectSchema>;
+export type JsonObject = typeof JsonObjectSchema.Type;
 
 /**
  * WebUntis encodes every bounded interval as a `start`/`end` string pair. The
@@ -17,12 +17,12 @@ const BoundedRangeSchema = Schema.Struct({
 /** Calendar-date interval, e.g. `2026-03-23` to `2026-03-27`. */
 export const DateRangeSchema = BoundedRangeSchema;
 
-export type DateRange = Schema.Schema.Type<typeof DateRangeSchema>;
+export type DateRange = typeof DateRangeSchema.Type;
 
 /** Wall-clock interval within a single day. */
 export const TimeRangeSchema = BoundedRangeSchema;
 
-export type TimeRange = Schema.Schema.Type<typeof TimeRangeSchema>;
+export type TimeRange = typeof TimeRangeSchema.Type;
 
 /**
  * The four-field identity WebUntis attaches to every referenceable entity:
@@ -36,7 +36,7 @@ export const DisplayResourceSchema = Schema.Struct({
   displayName: Schema.String,
 });
 
-export type DisplayResource = Schema.Schema.Type<typeof DisplayResourceSchema>;
+export type DisplayResource = typeof DisplayResourceSchema.Type;
 
 export const TimeGridUnitSchema = Schema.Struct({
   unitOfDay: Schema.Int,
@@ -44,14 +44,14 @@ export const TimeGridUnitSchema = Schema.Struct({
   endTime: Schema.Int,
 });
 
-export type TimeGridUnit = Schema.Schema.Type<typeof TimeGridUnitSchema>;
+export type TimeGridUnit = typeof TimeGridUnitSchema.Type;
 
 export const TimeGridSchema = Schema.Struct({
   schoolyearId: EntityId,
   units: Schema.Array(TimeGridUnitSchema),
 });
 
-export type TimeGrid = Schema.Schema.Type<typeof TimeGridSchema>;
+export type TimeGrid = typeof TimeGridSchema.Type;
 
 export const SchoolyearSchema = Schema.Struct({
   id: EntityId,
@@ -59,23 +59,23 @@ export const SchoolyearSchema = Schema.Struct({
   dateRange: DateRangeSchema,
 });
 
-export type Schoolyear = Schema.Schema.Type<typeof SchoolyearSchema>;
+export type Schoolyear = typeof SchoolyearSchema.Type;
 
 export const SchoolyearWithTimeGridSchema = Schema.Struct({
   ...SchoolyearSchema.fields,
   timeGrid: TimeGridSchema,
 });
 
-export type SchoolyearWithTimeGrid = Schema.Schema.Type<typeof SchoolyearWithTimeGridSchema>;
+export type SchoolyearWithTimeGrid = typeof SchoolyearWithTimeGridSchema.Type;
 
 export const TenantSchema = Schema.Struct({
   displayName: Schema.String,
   id: Schema.String,
   name: Schema.String,
-  wuHostName: Schema.optional(Schema.NullOr(Schema.String)),
+  wuHostName: Schema.String.pipe(Schema.NullOr, Schema.optional),
 });
 
-export type Tenant = Schema.Schema.Type<typeof TenantSchema>;
+export type Tenant = typeof TenantSchema.Type;
 
 export const UserPersonSchema = Schema.Struct({
   displayName: Schema.String,
@@ -83,7 +83,7 @@ export const UserPersonSchema = Schema.Struct({
   imageUrl: Schema.NullOr(Schema.String),
 });
 
-export type UserPerson = Schema.Schema.Type<typeof UserPersonSchema>;
+export type UserPerson = typeof UserPersonSchema.Type;
 
 export const UserSchema = Schema.Struct({
   id: EntityId,
@@ -95,11 +95,11 @@ export const UserSchema = Schema.Struct({
   }),
   person: Schema.optional(UserPersonSchema),
   roles: Schema.Array(Schema.String),
-  students: Schema.optional(Schema.Array(JsonObjectSchema)),
+  students: JsonObjectSchema.pipe(Schema.Array, Schema.optional),
   lastLogin: Schema.optional(Schema.String),
 });
 
-export type User = Schema.Schema.Type<typeof UserSchema>;
+export type User = typeof UserSchema.Type;
 
 export const HolidaySchema = Schema.Struct({
   id: EntityId,
@@ -109,4 +109,4 @@ export const HolidaySchema = Schema.Struct({
   bookable: Schema.Boolean,
 });
 
-export type Holiday = Schema.Schema.Type<typeof HolidaySchema>;
+export type Holiday = typeof HolidaySchema.Type;

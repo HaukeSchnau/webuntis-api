@@ -35,7 +35,7 @@ const groupByFamily = (endpoints: ReadonlyArray<string>) =>
 
         return acc;
       }, {}),
-    ).sort(([left], [right]) => left.localeCompare(right)),
+    ).toSorted(([left], [right]) => left.localeCompare(right)),
   );
 
 describe("reverse-engineering artifacts", () => {

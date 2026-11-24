@@ -74,8 +74,8 @@ export const validateInput =
   <Input>(schema: Schema.Codec<Input, unknown>, path: string) =>
   (input: Input): Effect.Effect<Input, InvalidRequestError> =>
     Schema.decodeUnknownEffect(schema)(input).pipe(
-      Effect.mapError(
-        (cause) => new InvalidRequestError({ path, message: errorMessage(cause), cause }),
+      Effect.mapError((cause) =>
+        InvalidRequestError.make({ path, message: errorMessage(cause), cause }),
       ),
     );
 

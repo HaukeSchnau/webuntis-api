@@ -21,6 +21,7 @@ import {
  * so the cast is the subject of the test rather than a shortcut around it.
  */
 const rejects = <Input>(descriptor: RequestDescriptor<Input>, input: unknown) =>
+  // SAFETY: `input` breaks the descriptor's schema on purpose; the test checks that validation rejects it.
   // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   Effect.flip(validateRequest(descriptor, input as Input));
 
@@ -123,7 +124,9 @@ describe("request descriptor validation", () => {
         resource: 1,
       };
 
-      expect(yield* validateRequest(TimetableRequests.getEntries, input)).toEqual(input);
+      const validated = yield* validateRequest(TimetableRequests.getEntries, input);
+
+      expect(validated).toEqual(input);
     }),
   );
 });

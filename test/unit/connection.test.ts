@@ -54,11 +54,10 @@ describe("connections", () => {
   it.effect("rejects a pinned server URL that cannot address WebUntis", () =>
     Effect.gen(function* () {
       for (const serverUrl of ["file:///tmp/webuntis", "https://", "http://exa mple.com"]) {
-        const error = yield* Effect.flip(
-          Layer.build(
-            webUntisLayer({ ...testConnection, school: { loginName: "x", serverUrl } }),
-          ).pipe(Effect.provide(mockHttpLayer(() => new Response()))),
-        );
+        const error = yield* webUntisLayer({
+          ...testConnection,
+          school: { loginName: "x", serverUrl },
+        }).pipe(Layer.build, Effect.provide(mockHttpLayer(() => new Response())), Effect.flip);
 
         expect(error).toBeInstanceOf(ConfigurationError);
       }
@@ -122,11 +121,11 @@ describe("connections", () => {
         concurrency: "unbounded",
       });
 
-      expect(logins.sort()).toEqual([
+      expect(logins.toSorted()).toEqual([
         "a.webuntis.test school-a alice",
         "b.webuntis.test school-b bob",
       ]);
-      expect(reads.sort()).toEqual([
+      expect(reads.toSorted()).toEqual([
         "a.webuntis.test Bearer a.webuntis.test-token tenant-of-a.webuntis.test",
         "a.webuntis.test Bearer a.webuntis.test-token tenant-of-a.webuntis.test",
         "b.webuntis.test Bearer b.webuntis.test-token tenant-b",

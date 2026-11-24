@@ -110,7 +110,7 @@ export class Connection extends Context.Service<Connection, WebUntisConnection>(
 
         return problem === undefined
           ? Effect.succeed(connection)
-          : Effect.fail(new ConfigurationError({ message: problem }));
+          : Effect.fail(ConfigurationError.make({ message: problem }));
       }),
     );
 }

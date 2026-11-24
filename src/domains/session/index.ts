@@ -17,7 +17,9 @@ export class SessionClient extends Context.Service<SessionClient, SessionClientS
   static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
-      const { callOptional } = makeOperations(yield* WebUntisHttp, "SessionClient");
+      const http = yield* WebUntisHttp;
+
+      const { callOptional } = makeOperations(http, "SessionClient");
 
       return SessionClient.of({
         getStatus: callOptional("getStatus", SessionRequests.getStatus, {}),

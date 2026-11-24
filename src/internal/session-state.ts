@@ -109,7 +109,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
             );
 
           if (seedResponse.status < 200 || seedResponse.status >= 400) {
-            return yield* new AuthError({
+            return yield* AuthError.make({
               stage: "bootstrap",
               status: seedResponse.status,
               message: `Seed request failed for ${baseUrl}`,
@@ -136,7 +136,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
             );
 
           if (loginResponse.status < 200 || loginResponse.status >= 400) {
-            return yield* new AuthError({
+            return yield* AuthError.make({
               stage: "login",
               status: loginResponse.status,
               message: `WebUntis login handshake failed for ${credential.username}`,
@@ -155,7 +155,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
             );
 
             if (loginResponseLooksLikeHtml(loginBody)) {
-              return yield* new AuthError({
+              return yield* AuthError.make({
                 stage: "login",
                 status: loginResponse.status,
                 message: "WebUntis login returned HTML instead of a redirect",
@@ -176,7 +176,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
 
           // A rejected password still gets a 302 from the login form; only the
           // token endpoint tells, by redirecting to the anonymous start page.
-          const rejected = new InvalidCredentials({
+          const rejected = InvalidCredentials.make({
             school: school.loginName,
             message: `WebUntis rejected the credential for ${credential.username} at ${school.loginName}`,
           });
@@ -189,7 +189,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
           }
 
           if (tokenResponse.status < 200 || tokenResponse.status >= 300) {
-            return yield* new AuthError({
+            return yield* AuthError.make({
               stage: "token",
               status: tokenResponse.status,
               message: `Token minting failed for ${baseUrl}`,

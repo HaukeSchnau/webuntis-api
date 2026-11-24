@@ -54,7 +54,9 @@ export class MessagesClient extends Context.Service<MessagesClient, MessagesClie
   static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
-      const { read, call } = makeOperations(yield* WebUntisHttp, "MessagesClient");
+      const http = yield* WebUntisHttp;
+
+      const { read, call } = makeOperations(http, "MessagesClient");
 
       return MessagesClient.of({
         getInbox: read("getInbox", MessagesRequests.getInbox),

@@ -31,7 +31,11 @@ export const testConnection: WebUntisConnection = {
   credential: Credential.Password({ username: "tester", password: Redacted.make("secret") }),
 };
 
-const encodeJwt = (payloadValue: object) => {
+interface JwtPayload {
+  readonly exp?: number;
+}
+
+const encodeJwt = (payloadValue: JwtPayload) => {
   const header = "eyJhbGciOiJub25lIn0";
 
   const payload = btoa(JSON.stringify(payloadValue))

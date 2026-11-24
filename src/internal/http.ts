@@ -1,5 +1,6 @@
 import { Clock, Context, Effect, Layer, type Result, type Schema } from "effect";
-import { HttpClientRequest, HttpClientResponse } from "effect/http";
+import type { HttpClientResponse } from "effect/http";
+import { HttpClientRequest } from "effect/http";
 import {
   type DecodeError,
   decodeError,
@@ -50,7 +51,7 @@ const mergeHeaders = (
   );
 
 const transportError = (method: HttpMethod, path: string, error: unknown) =>
-  new TransportError({
+  TransportError.make({
     method,
     path,
     message: errorMessage(error),
@@ -135,7 +136,7 @@ const failIfNonSuccess = (
     return Effect.succeed(response);
   }
 
-  return Effect.all([drainBody(response), Clock.currentTimeMillis]).pipe(
+  return Effect.all([drainBody(response), Clock.currentTimeMillis], { concurrency: 1 }).pipe(
     Effect.flatMap(([body, now]) => Effect.fail(responseError(method, path, response, body, now))),
   );
 };

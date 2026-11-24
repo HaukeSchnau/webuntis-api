@@ -10,7 +10,7 @@ import {
 } from "../shared/schema.ts";
 
 export const AppDataSchema = Schema.Struct({
-  departments: Schema.optional(Schema.Array(JsonObjectSchema)),
+  departments: JsonObjectSchema.pipe(Schema.Array, Schema.optional),
   currentSchoolYear: Schema.NullOr(SchoolyearWithTimeGridSchema),
   tenant: TenantSchema,
   user: UserSchema,
@@ -26,12 +26,12 @@ export const AppDataSchema = Schema.Struct({
     }),
   ),
   ui2020: Schema.optional(Schema.Boolean),
-  pollingJobs: Schema.optional(Schema.Array(JsonObjectSchema)),
+  pollingJobs: JsonObjectSchema.pipe(Schema.Array, Schema.optional),
   isSupportAccessOpen: Schema.optional(Schema.Boolean),
   licenceExpiresAt: Schema.optional(Schema.String),
 });
 
-export type AppData = Schema.Schema.Type<typeof AppDataSchema>;
+export type AppData = typeof AppDataSchema.Type;
 
 export const AppPlatformApplicationMenuSchema = Schema.Struct({
   icon: Schema.String,
@@ -44,20 +44,16 @@ export const AppPlatformApplicationMenuSchema = Schema.Struct({
 
 export const AppPlatformApplicationMenusSchema = Schema.Array(AppPlatformApplicationMenuSchema);
 
-export type AppPlatformApplicationMenu = Schema.Schema.Type<
-  typeof AppPlatformApplicationMenuSchema
->;
+export type AppPlatformApplicationMenu = typeof AppPlatformApplicationMenuSchema.Type;
 
-export type AppPlatformApplicationMenus = Schema.Schema.Type<
-  typeof AppPlatformApplicationMenusSchema
->;
+export type AppPlatformApplicationMenus = typeof AppPlatformApplicationMenusSchema.Type;
 
 export const AppThirdPartyDataSchema = Schema.Struct({
   playgroundUrl: Schema.NullOr(Schema.String),
   sleekplanToken: Schema.String,
 });
 
-export type AppThirdPartyData = Schema.Schema.Type<typeof AppThirdPartyDataSchema>;
+export type AppThirdPartyData = typeof AppThirdPartyDataSchema.Type;
 
 export const AppExamIntegrationRoleSchema = Schema.Literals([
   "ADMIN",
@@ -70,13 +66,11 @@ export const AppExamIntegrationRoleSchema = Schema.Literals([
   "DEFAULT",
 ]);
 
-export type AppExamIntegrationRole = Schema.Schema.Type<typeof AppExamIntegrationRoleSchema>;
+export type AppExamIntegrationRole = typeof AppExamIntegrationRoleSchema.Type;
 
 export const AppExamIntegrationViewTypeSchema = Schema.Literals(["OVERVIEW", "DETAIL", "EXAMLIST"]);
 
-export type AppExamIntegrationViewType = Schema.Schema.Type<
-  typeof AppExamIntegrationViewTypeSchema
->;
+export type AppExamIntegrationViewType = typeof AppExamIntegrationViewTypeSchema.Type;
 
 export const AppExamIntegrationSchema = Schema.Struct({
   active: Schema.optional(Schema.Boolean),
@@ -92,9 +86,9 @@ export const AppExamIntegrationSchema = Schema.Struct({
 
 export const AppExamIntegrationsSchema = Schema.Array(AppExamIntegrationSchema);
 
-export type AppExamIntegration = Schema.Schema.Type<typeof AppExamIntegrationSchema>;
+export type AppExamIntegration = typeof AppExamIntegrationSchema.Type;
 
-export type AppExamIntegrations = Schema.Schema.Type<typeof AppExamIntegrationsSchema>;
+export type AppExamIntegrations = typeof AppExamIntegrationsSchema.Type;
 
 export const DashboardCardSchema = Schema.Struct({
   hasAttachments: Schema.Boolean,
@@ -107,13 +101,13 @@ export const DashboardCardSchema = Schema.Struct({
   title: Schema.String,
 });
 
-export type DashboardCard = Schema.Schema.Type<typeof DashboardCardSchema>;
+export type DashboardCard = typeof DashboardCardSchema.Type;
 
 export const DashboardCardsSchema = Schema.Struct({
   dashboardCards: Schema.Array(DashboardCardSchema),
 });
 
-export type DashboardCards = Schema.Schema.Type<typeof DashboardCardsSchema>;
+export type DashboardCards = typeof DashboardCardsSchema.Type;
 
 export const DashboardCardsDetailItemSchema = Schema.Struct({
   attachments: Schema.Array(JsonObjectSchema),
@@ -128,26 +122,26 @@ export const DashboardCardsDetailItemSchema = Schema.Struct({
   title: Schema.String,
 });
 
-export type DashboardCardsDetailItem = Schema.Schema.Type<typeof DashboardCardsDetailItemSchema>;
+export type DashboardCardsDetailItem = typeof DashboardCardsDetailItemSchema.Type;
 
 export const DashboardCardsDetailSchema = Schema.Struct({
   dashboardCardsDetails: Schema.Array(DashboardCardsDetailItemSchema),
 });
 
-export type DashboardCardsDetail = Schema.Schema.Type<typeof DashboardCardsDetailSchema>;
+export type DashboardCardsDetail = typeof DashboardCardsDetailSchema.Type;
 
 export const DashboardCardsStatusSchema = Schema.Struct({
   unreadCardsCount: Schema.Int,
 });
 
-export type DashboardCardsStatus = Schema.Schema.Type<typeof DashboardCardsStatusSchema>;
+export type DashboardCardsStatus = typeof DashboardCardsStatusSchema.Type;
 
 export const TodayMetaSchema = Schema.Struct({
   greetingName: Schema.String,
   calendar: Schema.NullOr(JsonObjectSchema),
 });
 
-export type TodayMeta = Schema.Schema.Type<typeof TodayMetaSchema>;
+export type TodayMeta = typeof TodayMetaSchema.Type;
 
 export const HomeCellTypeSchema = Schema.Literals([
   "MY_EVENTS",
@@ -160,20 +154,20 @@ export const HomeCellTypeSchema = Schema.Literals([
   "SUBSTITUTION_REQUESTS",
 ]);
 
-export type HomeCellType = Schema.Schema.Type<typeof HomeCellTypeSchema>;
+export type HomeCellType = typeof HomeCellTypeSchema.Type;
 
 export const HomeCellSchema = Schema.Struct({
   badge: Schema.NullOr(JsonObjectSchema),
   type: HomeCellTypeSchema,
 });
 
-export type HomeCell = Schema.Schema.Type<typeof HomeCellSchema>;
+export type HomeCell = typeof HomeCellSchema.Type;
 
 export const HomeSectionSchema = Schema.Struct({
   cells: Schema.Array(HomeCellSchema),
 });
 
-export type HomeSection = Schema.Schema.Type<typeof HomeSectionSchema>;
+export type HomeSection = typeof HomeSectionSchema.Type;
 
 export const HomeSchema = Schema.Struct({
   schoolName: Schema.String,
@@ -182,7 +176,7 @@ export const HomeSchema = Schema.Struct({
   isEmailUpdateRequired: Schema.Boolean,
 });
 
-export type Home = Schema.Schema.Type<typeof HomeSchema>;
+export type Home = typeof HomeSchema.Type;
 
 export const MobileTenantSchema = Schema.Struct({
   id: Schema.String,
@@ -192,7 +186,7 @@ export const MobileTenantSchema = Schema.Struct({
   schoolLoginName: Schema.String,
 });
 
-export type MobileTenant = Schema.Schema.Type<typeof MobileTenantSchema>;
+export type MobileTenant = typeof MobileTenantSchema.Type;
 
 export const MobileTenantV1V2Schema = Schema.Struct({
   id: Schema.String,
@@ -201,7 +195,7 @@ export const MobileTenantV1V2Schema = Schema.Struct({
   language: Schema.String,
 });
 
-export type MobileTenantV1V2 = Schema.Schema.Type<typeof MobileTenantV1V2Schema>;
+export type MobileTenantV1V2 = typeof MobileTenantV1V2Schema.Type;
 
 export const MobilePermissionSchema = Schema.Literals([
   "READ_MESSAGES",
@@ -211,7 +205,7 @@ export const MobilePermissionSchema = Schema.Literals([
   "CHANGE_OWN_PASSWORD",
 ]);
 
-export type MobilePermission = Schema.Schema.Type<typeof MobilePermissionSchema>;
+export type MobilePermission = typeof MobilePermissionSchema.Type;
 
 export const MobileUserSchema = Schema.Struct({
   id: EntityId,
@@ -224,7 +218,7 @@ export const MobileUserSchema = Schema.Struct({
   permissions: Schema.Array(MobilePermissionSchema),
 });
 
-export type MobileUser = Schema.Schema.Type<typeof MobileUserSchema>;
+export type MobileUser = typeof MobileUserSchema.Type;
 
 export const MobileDataV1V2Schema = Schema.Struct({
   schoolYear: Schema.NullOr(SchoolyearSchema),
@@ -238,9 +232,9 @@ export const MobileDataSchema = Schema.Struct({
   user: MobileUserSchema,
 });
 
-export type MobileDataV1V2 = Schema.Schema.Type<typeof MobileDataV1V2Schema>;
+export type MobileDataV1V2 = typeof MobileDataV1V2Schema.Type;
 
-export type MobileData = Schema.Schema.Type<typeof MobileDataSchema>;
+export type MobileData = typeof MobileDataSchema.Type;
 
 export const StartupActionsSchema = Schema.Struct({
   startupActions: Schema.Array(
@@ -248,7 +242,7 @@ export const StartupActionsSchema = Schema.Struct({
   ),
 });
 
-export type StartupActions = Schema.Schema.Type<typeof StartupActionsSchema>;
+export type StartupActions = typeof StartupActionsSchema.Type;
 
 export const OnboardingTypeSchema = Schema.Literals(["TIMETABLE"]);
 
@@ -258,6 +252,6 @@ export const OnboardingSchema = Schema.Struct({
   step: Schema.String,
 });
 
-export type Onboarding = Schema.Schema.Type<typeof OnboardingSchema>;
+export type Onboarding = typeof OnboardingSchema.Type;
 
 export type OnboardingType = Onboarding["type"];

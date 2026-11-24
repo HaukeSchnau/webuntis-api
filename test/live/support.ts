@@ -172,7 +172,7 @@ export function summarizeSnapshotCollection<T>(
 
 const normalizeUnknown = normalizeSnapshotValue;
 
-function normalizeCollection<T>(items: ReadonlyArray<T>): unknown {
+function normalizeCollection(items: ReadonlyArray<unknown>): unknown {
   return normalizeUnknown(summarizeSnapshotCollection(items));
 }
 

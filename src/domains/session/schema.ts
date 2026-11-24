@@ -4,4 +4,4 @@ export const SessionStatusSchema = Schema.Struct({
   expiresInMs: Schema.Int,
 });
 
-export type SessionStatus = Schema.Schema.Type<typeof SessionStatusSchema>;
+export type SessionStatus = typeof SessionStatusSchema.Type;

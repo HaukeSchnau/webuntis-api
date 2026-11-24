@@ -68,7 +68,7 @@ export class MetadataState extends Context.Service<MetadataState, MetadataStateS
                 return yield* fetchMetadata(refreshedSession, false);
               }
 
-              return yield* new AuthError({
+              return yield* AuthError.make({
                 stage: "metadata",
                 status: response.status,
                 message: `Metadata bootstrap failed: ${body}`,

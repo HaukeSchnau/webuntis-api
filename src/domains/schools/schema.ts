@@ -10,7 +10,7 @@ export const SchoolSchema = Schema.Struct({
   server: Schema.String,
   serverUrl: Schema.String,
   address: Schema.String,
-  mobileServiceUrl: Schema.optional(Schema.NullOr(Schema.String)),
+  mobileServiceUrl: Schema.String.pipe(Schema.NullOr, Schema.optional),
   useMobileServiceUrlAndroid: Schema.optional(Schema.Boolean),
   useMobileServiceUrlIos: Schema.optional(Schema.Boolean),
 });
