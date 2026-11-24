@@ -8,16 +8,19 @@ export const resolveBaseUrl = (target: { readonly serverUrl: string }): string |
   const rawServerUrl = /^[a-z]+:\/\//iu.test(target.serverUrl)
     ? target.serverUrl
     : `https://${target.serverUrl.replace(/^\/+/u, "")}`;
+
   if (!URL.canParse(rawServerUrl)) {
     return undefined;
   }
 
   const url = new URL(rawServerUrl);
+
   if ((url.protocol !== "https:" && url.protocol !== "http:") || url.hostname === "") {
     return undefined;
   }
 
   const pathname = url.pathname.replace(/\/+$/u, "");
+
   if (
     pathname === "" ||
     pathname === "/" ||

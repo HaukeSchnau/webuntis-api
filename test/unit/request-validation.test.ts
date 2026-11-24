@@ -27,22 +27,27 @@ const rejects = <Input>(descriptor: RequestDescriptor<Input>, input: unknown) =>
 describe("request descriptor validation", () => {
   it.effect("rejects invalid input before resolving path, query, headers, or body", () => {
     const evaluated: Array<string> = [];
+
     const descriptor = request<{ readonly id: number }>({
       method: "POST",
       path: ({ id }) => {
         evaluated.push("path");
+
         return `items/${id}`;
       },
       query: ({ id }) => {
         evaluated.push("query");
+
         return { id };
       },
       headers: () => {
         evaluated.push("headers");
+
         return { "x-test": "test" };
       },
       body: ({ id }) => {
         evaluated.push("body");
+
         return { id };
       },
       policy: RequestPolicy.AuthOnly,
@@ -117,6 +122,7 @@ describe("request descriptor validation", () => {
         resourceType: "CLASS" as const,
         resource: 1,
       };
+
       expect(yield* validateRequest(TimetableRequests.getEntries, input)).toEqual(input);
     }),
   );

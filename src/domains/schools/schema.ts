@@ -14,4 +14,5 @@ export const SchoolSchema = Schema.Struct({
   useMobileServiceUrlAndroid: Schema.optional(Schema.Boolean),
   useMobileServiceUrlIos: Schema.optional(Schema.Boolean),
 });
+
 export type School = typeof SchoolSchema.Type;

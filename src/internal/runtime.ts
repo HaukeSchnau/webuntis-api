@@ -19,5 +19,6 @@ export const makeWebUntisCoreLayer = (connection: WebUntisConnection) => {
   const schoolResolverLayer = SchoolResolver.layer.pipe(Layer.provideMerge(connectionLayer));
   const sessionLayer = SessionState.layer.pipe(Layer.provideMerge(schoolResolverLayer));
   const metadataLayer = MetadataState.layer.pipe(Layer.provideMerge(sessionLayer));
+
   return WebUntisHttp.layer.pipe(Layer.provideMerge(metadataLayer));
 };

@@ -33,6 +33,7 @@ export const testConnection: WebUntisConnection = {
 
 const encodeJwt = (payloadValue: object) => {
   const header = "eyJhbGciOiJub25lIn0";
+
   const payload = btoa(JSON.stringify(payloadValue))
     .replace(/\+/gu, "-")
     .replace(/\//gu, "_")
@@ -50,6 +51,7 @@ export const makeJwtWithoutExpiry = () => encodeJwt({});
 
 export const jsonResponse = (body: unknown, init: ResponseInit = {}) => {
   const headers = new Headers(init.headers);
+
   if (!headers.has("content-type")) {
     headers.set("content-type", "application/json");
   }

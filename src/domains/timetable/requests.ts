@@ -98,14 +98,23 @@ const TimetableGridInput = Schema.Struct({ timetableType: Schema.optional(NonBla
 // never describe different shapes. Refinements such as `IsoDate` narrow values
 // at runtime only; they stay `string` here.
 export type TimetableEntriesRequest = typeof TimetableEntriesInput.Type;
+
 export type TimetableEntriesForResourcesRequest = typeof TimetableEntriesForResourcesInput.Type;
+
 export type TimetableEntriesWeekOverviewRequest = typeof TimetableEntriesWeekOverviewInput.Type;
+
 export type TimetableFilterRequest = typeof TimetableFilterInput.Type;
+
 export type TimetableEntriesSettingsRequest = typeof TimetableEntriesSettingsInput.Type;
+
 export type TimetableSearchRequest = typeof TimetableSearchInput.Type;
+
 export type TimetableCalendarRequest = typeof TimetableCalendarInput.Type;
+
 export type TimetableExternalCalendarRequest = typeof TimetableExternalCalendarInput.Type;
+
 export type TimetableAvailableRoomsRequest = typeof TimetableAvailableRoomsInput.Type;
+
 export type TimetableGridRequest = typeof TimetableGridInput.Type;
 
 export const TimetableRequests = {

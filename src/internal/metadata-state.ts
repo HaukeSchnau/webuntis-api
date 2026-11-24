@@ -64,6 +64,7 @@ export class MetadataState extends Context.Service<MetadataState, MetadataStateS
               if (mayRetry) {
                 yield* sessionState.invalidate(session.generation);
                 const refreshedSession = yield* sessionState.ensureAuthenticated;
+
                 return yield* fetchMetadata(refreshedSession, false);
               }
 
@@ -75,6 +76,7 @@ export class MetadataState extends Context.Service<MetadataState, MetadataStateS
             }
 
             const now = yield* Clock.currentTimeMillis;
+
             return yield* responseError("GET", "api/rest/view/v1/app/data", response, body, now);
           }
 

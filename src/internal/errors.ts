@@ -124,9 +124,11 @@ export const errorMessage = (error: unknown): string => {
   if (error instanceof Error) {
     return error.message;
   }
+
   if (typeof error === "string") {
     return error;
   }
+
   try {
     return JSON.stringify(error);
   } catch {
@@ -176,6 +178,7 @@ export const decodeError = (path: string, error: unknown): DecodeError =>
 const UpstreamErrorBody = Schema.fromJsonString(
   Schema.Struct({ errorCode: Schema.String, errorMessage: Schema.optional(Schema.String) }),
 );
+
 const decodeUpstreamErrorBody = Schema.decodeUnknownOption(UpstreamErrorBody);
 
 const maxBodyExcerptLength = 500;
@@ -186,9 +189,11 @@ const maxBodyExcerptLength = 500;
  */
 const bodyExcerpt = (body: string) => {
   const text = body.replace(/\s+/gu, " ").trim();
+
   if (text === "") {
     return "";
   }
+
   return text.length > maxBodyExcerptLength
     ? `: ${text.slice(0, maxBodyExcerptLength)}…`
     : `: ${text}`;
@@ -216,6 +221,7 @@ export const responseError = (
   if (response.status === 429) {
     const retryAfter = response.headers["retry-after"];
     const parsed = retryAfter === undefined ? undefined : Headers.parseRetryAfter(retryAfter);
+
     return new RateLimited({
       method,
       path,

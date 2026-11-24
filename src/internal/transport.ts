@@ -41,6 +41,7 @@ export const makeConnectionClient = (
 ) =>
   Effect.gen(function* () {
     const { budget, concurrency } = limits;
+
     const budgeted =
       budget === undefined
         ? base
@@ -59,11 +60,14 @@ export const makeConnectionClient = (
             // no failure mode, so a `RateLimiterError` here is a bug.
             HttpClient.catchTag("RateLimiterError", (error) => Effect.die(error)),
           );
+
     const retried = withTransientRetries(budgeted);
+
     if (concurrency === undefined) {
       return retried;
     }
 
     const semaphore = yield* Semaphore.make(concurrency);
+
     return HttpClient.transform(retried, (effect) => semaphore.withPermit(effect));
   });

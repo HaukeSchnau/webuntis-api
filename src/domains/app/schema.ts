@@ -47,6 +47,7 @@ export const AppPlatformApplicationMenusSchema = Schema.Array(AppPlatformApplica
 export type AppPlatformApplicationMenu = Schema.Schema.Type<
   typeof AppPlatformApplicationMenuSchema
 >;
+
 export type AppPlatformApplicationMenus = Schema.Schema.Type<
   typeof AppPlatformApplicationMenusSchema
 >;
@@ -92,6 +93,7 @@ export const AppExamIntegrationSchema = Schema.Struct({
 export const AppExamIntegrationsSchema = Schema.Array(AppExamIntegrationSchema);
 
 export type AppExamIntegration = Schema.Schema.Type<typeof AppExamIntegrationSchema>;
+
 export type AppExamIntegrations = Schema.Schema.Type<typeof AppExamIntegrationsSchema>;
 
 export const DashboardCardSchema = Schema.Struct({
@@ -106,6 +108,7 @@ export const DashboardCardSchema = Schema.Struct({
 });
 
 export type DashboardCard = Schema.Schema.Type<typeof DashboardCardSchema>;
+
 export const DashboardCardsSchema = Schema.Struct({
   dashboardCards: Schema.Array(DashboardCardSchema),
 });
@@ -126,6 +129,7 @@ export const DashboardCardsDetailItemSchema = Schema.Struct({
 });
 
 export type DashboardCardsDetailItem = Schema.Schema.Type<typeof DashboardCardsDetailItemSchema>;
+
 export const DashboardCardsDetailSchema = Schema.Struct({
   dashboardCardsDetails: Schema.Array(DashboardCardsDetailItemSchema),
 });
@@ -235,6 +239,7 @@ export const MobileDataSchema = Schema.Struct({
 });
 
 export type MobileDataV1V2 = Schema.Schema.Type<typeof MobileDataV1V2Schema>;
+
 export type MobileData = Schema.Schema.Type<typeof MobileDataSchema>;
 
 export const StartupActionsSchema = Schema.Struct({
@@ -254,4 +259,5 @@ export const OnboardingSchema = Schema.Struct({
 });
 
 export type Onboarding = Schema.Schema.Type<typeof OnboardingSchema>;
+
 export type OnboardingType = Onboarding["type"];

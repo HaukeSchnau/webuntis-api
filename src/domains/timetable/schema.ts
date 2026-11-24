@@ -92,6 +92,7 @@ export const TimetableAvailableRoomSchema = Schema.Struct({
 export const TimetableAvailableRoomsSchema = Schema.Array(TimetableAvailableRoomSchema);
 
 export type TimetableAvailableRoom = Schema.Schema.Type<typeof TimetableAvailableRoomSchema>;
+
 export type TimetableAvailableRooms = Schema.Schema.Type<typeof TimetableAvailableRoomsSchema>;
 
 export const TimetableDepartmentSchema = DisplayResourceSchema;
@@ -158,11 +159,13 @@ export type TimetableRoomFilterItem = Schema.Schema.Type<typeof TimetableRoomFil
 export const TimetableFilterSelectionSchema = JsonObjectSchema;
 
 export type TimetableFilterSelection = Schema.Schema.Type<typeof TimetableFilterSelectionSchema>;
+
 export const TimetableFilterResourceGroupSchema = JsonObjectSchema;
 
 export type TimetableFilterResourceGroup = Schema.Schema.Type<
   typeof TimetableFilterResourceGroupSchema
 >;
+
 export const TimetableFilterSchema = Schema.Struct({
   resourceType: TimetableResourceTypeSchema,
   preSelected: Schema.NullOr(TimetableFilterSelectionSchema),
@@ -302,9 +305,11 @@ export const TimetableBackEntrySchema = Schema.StructWithRest(
 );
 
 export type TimetableBackEntry = Schema.Schema.Type<typeof TimetableBackEntrySchema>;
+
 export const TimetableEntriesErrorSchema = JsonObjectSchema;
 
 export type TimetableEntriesError = Schema.Schema.Type<typeof TimetableEntriesErrorSchema>;
+
 export const TimetableEntryDaySchema = Schema.Struct({
   date: Schema.String,
   resourceType: TimetableResourceTypeSchema,
@@ -377,6 +382,7 @@ export const TimetableExternalCalendarItemSchema = JsonObjectSchema;
 export type TimetableExternalCalendarItem = Schema.Schema.Type<
   typeof TimetableExternalCalendarItemSchema
 >;
+
 export const TimetableExternalCalendarSchema = Schema.Array(TimetableExternalCalendarItemSchema);
 
 export type TimetableExternalCalendar = Schema.Schema.Type<typeof TimetableExternalCalendarSchema>;

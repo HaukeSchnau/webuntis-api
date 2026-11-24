@@ -42,7 +42,9 @@ const ExamsListInput = Schema.Union([
 ]).check(coherentOptionalDateRange);
 
 export type ExamDetailRequest = typeof ExamDetailInput.Type;
+
 export type ExamDateRangeRequest = typeof ExamDateRangeInput.Type;
+
 export type ExamsListRequest = typeof ExamsListInput.Type;
 
 export const ExamsRequests = {

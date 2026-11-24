@@ -136,12 +136,15 @@ export type MessageComposeRecipients = Schema.Schema.Type<typeof MessageComposeR
 export const MessageAttachmentSchema = JsonObjectSchema;
 
 export type MessageAttachment = Schema.Schema.Type<typeof MessageAttachmentSchema>;
+
 export const MessageRecipientSchema = JsonObjectSchema;
 
 export type MessageRecipient = Schema.Schema.Type<typeof MessageRecipientSchema>;
+
 export const MessageReplyHistoryEntrySchema = JsonObjectSchema;
 
 export type MessageReplyHistoryEntry = Schema.Schema.Type<typeof MessageReplyHistoryEntrySchema>;
+
 export const MessageRequestConfirmationSchema = JsonObjectSchema;
 
 export type MessageRequestConfirmation = Schema.Schema.Type<

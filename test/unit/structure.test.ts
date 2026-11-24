@@ -48,6 +48,7 @@ describe("public structure", () => {
   // its container, so the two must be exported together.
   it("exports a type for every schema on the public schema surface", () => {
     const domainsDir = new URL("../../src/domains/", import.meta.url);
+
     const schemaFiles = readdirSync(domainsDir, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .map((entry) => new URL(`${entry.name}/schema.ts`, domainsDir))
@@ -96,15 +97,18 @@ describe("public structure", () => {
               headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
             });
           }
+
           if (pathname.endsWith("/j_spring_security_check")) {
             return new Response("", {
               status: 302,
               headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
             });
           }
+
           if (pathname.endsWith("/api/token/new")) {
             return new Response(makeJwt(), { status: 200 });
           }
+
           if (pathname.endsWith("/api/rest/view/v1/app/data")) {
             return jsonResponse({
               currentSchoolYear: { id: 7 },

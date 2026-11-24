@@ -28,6 +28,7 @@ const absoluteUrlPattern = /^https?:\/\//u;
 const leadingSlashes = /^\/+/u;
 
 type HttpMethod = "GET" | "POST" | "PUT";
+
 type RequestState = AuthenticatedState | MetadataSnapshot;
 
 interface RequestOptions {
@@ -103,6 +104,7 @@ const buildRequest = (
     }
 
     const schoolYearId = resolveSchoolYearId(state, options, currentSchoolYearId);
+
     if (schoolYearId !== undefined) {
       request = HttpClientRequest.setHeader(
         request,
@@ -224,6 +226,7 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
           yield* sessionState.invalidate(state.generation);
 
           const refreshedState = yield* resolveState(policy);
+
           const retriedResponse = yield* executeRequest(
             refreshedState,
             method,

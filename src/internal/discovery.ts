@@ -42,12 +42,14 @@ export const searchSchools = (
   Effect.gen(function* () {
     const client = yield* HttpClient.HttpClient;
     const now = yield* Clock.currentTimeMillis;
+
     const response = yield* HttpClientRequest.post(schoolSearchEndpoint).pipe(
       HttpClientRequest.acceptJson,
       HttpClientRequest.bodyJson(searchPayload(query, now)),
       Effect.flatMap(client.execute),
       Effect.mapError((error) => httpClientErrorToTransportError("POST", "/schoolquery2", error)),
     );
+
     const ok = yield* HttpClientResponse.filterStatusOk(response).pipe(
       Effect.mapError(
         (cause) =>
@@ -58,10 +60,12 @@ export const searchSchools = (
           }),
       ),
     );
+
     const decoded = yield* HttpClientResponse.schemaBodyJson(
       SearchSchoolRpcResponseSchema,
       runtimeJsonParseOptions,
     )(ok).pipe(Effect.mapError((error) => decodeError("/schoolquery2", error)));
+
     return decoded.result.schools;
   }).pipe(Effect.withSpan("searchSchools"));
 
@@ -78,6 +82,7 @@ export const findSchool = (query: string) =>
   searchSchools(query).pipe(
     Effect.flatMap((schools) => {
       const normalizedQuery = query.trim().toLowerCase();
+
       const exactMatches = schools.filter(
         (school) =>
           school.displayName.toLowerCase() === normalizedQuery ||
@@ -87,6 +92,7 @@ export const findSchool = (query: string) =>
       );
 
       const exactMatch = onlyMatch(exactMatches);
+
       if (exactMatch !== undefined) {
         return Effect.succeed(exactMatch);
       }
@@ -111,6 +117,7 @@ export const findSchool = (query: string) =>
       }
 
       const soleMatch = onlyMatch(schools);
+
       if (soleMatch !== undefined) {
         return Effect.succeed(soleMatch);
       }

@@ -36,9 +36,13 @@ const MessageComposeRecipientsInput = Schema.Struct({
 const MessageIdInput = Schema.Struct({ id: PositiveInteger });
 
 export type MessageRecipientFilterRequest = typeof RecipientOptionInput.Type;
+
 export type MessageRecipientSearchRequest = typeof MessageRecipientSearchInput.Type;
+
 export type MessageComposeRecipientsRequest = typeof MessageComposeRecipientsInput.Type;
+
 export type MessageReplyFormRequest = typeof MessageIdInput.Type;
+
 export type MessageDetailRequest = typeof MessageIdInput.Type;
 
 export const MessagesRequests = {

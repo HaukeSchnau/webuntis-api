@@ -12,6 +12,7 @@ export interface SchoolResolverShape {
 
 const toResolvedSchool = (query: string, target: SchoolTarget) => {
   const baseUrl = resolveBaseUrl(target);
+
   return baseUrl === undefined
     ? Effect.fail(
         new DiscoveryError({
