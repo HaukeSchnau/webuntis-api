@@ -192,8 +192,8 @@ importers:
         specifier: 1.94.0
         version: 1.94.0
       '@schnau/tsconfig':
-        specifier: github:HaukeSchnau/nix-infra-modules#b365d13637b9dc83c397df542b5112a50ac8cbb9&path:/packages/tsconfig
-        version: https://codeload.github.com/HaukeSchnau/nix-infra-modules/tar.gz/b365d13637b9dc83c397df542b5112a50ac8cbb9#path:/packages/tsconfig
+        specifier: ^0.1.1
+        version: 0.1.1
       '@types/node':
         specifier: ^26.6.5
         version: 26.6.5
@@ -569,9 +569,8 @@ packages:
     resolution: {integrity: sha512-4EDEmvxWtgsCnnVeBvtFIFZtUhPPt1+bA9JrSwU4Sa//6oKtzCSlGGXYJr44OD9aGISymbieJ4mCKHUygUDU+g==}
     engines: {node: '>=18'}
 
-  '@schnau/tsconfig@https://codeload.github.com/HaukeSchnau/nix-infra-modules/tar.gz/b365d13637b9dc83c397df542b5112a50ac8cbb9#path:/packages/tsconfig':
-    resolution: {gitHosted: true, integrity: sha512-ZAAzZGsh+MXoXtHk4H/s7RTb5k78DKCV76BXWXlqurULCeYLibsF2iMyXhom4N4DJ7LQgpSojX4JE5a0Y4I9gA==, path: /packages/tsconfig, tarball: https://codeload.github.com/HaukeSchnau/nix-infra-modules/tar.gz/b365d13637b9dc83c397df542b5112a50ac8cbb9}
-    version: 0.1.0
+  '@schnau/tsconfig@0.1.1':
+    resolution: {integrity: sha512-mLrQmKG5grlce+587FTjGqbDbeasUJmX5dVKR41Te4oItMdipxwUHdFY6kOw93XgjH+fItdCEbgnvQynpuY9GA==}
 
   '@sindresorhus/is@4.6.0':
     resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}
@@ -1641,7 +1640,7 @@ snapshots:
     dependencies:
       tinyexec: 1.3.1
 
-  '@schnau/tsconfig@https://codeload.github.com/HaukeSchnau/nix-infra-modules/tar.gz/b365d13637b9dc83c397df542b5112a50ac8cbb9#path:/packages/tsconfig': {}
+  '@schnau/tsconfig@0.1.1': {}
 
   '@sindresorhus/is@4.6.0': {}
 
