@@ -8,9 +8,11 @@ describe("WebUntis transport retries", () => {
   it.effect("retries transient responses at the request boundary", () =>
     Effect.gen(function* () {
       let attempts = 0;
+
       const client = withTransientRetries(
         makeMockHttpClient(() => {
           attempts += 1;
+
           return new Response(null, { status: attempts < 3 ? 503 : 200 });
         }),
       );
@@ -27,9 +29,11 @@ describe("WebUntis transport retries", () => {
   it.effect("does not retry permanent responses", () =>
     Effect.gen(function* () {
       let attempts = 0;
+
       const client = withTransientRetries(
         makeMockHttpClient(() => {
           attempts += 1;
+
           return new Response(null, { status: 400 });
         }),
       );

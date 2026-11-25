@@ -1,5 +1,6 @@
 import { Clock, Context, Effect, Layer, type Result, type Schema } from "effect";
-import { HttpClientRequest, HttpClientResponse } from "effect/http";
+import type { HttpClientResponse } from "effect/http";
+import { HttpClientRequest } from "effect/http";
 import {
   type DecodeError,
   decodeError,
@@ -28,6 +29,7 @@ const absoluteUrlPattern = /^https?:\/\//u;
 const leadingSlashes = /^\/+/u;
 
 type HttpMethod = "GET" | "POST" | "PUT";
+
 type RequestState = AuthenticatedState | MetadataSnapshot;
 
 interface RequestOptions {
@@ -49,7 +51,7 @@ const mergeHeaders = (
   );
 
 const transportError = (method: HttpMethod, path: string, error: unknown) =>
-  new TransportError({
+  TransportError.make({
     method,
     path,
     message: errorMessage(error),
@@ -103,6 +105,7 @@ const buildRequest = (
     }
 
     const schoolYearId = resolveSchoolYearId(state, options, currentSchoolYearId);
+
     if (schoolYearId !== undefined) {
       request = HttpClientRequest.setHeader(
         request,
@@ -133,7 +136,7 @@ const failIfNonSuccess = (
     return Effect.succeed(response);
   }
 
-  return Effect.all([drainBody(response), Clock.currentTimeMillis]).pipe(
+  return Effect.all([drainBody(response), Clock.currentTimeMillis], { concurrency: 1 }).pipe(
     Effect.flatMap(([body, now]) => Effect.fail(responseError(method, path, response, body, now))),
   );
 };
@@ -224,6 +227,7 @@ export class WebUntisHttp extends Context.Service<WebUntisHttp, WebUntisHttpShap
           yield* sessionState.invalidate(state.generation);
 
           const refreshedState = yield* resolveState(policy);
+
           const retriedResponse = yield* executeRequest(
             refreshedState,
             method,

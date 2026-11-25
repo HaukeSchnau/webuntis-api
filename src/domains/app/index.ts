@@ -37,7 +37,9 @@ export class AppClient extends Context.Service<AppClient, AppClientShape>()("web
   static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
-      const { read, call } = makeOperations(yield* WebUntisHttp, "AppClient");
+      const http = yield* WebUntisHttp;
+
+      const { read, call } = makeOperations(http, "AppClient");
 
       return AppClient.of({
         getData: read("getData", AppRequests.getData),

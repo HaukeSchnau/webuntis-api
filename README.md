@@ -369,10 +369,10 @@ const results =
 
 ## Testing
 
-Run the static checks:
+Run the static checks (format, lint and the type check):
 
 ```bash
-just lint
+just check
 ```
 
 Run the tests:

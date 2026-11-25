@@ -40,20 +40,25 @@ describe("bootstrap and transport", () => {
 
             if (pathname.endsWith("/index.do")) {
               seedCalls += 1;
+
               return new Response("", {
                 status: 200,
                 headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               loginCalls += 1;
+
               return new Response("", {
                 status: 302,
                 headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/api/token/new")) {
               tokenCalls += 1;
+
               return new Response(makeJwt(), { status: 200 });
             }
 
@@ -93,15 +98,18 @@ describe("bootstrap and transport", () => {
                 headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               return new Response("", {
                 status: 302,
                 headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/api/token/new")) {
               return new Response(makeJwt(), { status: 200 });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/app/data")) {
               return jsonResponse({
                 currentSchoolYear: { id: 7 },
@@ -110,6 +118,7 @@ describe("bootstrap and transport", () => {
             }
 
             finalHeaders.push(request.headers);
+
             return jsonResponse({ ok: true });
           }),
         ),
@@ -144,22 +153,27 @@ describe("bootstrap and transport", () => {
                 headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               return new Response("", {
                 status: 302,
                 headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/api/token/new")) {
               return new Response(makeJwt(), { status: 200 });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/app/data")) {
               return jsonResponse({
                 currentSchoolYear: null,
                 tenant: { id: "tenant-42" },
               });
             }
+
             finalHeaders.push(request.headers);
+
             return jsonResponse({ ok: true });
           }),
         ),
@@ -198,17 +212,21 @@ describe("bootstrap and transport", () => {
                   headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
                 });
               }
+
               if (pathname.endsWith("/j_spring_security_check")) {
                 return new Response("", {
                   status: 302,
                   headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
                 });
               }
+
               if (pathname.endsWith("/api/token/new")) {
                 return new Response(makeJwt(), { status: 200 });
               }
+
               if (pathname.endsWith("/api/rest/view/v1/app/data")) {
                 metadataCalls += 1;
+
                 return jsonResponse({
                   currentSchoolYear: { id: 7 },
                   tenant: { id: "tenant-42" },
@@ -216,6 +234,7 @@ describe("bootstrap and transport", () => {
               }
 
               finalHeaders.push(request.headers);
+
               return jsonResponse({ ok: true });
             },
             {
@@ -234,6 +253,7 @@ describe("bootstrap and transport", () => {
     () => {
       const finalHeaders: Array<Readonly<Record<string, string>>> = [];
       let metadataCalls = 0;
+
       return Effect.gen(function* () {
         const http = yield* WebUntisHttp;
         yield* testGet(http, "api/rest/view/v1/messages/status");
@@ -261,17 +281,21 @@ describe("bootstrap and transport", () => {
                 headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               return new Response("", {
                 status: 302,
                 headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/api/token/new")) {
               return new Response(makeJwtWithoutExpiry(), { status: 200 });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/app/data")) {
               metadataCalls += 1;
+
               return jsonResponse({
                 currentSchoolYear: { id: metadataCalls === 1 ? 7 : 8 },
                 tenant: { id: "tenant-42" },
@@ -279,6 +303,7 @@ describe("bootstrap and transport", () => {
             }
 
             finalHeaders.push(request.headers);
+
             return jsonResponse({ ok: true });
           }),
         ),
@@ -308,14 +333,17 @@ describe("bootstrap and transport", () => {
                 headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               return new Response("", {
                 status: 302,
                 headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/api/token/new")) {
               tokenCalls += 1;
+
               return new Response(makeJwtWithoutExpiry(), { status: 200 });
             }
 
@@ -357,24 +385,30 @@ describe("bootstrap and transport", () => {
                 headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               return new Response("", {
                 status: 302,
                 headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/api/token/new")) {
               return new Response(makeJwt(), { status: 200 });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/app/data")) {
               metadataCalls += 1;
+
               return jsonResponse({
                 currentSchoolYear: { id: 7 },
                 tenant: { id: "tenant-42" },
               });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/schoolyears")) {
               finalHeaders.push(request.headers);
+
               return jsonResponse([
                 {
                   id: 7,
@@ -420,18 +454,23 @@ describe("bootstrap and transport", () => {
                 headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               return new Response("", {
                 status: 302,
                 headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/api/token/new")) {
               tokenCalls += 1;
+
               return new Response(makeJwt(), { status: 200 });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/app/data")) {
               metadataCalls += 1;
+
               return metadataCalls === 1
                 ? new Response("expired", { status: 401 })
                 : jsonResponse({
@@ -439,8 +478,10 @@ describe("bootstrap and transport", () => {
                     tenant: { id: "tenant-42" },
                   });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/messages/status")) {
               statusCalls += 1;
+
               return jsonResponse({ unreadMessagesCount: 0 });
             }
 
@@ -478,22 +519,29 @@ describe("bootstrap and transport", () => {
                 headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               return new Response("", {
                 status: 302,
                 headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/api/token/new")) {
               tokenCalls += 1;
+
               return new Response(makeJwt(), { status: 200 });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/app/data")) {
               metadataCalls += 1;
+
               return new Response("expired", { status: 401 });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/messages/status")) {
               statusCalls += 1;
+
               return jsonResponse({ unreadMessagesCount: 0 });
             }
 
@@ -525,6 +573,7 @@ describe("bootstrap and transport", () => {
                 headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               return new Response("<!DOCTYPE html><html>login</html>", {
                 status: 200,
@@ -547,6 +596,7 @@ describe("bootstrap and transport", () => {
     () =>
       Effect.gen(function* () {
         const http = yield* WebUntisHttp;
+
         const error = yield* Effect.flip(
           testGetSchema(
             http,
@@ -569,21 +619,25 @@ describe("bootstrap and transport", () => {
                 headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               return new Response("", {
                 status: 302,
                 headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/api/token/new")) {
               return new Response(makeJwt(), { status: 200 });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/app/data")) {
               return jsonResponse({
                 currentSchoolYear: { id: 7 },
                 tenant: { id: "tenant-42" },
               });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/messages/status")) {
               return new Response("{invalid-json", {
                 status: 200,
@@ -603,6 +657,7 @@ describe("bootstrap and transport", () => {
     () =>
       Effect.gen(function* () {
         const http = yield* WebUntisHttp;
+
         const error = yield* Effect.flip(
           testGetSchema(
             http,
@@ -625,21 +680,25 @@ describe("bootstrap and transport", () => {
                 headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               return new Response("", {
                 status: 302,
                 headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/api/token/new")) {
               return new Response(makeJwt(), { status: 200 });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/app/data")) {
               return jsonResponse({
                 currentSchoolYear: { id: 7 },
                 tenant: { id: "tenant-42" },
               });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/messages/status")) {
               return jsonResponse({
                 unreadMessagesCount: "0",
@@ -658,6 +717,7 @@ describe("bootstrap and transport", () => {
     () =>
       Effect.gen(function* () {
         const http = yield* WebUntisHttp;
+
         const decoded = yield* testGetSchema(
           http,
           "api/rest/view/v1/messages/status",
@@ -674,15 +734,19 @@ describe("bootstrap and transport", () => {
             if (pathname.endsWith("/index.do")) {
               return new Response("", { status: 200 });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               return new Response("", { status: 302 });
             }
+
             if (pathname.endsWith("/api/token/new")) {
               return new Response(makeJwt(), { status: 200 });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/app/data")) {
               return jsonResponse({ currentSchoolYear: { id: 7 }, tenant: { id: "tenant-42" } });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/messages/status")) {
               return jsonResponse({ unreadMessagesCount: 0, futureField: "ignored" });
             }
@@ -712,6 +776,7 @@ describe("bootstrap and transport", () => {
         expect(tokenCalls).toBe(2);
         expect(metadataCalls).toBe(2);
         expect(finalHeaders).toHaveLength(2);
+
         for (const headers of finalHeaders) {
           expect(headers["tenant-id"] ?? headers["Tenant-Id"]).toBe("tenant-42");
           expect(
@@ -726,20 +791,27 @@ describe("bootstrap and transport", () => {
             if (pathname.endsWith("/index.do")) {
               return new Response("", { status: 200 });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               return new Response("", { status: 302 });
             }
+
             if (pathname.endsWith("/api/token/new")) {
               tokenCalls += 1;
+
               return new Response(makeJwt(3_600 + tokenCalls), { status: 200 });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/app/data")) {
               metadataCalls += 1;
+
               return jsonResponse({ currentSchoolYear: { id: 7 }, tenant: { id: "tenant-42" } });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/messages/status")) {
               statusCalls += 1;
               finalHeaders.push(request.headers);
+
               return statusCalls === 1
                 ? new Response("expired", { status: 401 })
                 : jsonResponse({ unreadMessagesCount: 0 });
@@ -761,9 +833,11 @@ describe("bootstrap and transport", () => {
       let initialToken = "";
       let releaseSecondInitial!: () => void;
       let signalBothInitial!: () => void;
+
       const secondInitialMayFinish = new Promise<void>((resolve) => {
         releaseSecondInitial = resolve;
       });
+
       const bothInitialArrived = new Promise<void>((resolve) => {
         signalBothInitial = resolve;
       });
@@ -788,20 +862,26 @@ describe("bootstrap and transport", () => {
             if (pathname.endsWith("/index.do")) {
               return new Response("", { status: 200 });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               return new Response("", { status: 302 });
             }
+
             if (pathname.endsWith("/api/token/new")) {
               tokenCalls += 1;
               const token = makeJwt(3_600 + tokenCalls);
+
               if (tokenCalls === 1) {
                 initialToken = token;
               }
+
               return new Response(token, { status: 200 });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/app/data")) {
               return jsonResponse({ currentSchoolYear: { id: 7 }, tenant: { id: "tenant-42" } });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/messages/status")) {
               statusCalls += 1;
               const authorization = request.headers["authorization"] ?? "";
@@ -809,15 +889,19 @@ describe("bootstrap and transport", () => {
 
               if (isInitialToken && statusCalls === 1) {
                 await bothInitialArrived;
+
                 return new Response("expired", { status: 401 });
               }
+
               if (isInitialToken && statusCalls === 2) {
                 signalBothInitial();
                 await secondInitialMayFinish;
+
                 return new Response("expired", { status: 401 });
               }
 
               releaseSecondInitial();
+
               return jsonResponse({ unreadMessagesCount: 0 });
             }
 
@@ -862,22 +946,27 @@ describe("bootstrap and transport", () => {
                 headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/j_spring_security_check")) {
               return new Response("", {
                 status: 302,
                 headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
               });
             }
+
             if (pathname.endsWith("/api/token/new")) {
               return new Response(makeJwt(), { status: 200 });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/app/data")) {
               metadataCalls += 1;
+
               return jsonResponse({
                 currentSchoolYear: { id: metadataCalls === 1 ? 7 : 8 },
                 tenant: { id: "tenant-42" },
               });
             }
+
             if (pathname.endsWith("/api/rest/view/v1/messages/status")) {
               statusCalls += 1;
               finalHeaders.push(request.headers);

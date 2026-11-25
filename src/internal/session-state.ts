@@ -27,6 +27,7 @@ const decodeJwtPayload = Schema.decodeUnknownSync(JwtPayloadSchema);
  */
 const parseJwtExpiration = (token: string): number | undefined => {
   const payloadSegment = token.split(".")[1];
+
   if (payloadSegment === undefined) {
     return undefined;
   }
@@ -36,7 +37,9 @@ const parseJwtExpiration = (token: string): number | undefined => {
       .replace(/-/gu, "+")
       .replace(/_/gu, "/")
       .padEnd(Math.ceil(payloadSegment.length / 4) * 4, "=");
+
     const payload = decodeJwtPayload(JSON.parse(atob(base64)));
+
     return payload.exp === undefined ? undefined : payload.exp * 1_000;
   } catch {
     return undefined;
@@ -45,6 +48,7 @@ const parseJwtExpiration = (token: string): number | undefined => {
 
 const loginResponseLooksLikeHtml = (body: string): boolean => {
   const trimmed = body.trimStart();
+
   return trimmed.startsWith("<!DOCTYPE") || trimmed.startsWith("<html");
 };
 
@@ -84,6 +88,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
       const schoolResolver = yield* SchoolResolver;
       const cookiesRef = yield* Ref.make(Cookies.empty);
       const stateRef = yield* SynchronizedRef.make<SessionCache>(emptySessionState());
+
       const client = (yield* makeConnectionClient(baseClient, limiter, limits)).pipe(
         HttpClient.withCookiesRef(cookiesRef),
       );
@@ -104,7 +109,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
             );
 
           if (seedResponse.status < 200 || seedResponse.status >= 400) {
-            return yield* new AuthError({
+            return yield* AuthError.make({
               stage: "bootstrap",
               status: seedResponse.status,
               message: `Seed request failed for ${baseUrl}`,
@@ -131,7 +136,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
             );
 
           if (loginResponse.status < 200 || loginResponse.status >= 400) {
-            return yield* new AuthError({
+            return yield* AuthError.make({
               stage: "login",
               status: loginResponse.status,
               message: `WebUntis login handshake failed for ${credential.username}`,
@@ -150,7 +155,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
             );
 
             if (loginResponseLooksLikeHtml(loginBody)) {
-              return yield* new AuthError({
+              return yield* AuthError.make({
                 stage: "login",
                 status: loginResponse.status,
                 message: "WebUntis login returned HTML instead of a redirect",
@@ -171,7 +176,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
 
           // A rejected password still gets a 302 from the login form; only the
           // token endpoint tells, by redirecting to the anonymous start page.
-          const rejected = new InvalidCredentials({
+          const rejected = InvalidCredentials.make({
             school: school.loginName,
             message: `WebUntis rejected the credential for ${credential.username} at ${school.loginName}`,
           });
@@ -184,7 +189,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
           }
 
           if (tokenResponse.status < 200 || tokenResponse.status >= 300) {
-            return yield* new AuthError({
+            return yield* AuthError.make({
               stage: "token",
               status: tokenResponse.status,
               message: `Token minting failed for ${baseUrl}`,
@@ -232,6 +237,7 @@ export class SessionState extends Context.Service<SessionState, SessionStateShap
               if (state.rejected !== undefined) {
                 return Effect.succeed<LoginAttempt>([Effect.fail(state.rejected), state]);
               }
+
               return hasFreshToken(state, now)
                 ? Effect.succeed<LoginAttempt>([Effect.succeed(state), state])
                 : login(state);

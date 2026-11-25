@@ -42,18 +42,25 @@ const webUntis = (
   makeCoreTestLayer(
     (request) => {
       const { pathname } = new URL(request.url);
+
       if (pathname.endsWith("/index.do")) {
         return new Response("", { status: 200 });
       }
+
       if (pathname.endsWith("/j_spring_security_check")) {
         calls.logins += 1;
+
         return new Response("", { status: 302, headers: { location: "/WebUntis/index.do" } });
       }
+
       if (pathname.endsWith("/api/token/new")) {
         calls.tokens += 1;
+
         return token();
       }
+
       calls.reads += 1;
+
       return read(calls.reads);
     },
     { ...testConnection, school: { ...testSchoolTarget, tenantId: "tenant-42" } },
@@ -61,6 +68,7 @@ const webUntis = (
 
 const read = Effect.gen(function* () {
   const http = yield* WebUntisHttp;
+
   return yield* testGet(http, "api/rest/view/v1/test", { policy: "auth-only" });
 });
 
@@ -163,6 +171,7 @@ describe("typed failures", () => {
 
       expect(calls.reads).toBe(3);
       expect(error).toBeInstanceOf(RateLimited);
+
       if (error instanceof RateLimited) {
         expect(error.retryAfter).toEqual(Duration.seconds(30));
       }
@@ -174,28 +183,33 @@ describe("typed failures", () => {
   });
 });
 
-describe("connection limits", () => {
-  const limited = (limits: ConnectionLimits, onRead: () => Promise<Response>) =>
-    makeCoreTestLayer(
-      (request) => {
-        const { pathname } = new URL(request.url);
-        if (pathname.endsWith("/j_spring_security_check")) {
-          return new Response("", { status: 302 });
-        }
-        if (pathname.endsWith("/api/token/new")) {
-          return new Response(makeJwt(), { status: 200 });
-        }
-        if (pathname.endsWith("/app/data")) {
-          return jsonResponse({ currentSchoolYear: null, tenant: { id: "tenant-42" } });
-        }
-        if (pathname.endsWith("/index.do")) {
-          return new Response("", { status: 200 });
-        }
-        return onRead();
-      },
-      { ...testConnection, limits },
-    );
+const limited = (limits: ConnectionLimits, onRead: () => Promise<Response>) =>
+  makeCoreTestLayer(
+    (request) => {
+      const { pathname } = new URL(request.url);
 
+      if (pathname.endsWith("/j_spring_security_check")) {
+        return new Response("", { status: 302 });
+      }
+
+      if (pathname.endsWith("/api/token/new")) {
+        return new Response(makeJwt(), { status: 200 });
+      }
+
+      if (pathname.endsWith("/app/data")) {
+        return jsonResponse({ currentSchoolYear: null, tenant: { id: "tenant-42" } });
+      }
+
+      if (pathname.endsWith("/index.do")) {
+        return new Response("", { status: 200 });
+      }
+
+      return onRead();
+    },
+    { ...testConnection, limits },
+  );
+
+describe("connection limits", () => {
   it.effect("keeps at most `concurrency` requests in flight", () => {
     let inFlight = 0;
     let peak = 0;
@@ -215,6 +229,7 @@ describe("connection limits", () => {
           peak = Math.max(peak, inFlight);
           await new Promise((resolve) => setTimeout(resolve, 5));
           inFlight -= 1;
+
           return jsonResponse({});
         }),
       ),
@@ -227,6 +242,7 @@ describe("connection limits", () => {
 
     return Effect.gen(function* () {
       const http = yield* WebUntisHttp;
+
       // Logging in spends 4 of the 6 requests: index.do, login, token, app/data.
       const fiber = yield* Effect.all(
         Array.from({ length: 4 }, () => testGet(http, "api/rest/view/v1/test")),
@@ -245,6 +261,7 @@ describe("connection limits", () => {
       Effect.provide(
         limited({ budget: { requests: 6, window: "1 minute" } }, () => {
           reads += 1;
+
           return Promise.resolve(jsonResponse({}));
         }),
       ),
@@ -259,13 +276,16 @@ describe("connection limits", () => {
         { budget: { requests: 0, window: "1 minute" } },
         { budget: { requests: 10, window: "0 millis" } },
       ];
+
       for (const limits of invalid) {
         const connection: WebUntisConnection = { ...testConnection, limits };
-        const error = yield* Effect.flip(
-          Layer.build(webUntisLayer(connection)).pipe(
-            Effect.provide(mockHttpLayer(() => new Response())),
-          ),
+
+        const error = yield* webUntisLayer(connection).pipe(
+          Layer.build,
+          Effect.provide(mockHttpLayer(() => new Response())),
+          Effect.flip,
         );
+
         expect(error).toBeInstanceOf(ConfigurationError);
       }
     }),

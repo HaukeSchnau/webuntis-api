@@ -13,7 +13,7 @@ describe("public structure", () => {
   // A snapshot of the whole surface, so an accidental addition is as visible as
   // an accidental removal. Schema values must stay on the `/schemas` subpath.
   it("pins the root export surface", () => {
-    expect(Object.keys(api).sort()).toMatchInlineSnapshot(`
+    expect(Object.keys(api).toSorted()).toMatchInlineSnapshot(`
       [
         "AppClient",
         "AuthClient",
@@ -48,6 +48,7 @@ describe("public structure", () => {
   // its container, so the two must be exported together.
   it("exports a type for every schema on the public schema surface", () => {
     const domainsDir = new URL("../../src/domains/", import.meta.url);
+
     const schemaFiles = readdirSync(domainsDir, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .map((entry) => new URL(`${entry.name}/schema.ts`, domainsDir))
@@ -57,10 +58,11 @@ describe("public structure", () => {
       const source = readFileSync(url, "utf8");
       const types = new Set(source.match(/^export type (\w+)/gmu)?.map((line) => line.slice(12)));
 
-      return [...(source.match(/^export const (\w+)Schema\b/gmu) ?? [])]
-        .map((line) => line.slice(13, -6))
-        .filter((name) => !types.has(name))
-        .map((name) => `${url.pathname.split("/domains/")[1]}: ${name}Schema`);
+      return (source.match(/^export const (\w+)Schema\b/gmu) ?? []).flatMap((line) => {
+        const name = line.slice(13, -6);
+
+        return types.has(name) ? [] : [`${url.pathname.split("/domains/")[1]}: ${name}Schema`];
+      });
     });
 
     expect(missing).toEqual([]);
@@ -96,15 +98,18 @@ describe("public structure", () => {
               headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
             });
           }
+
           if (pathname.endsWith("/j_spring_security_check")) {
             return new Response("", {
               status: 302,
               headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
             });
           }
+
           if (pathname.endsWith("/api/token/new")) {
             return new Response(makeJwt(), { status: 200 });
           }
+
           if (pathname.endsWith("/api/rest/view/v1/app/data")) {
             return jsonResponse({
               currentSchoolYear: { id: 7 },

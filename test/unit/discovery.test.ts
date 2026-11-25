@@ -28,6 +28,7 @@ const searchReturning = (schools: ReadonlyArray<ReturnType<typeof school>>) =>
     if (new URL(request.url).pathname === "/schoolquery2") {
       return jsonResponse({ result: { schools }, id: "wu_schulsuche-1", jsonrpc: "2.0" });
     }
+
     throw new Error(`Unexpected request: ${request.method} ${request.url}`);
   });
 
@@ -66,6 +67,7 @@ describe("school search", () => {
       const error = yield* Effect.flip(findSchool("IGS"));
 
       expect(error).toBeInstanceOf(DiscoveryError);
+
       if (error instanceof DiscoveryError) {
         expect(error.matches).toHaveLength(2);
         expect(error.message).toContain("ambiguous");
@@ -116,12 +118,15 @@ describe("school search", () => {
             if (url.pathname === "/schoolquery2") {
               return jsonResponse({ result: { schools: [igs] }, id: "1", jsonrpc: "2.0" });
             }
+
             if (url.pathname.endsWith("/j_spring_security_check")) {
               return new Response("", { status: 302 });
             }
+
             if (url.pathname.endsWith("/api/token/new")) {
               return new Response(makeJwt(), { status: 200 });
             }
+
             return new Response("", { status: 200 });
           },
           { ...testConnection, school: "IGS Lilienthal" },

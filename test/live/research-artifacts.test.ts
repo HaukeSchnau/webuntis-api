@@ -32,9 +32,10 @@ const groupByFamily = (endpoints: ReadonlyArray<string>) =>
         const [, , , version, family = "root"] = endpoint.split("/");
         const key = `${version}:${family}`;
         acc[key] = (acc[key] ?? 0) + 1;
+
         return acc;
       }, {}),
-    ).sort(([left], [right]) => left.localeCompare(right)),
+    ).toSorted(([left], [right]) => left.localeCompare(right)),
   );
 
 describe("reverse-engineering artifacts", () => {

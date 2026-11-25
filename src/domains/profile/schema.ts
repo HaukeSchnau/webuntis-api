@@ -11,10 +11,10 @@ export const UserContactDataSchema = Schema.Struct({
   userEmailMissingOrDifferentToMasterData: Schema.Boolean,
 });
 
-export type UserContactData = Schema.Schema.Type<typeof UserContactDataSchema>;
+export type UserContactData = typeof UserContactDataSchema.Type;
 
 export const UserEmailSchema = Schema.Struct({
   email: Schema.String,
 });
 
-export type UserEmail = Schema.Schema.Type<typeof UserEmailSchema>;
+export type UserEmail = typeof UserEmailSchema.Type;

@@ -21,28 +21,34 @@ import {
  * so the cast is the subject of the test rather than a shortcut around it.
  */
 const rejects = <Input>(descriptor: RequestDescriptor<Input>, input: unknown) =>
+  // SAFETY: `input` breaks the descriptor's schema on purpose; the test checks that validation rejects it.
   // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   Effect.flip(validateRequest(descriptor, input as Input));
 
 describe("request descriptor validation", () => {
   it.effect("rejects invalid input before resolving path, query, headers, or body", () => {
     const evaluated: Array<string> = [];
+
     const descriptor = request<{ readonly id: number }>({
       method: "POST",
       path: ({ id }) => {
         evaluated.push("path");
+
         return `items/${id}`;
       },
       query: ({ id }) => {
         evaluated.push("query");
+
         return { id };
       },
       headers: () => {
         evaluated.push("headers");
+
         return { "x-test": "test" };
       },
       body: ({ id }) => {
         evaluated.push("body");
+
         return { id };
       },
       policy: RequestPolicy.AuthOnly,
@@ -117,7 +123,10 @@ describe("request descriptor validation", () => {
         resourceType: "CLASS" as const,
         resource: 1,
       };
-      expect(yield* validateRequest(TimetableRequests.getEntries, input)).toEqual(input);
+
+      const validated = yield* validateRequest(TimetableRequests.getEntries, input);
+
+      expect(validated).toEqual(input);
     }),
   );
 });

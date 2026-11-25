@@ -106,5 +106,6 @@ export const webUntisLayer = (connection: WebUntisConnection) =>
 export const makeWebUntisResearchLayer = (connection: WebUntisConnection) => {
   const layers = makeLayers(connection);
   const researchLayer = RawViewApiClient.layer.pipe(Layer.provide(layers.coreLayer));
+
   return Layer.fresh(Layer.mergeAll(layers.publicLayer, researchLayer, layers.coreLayer));
 };

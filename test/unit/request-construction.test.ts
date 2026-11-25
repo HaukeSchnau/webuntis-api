@@ -26,9 +26,11 @@ const decodeBody = (body: { readonly _tag: string; readonly body?: unknown }) =>
   if (body._tag === "Empty") {
     return undefined;
   }
+
   if (body._tag === "Uint8Array" && body.body instanceof Uint8Array) {
     return new TextDecoder().decode(body.body);
   }
+
   if (body._tag === "Raw") {
     return typeof body.body === "string" ? body.body : JSON.stringify(body.body);
   }
@@ -68,15 +70,18 @@ const makeRecorderLayer = (
         headers: { "set-cookie": "JSESSIONID=seed; Path=/;" },
       });
     }
+
     if (url.pathname.endsWith("/j_spring_security_check")) {
       return new Response("", {
         status: 302,
         headers: { "set-cookie": "JSESSIONID=login; Path=/;" },
       });
     }
+
     if (url.pathname.endsWith("/api/token/new")) {
       return new Response(makeJwt(), { status: 200 });
     }
+
     if (url.pathname.endsWith("/api/rest/view/v1/app/data")) {
       return jsonResponse({
         currentSchoolYear,
@@ -436,6 +441,7 @@ const makeRecorderLayer = (
 
 const getLast = (observed: Array<ObservedRequest>) => {
   const request = observed[observed.length - 1];
+
   if (request === undefined) {
     throw new Error("Expected at least one observed request");
   }
@@ -450,11 +456,10 @@ describe("request descriptors", () => {
     return Effect.gen(function* () {
       const client = yield* WebUntisClient;
 
-      yield* Effect.all([
-        client.exams.list(),
-        client.timetable.getGrid(),
-        client.classreg.getHomeworkMeta,
-      ]).pipe(withSchoolYear(6));
+      yield* Effect.all(
+        [client.exams.list(), client.timetable.getGrid(), client.classreg.getHomeworkMeta],
+        { concurrency: 1 },
+      ).pipe(withSchoolYear(6));
 
       expect(observed).toHaveLength(3);
       expect(observed.map((request) => request.headers["x-webuntis-api-school-year-id"])).toEqual([
@@ -547,6 +552,7 @@ describe("request descriptors", () => {
       const examRequests = observed.filter(
         (request) => request.url.pathname === "/WebUntis/api/rest/view/v1/exams",
       );
+
       expect(examRequests).toHaveLength(2);
       expect(
         examRequests.map((request) => request.headers["x-webuntis-api-school-year-id"]),
@@ -849,7 +855,10 @@ describe("request descriptors", () => {
   it.effect("rejected requests carry the WebUntis error code and response body", () =>
     Effect.gen(function* () {
       const raw = yield* RawViewApiClient;
-      const error = yield* Effect.flip(raw.getJson("api/rest/view/v1/test/validation-error"));
+
+      const error = yield* raw
+        .getJson("api/rest/view/v1/test/validation-error")
+        .pipe(Effect.asVoid, Effect.flip);
 
       expect(error).toBeInstanceOf(UpstreamRejected);
       expect(error).toMatchObject({ status: 400, errorCode: "VALIDATION_ERROR" });

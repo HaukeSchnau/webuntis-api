@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, it } from "@effect/vitest";
-import { Context, type Effect } from "effect";
+import { Context, Effect } from "effect";
 import { withSchoolYear } from "../../src/index.ts";
 import { resolveBaseUrl } from "../../src/internal/url.ts";
 
@@ -32,9 +32,13 @@ describe("internal URL normalization", () => {
 
 describe("school-year scope types", () => {
   it("preserves an effect's success, error, and requirement channels", () => {
-    // Type-level assertion only; the value is never run.
-    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
-    const original = undefined as unknown as Effect.Effect<number, "failure", TestDependency>;
+    // Type-level assertion only; the effect is never run.
+    const original: Effect.Effect<number, "failure", TestDependency> = Effect.gen(function* () {
+      const { value } = yield* TestDependency;
+
+      return value > 0 ? value : yield* Effect.fail("failure" as const);
+    });
+
     const scoped = withSchoolYear(7)(original);
 
     expectTypeOf(scoped).toEqualTypeOf<typeof original>();

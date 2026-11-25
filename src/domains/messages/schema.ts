@@ -6,7 +6,7 @@ export const MessagesStatusSchema = Schema.Struct({
   unreadMessagesCount: Schema.Int,
 });
 
-export type MessagesStatus = Schema.Schema.Type<typeof MessagesStatusSchema>;
+export type MessagesStatus = typeof MessagesStatusSchema.Type;
 
 export const MessageSenderSchema = Schema.Struct({
   className: Schema.NullOr(Schema.String),
@@ -15,7 +15,7 @@ export const MessageSenderSchema = Schema.Struct({
   userId: EntityId,
 });
 
-export type MessageSender = Schema.Schema.Type<typeof MessageSenderSchema>;
+export type MessageSender = typeof MessageSenderSchema.Type;
 
 export const MessageSummarySchema = Schema.Struct({
   id: EntityId,
@@ -30,14 +30,14 @@ export const MessageSummarySchema = Schema.Struct({
   isReplyAllowed: Schema.Boolean,
 });
 
-export type MessageSummary = Schema.Schema.Type<typeof MessageSummarySchema>;
+export type MessageSummary = typeof MessageSummarySchema.Type;
 
 export const MessagesInboxSchema = Schema.Struct({
   incomingMessages: Schema.Array(MessageSummarySchema),
   readConfirmationMessages: Schema.Array(JsonObjectSchema),
 });
 
-export type MessagesInbox = Schema.Schema.Type<typeof MessagesInboxSchema>;
+export type MessagesInbox = typeof MessagesInboxSchema.Type;
 
 export const MessageRecipientOptionSchema = Schema.Literals([
   "PARENTS",
@@ -47,7 +47,7 @@ export const MessageRecipientOptionSchema = Schema.Literals([
   "CUSTOM",
 ]);
 
-export type MessageRecipientOption = Schema.Schema.Type<typeof MessageRecipientOptionSchema>;
+export type MessageRecipientOption = typeof MessageRecipientOptionSchema.Type;
 
 export const MessagesPermissionsSchema = Schema.Struct({
   recipientOptions: Schema.Array(MessageRecipientOptionSchema),
@@ -60,7 +60,7 @@ export const MessagesPermissionsSchema = Schema.Struct({
   maxFileCount: Schema.Int,
 });
 
-export type MessagesPermissions = Schema.Schema.Type<typeof MessagesPermissionsSchema>;
+export type MessagesPermissions = typeof MessagesPermissionsSchema.Type;
 
 export const MessageQuickfilterItemSchema = Schema.Struct({
   id: EntityId,
@@ -72,31 +72,27 @@ export const MessageQuickfilterItemSchema = Schema.Struct({
   dynamic: Schema.Boolean,
 });
 
-export type MessageQuickfilterItem = Schema.Schema.Type<typeof MessageQuickfilterItemSchema>;
+export type MessageQuickfilterItem = typeof MessageQuickfilterItemSchema.Type;
 
 export const MessageRecipientQuickfiltersSchema = Schema.Struct({
   canCreatePublic: Schema.Boolean,
   items: Schema.Array(MessageQuickfilterItemSchema),
 });
 
-export type MessageRecipientQuickfilters = Schema.Schema.Type<
-  typeof MessageRecipientQuickfiltersSchema
->;
+export type MessageRecipientQuickfilters = typeof MessageRecipientQuickfiltersSchema.Type;
 
 export const MessageRecipientFilterGroupSchema = Schema.Struct({
   type: Schema.String,
   items: Schema.Array(Schema.String),
 });
 
-export type MessageRecipientFilterGroup = Schema.Schema.Type<
-  typeof MessageRecipientFilterGroupSchema
->;
+export type MessageRecipientFilterGroup = typeof MessageRecipientFilterGroupSchema.Type;
 
 export const MessageRecipientFilterSchema = Schema.Struct({
   filters: Schema.Array(MessageRecipientFilterGroupSchema),
 });
 
-export type MessageRecipientFilter = Schema.Schema.Type<typeof MessageRecipientFilterSchema>;
+export type MessageRecipientFilter = typeof MessageRecipientFilterSchema.Type;
 
 export const MessageRecipientSearchResultSchema = Schema.Struct({
   personId: EntityId,
@@ -106,13 +102,11 @@ export const MessageRecipientSearchResultSchema = Schema.Struct({
   role: Schema.String,
 });
 
-export type MessageRecipientSearchResult = Schema.Schema.Type<
-  typeof MessageRecipientSearchResultSchema
->;
+export type MessageRecipientSearchResult = typeof MessageRecipientSearchResultSchema.Type;
 
 export const MessageRecipientSearchSchema = Schema.Array(MessageRecipientSearchResultSchema);
 
-export type MessageRecipientSearch = Schema.Schema.Type<typeof MessageRecipientSearchSchema>;
+export type MessageRecipientSearch = typeof MessageRecipientSearchSchema.Type;
 
 export const MessageComposeRecipientUserSchema = Schema.Struct({
   id: EntityId,
@@ -123,30 +117,29 @@ export const MessageComposeRecipientUserSchema = Schema.Struct({
   className: Schema.NullOr(Schema.String),
 });
 
-export type MessageComposeRecipientUser = Schema.Schema.Type<
-  typeof MessageComposeRecipientUserSchema
->;
+export type MessageComposeRecipientUser = typeof MessageComposeRecipientUserSchema.Type;
 
 export const MessageComposeRecipientsSchema = Schema.Struct({
   users: Schema.Array(MessageComposeRecipientUserSchema),
 });
 
-export type MessageComposeRecipients = Schema.Schema.Type<typeof MessageComposeRecipientsSchema>;
+export type MessageComposeRecipients = typeof MessageComposeRecipientsSchema.Type;
 
 export const MessageAttachmentSchema = JsonObjectSchema;
 
-export type MessageAttachment = Schema.Schema.Type<typeof MessageAttachmentSchema>;
+export type MessageAttachment = typeof MessageAttachmentSchema.Type;
+
 export const MessageRecipientSchema = JsonObjectSchema;
 
-export type MessageRecipient = Schema.Schema.Type<typeof MessageRecipientSchema>;
+export type MessageRecipient = typeof MessageRecipientSchema.Type;
+
 export const MessageReplyHistoryEntrySchema = JsonObjectSchema;
 
-export type MessageReplyHistoryEntry = Schema.Schema.Type<typeof MessageReplyHistoryEntrySchema>;
+export type MessageReplyHistoryEntry = typeof MessageReplyHistoryEntrySchema.Type;
+
 export const MessageRequestConfirmationSchema = JsonObjectSchema;
 
-export type MessageRequestConfirmation = Schema.Schema.Type<
-  typeof MessageRequestConfirmationSchema
->;
+export type MessageRequestConfirmation = typeof MessageRequestConfirmationSchema.Type;
 
 export const MessageDetailSchema = Schema.Struct({
   id: EntityId,
@@ -166,7 +159,7 @@ export const MessageDetailSchema = Schema.Struct({
   requestConfirmation: Schema.NullOr(MessageRequestConfirmationSchema),
 });
 
-export type MessageDetail = Schema.Schema.Type<typeof MessageDetailSchema>;
+export type MessageDetail = typeof MessageDetailSchema.Type;
 
 export const MessageReplyHistoryItemSchema = Schema.Struct({
   id: EntityId,
@@ -181,7 +174,7 @@ export const MessageReplyHistoryItemSchema = Schema.Struct({
   storageAttachments: Schema.Array(MessageAttachmentSchema),
 });
 
-export type MessageReplyHistoryItem = Schema.Schema.Type<typeof MessageReplyHistoryItemSchema>;
+export type MessageReplyHistoryItem = typeof MessageReplyHistoryItemSchema.Type;
 
 export const MessageReplyFormSchema = Schema.Struct({
   subject: Schema.String,
@@ -193,7 +186,7 @@ export const MessageReplyFormSchema = Schema.Struct({
   replyHistory: Schema.Array(MessageReplyHistoryItemSchema),
 });
 
-export type MessageReplyForm = Schema.Schema.Type<typeof MessageReplyFormSchema>;
+export type MessageReplyForm = typeof MessageReplyFormSchema.Type;
 
 export const MessageDraftSummarySchema = Schema.Struct({
   id: EntityId,
@@ -202,13 +195,13 @@ export const MessageDraftSummarySchema = Schema.Struct({
   hasAttachments: Schema.Boolean,
 });
 
-export type MessageDraftSummary = Schema.Schema.Type<typeof MessageDraftSummarySchema>;
+export type MessageDraftSummary = typeof MessageDraftSummarySchema.Type;
 
 export const MessageDraftsSchema = Schema.Struct({
   draftMessages: Schema.Array(MessageDraftSummarySchema),
 });
 
-export type MessageDrafts = Schema.Schema.Type<typeof MessageDraftsSchema>;
+export type MessageDrafts = typeof MessageDraftsSchema.Type;
 
 export const MessageSentSummarySchema = Schema.Struct({
   id: EntityId,
@@ -218,10 +211,10 @@ export const MessageSentSummarySchema = Schema.Struct({
   hasAttachments: Schema.Boolean,
 });
 
-export type MessageSentSummary = Schema.Schema.Type<typeof MessageSentSummarySchema>;
+export type MessageSentSummary = typeof MessageSentSummarySchema.Type;
 
 export const MessageSentSchema = Schema.Struct({
   sentMessages: Schema.Array(MessageSentSummarySchema),
 });
 
-export type MessageSent = Schema.Schema.Type<typeof MessageSentSchema>;
+export type MessageSent = typeof MessageSentSchema.Type;

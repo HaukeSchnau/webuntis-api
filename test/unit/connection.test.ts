@@ -54,11 +54,10 @@ describe("connections", () => {
   it.effect("rejects a pinned server URL that cannot address WebUntis", () =>
     Effect.gen(function* () {
       for (const serverUrl of ["file:///tmp/webuntis", "https://", "http://exa mple.com"]) {
-        const error = yield* Effect.flip(
-          Layer.build(
-            webUntisLayer({ ...testConnection, school: { loginName: "x", serverUrl } }),
-          ).pipe(Effect.provide(mockHttpLayer(() => new Response()))),
-        );
+        const error = yield* webUntisLayer({
+          ...testConnection,
+          school: { loginName: "x", serverUrl },
+        }).pipe(Layer.build, Effect.provide(mockHttpLayer(() => new Response())), Effect.flip);
 
         expect(error).toBeInstanceOf(ConfigurationError);
       }
@@ -68,6 +67,7 @@ describe("connections", () => {
   it.effect("keeps several schools and accounts apart in one process", () => {
     const logins: Array<string> = [];
     const reads: Array<string> = [];
+
     const connections = {
       a: {
         school: { loginName: "school-a", serverUrl: "a.webuntis.test" },
@@ -81,24 +81,31 @@ describe("connections", () => {
 
     const http = mockHttpLayer((request) => {
       const url = new URL(request.url);
+
       if (url.pathname.endsWith("/j_spring_security_check")) {
         const body = request.body._tag === "Uint8Array" ? request.body.body : new Uint8Array();
         const form = new URLSearchParams(new TextDecoder().decode(body));
         logins.push(`${url.host} ${form.get("school")} ${form.get("j_username")}`);
+
         return new Response("", { status: 302 });
       }
+
       if (url.pathname.endsWith("/api/token/new")) {
         return new Response(`${url.host}-token`, { status: 200 });
       }
+
       if (url.pathname.endsWith("/app/data")) {
         return jsonResponse({ currentSchoolYear: null, tenant: { id: `tenant-of-${url.host}` } });
       }
+
       if (url.pathname.endsWith("/schoolyears")) {
         reads.push(
           `${url.host} ${request.headers["authorization"]} ${request.headers["tenant-id"]}`,
         );
+
         return jsonResponse([]);
       }
+
       return new Response("", { status: 200 });
     });
 
@@ -106,6 +113,7 @@ describe("connections", () => {
       const schools = yield* LayerMap.make((key: keyof typeof connections) =>
         webUntisLayer(connections[key]).pipe(Layer.provide(http)),
       );
+
       const listYears = (key: keyof typeof connections) =>
         SchoolyearsClient.use((client) => client.list).pipe(Effect.provide(schools.get(key)));
 
@@ -113,11 +121,11 @@ describe("connections", () => {
         concurrency: "unbounded",
       });
 
-      expect(logins.sort()).toEqual([
+      expect(logins.toSorted()).toEqual([
         "a.webuntis.test school-a alice",
         "b.webuntis.test school-b bob",
       ]);
-      expect(reads.sort()).toEqual([
+      expect(reads.toSorted()).toEqual([
         "a.webuntis.test Bearer a.webuntis.test-token tenant-of-a.webuntis.test",
         "a.webuntis.test Bearer a.webuntis.test-token tenant-of-a.webuntis.test",
         "b.webuntis.test Bearer b.webuntis.test-token tenant-b",

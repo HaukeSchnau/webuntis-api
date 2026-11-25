@@ -77,18 +77,23 @@ const connectionProblem = ({ school, limits = {} }: WebUntisConnection): string 
   if (typeof school !== "string" && resolveBaseUrl(school) === undefined) {
     return `serverUrl ${JSON.stringify(school.serverUrl)} is not an HTTP(S) URL or host`;
   }
+
   if (limits.concurrency !== undefined && !isPositiveInteger(limits.concurrency)) {
     return `limits.concurrency must be a positive integer, got ${limits.concurrency}`;
   }
+
   if (limits.budget !== undefined) {
     const window = Duration.fromInput(limits.budget.window);
+
     if (!isPositiveInteger(limits.budget.requests)) {
       return `limits.budget.requests must be a positive integer, got ${limits.budget.requests}`;
     }
+
     if (Option.isNone(window) || !Duration.isPositive(window.value)) {
       return "limits.budget.window must be a positive duration";
     }
   }
+
   return undefined;
 };
 
@@ -102,9 +107,10 @@ export class Connection extends Context.Service<Connection, WebUntisConnection>(
       this,
       Effect.suspend(() => {
         const problem = connectionProblem(connection);
+
         return problem === undefined
           ? Effect.succeed(connection)
-          : Effect.fail(new ConfigurationError({ message: problem }));
+          : Effect.fail(ConfigurationError.make({ message: problem }));
       }),
     );
 }

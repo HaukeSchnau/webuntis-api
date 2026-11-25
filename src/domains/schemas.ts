@@ -7,11 +7,19 @@
  * `src/internal` and are deliberately unreachable from this entry point.
  */
 export * from "./app/schema.ts";
+
 export * from "./classreg/schema.ts";
+
 export * from "./exams/schema.ts";
+
 export * from "./messages/schema.ts";
+
 export * from "./profile/schema.ts";
+
 export * from "./schools/schema.ts";
+
 export * from "./session/schema.ts";
+
 export * from "./shared/schema.ts";
+
 export * from "./timetable/schema.ts";

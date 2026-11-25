@@ -4,7 +4,7 @@ import { Headers, HttpClientError, type HttpClientResponse } from "effect/http";
 export class DiscoveryError extends Schema.TaggedError<DiscoveryError>()("DiscoveryError", {
   query: Schema.String,
   message: Schema.String,
-  matches: Schema.optional(Schema.Array(Schema.String)),
+  matches: Schema.String.pipe(Schema.Array, Schema.optional),
   cause: Schema.optional(Schema.Unknown),
 }) {}
 
@@ -124,9 +124,11 @@ export const errorMessage = (error: unknown): string => {
   if (error instanceof Error) {
     return error.message;
   }
+
   if (typeof error === "string") {
     return error;
   }
+
   try {
     return JSON.stringify(error);
   } catch {
@@ -141,7 +143,7 @@ export const httpClientErrorToTransportError = (
 ): TransportError => {
   if (HttpClientError.isHttpClientError(error)) {
     if (error.reason._tag === "StatusCodeError") {
-      return new TransportError({
+      return TransportError.make({
         method,
         path,
         message: `HTTP ${error.reason.response.status} for ${method} ${path}`,
@@ -150,7 +152,7 @@ export const httpClientErrorToTransportError = (
       });
     }
 
-    return new TransportError({
+    return TransportError.make({
       method,
       path,
       message: errorMessage(error.reason),
@@ -158,7 +160,7 @@ export const httpClientErrorToTransportError = (
     });
   }
 
-  return new TransportError({
+  return TransportError.make({
     method,
     path,
     message: errorMessage(error),
@@ -167,7 +169,7 @@ export const httpClientErrorToTransportError = (
 };
 
 export const decodeError = (path: string, error: unknown): DecodeError =>
-  new DecodeError({
+  DecodeError.make({
     path,
     message: errorMessage(error),
     cause: error,
@@ -176,6 +178,7 @@ export const decodeError = (path: string, error: unknown): DecodeError =>
 const UpstreamErrorBody = Schema.fromJsonString(
   Schema.Struct({ errorCode: Schema.String, errorMessage: Schema.optional(Schema.String) }),
 );
+
 const decodeUpstreamErrorBody = Schema.decodeUnknownOption(UpstreamErrorBody);
 
 const maxBodyExcerptLength = 500;
@@ -186,9 +189,11 @@ const maxBodyExcerptLength = 500;
  */
 const bodyExcerpt = (body: string) => {
   const text = body.replace(/\s+/gu, " ").trim();
+
   if (text === "") {
     return "";
   }
+
   return text.length > maxBodyExcerptLength
     ? `: ${text.slice(0, maxBodyExcerptLength)}…`
     : `: ${text}`;
@@ -210,13 +215,14 @@ export const responseError = (
   const message = `HTTP ${response.status} for ${method} ${path}${bodyExcerpt(body)}`;
 
   if (response.status === 403) {
-    return new PermissionDenied({ method, path, message, errorCode: upstream?.errorCode, body });
+    return PermissionDenied.make({ method, path, message, errorCode: upstream?.errorCode, body });
   }
 
   if (response.status === 429) {
     const retryAfter = response.headers["retry-after"];
     const parsed = retryAfter === undefined ? undefined : Headers.parseRetryAfter(retryAfter);
-    return new RateLimited({
+
+    return RateLimited.make({
       method,
       path,
       message,
@@ -228,7 +234,7 @@ export const responseError = (
   }
 
   if (upstream !== undefined) {
-    return new UpstreamRejected({
+    return UpstreamRejected.make({
       method,
       path,
       status: response.status,
@@ -238,5 +244,5 @@ export const responseError = (
     });
   }
 
-  return new TransportError({ method, path, status: response.status, body, message });
+  return TransportError.make({ method, path, status: response.status, body, message });
 };

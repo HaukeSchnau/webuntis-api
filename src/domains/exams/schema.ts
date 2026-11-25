@@ -7,7 +7,7 @@ export const ExamTypeSchema = Schema.Struct({
   gradingScaleId: EntityId,
 });
 
-export type ExamType = Schema.Schema.Type<typeof ExamTypeSchema>;
+export type ExamType = typeof ExamTypeSchema.Type;
 
 export const ExamStudentSchema = Schema.Struct({
   ...DisplayResourceSchema.fields,
@@ -18,7 +18,7 @@ export const ExamStudentSchema = Schema.Struct({
   disadvantageCompensation: Schema.Boolean,
 });
 
-export type ExamStudent = Schema.Schema.Type<typeof ExamStudentSchema>;
+export type ExamStudent = typeof ExamStudentSchema.Type;
 
 export const ExamInvigilatorSchema = Schema.Struct({
   start: Schema.String,
@@ -26,7 +26,7 @@ export const ExamInvigilatorSchema = Schema.Struct({
   teachers: Schema.Array(DisplayResourceSchema),
 });
 
-export type ExamInvigilator = Schema.Schema.Type<typeof ExamInvigilatorSchema>;
+export type ExamInvigilator = typeof ExamInvigilatorSchema.Type;
 
 export const ExamSchema = Schema.Struct({
   examId: EntityId,
@@ -61,14 +61,14 @@ export const ExamSchema = Schema.Struct({
   canWriteGrades: Schema.Boolean,
 });
 
-export type Exam = Schema.Schema.Type<typeof ExamSchema>;
+export type Exam = typeof ExamSchema.Type;
 
 export const ExamsSchema = Schema.Struct({
   exams: Schema.Array(ExamSchema),
   withDeleted: Schema.Boolean,
 });
 
-export type Exams = Schema.Schema.Type<typeof ExamsSchema>;
+export type Exams = typeof ExamsSchema.Type;
 
 export const ExamsForClassSchema = Schema.Struct({
   examsDone: Schema.Array(JsonObjectSchema),
@@ -76,7 +76,7 @@ export const ExamsForClassSchema = Schema.Struct({
   examsFuture: Schema.Array(JsonObjectSchema),
 });
 
-export type ExamsForClass = Schema.Schema.Type<typeof ExamsForClassSchema>;
+export type ExamsForClass = typeof ExamsForClassSchema.Type;
 
 export const ExamFilterSchema = Schema.Struct({
   examTypes: Schema.Array(DisplayResourceSchema),
@@ -85,21 +85,21 @@ export const ExamFilterSchema = Schema.Struct({
   teachers: Schema.Array(DisplayResourceSchema),
 });
 
-export type ExamFilter = Schema.Schema.Type<typeof ExamFilterSchema>;
+export type ExamFilter = typeof ExamFilterSchema.Type;
 
 export const ExamGradingScaleMarkSchema = Schema.Struct({
   name: Schema.String,
   value: Schema.Finite,
 });
 
-export type ExamGradingScaleMark = Schema.Schema.Type<typeof ExamGradingScaleMarkSchema>;
+export type ExamGradingScaleMark = typeof ExamGradingScaleMarkSchema.Type;
 
 export const ExamGradingScaleWithMarksSchema = Schema.Struct({
   ...DisplayResourceSchema.fields,
   marks: Schema.Array(ExamGradingScaleMarkSchema),
 });
 
-export type ExamGradingScaleWithMarks = Schema.Schema.Type<typeof ExamGradingScaleWithMarksSchema>;
+export type ExamGradingScaleWithMarks = typeof ExamGradingScaleWithMarksSchema.Type;
 
 export const ExamGradeSchema = Schema.Struct({
   id: EntityId,
@@ -107,7 +107,7 @@ export const ExamGradeSchema = Schema.Struct({
   weight: Schema.Finite,
 });
 
-export type ExamGrade = Schema.Schema.Type<typeof ExamGradeSchema>;
+export type ExamGrade = typeof ExamGradeSchema.Type;
 
 export const ExamStatisticsEntrySchema = Schema.Struct({
   exam: ExamSchema,
@@ -120,14 +120,14 @@ export const ExamStatisticsEntrySchema = Schema.Struct({
   countPerGrade: Schema.Array(Schema.Unknown),
 });
 
-export type ExamStatisticsEntry = Schema.Schema.Type<typeof ExamStatisticsEntrySchema>;
+export type ExamStatisticsEntry = typeof ExamStatisticsEntrySchema.Type;
 
 export const ExamStatisticsSchema = Schema.Struct({
   exams: Schema.Array(ExamStatisticsEntrySchema),
 });
 
-export type ExamStatistics = Schema.Schema.Type<typeof ExamStatisticsSchema>;
+export type ExamStatistics = typeof ExamStatisticsSchema.Type;
 
 export const ExamDetailSchema = ExamSchema;
 
-export type ExamDetail = Schema.Schema.Type<typeof ExamDetailSchema>;
+export type ExamDetail = typeof ExamDetailSchema.Type;

@@ -26,7 +26,9 @@ export class ExamsClient extends Context.Service<ExamsClient, ExamsClientShape>(
   static readonly layer = Layer.effect(
     this,
     Effect.gen(function* () {
-      const { read, callOptional, call } = makeOperations(yield* WebUntisHttp, "ExamsClient");
+      const http = yield* WebUntisHttp;
+
+      const { read, callOptional, call } = makeOperations(http, "ExamsClient");
 
       return ExamsClient.of({
         list: callOptional("list", ExamsRequests.list, undefined),

@@ -42,26 +42,29 @@ export const searchSchools = (
   Effect.gen(function* () {
     const client = yield* HttpClient.HttpClient;
     const now = yield* Clock.currentTimeMillis;
+
     const response = yield* HttpClientRequest.post(schoolSearchEndpoint).pipe(
       HttpClientRequest.acceptJson,
       HttpClientRequest.bodyJson(searchPayload(query, now)),
       Effect.flatMap(client.execute),
       Effect.mapError((error) => httpClientErrorToTransportError("POST", "/schoolquery2", error)),
     );
+
     const ok = yield* HttpClientResponse.filterStatusOk(response).pipe(
-      Effect.mapError(
-        (cause) =>
-          new DiscoveryError({
-            query,
-            message: `School search failed for ${JSON.stringify(query)}`,
-            cause,
-          }),
+      Effect.mapError((cause) =>
+        DiscoveryError.make({
+          query,
+          message: `School search failed for ${JSON.stringify(query)}`,
+          cause,
+        }),
       ),
     );
+
     const decoded = yield* HttpClientResponse.schemaBodyJson(
       SearchSchoolRpcResponseSchema,
       runtimeJsonParseOptions,
     )(ok).pipe(Effect.mapError((error) => decodeError("/schoolquery2", error)));
+
     return decoded.result.schools;
   }).pipe(Effect.withSpan("searchSchools"));
 
@@ -78,6 +81,7 @@ export const findSchool = (query: string) =>
   searchSchools(query).pipe(
     Effect.flatMap((schools) => {
       const normalizedQuery = query.trim().toLowerCase();
+
       const exactMatches = schools.filter(
         (school) =>
           school.displayName.toLowerCase() === normalizedQuery ||
@@ -87,13 +91,14 @@ export const findSchool = (query: string) =>
       );
 
       const exactMatch = onlyMatch(exactMatches);
+
       if (exactMatch !== undefined) {
         return Effect.succeed(exactMatch);
       }
 
       if (exactMatches.length > 1) {
         return Effect.fail(
-          new DiscoveryError({
+          DiscoveryError.make({
             query,
             message: `Multiple WebUntis tenants matched ${JSON.stringify(query)} exactly`,
             matches: exactMatches.map((school) => school.serverUrl),
@@ -103,7 +108,7 @@ export const findSchool = (query: string) =>
 
       if (schools.length === 0) {
         return Effect.fail(
-          new DiscoveryError({
+          DiscoveryError.make({
             query,
             message: `No WebUntis tenant matched ${JSON.stringify(query)}`,
           }),
@@ -111,12 +116,13 @@ export const findSchool = (query: string) =>
       }
 
       const soleMatch = onlyMatch(schools);
+
       if (soleMatch !== undefined) {
         return Effect.succeed(soleMatch);
       }
 
       return Effect.fail(
-        new DiscoveryError({
+        DiscoveryError.make({
           query,
           message: `School discovery for ${JSON.stringify(query)} was ambiguous; pass the chosen school from searchSchools instead of its name`,
           matches: schools.map((school) => `${school.displayName} <${school.serverUrl}>`),

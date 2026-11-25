@@ -29,16 +29,20 @@ const MessageRecipientSearchInput = Schema.Struct({
 
 const MessageComposeRecipientsInput = Schema.Struct({
   recipientOption: MessageRecipientOptionSchema,
-  filters: Schema.optional(Schema.Array(Schema.Unknown)),
+  filters: Schema.Unknown.pipe(Schema.Array, Schema.optional),
   searchText: Schema.optional(Schema.String),
 });
 
 const MessageIdInput = Schema.Struct({ id: PositiveInteger });
 
 export type MessageRecipientFilterRequest = typeof RecipientOptionInput.Type;
+
 export type MessageRecipientSearchRequest = typeof MessageRecipientSearchInput.Type;
+
 export type MessageComposeRecipientsRequest = typeof MessageComposeRecipientsInput.Type;
+
 export type MessageReplyFormRequest = typeof MessageIdInput.Type;
+
 export type MessageDetailRequest = typeof MessageIdInput.Type;
 
 export const MessagesRequests = {

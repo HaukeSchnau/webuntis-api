@@ -13,21 +13,27 @@ const week = { start: "2026-03-16", end: "2026-03-20", resourceType: "CLASS" } a
 const timetableFor = (sent: Array<string>, entries: (resource: string) => Response) =>
   makeCoreTestLayer((request) => {
     const url = new URL(request.url);
+
     if (url.pathname.endsWith("/j_spring_security_check")) {
       return new Response("", { status: 302 });
     }
+
     if (url.pathname.endsWith("/api/token/new")) {
       return new Response(makeJwt(), { status: 200 });
     }
+
     if (url.pathname.endsWith("/app/data")) {
       return jsonResponse({ currentSchoolYear: { id: 7 }, tenant: { id: "tenant-42" } });
     }
+
     if (url.pathname.endsWith("/timetable/entries")) {
       const param = Array.from(request.urlParams).find(([key]) => key === "resources")?.[1];
       const resource = typeof param === "string" ? param : "";
       sent.push(resource);
+
       return entries(resource);
     }
+
     return new Response("", { status: 200 });
   });
 
@@ -42,6 +48,7 @@ describe("timetable entries for many resources", () => {
 
     return Effect.gen(function* () {
       const timetable = yield* TimetableClient;
+
       const results = yield* timetable.getEntriesForResources(
         { ...week, resources: [1, 2, 3, 4] },
         { raw: true },
@@ -95,9 +102,11 @@ describe("timetable entries for many resources", () => {
 
     return Effect.gen(function* () {
       const timetable = yield* TimetableClient;
+
       const notAnId = yield* Effect.flip(
         timetable.getEntriesForResources({ ...week, resources: [1, 0] }),
       );
+
       const backwards = yield* Effect.flip(
         timetable.getEntriesForResources({ ...week, end: "2026-03-01", resources: [1] }),
       );

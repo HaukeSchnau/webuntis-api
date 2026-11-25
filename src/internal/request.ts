@@ -9,6 +9,7 @@ export const RequestPolicy = {
 export type RequestPolicy = (typeof RequestPolicy)[keyof typeof RequestPolicy];
 
 export type QueryParams = Readonly<Record<string, string | number | boolean | undefined>>;
+
 export type HeaderParams = Readonly<Record<string, string | undefined>>;
 
 export interface RequestDescriptor<Input> {
@@ -73,8 +74,8 @@ export const validateInput =
   <Input>(schema: Schema.Codec<Input, unknown>, path: string) =>
   (input: Input): Effect.Effect<Input, InvalidRequestError> =>
     Schema.decodeUnknownEffect(schema)(input).pipe(
-      Effect.mapError(
-        (cause) => new InvalidRequestError({ path, message: errorMessage(cause), cause }),
+      Effect.mapError((cause) =>
+        InvalidRequestError.make({ path, message: errorMessage(cause), cause }),
       ),
     );
 
@@ -102,6 +103,7 @@ const isoDatePattern = /^(\d{4})-(\d{2})-(\d{2})$/u;
 
 const isValidCalendarDate = (value: string): boolean => {
   const match = isoDatePattern.exec(value);
+
   if (match === null) {
     return false;
   }
@@ -110,6 +112,7 @@ const isValidCalendarDate = (value: string): boolean => {
   const month = Number(match[2]);
   const day = Number(match[3]);
   const date = new Date(Date.UTC(year, month - 1, day));
+
   return (
     date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day
   );
@@ -118,9 +121,11 @@ const isValidCalendarDate = (value: string): boolean => {
 export const IsoDate = Schema.String.check(
   Schema.makeFilter((value) => {
     const match = isoDatePattern.exec(value);
+
     if (match === null) {
       return "must be an ISO date in YYYY-MM-DD format";
     }
+
     return isValidCalendarDate(value) || "must be a valid calendar date";
   }),
 );
@@ -131,6 +136,7 @@ const isoDateTimePattern =
 export const DateTimeString = Schema.String.check(
   Schema.makeFilter((value) => {
     const match = isoDateTimePattern.exec(value);
+
     if (match === null) {
       return "must be a valid ISO date-time";
     }
@@ -138,6 +144,7 @@ export const DateTimeString = Schema.String.check(
     const hour = Number(match[2]);
     const minute = Number(match[3]);
     const second = match[4] === undefined ? 0 : Number(match[4]);
+
     return (
       (isValidCalendarDate(match[1] ?? "") &&
         hour <= 23 &&
