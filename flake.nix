@@ -3,14 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nix-infra-modules = {
-      url = "github:HaukeSchnau/nix-infra-modules/b365d13637b9dc83c397df542b5112a50ac8cbb9";
+    projects-sdk = {
+      url = "github:HaukeSchnau/projects-sdk/v0.1.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs =
-    { nixpkgs, nix-infra-modules, ... }:
+    { nixpkgs, projects-sdk, ... }:
     let
       forAllSystems = nixpkgs.lib.genAttrs [
         "aarch64-darwin"
@@ -23,7 +23,7 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          toolchain = builtins.attrValues (nix-infra-modules.lib.toolchain { inherit pkgs; });
+          toolchain = builtins.attrValues (projects-sdk.lib.toolchain { inherit pkgs; });
         in
         {
           ci = pkgs.mkShellNoCC { packages = toolchain; };
