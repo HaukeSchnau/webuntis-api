@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
-    "@effect/tsgo": "^0.73.4",
+    "@effect/tsgo": "^0.74.1",
     "@effect/vitest": "^4.0.7",
     "@oxlint/plugins": "1.94.0",
     "@schnau/tsconfig": "^0.1.1",
